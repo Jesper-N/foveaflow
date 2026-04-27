@@ -30,3 +30,15 @@ export const safeStimulusColor = (hexColor: string) => {
   if (isSaturatedRed(hexColor)) return "#ffb020";
   return hexColor;
 };
+
+export const darkenHexColor = (hexColor: string, amount = 0.65) => {
+  const match = /^#?([0-9a-f]{6})$/i.exec(hexColor.trim());
+  if (!match) return "#4c8a00";
+
+  const value = match[1];
+  const red = Math.round(Number.parseInt(value.slice(0, 2), 16) * amount);
+  const green = Math.round(Number.parseInt(value.slice(2, 4), 16) * amount);
+  const blue = Math.round(Number.parseInt(value.slice(4, 6), 16) * amount);
+
+  return `#${red.toString(16).padStart(2, "0")}${green.toString(16).padStart(2, "0")}${blue.toString(16).padStart(2, "0")}`;
+};

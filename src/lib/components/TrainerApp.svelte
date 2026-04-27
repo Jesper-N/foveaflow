@@ -3,8 +3,8 @@
   import ActivityIcon from "@lucide/svelte/icons/activity";
   import EyeIcon from "@lucide/svelte/icons/eye";
   import MoonIcon from "@lucide/svelte/icons/moon";
+  import RotateCcwIcon from "@lucide/svelte/icons/rotate-ccw";
   import SettingsIcon from "@lucide/svelte/icons/settings-2";
-  import ShuffleIcon from "@lucide/svelte/icons/shuffle";
   import SunIcon from "@lucide/svelte/icons/sun";
   import TargetIcon from "@lucide/svelte/icons/crosshair";
   import { ModeWatcher, mode, toggleMode } from "mode-watcher";
@@ -45,7 +45,7 @@
     type SpeedProfile,
   } from "$lib/engine/profiles";
   import { createRng } from "$lib/engine/random";
-  import { safeStimulusColor } from "$lib/engine/safety";
+  import { darkenHexColor, safeStimulusColor } from "$lib/engine/safety";
   import { loadSettings, saveSettings } from "$lib/engine/storage";
   import type {
     Arena,
@@ -62,45 +62,29 @@
           background: "#101113",
           trail: "rgba(16, 17, 19, 0.35)",
           grid: "rgba(255, 255, 255, 0.045)",
-          cue: "rgba(255, 255, 255,",
         }
       : {
           background: "#eff1f3",
           trail: "rgba(239, 241, 243, 0.38)",
           grid: "rgba(16, 18, 22, 0.075)",
-          cue: "rgba(16, 18, 22,",
         };
   };
-  const randomPatternIds: PatternId[] = [
-    "circle",
-    "ellipse",
-    "figureEight",
-    "wave",
-    "diagonal",
-    "bounce",
-    "randomWalk",
-    "directionChange",
-    "looming",
-  ];
+  type BehaviorId =
+    | "constant"
+    | "wavePattern"
+    | "surgePattern"
+    | "alternatingPattern"
+    | "climbPattern"
+    | "sizePulse";
 
-  const speedProfileOptions: Array<{
-    kind: SpeedProfile["kind"];
-    name: string;
-  }> = [
-    { kind: "constant", name: "Constant" },
-    { kind: "ramp", name: "Slow ramp" },
-    { kind: "sine", name: "Sine wave" },
-    { kind: "randomJitter", name: "Random jitter" },
-    { kind: "abruptStep", name: "Abrupt step" },
+  const behaviorOptions: Array<{ id: BehaviorId; name: string }> = [
+    { id: "constant", name: "Constant" },
+    { id: "wavePattern", name: "Speed wave" },
+    { id: "surgePattern", name: "Speed surges" },
+    { id: "alternatingPattern", name: "Alternating speed" },
+    { id: "climbPattern", name: "Climb loop" },
+    { id: "sizePulse", name: "Size pulse" },
   ];
-
-  const sizeProfileOptions: Array<{ kind: SizeProfile["kind"]; name: string }> =
-    [
-      { kind: "constant", name: "Constant" },
-      { kind: "ramp", name: "Slow ramp" },
-      { kind: "pulse", name: "Pulse" },
-      { kind: "randomStep", name: "Random step" },
-    ];
 
   const shapeOptions: Array<{ id: TargetShape; name: string }> = [
     { id: "circle", name: "Circle" },
@@ -135,7 +119,6 @@
   let baseSpeedPxPerSec = 0;
   let seed = 4321;
   let rng = createRng(seed);
-  let patternRng = createRng(seed + 101);
   let canvasTheme: ReturnType<typeof getCanvasTheme> | null = null;
   let gridPath: Path2D | null = null;
   const targetFrames: TargetFrame[] = [];
@@ -148,9 +131,10 @@
   );
   let speedValue = $state([firstPreset.speed.value]);
   let sizeValue = $state([firstPreset.baseRadiusPx]);
+  let opacityValue = $state([1]);
   let targetCountValue = $state([firstPreset.targetCount]);
   let distractorCountValue = $state([firstPreset.distractorCount]);
-  let contrastValue = $state([firstPreset.contrast]);
+  let distractorBrightnessValue = $state([0.7]);
   let fpsStats = $state(calculateFpsStats([]));
   let panelOpen = $state(false);
   let storageReady = $state(false);
@@ -159,11 +143,10 @@
 
   let selectedPreset = $derived(getPreset(settings.presetId));
   let safeBallColor = $derived(safeStimulusColor(settings.ballColor));
-  let safeSecondaryColor = $derived(safeStimulusColor(selectedPreset.colorB));
+  let distractorColor = $derived(
+    darkenHexColor(safeBallColor, settings.distractorBrightness),
+  );
   let isMotMode = $derived(settings.presetId === "mot");
-  let isContrastMode = $derived(settings.presetId === "contrast");
-  let isRandomMode = $derived(settings.presetId === "random");
-  let isPeripheralMode = $derived(settings.presetId === "peripheral");
 
   const refreshBaseSpeed = () => {
     baseSpeedPxPerSec = speedToPixelsPerSecond(
@@ -172,6 +155,91 @@
       settings.calibration,
     );
   };
+
+  const normalizeSpeedProfile = (
+    profile: SpeedProfile | { kind?: string } | undefined,
+  ): SpeedProfile => {
+    if (!profile?.kind) return { kind: "constant" };
+    if (profile.kind === "constant") return { kind: "constant" };
+    if (profile.kind === "ramp") {
+      return {
+        kind: "loopRamp",
+        fromMultiplier: 0.45,
+        toMultiplier: 1.65,
+        periodSec: 5.8,
+        resetSec: 1.2,
+      };
+    }
+    if (profile.kind === "sine") {
+      const sine = profile as Partial<Extract<SpeedProfile, { kind: "sine" }>>;
+      const isQuick = (sine.periodSec ?? 6) <= 4;
+      return {
+        kind: "sine",
+        minMultiplier: isQuick ? 0.4 : 0.45,
+        maxMultiplier: isQuick ? 1.65 : 1.55,
+        periodSec: isQuick ? 2.8 : 5.2,
+      };
+    }
+    if (profile.kind === "steps") {
+      const steps = profile as Partial<
+        Extract<SpeedProfile, { kind: "steps" }>
+      >;
+      const isSurge = (steps.intervalSec ?? 1.25) <= 0.8;
+      return {
+        kind: "steps",
+        multipliers: isSurge
+          ? [0.45, 1.65, 0.55, 1.5, 0.8]
+          : [0.5, 1.5, 0.65, 1.35],
+        intervalSec: isSurge ? 0.65 : 1.25,
+        transitionSec: isSurge ? 0.18 : 0.28,
+      };
+    }
+    if (profile.kind === "loopRamp") {
+      return {
+        kind: "loopRamp",
+        fromMultiplier: 0.45,
+        toMultiplier: 1.65,
+        periodSec: 5.8,
+        resetSec: 1.2,
+      };
+    }
+    return { kind: "constant" };
+  };
+
+  const normalizeSizeProfile = (
+    profile: SizeProfile | { kind?: string } | undefined,
+  ): SizeProfile => {
+    if (profile?.kind !== "pulse") return { kind: "constant" };
+    return {
+      kind: "pulse",
+      minMultiplier: 0.7,
+      maxMultiplier: 1.4,
+      periodSec: 3.2,
+    };
+  };
+
+  const getBehaviorId = (
+    speedProfile: SpeedProfile,
+    sizeProfile: SizeProfile,
+  ): BehaviorId => {
+    if (sizeProfile.kind === "pulse") return "sizePulse";
+    if (speedProfile.kind === "ramp" || speedProfile.kind === "loopRamp") {
+      return "climbPattern";
+    }
+    if (speedProfile.kind === "steps") {
+      return speedProfile.intervalSec <= 0.7
+        ? "surgePattern"
+        : "alternatingPattern";
+    }
+    if (speedProfile.kind === "sine") {
+      return "wavePattern";
+    }
+    return "constant";
+  };
+
+  let behaviorValue = $derived(
+    getBehaviorId(settings.speedProfile, settings.sizeProfile),
+  );
 
   $effect(() => {
     const nextSpeed = speedValue[0];
@@ -183,6 +251,14 @@
     const nextSize = sizeValue[0];
     if (typeof nextSize === "number" && nextSize !== settings.baseRadiusPx) {
       settings.baseRadiusPx = nextSize;
+    }
+
+    const nextOpacity = opacityValue[0];
+    if (
+      typeof nextOpacity === "number" &&
+      nextOpacity !== settings.targetOpacity
+    ) {
+      settings.targetOpacity = nextOpacity;
     }
 
     const nextTargets = targetCountValue[0];
@@ -201,12 +277,12 @@
       settings.distractorCount = Math.round(nextDistractors);
     }
 
-    const nextContrast = contrastValue[0];
+    const nextDistractorBrightness = distractorBrightnessValue[0];
     if (
-      typeof nextContrast === "number" &&
-      nextContrast !== settings.contrast
+      typeof nextDistractorBrightness === "number" &&
+      nextDistractorBrightness !== settings.distractorBrightness
     ) {
-      settings.contrast = nextContrast;
+      settings.distractorBrightness = nextDistractorBrightness;
     }
   });
 
@@ -226,7 +302,7 @@
       if (nextMode !== "light" && nextMode !== "dark") return;
       colorMode = nextMode;
       canvasTheme = getCanvasTheme();
-      drawFrame(performance.now());
+      drawFrame();
     });
     context = canvas.getContext("2d", { alpha: false });
     const resizeObserver = new ResizeObserver(resizeCanvas);
@@ -234,7 +310,7 @@
     document.addEventListener("visibilitychange", handleVisibilityChange);
     const themeObserver = new MutationObserver(() => {
       canvasTheme = getCanvasTheme();
-      drawFrame(performance.now());
+      drawFrame();
     });
     themeObserver.observe(document.documentElement, {
       attributes: true,
@@ -256,19 +332,35 @@
 
   const mergeSettings = (saved: TrainerSettings) => {
     const preset = getPreset(saved.presetId);
+    const presetId = preset.id;
+    const patternId = patternOptions.some(
+      (option) => option.id === saved.patternId,
+    )
+      ? saved.patternId
+      : preset.patternId;
+    let speedProfile = normalizeSpeedProfile(
+      saved.speedProfile ?? preset.speedProfile,
+    );
+    const sizeProfile = normalizeSizeProfile(
+      saved.sizeProfile ?? preset.sizeProfile,
+    );
+    if (sizeProfile.kind === "pulse") speedProfile = { kind: "constant" };
     return settingsFromPreset(
       preset,
       saved.calibration ?? DEFAULT_CALIBRATION,
       {
         ...saved,
+        presetId,
+        patternId,
         speed: saved.speed ?? preset.speed,
-        speedProfile: saved.speedProfile ?? preset.speedProfile,
-        sizeProfile: saved.sizeProfile ?? preset.sizeProfile,
+        speedProfile,
+        sizeProfile,
         targetCount: saved.targetCount ?? preset.targetCount,
         distractorCount: saved.distractorCount ?? preset.distractorCount,
-        contrast: saved.contrast ?? preset.contrast,
         showTrail: saved.showTrail ?? false,
         ballColor: saved.ballColor ?? DEFAULT_BALL_COLOR,
+        distractorBrightness: saved.distractorBrightness ?? 0.7,
+        targetOpacity: saved.targetOpacity ?? 1,
         targetShape: saved.targetShape ?? "circle",
       },
     );
@@ -277,9 +369,10 @@
   const syncSlidersFromSettings = () => {
     speedValue = [settings.speed.value];
     sizeValue = [settings.baseRadiusPx];
+    opacityValue = [settings.targetOpacity];
     targetCountValue = [settings.targetCount];
     distractorCountValue = [settings.distractorCount];
-    contrastValue = [settings.contrast];
+    distractorBrightnessValue = [settings.distractorBrightness];
   };
 
   const resizeCanvas = () => {
@@ -295,7 +388,7 @@
     context.setTransform(dpr, 0, 0, dpr, 0, 0);
     refreshBaseSpeed();
     rebuildGridPath();
-    drawFrame(performance.now());
+    drawFrame();
   };
 
   const rebuildGridPath = () => {
@@ -327,7 +420,7 @@
     travelPx += currentSpeedPxPerSec * deltaSec;
     elapsedSec += deltaSec;
     pushFrameTime(deltaMs, timestamp);
-    drawFrame(timestamp);
+    drawFrame();
     animationFrame = requestAnimationFrame(tick);
   };
 
@@ -356,28 +449,16 @@
       settings.speedProfile,
       timeSec,
       baseSpeedPxPerSec,
-      seed,
     );
-  };
-
-  const getEffectivePattern = (timeSec: number) => {
-    if (!settings.randomizePattern) return settings.patternId;
-    const bucket = Math.floor(timeSec / 10);
-    const index = Math.min(
-      randomPatternIds.length - 1,
-      Math.floor(patternRng.rangeAt(bucket, 0, randomPatternIds.length)),
-    );
-    return randomPatternIds[index];
   };
 
   const sampleFrameCount = (timeSec: number) => {
-    const patternId = getEffectivePattern(timeSec);
+    const patternId = settings.patternId;
     const speedPxPerSec = currentSpeedPxPerSec || getSpeedPxPerSec(timeSec);
     const radiusPx = sampleSizeProfile(
       settings.sizeProfile,
       timeSec,
       settings.baseRadiusPx,
-      seed + 17,
     );
     if (activePatternId !== patternId) activePatternId = patternId;
     return samplePatternInto(
@@ -387,19 +468,19 @@
       arena,
       {
         radiusPx,
+        boundsRadiusPx: settings.baseRadiusPx,
         speedPxPerSec,
         travelPx,
         targetCount: settings.targetCount,
         distractorCount: settings.distractorCount,
-        contrast: settings.contrast,
         colorA: safeBallColor,
-        colorB: safeSecondaryColor,
+        colorB: distractorColor,
       },
       rng,
     );
   };
 
-  const drawFrame = (timestamp: number) => {
+  const drawFrame = () => {
     if (!context) return;
     const ctx = context;
     const theme = canvasTheme ?? getCanvasTheme();
@@ -409,7 +490,7 @@
 
     const frameCount = sampleFrameCount(elapsedSec);
     for (let index = 0; index < frameCount; index += 1) {
-      drawTarget(ctx, targetFrames[index], timestamp, theme);
+      drawTarget(ctx, targetFrames[index]);
     }
   };
 
@@ -422,47 +503,18 @@
     if (gridPath) ctx.stroke(gridPath);
   };
 
-  const drawTarget = (
-    ctx: CanvasRenderingContext2D,
-    frame: TargetFrame,
-    timestamp: number,
-    theme: ReturnType<typeof getCanvasTheme>,
-  ) => {
+  const drawTarget = (ctx: CanvasRenderingContext2D, frame: TargetFrame) => {
     if (!frame.visible) return;
-    const fixation = frame.role === "fixation";
-    const cue = frame.role === "cue";
-    const pulse = cue ? (Math.sin(timestamp / 180) + 1) * 0.5 : 0;
 
-    ctx.globalAlpha = frame.alpha;
+    ctx.globalAlpha = frame.alpha * settings.targetOpacity;
     ctx.fillStyle = frame.color;
     drawStimulusShape(
       ctx,
       frame.x,
       frame.y,
       frame.radiusPx,
-      frame.role === "target" || frame.role === "distractor"
-        ? settings.targetShape
-        : "circle",
+      settings.targetShape,
     );
-
-    if (fixation) {
-      ctx.strokeStyle = "rgba(247, 247, 242, 0.78)";
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(frame.x - 12, frame.y);
-      ctx.lineTo(frame.x + 12, frame.y);
-      ctx.moveTo(frame.x, frame.y - 12);
-      ctx.lineTo(frame.x, frame.y + 12);
-      ctx.stroke();
-    }
-
-    if (cue) {
-      ctx.strokeStyle = `${theme.cue} ${0.36 + pulse * 0.28})`;
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.arc(frame.x, frame.y, frame.radiusPx + 7 + pulse * 4, 0, Math.PI * 2);
-      ctx.stroke();
-    }
     ctx.globalAlpha = 1;
   };
 
@@ -527,17 +579,35 @@
     const preset = getPreset(presetId);
     const calibration = settings.calibration;
     settings = settingsFromPreset(preset, calibration, {
+      speed: settings.speed,
+      baseRadiusPx: settings.baseRadiusPx,
+      speedProfile: settings.speedProfile,
+      sizeProfile: settings.sizeProfile,
       showTrail: settings.showTrail,
       ballColor: settings.ballColor,
+      distractorBrightness: settings.distractorBrightness,
+      targetOpacity: settings.targetOpacity,
       targetShape: settings.targetShape,
     });
     syncSlidersFromSettings();
     refreshBaseSpeed();
   };
 
+  const resetSettings = () => {
+    settings = settingsFromPreset(firstPreset, DEFAULT_CALIBRATION);
+    activePatternId = settings.patternId;
+    seed = 4321;
+    rng = createRng(seed);
+    elapsedSec = 0;
+    travelPx = 0;
+    currentSpeedPxPerSec = 0;
+    syncSlidersFromSettings();
+    refreshBaseSpeed();
+    drawFrame();
+  };
+
   const setPattern = (patternId: PatternId) => {
     settings.patternId = patternId;
-    settings.randomizePattern = false;
   };
 
   const setSpeedUnit = (unit: SpeedUnit) => {
@@ -545,72 +615,62 @@
     refreshBaseSpeed();
   };
 
-  const setSpeedProfile = (kind: SpeedProfile["kind"]) => {
-    if (kind === "constant") settings.speedProfile = { kind };
-    if (kind === "ramp") {
-      settings.speedProfile = {
-        kind,
-        fromMultiplier: 0.65,
-        toMultiplier: 1.3,
-        durationSec: 90,
-      };
-    }
-    if (kind === "sine") {
-      settings.speedProfile = {
-        kind,
-        minMultiplier: 0.65,
-        maxMultiplier: 1.35,
-        periodSec: 8,
-      };
-    }
-    if (kind === "randomJitter") {
-      settings.speedProfile = { kind, amount: 0.28, intervalSec: 0.8 };
-    }
-    if (kind === "abruptStep") {
-      settings.speedProfile = {
-        kind,
-        minMultiplier: 0.55,
-        maxMultiplier: 1.65,
-        intervalSec: 1.1,
-      };
-    }
-  };
+  const setBehavior = (behavior: BehaviorId) => {
+    settings.sizeProfile = { kind: "constant" };
 
-  const setSizeProfile = (kind: SizeProfile["kind"]) => {
-    if (kind === "constant") settings.sizeProfile = { kind };
-    if (kind === "ramp") {
-      settings.sizeProfile = {
-        kind,
-        fromPx: Math.max(5, settings.baseRadiusPx * 0.6),
-        toPx: settings.baseRadiusPx * 1.8,
-        durationSec: 90,
-      };
+    if (behavior === "constant") {
+      settings.speedProfile = { kind: "constant" };
+      return;
     }
-    if (kind === "pulse") {
-      settings.sizeProfile = {
-        kind,
-        minPx: Math.max(5, settings.baseRadiusPx * 0.6),
-        maxPx: settings.baseRadiusPx * 1.75,
-        periodSec: 3.4,
-      };
-    }
-    if (kind === "randomStep") {
-      settings.sizeProfile = {
-        kind,
-        minPx: Math.max(5, settings.baseRadiusPx * 0.6),
-        maxPx: settings.baseRadiusPx * 1.8,
-        intervalSec: 1.2,
-      };
-    }
-  };
 
-  const regenerateSeed = () => {
-    seed = Math.floor(Math.random() * 1_000_000);
-    rng = createRng(seed);
-    patternRng = createRng(seed + 101);
-    elapsedSec = 0;
-    travelPx = 0;
-    currentSpeedPxPerSec = 0;
+    if (behavior === "wavePattern") {
+      settings.speedProfile = {
+        kind: "sine",
+        minMultiplier: 0.45,
+        maxMultiplier: 1.55,
+        periodSec: 5.2,
+      };
+      return;
+    }
+
+    if (behavior === "surgePattern") {
+      settings.speedProfile = {
+        kind: "steps",
+        multipliers: [0.45, 1.65, 0.55, 1.5, 0.8],
+        intervalSec: 0.65,
+        transitionSec: 0.18,
+      };
+      return;
+    }
+
+    if (behavior === "alternatingPattern") {
+      settings.speedProfile = {
+        kind: "steps",
+        multipliers: [0.5, 1.5, 0.65, 1.35],
+        intervalSec: 1.25,
+        transitionSec: 0.28,
+      };
+      return;
+    }
+
+    if (behavior === "climbPattern") {
+      settings.speedProfile = {
+        kind: "loopRamp",
+        fromMultiplier: 0.45,
+        toMultiplier: 1.65,
+        periodSec: 5.8,
+        resetSec: 1.2,
+      };
+      return;
+    }
+
+    settings.speedProfile = { kind: "constant" };
+    settings.sizeProfile = {
+      kind: "pulse",
+      minMultiplier: 0.7,
+      maxMultiplier: 1.4,
+      periodSec: 3.2,
+    };
   };
 
   const handleColorInput = (event: Event) => {
@@ -649,17 +709,10 @@
     }
   };
 
-  const handleSpeedProfileChange = (event: Event) => {
+  const handleBehaviorChange = (event: Event) => {
     const target = event.currentTarget;
     if (target instanceof HTMLSelectElement) {
-      setSpeedProfile(target.value as SpeedProfile["kind"]);
-    }
-  };
-
-  const handleSizeProfileChange = (event: Event) => {
-    const target = event.currentTarget;
-    if (target instanceof HTMLSelectElement) {
-      setSizeProfile(target.value as SizeProfile["kind"]);
+      setBehavior(target.value as BehaviorId);
     }
   };
 
@@ -691,7 +744,7 @@
 </script>
 
 {#snippet settingHeader(
-  icon: "target" | "motion" | "eye" | "calibration",
+  icon: "target" | "motion" | "eye" | "calibration" | "theme",
   label: string,
 )}
   <div
@@ -703,6 +756,12 @@
       <ActivityIcon class="size-4 text-accent" />
     {:else if icon === "eye"}
       <EyeIcon class="size-4 text-accent" />
+    {:else if icon === "theme"}
+      {#if colorMode === "dark"}
+        <MoonIcon class="size-4 text-accent" />
+      {:else}
+        <SunIcon class="size-4 text-accent" />
+      {/if}
     {:else}
       <SettingsIcon class="size-4 text-accent" />
     {/if}
@@ -762,15 +821,15 @@
   <Sheet bind:open={panelOpen}>
     <SheetContent
       side="right"
-      class="w-[min(420px,100vw)] overflow-y-auto p-6 sm:max-w-[420px]"
+      class="w-[min(420px,100vw)] overflow-y-auto px-7 py-8 sm:max-w-[420px]"
     >
       <SheetHeader>
         <SheetTitle>Settings</SheetTitle>
       </SheetHeader>
 
-      <div class="grid gap-6 pb-8 text-sm">
-        <section class="settings-section space-y-3">
-          {@render settingHeader("calibration", "Theme")}
+      <div class="grid gap-9 pb-12 text-sm">
+        <section class="settings-section space-y-5">
+          {@render settingHeader("theme", "Theme")}
           <Button
             class="pressable-ui relative w-full justify-start"
             variant="outline"
@@ -786,7 +845,9 @@
           </Button>
         </section>
 
-        <section class="settings-section space-y-3">
+        <section
+          class="settings-section space-y-5 border-t border-border/60 pt-8"
+        >
           {@render settingHeader("target", "Mode")}
           <Field.Field>
             <Field.Label for="trainer-mode">Mode</Field.Label>
@@ -813,7 +874,7 @@
                 value={settings.patternId}
                 onchange={handlePatternChange}
               >
-                {#each patternOptions.filter((option) => option.id !== "multipleObjectTracking" && option.id !== "peripheralCue") as option (option.id)}
+                {#each patternOptions.filter((option) => option.id !== "multipleObjectTracking") as option (option.id)}
                   <NativeSelect.Option value={option.id}>
                     {option.name}
                   </NativeSelect.Option>
@@ -822,167 +883,25 @@
             </Field.Field>
           {/if}
 
-          {#if isRandomMode}
-            <Item.Root variant="outline" size="sm">
-              <Item.Content>
-                <Item.Title>Randomize pattern</Item.Title>
-              </Item.Content>
-              <Item.Actions>
-                <Switch
-                  bind:checked={settings.randomizePattern}
-                  aria-label="Randomize pattern"
-                />
-              </Item.Actions>
-            </Item.Root>
-            <Button
-              class="pressable-ui"
-              variant="outline"
-              onclick={regenerateSeed}
+          <Field.Field>
+            <Field.Label for="trainer-behavior">Behavior</Field.Label>
+            <NativeSelect.Root
+              id="trainer-behavior"
+              class="w-full"
+              value={behaviorValue}
+              onchange={handleBehaviorChange}
             >
-              <ShuffleIcon />
-              New sequence
-            </Button>
-          {/if}
-        </section>
-
-        <section class="settings-section space-y-3">
-          {@render settingHeader("motion", "Motion")}
-          <Field.Field>
-            {@render sliderRow(
-              "Speed",
-              `${speedValue[0]?.toFixed(1)} ${settings.speed.unit}`,
-            )}
-            <Slider
-              bind:value={speedValue}
-              min={0.5}
-              max={maxSpeedByUnit[settings.speed.unit]}
-              step={speedStepByUnit[settings.speed.unit]}
-              aria-label="Speed"
-            />
-          </Field.Field>
-
-          <div class="grid grid-cols-2 gap-2">
-            <Field.Field>
-              <Field.Label for="trainer-speed-unit">Unit</Field.Label>
-              <NativeSelect.Root
-                id="trainer-speed-unit"
-                class="w-full"
-                value={settings.speed.unit}
-                onchange={handleSpeedUnitChange}
-              >
-                <NativeSelect.Option value="deg/s">deg/s</NativeSelect.Option>
-                <NativeSelect.Option value="cm/s">cm/s</NativeSelect.Option>
-                <NativeSelect.Option value="screen/s">
-                  screen/s
+              {#each behaviorOptions as option (option.id)}
+                <NativeSelect.Option value={option.id}>
+                  {option.name}
                 </NativeSelect.Option>
-              </NativeSelect.Root>
-            </Field.Field>
-
-            {#if isRandomMode || settings.presetId === "pursuit"}
-              <Field.Field>
-                <Field.Label for="trainer-speed-profile">
-                  Speed profile
-                </Field.Label>
-                <NativeSelect.Root
-                  id="trainer-speed-profile"
-                  class="w-full"
-                  value={settings.speedProfile.kind}
-                  onchange={handleSpeedProfileChange}
-                >
-                  {#each speedProfileOptions as option (option.kind)}
-                    <NativeSelect.Option value={option.kind}>
-                      {option.name}
-                    </NativeSelect.Option>
-                  {/each}
-                </NativeSelect.Root>
-              </Field.Field>
-            {/if}
-          </div>
-
-          <Field.Field>
-            {@render sliderRow(
-              "Size",
-              `${Math.round(sizeValue[0] ?? settings.baseRadiusPx)} px`,
-            )}
-            <Slider
-              bind:value={sizeValue}
-              min={4}
-              max={100}
-              step={1}
-              aria-label="Target size"
-            />
+              {/each}
+            </NativeSelect.Root>
           </Field.Field>
 
-          <div class="grid grid-cols-[auto_1fr] gap-2">
-            <Field.Field>
-              <Field.Label for="trainer-color">Color</Field.Label>
-              <Input
-                id="trainer-color"
-                class="h-9 w-14 p-1"
-                type="color"
-                value={settings.ballColor}
-                oninput={handleColorInput}
-                aria-label="Ball color"
-              />
-            </Field.Field>
-
-            <Field.Field>
-              <Field.Label for="trainer-shape">Shape</Field.Label>
-              <NativeSelect.Root
-                id="trainer-shape"
-                class="w-full"
-                value={settings.targetShape}
-                onchange={handleShapeChange}
-              >
-                {#each shapeOptions as option (option.id)}
-                  <NativeSelect.Option value={option.id}>
-                    {option.name}
-                  </NativeSelect.Option>
-                {/each}
-              </NativeSelect.Root>
-            </Field.Field>
-          </div>
-
-          {#if isRandomMode || settings.presetId === "looming" || isContrastMode}
-            <Field.Field>
-              <Field.Label for="trainer-size-profile">Size profile</Field.Label>
-              <NativeSelect.Root
-                id="trainer-size-profile"
-                class="w-full"
-                value={settings.sizeProfile.kind}
-                onchange={handleSizeProfileChange}
-              >
-                {#each sizeProfileOptions as option (option.kind)}
-                  <NativeSelect.Option value={option.kind}>
-                    {option.name}
-                  </NativeSelect.Option>
-                {/each}
-              </NativeSelect.Root>
-            </Field.Field>
-          {/if}
-        </section>
-
-        {#if isMotMode || isContrastMode || isPeripheralMode}
-          <section class="settings-section space-y-3">
-            {@render settingHeader("eye", "Visual load")}
-
-            {#if isContrastMode}
-              <Field.Field>
-                {@render sliderRow(
-                  "Contrast",
-                  `${Math.round((contrastValue[0] ?? settings.contrast) * 100)}%`,
-                )}
-                <Slider
-                  bind:value={contrastValue}
-                  min={0.08}
-                  max={1}
-                  step={0.02}
-                  aria-label="Contrast"
-                />
-              </Field.Field>
-            {/if}
-
-            {#if isMotMode}
+          {#if isMotMode}
+            <div class="space-y-5 pt-1">
+              {@render settingHeader("eye", "Visual load")}
               <Field.Field>
                 {@render sliderRow("Targets", String(targetCountValue[0]))}
                 <Slider
@@ -1006,22 +925,140 @@
                   aria-label="Distractors"
                 />
               </Field.Field>
-            {/if}
+            </div>
+          {/if}
+        </section>
 
-            {#if isPeripheralMode}
-              <Item.Root variant="outline" size="sm">
-                <Item.Content>
-                  <Item.Description>
-                    Keep your eyes on the center cross and use peripheral vision
-                    to notice the outer cue.
-                  </Item.Description>
-                </Item.Content>
-              </Item.Root>
-            {/if}
-          </section>
-        {/if}
+        <section
+          class="settings-section space-y-5 border-t border-border/60 pt-8"
+        >
+          {@render settingHeader("eye", "Color")}
+          <Field.Field>
+            <label
+              class="flex h-11 cursor-pointer items-center gap-3 rounded-full border bg-input/50 px-3 transition-[color,box-shadow,background-color] hover:ring-4 hover:ring-ring/30"
+              for="trainer-color"
+            >
+              <span
+                class="size-6 rounded-full border shadow-sm"
+                style:background-color={settings.ballColor}
+              ></span>
+              <span class="font-mono text-sm uppercase text-foreground">
+                {settings.ballColor}
+              </span>
+              <Input
+                id="trainer-color"
+                class="sr-only"
+                type="color"
+                value={settings.ballColor}
+                oninput={handleColorInput}
+                aria-label="Ball color"
+              />
+            </label>
+          </Field.Field>
 
-        <section class="settings-section space-y-3">
+          {#if isMotMode}
+            <Field.Field>
+              {@render sliderRow(
+                "Distractor color",
+                `${Math.round((distractorBrightnessValue[0] ?? settings.distractorBrightness) * 100)}%`,
+              )}
+              <Slider
+                bind:value={distractorBrightnessValue}
+                min={0.35}
+                max={1}
+                step={0.01}
+                aria-label="Distractor color brightness"
+              />
+            </Field.Field>
+          {/if}
+
+          <Field.Field>
+            {@render sliderRow(
+              "Opacity",
+              `${Math.round((opacityValue[0] ?? settings.targetOpacity) * 100)}%`,
+            )}
+            <Slider
+              bind:value={opacityValue}
+              min={0}
+              max={1}
+              step={0.01}
+              aria-label="Target opacity"
+            />
+          </Field.Field>
+        </section>
+
+        <section
+          class="settings-section space-y-5 border-t border-border/60 pt-8"
+        >
+          {@render settingHeader("eye", "Shape")}
+          <Field.Field>
+            <NativeSelect.Root
+              id="trainer-shape"
+              class="w-full"
+              value={settings.targetShape}
+              onchange={handleShapeChange}
+            >
+              {#each shapeOptions as option (option.id)}
+                <NativeSelect.Option value={option.id}>
+                  {option.name}
+                </NativeSelect.Option>
+              {/each}
+            </NativeSelect.Root>
+          </Field.Field>
+
+          <Field.Field>
+            {@render sliderRow(
+              "Size",
+              `${Math.round(sizeValue[0] ?? settings.baseRadiusPx)} px`,
+            )}
+            <Slider
+              bind:value={sizeValue}
+              min={4}
+              max={100}
+              step={1}
+              aria-label="Target size"
+            />
+          </Field.Field>
+        </section>
+
+        <section
+          class="settings-section space-y-5 border-t border-border/60 pt-8"
+        >
+          {@render settingHeader("motion", "Motion")}
+          <Field.Field>
+            {@render sliderRow(
+              "Speed",
+              `${speedValue[0]?.toFixed(1)} ${settings.speed.unit}`,
+            )}
+            <Slider
+              bind:value={speedValue}
+              min={0.5}
+              max={maxSpeedByUnit[settings.speed.unit]}
+              step={speedStepByUnit[settings.speed.unit]}
+              aria-label="Speed"
+            />
+          </Field.Field>
+
+          <Field.Field>
+            <Field.Label for="trainer-speed-unit">Unit</Field.Label>
+            <NativeSelect.Root
+              id="trainer-speed-unit"
+              class="w-full"
+              value={settings.speed.unit}
+              onchange={handleSpeedUnitChange}
+            >
+              <NativeSelect.Option value="deg/s">deg/s</NativeSelect.Option>
+              <NativeSelect.Option value="cm/s">cm/s</NativeSelect.Option>
+              <NativeSelect.Option value="screen/s"
+                >screen/s</NativeSelect.Option
+              >
+            </NativeSelect.Root>
+          </Field.Field>
+        </section>
+
+        <section
+          class="settings-section space-y-5 border-t border-border/60 pt-8"
+        >
           {@render settingHeader("calibration", "Calibration")}
           <div class="grid grid-cols-2 gap-2">
             <Field.Field>
@@ -1057,6 +1094,17 @@
               <Switch bind:checked={settings.showTrail} aria-label="Trail" />
             </Item.Actions>
           </Item.Root>
+        </section>
+
+        <section class="settings-section border-t border-border/60 pt-8">
+          <Button
+            class="pressable-ui w-full justify-start"
+            variant="outline"
+            onclick={resetSettings}
+          >
+            <RotateCcwIcon class="size-4" />
+            <span class="pl-1">Reset to defaults</span>
+          </Button>
         </section>
       </div>
     </SheetContent>

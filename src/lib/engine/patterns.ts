@@ -10,7 +10,6 @@ import type { Rng } from "./random";
 const TAU = Math.PI * 2;
 const DEFAULT_TARGET_COLOR = "#76d900";
 const DEFAULT_SECONDARY_COLOR = "#3ddbd9";
-const FIXATION_COLOR = "#f7f7f2";
 
 const clamp = (value: number, min: number, max: number) =>
   Math.min(max, Math.max(min, value));
@@ -22,6 +21,99 @@ const pingPong = (value: number, length: number) => {
   if (length <= 0) return 0;
   const wrapped = positiveModulo(value, length * 2);
   return wrapped <= length ? wrapped : length * 2 - wrapped;
+};
+
+type RandomWalkState = {
+  key: string;
+  x: number;
+  y: number;
+  heading: number;
+  targetHeading: number;
+  turnIndex: number;
+  nextTurnTravel: number;
+  lastTravelPx: number;
+};
+
+const randomWalkStates = new Map<number, RandomWalkState>();
+
+const shortestAngleDelta = (from: number, to: number) => {
+  return Math.atan2(Math.sin(to - from), Math.cos(to - from));
+};
+
+const initializeRandomWalk = (
+  rng: Rng,
+  key: string,
+  travelPx: number,
+  left: number,
+  top: number,
+  right: number,
+  bottom: number,
+) => {
+  const heading = rng.rangeAt(90_001, 0, TAU);
+  const state: RandomWalkState = {
+    key,
+    x: rng.rangeAt(90_002, left, right),
+    y: rng.rangeAt(90_003, top, bottom),
+    heading,
+    targetHeading: heading,
+    turnIndex: 0,
+    nextTurnTravel: travelPx + rng.rangeAt(90_004, 150, 340),
+    lastTravelPx: travelPx,
+  };
+  randomWalkStates.set(rng.seed, state);
+  return state;
+};
+
+const advanceRandomWalk = (
+  state: RandomWalkState,
+  rng: Rng,
+  travelPx: number,
+  left: number,
+  top: number,
+  right: number,
+  bottom: number,
+) => {
+  let remainingPx = Math.min(260, Math.max(0, travelPx - state.lastTravelPx));
+  state.lastTravelPx = travelPx;
+
+  while (remainingPx > 0) {
+    const stepPx = Math.min(remainingPx, 5);
+    remainingPx -= stepPx;
+
+    if (travelPx >= state.nextTurnTravel) {
+      state.turnIndex += 1;
+      const wander =
+        Math.sin((travelPx + rng.seed * 0.17) / 180) * 0.28 +
+        Math.sin((travelPx + rng.seed * 0.31) / 310) * 0.18;
+      state.targetHeading =
+        state.heading +
+        wander +
+        rng.rangeAt(91_000 + state.turnIndex, -1.85, 1.85);
+      state.nextTurnTravel =
+        travelPx + rng.rangeAt(92_000 + state.turnIndex, 160, 360);
+    }
+
+    const drift =
+      Math.sin((travelPx + rng.seed * 0.41) / 220) * 0.0018 +
+      Math.sin((travelPx + rng.seed * 0.73) / 380) * 0.0012;
+    state.heading +=
+      shortestAngleDelta(state.heading, state.targetHeading) *
+        Math.min(1, stepPx / 150) +
+      drift * stepPx;
+    state.x += Math.cos(state.heading) * stepPx;
+    state.y += Math.sin(state.heading) * stepPx;
+
+    if (state.x < left || state.x > right) {
+      state.x = clamp(state.x, left, right);
+      state.heading = Math.PI - state.heading;
+      state.targetHeading = state.heading;
+    }
+    if (state.y < top || state.y > bottom) {
+      state.y = clamp(state.y, top, bottom);
+      state.heading = -state.heading;
+      state.targetHeading = state.heading;
+    }
+  }
 };
 
 const writeTarget = (
@@ -74,7 +166,8 @@ export const samplePatternInto = (
   rng: Rng,
 ): number => {
   const radiusPx = Math.max(1, params.radiusPx);
-  const margin = Math.max(radiusPx + 8, 16);
+  const boundsRadiusPx = Math.max(1, params.boundsRadiusPx ?? radiusPx);
+  const margin = Math.max(boundsRadiusPx + 8, 16);
   const left = margin;
   const top = margin;
   const right = Math.max(left, arena.width - margin);
@@ -183,20 +276,27 @@ export const samplePatternInto = (
   }
 
   if (id === "randomWalk") {
-    const segmentPx = 46;
-    const segment = Math.floor(travelPx / segmentPx);
-    const partial = (travelPx - segment * segmentPx) / segmentPx;
-    const x1 = rng.rangeAt(segment * 2, left, right);
-    const y1 = rng.rangeAt(segment * 2 + 1, top, bottom);
-    const x2 = rng.rangeAt(segment * 2 + 2, left, right);
-    const y2 = rng.rangeAt(segment * 2 + 3, top, bottom);
+    const stateKey = `${Math.round(arena.width)}:${Math.round(arena.height)}:${Math.round(boundsRadiusPx)}`;
+    let state = randomWalkStates.get(rng.seed);
+    if (!state || state.key !== stateKey || travelPx < state.lastTravelPx) {
+      state = initializeRandomWalk(
+        rng,
+        stateKey,
+        travelPx,
+        left,
+        top,
+        right,
+        bottom,
+      );
+    }
+    advanceRandomWalk(state, rng, travelPx, left, top, right, bottom);
 
     return writeTarget(
       frames,
       0,
       "target",
-      x1 + (x2 - x1) * partial,
-      y1 + (y2 - y1) * partial,
+      state.x,
+      state.y,
       params,
       "target",
       radiusPx,
@@ -244,23 +344,6 @@ export const samplePatternInto = (
     );
   }
 
-  if (id === "looming") {
-    const orbitScale = Math.max(1, (rx + ry) / 2);
-    const angle = travelPx / orbitScale;
-    const loom = 0.72 + Math.abs(Math.sin(elapsedSec * 1.9)) * 1.55;
-    return writeTarget(
-      frames,
-      0,
-      "target",
-      cx + Math.cos(angle * 0.72) * rx * 0.82,
-      cy + Math.sin(angle * 0.58) * ry * 0.82,
-      params,
-      "target",
-      radiusPx * loom,
-      primaryColor,
-    );
-  }
-
   if (id === "multipleObjectTracking") {
     const targetCount = clamp(Math.round(params.targetCount ?? 3), 1, 12);
     const distractorCount = clamp(
@@ -288,90 +371,10 @@ export const samplePatternInto = (
         role,
         radiusPx,
         role === "target" ? primaryColor : secondaryColor,
-        role === "target" ? 1 : 0.55,
+        1,
       );
     }
 
-    return count;
-  }
-
-  if (id === "peripheralCue") {
-    let count = writeTarget(
-      frames,
-      0,
-      "fixation",
-      cx,
-      cy,
-      params,
-      "fixation",
-      Math.max(3, radiusPx * 0.35),
-      FIXATION_COLOR,
-      0.95,
-    );
-    const intervalSec = 1.45;
-    const bucket = Math.floor(elapsedSec / intervalSec);
-    const phase = (elapsedSec - bucket * intervalSec) / intervalSec;
-    const angle = rng.rangeAt(bucket, 0, TAU);
-    count = writeTarget(
-      frames,
-      count,
-      "cue",
-      cx + Math.cos(angle) * rx,
-      cy + Math.sin(angle) * ry,
-      params,
-      "cue",
-      radiusPx * (0.9 + phase * 0.28),
-      primaryColor,
-      phase < 0.14 ? 0.25 + phase * 5 : 1,
-    );
-    return count;
-  }
-
-  if (id === "contrastPulse") {
-    const arcScale = Math.max(1, (rx + ry) / 2);
-    const contrast = clamp(params.contrast ?? 0.45, 0.08, 1);
-    const pulse = 0.65 + Math.sin(elapsedSec * 1.7) * 0.2;
-    return writeTarget(
-      frames,
-      0,
-      "target",
-      cx + Math.cos(travelPx / arcScale) * rx,
-      cy + Math.sin(travelPx / arcScale) * ry,
-      params,
-      "target",
-      radiusPx,
-      primaryColor,
-      clamp(contrast * pulse, 0.06, 1),
-    );
-  }
-
-  if (id === "colorDiscrimination") {
-    const arcScale = Math.max(1, (rx + ry) / 2);
-    const angle = travelPx / arcScale;
-    const swap = Math.floor(elapsedSec / 1.8) % 2 === 0;
-    let count = writeTarget(
-      frames,
-      0,
-      "target-a",
-      cx + Math.cos(angle) * rx * 0.88,
-      cy + Math.sin(angle * 1.1) * ry * 0.88,
-      params,
-      "target",
-      radiusPx,
-      swap ? primaryColor : secondaryColor,
-    );
-    count = writeTarget(
-      frames,
-      count,
-      "target-b",
-      cx + Math.cos(angle + Math.PI) * rx * 0.88,
-      cy + Math.sin(angle * 1.1 + Math.PI) * ry * 0.88,
-      params,
-      "distractor",
-      radiusPx * 0.88,
-      swap ? secondaryColor : primaryColor,
-      0.72,
-    );
     return count;
   }
 

@@ -10,7 +10,7 @@ export type SpeedSetting = {
   value: number;
 };
 
-export type TargetRole = "target" | "distractor" | "cue" | "fixation";
+export type TargetRole = "target" | "distractor";
 
 export type TargetFrame = {
   id: string;
@@ -42,19 +42,15 @@ export type PatternId =
   | "randomWalk"
   | "directionChange"
   | "teleport"
-  | "looming"
-  | "multipleObjectTracking"
-  | "peripheralCue"
-  | "contrastPulse"
-  | "colorDiscrimination";
+  | "multipleObjectTracking";
 
 export type PatternParams = {
   radiusPx: number;
+  boundsRadiusPx?: number;
   speedPxPerSec: number;
   travelPx: number;
   targetCount?: number;
   distractorCount?: number;
-  contrast?: number;
   colorA?: string;
   colorB?: string;
 };
