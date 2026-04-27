@@ -1,0 +1,29 @@
+---
+import "../styles/global.css";
+import TrainerApp from "../lib/components/TrainerApp.svelte";
+import { generateSetInitialModeExpression } from "mode-watcher";
+
+const initialModeExpression = generateSetInitialModeExpression({
+  defaultMode: "dark",
+});
+---
+
+<script is:inline set:html={initialModeExpression} />
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta
+      name="description"
+      content="Visual-skill trainer for pursuit, peripheral attention, contrast, color, and full-field tracking practice."
+    />
+    <title>Eye Trainer</title>
+  </head>
+  <body>
+    <TrainerApp client:only="svelte" />
+  </body>
+</html>
