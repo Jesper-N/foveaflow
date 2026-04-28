@@ -8,15 +8,18 @@
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
     "build": "astro build",
-    "preview": "astro preview",
+    "preview": "bun run build && wrangler dev",
     "astro": "astro",
     "lint": "astro check",
     "check": "astro check",
     "format": "prettier --write .",
-    "format:svelte": "prettier --write \"src/**/*.{svelte,astro,ts,css}\""
+    "format:svelte": "prettier --write \"src/**/*.{svelte,astro,ts,css}\"",
+    "generate-types": "wrangler types",
+    "deploy": "bun run build && wrangler deploy"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.8",
+    "@astrojs/cloudflare": "^13.2.1",
     "@astrojs/svelte": "^8.0.5",
     "@lucide/svelte": "^1.11.0",
     "@tailwindcss/vite": "^4.2.4",
@@ -37,6 +40,10 @@
     "@internationalized/date": "^3.12.0",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-svelte": "^3.5.1",
-    "shadcn-svelte": "^1.2.7"
+    "shadcn-svelte": "^1.2.7",
+    "wrangler": "^4.85.0"
+  },
+  "overrides": {
+    "vite": "^7"
   }
 }
