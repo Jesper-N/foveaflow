@@ -337,6 +337,8 @@
   let storageReady = $state(false);
   let hudAutoHideReady = $state(false);
   let hudVisible = $state(true);
+  let headerPresetSelectOpen = $state(false);
+  let headerPatternSelectOpen = $state(false);
   let colorMode = $state<"light" | "dark">(
     typeof document !== "undefined" &&
       !document.documentElement.classList.contains("dark")
@@ -379,7 +381,13 @@
   let behaviorValue = $derived(
     getBehaviorId(settings.speedProfile, settings.sizeProfile),
   );
-  let hudHidden = $derived(hudAutoHideReady && !hudVisible);
+  let hudHidden = $derived(
+    hudAutoHideReady &&
+      !hudVisible &&
+      !panelOpen &&
+      !headerPresetSelectOpen &&
+      !headerPatternSelectOpen,
+  );
   let hudHideTimeout: number | undefined;
 
   $effect(() => {
@@ -796,13 +804,16 @@
     hudHideTimeout = undefined;
   };
 
+  const isHudInteractionOpen = () =>
+    panelOpen || headerPresetSelectOpen || headerPatternSelectOpen;
+
   const startHudAutoHideTimer = () => {
     clearHudAutoHideTimer();
     hudAutoHideReady = false;
     hudVisible = true;
     hudHideTimeout = window.setTimeout(() => {
       hudAutoHideReady = true;
-      if (!panelOpen) hudVisible = false;
+      if (!isHudInteractionOpen()) hudVisible = false;
     }, 5000);
   };
 
@@ -811,8 +822,18 @@
   };
 
   const hideHud = () => {
-    if (!hudAutoHideReady || panelOpen) return;
+    if (!hudAutoHideReady || isHudInteractionOpen()) return;
     hudVisible = false;
+  };
+
+  const handleHeaderPresetOpenChange = (open: boolean) => {
+    headerPresetSelectOpen = open;
+    if (open) revealHud();
+  };
+
+  const handleHeaderPatternOpenChange = (open: boolean) => {
+    headerPatternSelectOpen = open;
+    if (open) revealHud();
   };
 
   const handleWindowPointerMove = (event: PointerEvent) => {
@@ -1050,167 +1071,172 @@
     </button>
   {/if}
 
-  <header
-    class="trainer-hud absolute inset-x-3 top-3 z-20 flex min-h-12 items-center justify-between gap-3 rounded-2xl border bg-popover/90 px-3 py-2 text-popover-foreground shadow-sm shadow-black/5 backdrop-blur-md sm:inset-x-4 sm:top-4"
+  <div
+    class="trainer-hud-shell absolute top-3 z-20 sm:top-4"
+    style="left: 50%; width: min(calc(100vw - 1.5rem), 72rem); transform: translate3d(-50%, 0, 0);"
     data-hidden={hudHidden}
-    aria-hidden={hudHidden}
-    inert={hudHidden}
-    onpointerenter={revealHud}
-    onfocusin={revealHud}
   >
-    <div class="flex min-w-0 items-center gap-3">
-      <h1
-        class="flex shrink-0 items-center gap-2 text-sm font-semibold tracking-tight text-foreground"
-      >
-        <img
-          src="/lightmode.svg"
-          alt=""
-          aria-hidden="true"
-          class="h-5 w-7 object-contain dark:hidden"
-        />
-        <img
-          src="/darkmode.svg"
-          alt=""
-          aria-hidden="true"
-          class="hidden h-5 w-7 object-contain dark:block"
-        />
-        <span>{siteMetadata.name}</span>
-      </h1>
-
-      <div class="hidden h-6 w-px bg-border/70 md:block"></div>
-
-      <div class="hidden min-w-0 items-center gap-2 md:flex">
-        <Select.Root
-          type="single"
-          value={settings.presetId}
-          onValueChange={handlePresetChange}
+    <header
+      class="trainer-hud flex min-h-12 items-center justify-between gap-3 rounded-[2rem] border bg-popover/90 px-3 py-2 text-popover-foreground shadow-[0_18px_44px_-34px_rgba(20,24,22,0.42)] backdrop-blur-md"
+      aria-hidden={hudHidden}
+      inert={hudHidden}
+    >
+      <div class="flex min-w-0 items-center gap-3">
+        <h1
+          class="flex shrink-0 items-center gap-2 text-sm font-semibold tracking-tight text-foreground"
         >
-          <Select.Trigger
-            size="sm"
-            class="w-40 bg-muted/70 font-medium"
-            aria-label="Drill"
-          >
-            {getPresetName(settings.presetId)}
-          </Select.Trigger>
-          <Select.Content>
-            {#each exercisePresets as preset (preset.id)}
-              <Select.Item value={preset.id}>
-                {@render modeSelectLabel(preset.id, preset.name)}
-              </Select.Item>
-            {/each}
-          </Select.Content>
-        </Select.Root>
+          <img
+            src="/lightmode.svg"
+            alt=""
+            aria-hidden="true"
+            class="h-5 w-7 object-contain dark:hidden"
+          />
+          <img
+            src="/darkmode.svg"
+            alt=""
+            aria-hidden="true"
+            class="hidden h-5 w-7 object-contain dark:block"
+          />
+          <span>{siteMetadata.name}</span>
+        </h1>
 
-        {#if settings.presetId === "pursuit"}
+        <div class="hidden h-6 w-px bg-border/70 md:block"></div>
+
+        <div class="hidden min-w-0 items-center gap-2 md:flex">
           <Select.Root
             type="single"
-            value={settings.patternId}
-            onValueChange={handlePatternChange}
+            value={settings.presetId}
+            onValueChange={handlePresetChange}
+            onOpenChange={handleHeaderPresetOpenChange}
           >
             <Select.Trigger
               size="sm"
-              class="w-44 bg-muted/70 font-medium"
-              aria-label="Motion path"
+              class="w-40 bg-muted/70 font-medium"
+              aria-label="Drill"
             >
-              {getPatternName(settings.patternId)}
+              {getPresetName(settings.presetId)}
             </Select.Trigger>
-            <Select.Content class={patternSelectContentClass}>
-              {#each pursuitPatternOptions as option (option.id)}
-                <Select.Item value={option.id}>
-                  {@render previewSelectLabel(option.id, option.name)}
+            <Select.Content>
+              {#each exercisePresets as preset (preset.id)}
+                <Select.Item value={preset.id}>
+                  {@render modeSelectLabel(preset.id, preset.name)}
                 </Select.Item>
               {/each}
             </Select.Content>
           </Select.Root>
-        {/if}
-      </div>
 
-      <div class="hidden min-w-0 items-center gap-2 xl:flex">
-        <div
-          class="flex h-9 w-40 items-center gap-3 rounded-full border bg-muted/60 px-3"
-        >
-          <span class="text-xs font-medium text-muted-foreground">Size</span>
-          <Slider
-            bind:value={sizeSliderValue, setSizeSliderValue}
-            min={4}
-            max={100}
-            step={1}
-            aria-label="Header target size"
-          />
-          <span class="w-8 text-right text-xs font-semibold tabular-nums">
-            {Math.round(settings.baseRadiusPx)}
-          </span>
+          {#if settings.presetId === "pursuit"}
+            <Select.Root
+              type="single"
+              value={settings.patternId}
+              onValueChange={handlePatternChange}
+              onOpenChange={handleHeaderPatternOpenChange}
+            >
+              <Select.Trigger
+                size="sm"
+                class="w-44 bg-muted/70 font-medium"
+                aria-label="Motion path"
+              >
+                {getPatternName(settings.patternId)}
+              </Select.Trigger>
+              <Select.Content class={patternSelectContentClass}>
+                {#each pursuitPatternOptions as option (option.id)}
+                  <Select.Item value={option.id}>
+                    {@render previewSelectLabel(option.id, option.name)}
+                  </Select.Item>
+                {/each}
+              </Select.Content>
+            </Select.Root>
+          {/if}
+        </div>
+
+        <div class="hidden min-w-0 items-center gap-2 xl:flex">
+          <div
+            class="flex h-9 w-40 items-center gap-3 rounded-full border bg-muted/60 px-3"
+          >
+            <span class="text-xs font-medium text-muted-foreground">Size</span>
+            <Slider
+              bind:value={sizeSliderValue, setSizeSliderValue}
+              min={4}
+              max={100}
+              step={1}
+              aria-label="Header target size"
+            />
+            <span class="w-8 text-right text-xs font-semibold tabular-nums">
+              {Math.round(settings.baseRadiusPx)}
+            </span>
+          </div>
+
+          <div
+            class="flex h-9 w-48 items-center gap-3 rounded-full border bg-muted/60 px-3"
+          >
+            <span class="text-xs font-medium text-muted-foreground">Speed</span>
+            <Slider
+              bind:value={speedSliderValue, setSpeedSliderValue}
+              min={0.5}
+              max={maxSpeedByUnit[settings.speed.unit]}
+              step={speedStepByUnit[settings.speed.unit]}
+              aria-label="Header target speed"
+            />
+            <span class="w-14 text-right text-xs font-semibold tabular-nums">
+              {settings.speed.value.toFixed(1)}
+            </span>
+          </div>
         </div>
 
         <div
-          class="flex h-9 w-48 items-center gap-3 rounded-full border bg-muted/60 px-3"
+          class="hidden h-9 items-center rounded-full border bg-muted/60 px-3 text-xs font-medium text-muted-foreground lg:flex"
         >
-          <span class="text-xs font-medium text-muted-foreground">Speed</span>
-          <Slider
-            bind:value={speedSliderValue, setSpeedSliderValue}
-            min={0.5}
-            max={maxSpeedByUnit[settings.speed.unit]}
-            step={speedStepByUnit[settings.speed.unit]}
-            aria-label="Header target speed"
-          />
-          <span class="w-14 text-right text-xs font-semibold tabular-nums">
-            {settings.speed.value.toFixed(1)}
+          <span class="tabular-nums text-foreground">
+            {fpsStats.average || "-"}
           </span>
+          <span class="pl-1">fps</span>
         </div>
       </div>
 
-      <div
-        class="hidden h-9 items-center rounded-full border bg-muted/60 px-3 text-xs font-medium text-muted-foreground lg:flex"
-      >
-        <span class="tabular-nums text-foreground">
-          {fpsStats.average || "-"}
-        </span>
-        <span class="pl-1">fps</span>
-      </div>
-    </div>
+      <nav class="flex shrink-0 items-center gap-1" aria-label="App actions">
+        <Button
+          class="pressable-ui"
+          variant="outline"
+          size="lg"
+          href="https://github.com/Jesper-N/eye-trainer"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Open GitHub repository"
+        >
+          <svg viewBox="0 0 24 24" class="size-4" aria-hidden="true">
+            <path
+              fill="currentColor"
+              d="M12 2C6.48 2 2 6.58 2 12.24c0 4.52 2.87 8.35 6.84 9.7.5.1.68-.22.68-.5v-1.74c-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 5.94c.85 0 1.7.12 2.5.34 1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.8-4.57 5.06.36.32.68.94.68 1.9v2.8c0 .28.18.6.69.5A10.16 10.16 0 0 0 22 12.24C22 6.58 17.52 2 12 2Z"
+            />
+          </svg>
+        </Button>
 
-    <nav class="flex shrink-0 items-center gap-1" aria-label="App actions">
-      <Button
-        class="pressable-ui"
-        variant="outline"
-        size="lg"
-        href="https://github.com/Jesper-N/eye-trainer"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Open GitHub repository"
-      >
-        <svg viewBox="0 0 24 24" class="size-4" aria-hidden="true">
-          <path
-            fill="currentColor"
-            d="M12 2C6.48 2 2 6.58 2 12.24c0 4.52 2.87 8.35 6.84 9.7.5.1.68-.22.68-.5v-1.74c-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 5.94c.85 0 1.7.12 2.5.34 1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.8-4.57 5.06.36.32.68.94.68 1.9v2.8c0 .28.18.6.69.5A10.16 10.16 0 0 0 22 12.24C22 6.58 17.52 2 12 2Z"
-          />
-        </svg>
-      </Button>
+        <Button
+          class="pressable-ui"
+          variant="outline"
+          size="lg"
+          href="/guide/"
+          aria-label="Open guide"
+        >
+          <BookOpenIcon />
+        </Button>
 
-      <Button
-        class="pressable-ui"
-        variant="outline"
-        size="lg"
-        href="/guide/"
-        aria-label="Open guide"
-      >
-        <BookOpenIcon />
-      </Button>
-
-      <Button
-        class="pressable-ui"
-        variant="outline"
-        size="lg"
-        aria-label="Open controls"
-        onclick={() => {
-          revealHud();
-          panelOpen = true;
-        }}
-      >
-        <SettingsIcon />
-      </Button>
-    </nav>
-  </header>
+        <Button
+          class="pressable-ui"
+          variant="outline"
+          size="lg"
+          aria-label="Open controls"
+          onclick={() => {
+            revealHud();
+            panelOpen = true;
+          }}
+        >
+          <SettingsIcon />
+        </Button>
+      </nav>
+    </header>
+  </div>
 
   <Sheet bind:open={panelOpen}>
     <SheetContent
