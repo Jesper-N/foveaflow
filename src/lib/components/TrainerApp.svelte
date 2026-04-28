@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, untrack } from "svelte";
   import ActivityIcon from "@lucide/svelte/icons/activity";
+  import BookOpenIcon from "@lucide/svelte/icons/book-open";
   import EyeIcon from "@lucide/svelte/icons/eye";
   import MoonIcon from "@lucide/svelte/icons/moon";
   import RotateCcwIcon from "@lucide/svelte/icons/rotate-ccw";
@@ -46,7 +47,13 @@
   } from "$lib/engine/profiles";
   import { createRng } from "$lib/engine/random";
   import { darkenHexColor, safeStimulusColor } from "$lib/engine/safety";
-  import { safetyNote, siteMetadata, trainingModeNotes } from "$lib/seo";
+  import {
+    findTrainerRoute,
+    getTrainerRoute,
+    safetyNote,
+    siteMetadata,
+    trainingModeNotes,
+  } from "$lib/seo";
   import {
     loadSettings,
     saveSettings,
@@ -115,6 +122,8 @@
   const pursuitPatternOptions = patternOptions.filter(
     (option) => option.id !== "multipleObjectTracking",
   );
+
+  let { routeSlug = "" }: { routeSlug?: string } = $props();
 
   const clamp = (value: number, min: number, max: number) => {
     return Math.min(max, Math.max(min, value));
@@ -280,8 +289,42 @@
   let frameTimeIndex = 0;
   let frameTimeCount = 0;
 
+  const getPreservedSettings = (currentSettings: TrainerSettings) => ({
+    speed: currentSettings.speed,
+    baseRadiusPx: currentSettings.baseRadiusPx,
+    speedProfile: currentSettings.speedProfile,
+    sizeProfile: currentSettings.sizeProfile,
+    showTrail: currentSettings.showTrail,
+    ballColor: currentSettings.ballColor,
+    distractorBrightness: currentSettings.distractorBrightness,
+    targetOpacity: currentSettings.targetOpacity,
+    targetShape: currentSettings.targetShape,
+  });
+
+  const applyRouteToSettings = (
+    currentSettings: TrainerSettings,
+    nextSlug: string | undefined,
+  ) => {
+    const route = findTrainerRoute(nextSlug);
+    const preset = route ? getPreset(route.mode) : firstPreset;
+    const nextSettings = settingsFromPreset(
+      preset,
+      currentSettings.calibration,
+      getPreservedSettings(currentSettings),
+    );
+
+    if (route?.mode === "pursuit" && route.patternId) {
+      nextSettings.patternId = route.patternId;
+    }
+
+    return nextSettings;
+  };
+
   let settings = $state<TrainerSettings>(
-    settingsFromPreset(firstPreset, DEFAULT_CALIBRATION),
+    applyRouteToSettings(
+      settingsFromPreset(firstPreset, DEFAULT_CALIBRATION),
+      untrack(() => routeSlug),
+    ),
   );
   let fpsStats = $state(calculateFpsStats([]));
   let panelOpen = $state(false);
@@ -329,10 +372,19 @@
 
   onMount(() => {
     const savedSettings = loadSettings();
-    if (savedSettings) {
-      settings = mergeSettings(savedSettings);
-    }
+    const browserRouteSlug = getBrowserRouteSlug();
+    settings = applyRouteToSettings(
+      savedSettings ? mergeSettings(savedSettings) : settings,
+      browserRouteSlug,
+    );
     refreshBaseSpeed();
+
+    const handlePopState = () => {
+      settings = applyRouteToSettings(settings, getBrowserRouteSlug());
+      refreshBaseSpeed();
+      drawFrame();
+    };
+    window.addEventListener("popstate", handlePopState);
 
     const modeUnsubscribe = mode.subscribe((nextMode) => {
       if (nextMode !== "light" && nextMode !== "dark") return;
@@ -358,6 +410,7 @@
 
     return () => {
       cancelAnimationFrame(animationFrame);
+      window.removeEventListener("popstate", handlePopState);
       modeUnsubscribe();
       themeObserver.disconnect();
       resizeObserver.disconnect();
@@ -693,6 +746,20 @@
     refreshBaseSpeed();
   };
 
+  const getBrowserRouteSlug = () => {
+    return window.location.pathname.split("/").filter(Boolean)[0] ?? "";
+  };
+
+  const setBrowserPath = (path: string) => {
+    if (window.location.pathname === path) return;
+    window.history.pushState({}, "", path);
+  };
+
+  const syncBrowserPath = () => {
+    const route = getTrainerRoute(settings.presetId, settings.patternId);
+    setBrowserPath(route?.path ?? "/");
+  };
+
   const resetSettings = () => {
     settings = settingsFromPreset(firstPreset, DEFAULT_CALIBRATION);
     seed = 4321;
@@ -702,6 +769,7 @@
     currentSpeedPxPerSec = 0;
     refreshBaseSpeed();
     drawFrame();
+    setBrowserPath("/");
   };
 
   const setPattern = (patternId: PatternId) => {
@@ -801,10 +869,13 @@
 
   const handlePresetChange = (value: string) => {
     applyPreset(value);
+    syncBrowserPath();
   };
 
   const handlePatternChange = (value: string) => {
-    if (isPatternId(value)) setPattern(value);
+    if (!isPatternId(value)) return;
+    setPattern(value);
+    syncBrowserPath();
   };
 
   const handleSpeedUnitChange = (value: string) => {
@@ -889,7 +960,7 @@
   ></canvas>
 
   <header
-    class="ui-enter absolute left-3 top-3 z-10 flex max-w-[calc(100vw-7.5rem)] items-center rounded-lg border bg-popover/90 px-3 py-2 text-popover-foreground shadow-sm backdrop-blur-md"
+    class="ui-enter absolute left-3 top-3 z-10 flex max-w-[calc(100vw-10.5rem)] items-center rounded-lg border bg-popover/90 px-3 py-2 text-popover-foreground shadow-sm backdrop-blur-md"
   >
     <div class="flex min-w-0 flex-wrap items-center gap-2">
       <h1
@@ -987,7 +1058,7 @@
   </header>
 
   <Button
-    class="ui-enter ui-enter-slow pressable-ui absolute right-14 top-3 z-20"
+    class="ui-enter ui-enter-slow pressable-ui absolute right-24 top-3 z-20"
     variant="outline"
     size="icon"
     href="https://github.com/Jesper-N/eye-trainer"
@@ -1001,6 +1072,16 @@
         d="M12 2C6.48 2 2 6.58 2 12.24c0 4.52 2.87 8.35 6.84 9.7.5.1.68-.22.68-.5v-1.74c-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 5.94c.85 0 1.7.12 2.5.34 1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.8-4.57 5.06.36.32.68.94.68 1.9v2.8c0 .28.18.6.69.5A10.16 10.16 0 0 0 22 12.24C22 6.58 17.52 2 12 2Z"
       />
     </svg>
+  </Button>
+
+  <Button
+    class="ui-enter ui-enter-slow pressable-ui absolute right-14 top-3 z-20"
+    variant="outline"
+    size="icon"
+    href="/guide/"
+    aria-label="Open guide"
+  >
+    <BookOpenIcon />
   </Button>
 
   <Button
@@ -1023,28 +1104,6 @@
       </SheetHeader>
 
       <div class="grid gap-9 pb-12 text-sm">
-        <section class="settings-section space-y-5">
-          {@render settingHeader("eye", "About")}
-          <p class="text-sm leading-6 text-muted-foreground">
-            {siteMetadata.shortDescription}
-          </p>
-          <div class="grid gap-3">
-            {#each trainingModeNotes as trainingModeNote (trainingModeNote.title)}
-              <Item.Root variant="outline" size="sm">
-                <Item.Content>
-                  <Item.Title class="line-clamp-none">
-                    {trainingModeNote.title}
-                  </Item.Title>
-                  <Item.Description class="line-clamp-none leading-6">
-                    {trainingModeNote.body}
-                  </Item.Description>
-                </Item.Content>
-              </Item.Root>
-            {/each}
-          </div>
-          <p class="text-xs leading-5 text-muted-foreground">{safetyNote}</p>
-        </section>
-
         <section class="settings-section space-y-5">
           {@render settingHeader("theme", "Theme")}
           <Button
@@ -1366,8 +1425,32 @@
             onclick={resetSettings}
           >
             <RotateCcwIcon class="size-4" />
-            <span class="pl-1">Reset controls</span>
+            <span class="pl-1">Reset to defaults</span>
           </Button>
+        </section>
+
+        <section
+          class="settings-section space-y-5 border-t border-border/60 pt-8"
+        >
+          {@render settingHeader("eye", "About")}
+          <p class="text-sm leading-6 text-muted-foreground">
+            {siteMetadata.shortDescription}
+          </p>
+          <div class="grid gap-3">
+            {#each trainingModeNotes as trainingModeNote (trainingModeNote.title)}
+              <Item.Root variant="outline" size="sm">
+                <Item.Content>
+                  <Item.Title class="line-clamp-none">
+                    {trainingModeNote.title}
+                  </Item.Title>
+                  <Item.Description class="line-clamp-none leading-6">
+                    {trainingModeNote.body}
+                  </Item.Description>
+                </Item.Content>
+              </Item.Root>
+            {/each}
+          </div>
+          <p class="text-xs leading-5 text-muted-foreground">{safetyNote}</p>
         </section>
       </div>
     </SheetContent>

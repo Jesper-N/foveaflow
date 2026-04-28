@@ -1,0 +1,74 @@
+---
+import "../styles/global.css";
+import TrainerApp from "../lib/components/TrainerApp.svelte";
+import { generateSetInitialModeExpression } from "mode-watcher";
+import {
+  absoluteUrl,
+  getSiteOrigin,
+  siteMetadata,
+  trainerRoutes,
+  type TrainerRoute,
+} from "../lib/seo";
+
+export const getStaticPaths = () => {
+  return trainerRoutes.map((route) => ({
+    params: { trainerRoute: route.slug },
+    props: { route },
+  }));
+};
+
+const { route } = Astro.props as { route: TrainerRoute };
+
+const initialModeExpression = generateSetInitialModeExpression({
+  defaultMode: "dark",
+});
+
+const siteOrigin = getSiteOrigin(Astro.site);
+const canonicalUrl = absoluteUrl(route.path, siteOrigin);
+const ogImageUrl = absoluteUrl(siteMetadata.imagePath, siteOrigin);
+---
+
+<script is:inline set:html={initialModeExpression} />
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/metadata/favicon.svg" />
+    <link rel="icon" href="/metadata/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="/metadata/apple-touch-icon.png" />
+    <link rel="manifest" href="/metadata/site.webmanifest" />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={route.description} />
+    <meta name="robots" content="index,follow,max-image-preview:large" />
+    <meta name="application-name" content={siteMetadata.name} />
+    <meta name="apple-mobile-web-app-title" content={siteMetadata.name} />
+    <meta name="theme-color" content="#95E217" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteMetadata.name} />
+    <meta property="og:title" content={route.title} />
+    <meta property="og:description" content={route.description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta
+      property="og:image:alt"
+      content="Eye Trainer canvas with a moving practice target"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={route.title} />
+    <meta name="twitter:description" content={route.description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <meta
+      name="twitter:image:alt"
+      content="Eye Trainer canvas with a moving practice target"
+    />
+    <title>{route.title}</title>
+  </head>
+  <body>
+    <TrainerApp routeSlug={route.slug} client:load />
+  </body>
+</html>
