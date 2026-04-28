@@ -1,9 +1,5 @@
 # Eye Trainer
 
-![Eye Trainer app showcase](docs/showcase.gif)
-
-> Demo capture pending. Add `docs/showcase.gif` when the first short walkthrough is ready.
-
 [![Astro](https://img.shields.io/badge/Astro-6.1-ff5d01?logo=astro&logoColor=white)](https://astro.build/)
 [![Svelte](https://img.shields.io/badge/Svelte-5.55-ff3e00?logo=svelte&logoColor=white)](https://svelte.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -11,7 +7,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.2-38bdf8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-Eye Trainer is a free browser tool for visual tracking practice. It covers smooth pursuit, reaction jumps, random motion paths, peripheral awareness, and multiple object tracking.
+[Eye Trainer](https://eye-trainer.app/) is a free browser tool for visual tracking practice. It covers smooth pursuit, reaction jumps, random motion paths, peripheral awareness, and multiple object tracking.
 
 It runs without an account or install. The app keeps the canvas full screen, gives direct control over target motion, and stores preferences on the current device with `localStorage`.
 
