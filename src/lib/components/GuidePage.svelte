@@ -12,7 +12,6 @@
   import { Badge } from "$lib/components/ui/badge/index.js";
   import { Button } from "$lib/components/ui/button/index.js";
   import * as Item from "$lib/components/ui/item/index.js";
-  import { Separator } from "$lib/components/ui/separator/index.js";
   import {
     audienceNotes,
     faqItems,
@@ -38,18 +37,23 @@
   const guideEnterTop = "guide-enter guide-enter-top";
   const guideEnterUp = "guide-enter guide-enter-up";
   const interactiveItem =
-    "pressable-ui will-change-transform motion-reduce:will-change-auto";
+    "pressable-ui bg-background/70 shadow-[0_16px_36px_-30px_rgba(20,24,22,0.4)]";
+  const sectionGrid =
+    "grid gap-6 border-t border-border/60 pt-10 md:grid-cols-[0.72fr_1.28fr] md:gap-10";
+  const sectionIntro = "md:sticky md:top-8 md:self-start";
+  const sectionTitle =
+    "max-w-[18rem] text-2xl leading-tight font-semibold tracking-tight";
 </script>
 
 <main
   class="fixed inset-0 min-h-[100dvh] overflow-auto bg-background text-foreground selection:bg-accent/30"
 >
-  <div class="mx-auto grid w-full max-w-7xl gap-12 px-4 py-5 sm:px-6 lg:px-8">
+  <div class="mx-auto grid w-full max-w-7xl gap-10 px-4 py-5 sm:px-6 lg:px-8">
     <nav class={`flex items-center justify-between gap-4 ${guideEnterTop}`}>
       <Button
         href="/"
         variant="outline"
-        class="active:translate-y-px"
+        class="pressable-ui"
         aria-label="Open Eye Trainer"
       >
         <ArrowLeftIcon class="size-4" />
@@ -65,34 +69,36 @@
     </nav>
 
     <section
-      class={`grid min-h-[calc(100dvh-7rem)] items-center gap-10 py-8 md:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)] md:py-12 ${guideEnterUp}`}
+      class={`grid items-center gap-10 pt-10 pb-10 md:grid-cols-[minmax(0,1.08fr)_minmax(20rem,0.92fr)] md:pt-20 md:pb-16 ${guideEnterUp}`}
     >
       <div class="max-w-3xl">
         <Badge variant="secondary" class="mb-5 px-3 py-1">Guide</Badge>
         <h1
-          class="max-w-[14ch] text-4xl leading-none font-semibold tracking-tight text-foreground md:text-6xl"
+          class="max-w-[13ch] text-4xl leading-none font-semibold tracking-tight text-foreground md:text-6xl"
         >
           {guideMetadata.title}
         </h1>
-        <p class="mt-6 max-w-[42rem] text-base leading-7 text-muted-foreground">
+        <p
+          class="mt-6 max-w-[40rem] text-base leading-7 text-muted-foreground md:text-lg md:leading-8"
+        >
           {guideMetadata.summary}
         </p>
         <div class="mt-8 flex flex-wrap gap-3">
-          <Button href="/random/" class="active:translate-y-px">
+          <Button href="/random/" class="pressable-ui">
             <CrosshairIcon class="size-4" />
             <span class="pl-1">Open Random pattern</span>
           </Button>
-          <Button href="#faq" variant="outline" class="active:translate-y-px">
+          <Button href="#faq" variant="outline" class="pressable-ui">
             <BookOpenIcon class="size-4" />
             <span class="pl-1">Read FAQ</span>
           </Button>
         </div>
       </div>
 
-      <div class="grid gap-4 md:translate-y-10">
+      <div class="grid gap-4 md:translate-y-6">
         <Item.Root
           variant="outline"
-          class={`border-border/80 bg-card/70 p-5 shadow-[0_20px_40px_-28px_rgba(20,24,22,0.35)] backdrop-blur ${interactiveItem}`}
+          class={`border-border/80 p-5 backdrop-blur ${interactiveItem}`}
         >
           <Item.Media
             variant="icon"
@@ -113,7 +119,7 @@
 
         <Item.Root
           variant="muted"
-          class={`ml-0 border border-border/70 p-5 md:ml-10 ${interactiveItem}`}
+          class={`ml-0 border border-border/70 p-5 md:ml-8 ${interactiveItem}`}
         >
           <Item.Media
             variant="icon"
@@ -133,14 +139,10 @@
       </div>
     </section>
 
-    <Separator />
-
-    <section class={`grid gap-6 md:grid-cols-[0.8fr_1.2fr] ${guideEnterUp}`}>
-      <div>
+    <section class={`${sectionGrid} ${guideEnterUp}`}>
+      <div class={sectionIntro}>
         <Badge variant="outline" class="mb-4">Drills</Badge>
-        <h2 class="text-2xl leading-tight font-semibold tracking-tight">
-          Pick the drill that matches the session
-        </h2>
+        <h2 class={sectionTitle}>Pick the drill that matches the session</h2>
       </div>
 
       <div class="grid gap-3">
@@ -168,14 +170,10 @@
       </div>
     </section>
 
-    <Separator />
-
-    <section
-      class={`guide-enter-delay-1 grid gap-6 md:grid-cols-[0.8fr_1.2fr] ${guideEnterUp}`}
-    >
-      <div>
+    <section class={`guide-enter-delay-1 ${sectionGrid} ${guideEnterUp}`}>
+      <div class={sectionIntro}>
         <Badge variant="outline" class="mb-4">Best fit</Badge>
-        <h2 class="text-2xl leading-tight font-semibold tracking-tight">
+        <h2 class={sectionTitle}>
           Best for gamers, IT workers, and heavy screen users
         </h2>
         <p class="mt-4 max-w-[34rem] text-base leading-7 text-muted-foreground">
@@ -209,14 +207,12 @@
       </div>
     </section>
 
-    <Separator />
-
     <section
-      class={`guide-enter-delay-1 grid gap-6 md:grid-cols-[1.15fr_0.85fr] ${guideEnterUp}`}
+      class={`guide-enter-delay-1 grid gap-6 border-t border-border/60 pt-10 md:grid-cols-[1.18fr_0.82fr] md:gap-10 ${guideEnterUp}`}
     >
       <div class="grid gap-3">
         {#each featuredRoutes as route (route.slug)}
-          <Item.Root variant="outline" class={`bg-card/60 ${interactiveItem}`}>
+          <Item.Root variant="outline" class={interactiveItem}>
             <Item.Media
               variant="icon"
               class="size-9 rounded-lg border bg-background text-accent"
@@ -243,11 +239,9 @@
         {/each}
       </div>
 
-      <div class="md:pt-10">
+      <div class="md:sticky md:top-8 md:self-start md:pt-2">
         <Badge variant="outline" class="mb-4">Direct routes</Badge>
-        <h2 class="text-2xl leading-tight font-semibold tracking-tight">
-          Pattern URLs load the matching state
-        </h2>
+        <h2 class={sectionTitle}>Pattern URLs load the matching state</h2>
         <p class="mt-4 max-w-[38rem] text-base leading-7 text-muted-foreground">
           Pattern pages open Smooth Pursuit with that path selected. Reaction
           jumps and Multiple Distractions use their own direct URLs.
@@ -258,7 +252,7 @@
               href={route.path}
               variant="outline"
               size="sm"
-              class="motion-safe:transition-transform motion-safe:duration-150 motion-safe:ease-[cubic-bezier(0.25,0.46,0.45,0.94)] motion-safe:active:scale-[0.97] motion-reduce:transition-none"
+              class="pressable-ui"
             >
               {route.label}
             </Button>
@@ -267,16 +261,10 @@
       </div>
     </section>
 
-    <Separator />
-
-    <section
-      class={`guide-enter-delay-2 grid gap-6 md:grid-cols-[0.8fr_1.2fr] ${guideEnterUp}`}
-    >
-      <div>
+    <section class={`guide-enter-delay-2 ${sectionGrid} ${guideEnterUp}`}>
+      <div class={sectionIntro}>
         <Badge variant="outline" class="mb-4">Controls</Badge>
-        <h2 class="text-2xl leading-tight font-semibold tracking-tight">
-          Useful settings
-        </h2>
+        <h2 class={sectionTitle}>Useful settings</h2>
       </div>
 
       <div class="grid gap-3">
@@ -319,17 +307,13 @@
       </div>
     </section>
 
-    <Separator />
-
     <section
       id="faq"
-      class={`guide-enter-delay-3 grid gap-6 md:grid-cols-[0.8fr_1.2fr] ${guideEnterUp}`}
+      class={`guide-enter-delay-3 ${sectionGrid} ${guideEnterUp}`}
     >
-      <div>
+      <div class={sectionIntro}>
         <Badge variant="outline" class="mb-4">FAQ</Badge>
-        <h2 class="text-2xl leading-tight font-semibold tracking-tight">
-          Straight answers
-        </h2>
+        <h2 class={sectionTitle}>Straight answers</h2>
       </div>
 
       <div class="grid gap-3">
@@ -351,16 +335,10 @@
       </div>
     </section>
 
-    <Separator />
-
-    <section
-      class={`guide-enter-delay-4 grid gap-6 md:grid-cols-[0.8fr_1.2fr] ${guideEnterUp}`}
-    >
-      <div>
+    <section class={`guide-enter-delay-4 ${sectionGrid} ${guideEnterUp}`}>
+      <div class={sectionIntro}>
         <Badge variant="outline" class="mb-4">References</Badge>
-        <h2 class="text-2xl leading-tight font-semibold tracking-tight">
-          Background reading
-        </h2>
+        <h2 class={sectionTitle}>Background reading</h2>
       </div>
 
       <div class="grid gap-3">

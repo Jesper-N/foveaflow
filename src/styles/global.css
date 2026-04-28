@@ -58,6 +58,8 @@ body {
   background: var(--background);
   color: var(--color-foreground);
   font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
   overflow: hidden;
   overscroll-behavior: none;
 }
@@ -220,6 +222,15 @@ canvas {
   html {
     @apply font-sans;
   }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  p,
+  li {
+    text-wrap: pretty;
+  }
   button:not(:disabled),
   [role="button"]:not(:disabled) {
     cursor: pointer;
@@ -262,7 +273,6 @@ canvas {
 @layer components {
   .guide-enter {
     animation: guide-enter 180ms cubic-bezier(0.215, 0.61, 0.355, 1) backwards;
-    will-change: transform, opacity;
   }
 
   .guide-enter-top {
@@ -297,6 +307,35 @@ canvas {
     animation-duration: 220ms;
   }
 
+  .trainer-hud {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+    transition:
+      transform 280ms cubic-bezier(0.32, 0.72, 0, 1),
+      opacity 180ms ease;
+    will-change: transform, opacity;
+  }
+
+  .trainer-hud[data-hidden="true"] {
+    transform: translate3d(0, calc(-100% - 1rem), 0);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .trainer-hud-peek {
+    opacity: 0.85;
+    transform: translate3d(-50%, 0, 0);
+    transition:
+      opacity 160ms ease,
+      transform 180ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .trainer-hud-peek:hover,
+  .trainer-hud-peek:focus-visible {
+    opacity: 1;
+    transform: translate3d(-50%, 1px, 0);
+  }
+
   .settings-section {
     animation: settings-section-enter 180ms cubic-bezier(0.215, 0.61, 0.355, 1)
       both;
@@ -318,18 +357,30 @@ canvas {
     animation-delay: 80ms;
   }
 
+  .settings-section:nth-child(6) {
+    animation-delay: 100ms;
+  }
+
+  .settings-section:nth-child(7) {
+    animation-delay: 120ms;
+  }
+
+  .settings-section:nth-child(8) {
+    animation-delay: 140ms;
+  }
+
   .pressable-ui {
     transition:
-      transform 120ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      transform 140ms cubic-bezier(0.23, 1, 0.32, 1),
       opacity 150ms ease;
   }
 
   .pressable-ui:active {
-    transform: scale(0.97);
+    transform: scale(0.96);
   }
 
   @media (hover: hover) and (pointer: fine) {
-    .pressable-ui:hover {
+    .pressable-ui:hover:not(:active) {
       transform: translateY(-1px);
     }
   }
@@ -341,7 +392,9 @@ canvas {
       animation: none;
     }
 
-    .guide-enter {
+    .trainer-hud,
+    .trainer-hud-peek {
+      transition: none;
       will-change: auto;
     }
 

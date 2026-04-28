@@ -10,7 +10,7 @@
   import ShieldCheckIcon from "@lucide/svelte/icons/shield-check";
   import SunIcon from "@lucide/svelte/icons/sun";
   import TargetIcon from "@lucide/svelte/icons/crosshair";
-  import { ModeWatcher, mode, toggleMode } from "mode-watcher";
+  import { ModeWatcher, mode, setMode } from "mode-watcher";
 
   import ModePathPreview from "$lib/components/ModePathPreview.svelte";
   import PatternPathPreview from "$lib/components/PatternPathPreview.svelte";
@@ -335,6 +335,8 @@
   let fpsStats = $state(calculateFpsStats([]));
   let panelOpen = $state(false);
   let storageReady = $state(false);
+  let hudAutoHideReady = $state(false);
+  let hudVisible = $state(true);
   let colorMode = $state<"light" | "dark">(
     typeof document !== "undefined" &&
       !document.documentElement.classList.contains("dark")
@@ -347,6 +349,7 @@
     darkenHexColor(safeBallColor, settings.distractorBrightness),
   );
   let isMotMode = $derived(settings.presetId === "mot");
+  let isDarkMode = $derived(colorMode === "dark");
 
   const refreshBaseSpeed = () => {
     baseSpeedPxPerSec = speedToPixelsPerSecond(
@@ -376,6 +379,8 @@
   let behaviorValue = $derived(
     getBehaviorId(settings.speedProfile, settings.sizeProfile),
   );
+  let hudHidden = $derived(hudAutoHideReady && !hudVisible);
+  let hudHideTimeout: number | undefined;
 
   $effect(() => {
     if (storageReady) saveSettings(settings);
@@ -418,9 +423,11 @@
     canvasTheme = getCanvasTheme();
     resizeCanvas();
     if (!document.hidden) startLoop();
+    startHudAutoHideTimer();
 
     return () => {
       cancelAnimationFrame(animationFrame);
+      clearHudAutoHideTimer();
       window.removeEventListener("popstate", handlePopState);
       modeUnsubscribe();
       themeObserver.disconnect();
@@ -783,6 +790,42 @@
     setBrowserPath("/");
   };
 
+  const clearHudAutoHideTimer = () => {
+    if (hudHideTimeout === undefined) return;
+    window.clearTimeout(hudHideTimeout);
+    hudHideTimeout = undefined;
+  };
+
+  const startHudAutoHideTimer = () => {
+    clearHudAutoHideTimer();
+    hudAutoHideReady = false;
+    hudVisible = true;
+    hudHideTimeout = window.setTimeout(() => {
+      hudAutoHideReady = true;
+      if (!panelOpen) hudVisible = false;
+    }, 5000);
+  };
+
+  const revealHud = () => {
+    hudVisible = true;
+  };
+
+  const hideHud = () => {
+    if (!hudAutoHideReady || panelOpen) return;
+    hudVisible = false;
+  };
+
+  const handleWindowPointerMove = (event: PointerEvent) => {
+    if (!hudAutoHideReady || event.pointerType === "touch") return;
+
+    if (event.clientY <= 96) {
+      revealHud();
+      return;
+    }
+
+    if (event.clientY > 160) hideHud();
+  };
+
   const setPattern = (patternId: PatternId) => {
     settings.patternId = patternId;
   };
@@ -876,8 +919,8 @@
     if (isTargetShape(value)) settings.targetShape = value;
   };
 
-  const handleThemeToggle = () => {
-    toggleMode();
+  const handleThemeCheckedChange = (checked: boolean) => {
+    setMode(checked ? "dark" : "light");
   };
 
   const handlePresetChange = (value: string) => {
@@ -953,9 +996,13 @@
 {/snippet}
 
 {#snippet sliderRow(label: string, valueLabel: string)}
-  <span class="flex items-center justify-between text-xs text-muted-foreground">
+  <span
+    class="flex items-center justify-between gap-4 text-xs text-muted-foreground"
+  >
     {label}
-    <strong class="text-foreground">{valueLabel}</strong>
+    <strong class="font-semibold tabular-nums text-foreground">
+      {valueLabel}
+    </strong>
   </span>
 {/snippet}
 
@@ -974,6 +1021,7 @@
 {/snippet}
 
 <ModeWatcher track={false} defaultMode="system" />
+<svelte:window onpointermove={handleWindowPointerMove} />
 <svelte:document onvisibilitychange={handleVisibilityChange} />
 
 <main
@@ -986,12 +1034,33 @@
     aria-label="Eye trainer moving target canvas"
   ></canvas>
 
+  {#if hudHidden}
+    <button
+      type="button"
+      class="trainer-hud-peek absolute left-1/2 top-0 z-30 flex h-10 w-32 items-start justify-center rounded-b-full pt-2 outline-none focus-visible:ring-3 focus-visible:ring-ring/30"
+      aria-label="Reveal controls"
+      onpointerenter={revealHud}
+      onfocus={revealHud}
+      onclick={revealHud}
+    >
+      <span
+        class="h-1 w-16 rounded-full bg-accent/70 shadow-[0_0_16px_rgba(118,217,0,0.22)]"
+        aria-hidden="true"
+      ></span>
+    </button>
+  {/if}
+
   <header
-    class="ui-enter absolute left-3 top-3 z-10 flex max-w-[calc(100vw-10.5rem)] items-center rounded-lg border bg-popover/90 px-3 py-2 text-popover-foreground shadow-sm backdrop-blur-md"
+    class="trainer-hud absolute inset-x-3 top-3 z-20 flex min-h-12 items-center justify-between gap-3 rounded-2xl border bg-popover/90 px-3 py-2 text-popover-foreground shadow-sm shadow-black/5 backdrop-blur-md sm:inset-x-4 sm:top-4"
+    data-hidden={hudHidden}
+    aria-hidden={hudHidden}
+    inert={hudHidden}
+    onpointerenter={revealHud}
+    onfocusin={revealHud}
   >
-    <div class="flex min-w-0 flex-wrap items-center gap-2">
+    <div class="flex min-w-0 items-center gap-3">
       <h1
-        class="flex shrink-0 items-center gap-2 px-1 text-sm font-semibold text-foreground"
+        class="flex shrink-0 items-center gap-2 text-sm font-semibold tracking-tight text-foreground"
       >
         <img
           src="/lightmode.svg"
@@ -1008,148 +1077,179 @@
         <span>{siteMetadata.name}</span>
       </h1>
 
-      <Select.Root
-        type="single"
-        value={settings.presetId}
-        onValueChange={handlePresetChange}
-      >
-        <Select.Trigger
-          size="sm"
-          class="hidden w-40 bg-muted/70 font-medium sm:flex"
-          aria-label="Drill"
-        >
-          {getPresetName(settings.presetId)}
-        </Select.Trigger>
-        <Select.Content>
-          {#each exercisePresets as preset (preset.id)}
-            <Select.Item value={preset.id}>
-              {@render modeSelectLabel(preset.id, preset.name)}
-            </Select.Item>
-          {/each}
-        </Select.Content>
-      </Select.Root>
+      <div class="hidden h-6 w-px bg-border/70 md:block"></div>
 
-      {#if settings.presetId === "pursuit"}
+      <div class="hidden min-w-0 items-center gap-2 md:flex">
         <Select.Root
           type="single"
-          value={settings.patternId}
-          onValueChange={handlePatternChange}
+          value={settings.presetId}
+          onValueChange={handlePresetChange}
         >
           <Select.Trigger
             size="sm"
-            class="hidden w-44 bg-muted/70 font-medium sm:flex"
-            aria-label="Motion path"
+            class="w-40 bg-muted/70 font-medium"
+            aria-label="Drill"
           >
-            {getPatternName(settings.patternId)}
+            {getPresetName(settings.presetId)}
           </Select.Trigger>
-          <Select.Content class={patternSelectContentClass}>
-            {#each pursuitPatternOptions as option (option.id)}
-              <Select.Item value={option.id}>
-                {@render previewSelectLabel(option.id, option.name)}
+          <Select.Content>
+            {#each exercisePresets as preset (preset.id)}
+              <Select.Item value={preset.id}>
+                {@render modeSelectLabel(preset.id, preset.name)}
               </Select.Item>
             {/each}
           </Select.Content>
         </Select.Root>
-      {/if}
 
-      <div
-        class="hidden h-8 w-32 items-center gap-2 rounded-3xl border bg-muted/60 px-3 sm:flex"
-      >
-        <span class="text-xs font-medium text-muted-foreground">Size</span>
-        <Slider
-          bind:value={sizeSliderValue, setSizeSliderValue}
-          min={4}
-          max={100}
-          step={1}
-          aria-label="Header target size"
-        />
+        {#if settings.presetId === "pursuit"}
+          <Select.Root
+            type="single"
+            value={settings.patternId}
+            onValueChange={handlePatternChange}
+          >
+            <Select.Trigger
+              size="sm"
+              class="w-44 bg-muted/70 font-medium"
+              aria-label="Motion path"
+            >
+              {getPatternName(settings.patternId)}
+            </Select.Trigger>
+            <Select.Content class={patternSelectContentClass}>
+              {#each pursuitPatternOptions as option (option.id)}
+                <Select.Item value={option.id}>
+                  {@render previewSelectLabel(option.id, option.name)}
+                </Select.Item>
+              {/each}
+            </Select.Content>
+          </Select.Root>
+        {/if}
+      </div>
+
+      <div class="hidden min-w-0 items-center gap-2 xl:flex">
+        <div
+          class="flex h-9 w-40 items-center gap-3 rounded-full border bg-muted/60 px-3"
+        >
+          <span class="text-xs font-medium text-muted-foreground">Size</span>
+          <Slider
+            bind:value={sizeSliderValue, setSizeSliderValue}
+            min={4}
+            max={100}
+            step={1}
+            aria-label="Header target size"
+          />
+          <span class="w-8 text-right text-xs font-semibold tabular-nums">
+            {Math.round(settings.baseRadiusPx)}
+          </span>
+        </div>
+
+        <div
+          class="flex h-9 w-48 items-center gap-3 rounded-full border bg-muted/60 px-3"
+        >
+          <span class="text-xs font-medium text-muted-foreground">Speed</span>
+          <Slider
+            bind:value={speedSliderValue, setSpeedSliderValue}
+            min={0.5}
+            max={maxSpeedByUnit[settings.speed.unit]}
+            step={speedStepByUnit[settings.speed.unit]}
+            aria-label="Header target speed"
+          />
+          <span class="w-14 text-right text-xs font-semibold tabular-nums">
+            {settings.speed.value.toFixed(1)}
+          </span>
+        </div>
       </div>
 
       <div
-        class="hidden h-8 w-36 items-center gap-2 rounded-3xl border bg-muted/60 px-3 sm:flex"
+        class="hidden h-9 items-center rounded-full border bg-muted/60 px-3 text-xs font-medium text-muted-foreground lg:flex"
       >
-        <span class="text-xs font-medium text-muted-foreground">Speed</span>
-        <Slider
-          bind:value={speedSliderValue, setSpeedSliderValue}
-          min={0.5}
-          max={maxSpeedByUnit[settings.speed.unit]}
-          step={speedStepByUnit[settings.speed.unit]}
-          aria-label="Header target speed"
-        />
+        <span class="tabular-nums text-foreground">
+          {fpsStats.average || "-"}
+        </span>
+        <span class="pl-1">fps</span>
       </div>
-
-      <span class="hidden text-xs tabular-nums text-muted-foreground sm:block">
-        {fpsStats.average || "-"} fps
-      </span>
     </div>
+
+    <nav class="flex shrink-0 items-center gap-1" aria-label="App actions">
+      <Button
+        class="pressable-ui"
+        variant="outline"
+        size="lg"
+        href="https://github.com/Jesper-N/eye-trainer"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Open GitHub repository"
+      >
+        <svg viewBox="0 0 24 24" class="size-4" aria-hidden="true">
+          <path
+            fill="currentColor"
+            d="M12 2C6.48 2 2 6.58 2 12.24c0 4.52 2.87 8.35 6.84 9.7.5.1.68-.22.68-.5v-1.74c-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 5.94c.85 0 1.7.12 2.5.34 1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.8-4.57 5.06.36.32.68.94.68 1.9v2.8c0 .28.18.6.69.5A10.16 10.16 0 0 0 22 12.24C22 6.58 17.52 2 12 2Z"
+          />
+        </svg>
+      </Button>
+
+      <Button
+        class="pressable-ui"
+        variant="outline"
+        size="lg"
+        href="/guide/"
+        aria-label="Open guide"
+      >
+        <BookOpenIcon />
+      </Button>
+
+      <Button
+        class="pressable-ui"
+        variant="outline"
+        size="lg"
+        aria-label="Open controls"
+        onclick={() => {
+          revealHud();
+          panelOpen = true;
+        }}
+      >
+        <SettingsIcon />
+      </Button>
+    </nav>
   </header>
-
-  <Button
-    class="ui-enter ui-enter-slow pressable-ui absolute right-24 top-3 z-20"
-    variant="outline"
-    size="icon"
-    href="https://github.com/Jesper-N/eye-trainer"
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="Open GitHub repository"
-  >
-    <svg viewBox="0 0 24 24" class="size-4" aria-hidden="true">
-      <path
-        fill="currentColor"
-        d="M12 2C6.48 2 2 6.58 2 12.24c0 4.52 2.87 8.35 6.84 9.7.5.1.68-.22.68-.5v-1.74c-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 5.94c.85 0 1.7.12 2.5.34 1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.8-4.57 5.06.36.32.68.94.68 1.9v2.8c0 .28.18.6.69.5A10.16 10.16 0 0 0 22 12.24C22 6.58 17.52 2 12 2Z"
-      />
-    </svg>
-  </Button>
-
-  <Button
-    class="ui-enter ui-enter-slow pressable-ui absolute right-14 top-3 z-20"
-    variant="outline"
-    size="icon"
-    href="/guide/"
-    aria-label="Open guide"
-  >
-    <BookOpenIcon />
-  </Button>
-
-  <Button
-    class="ui-enter ui-enter-slow pressable-ui absolute right-3 top-3 z-20"
-    variant="outline"
-    size="icon"
-    aria-label="Open controls"
-    onclick={() => (panelOpen = true)}
-  >
-    <SettingsIcon />
-  </Button>
 
   <Sheet bind:open={panelOpen}>
     <SheetContent
       side="right"
-      class="w-[min(420px,100vw)] overflow-y-auto px-7 py-8 sm:max-w-[420px]"
+      class="overflow-y-auto px-6 py-7 data-[side=right]:w-[min(440px,100vw)] data-[side=right]:sm:max-w-[440px] sm:px-7"
     >
       <SheetHeader>
         <SheetTitle>Controls</SheetTitle>
       </SheetHeader>
 
-      <div class="grid gap-9 pb-12 text-sm">
-        <section class="settings-section space-y-5">
+      <div class="grid gap-7 pb-12 text-sm">
+        <section class="settings-section space-y-4">
           {@render settingHeader("theme", "Theme")}
-          <Button
-            class="pressable-ui relative w-full justify-start"
-            variant="outline"
-            onclick={handleThemeToggle}
-          >
-            {#if colorMode === "dark"}
-              <SunIcon class="size-4" />
-              <span class="pl-1">Switch to light</span>
-            {:else}
-              <MoonIcon class="size-4" />
-              <span class="pl-1">Switch to dark</span>
-            {/if}
-          </Button>
+          <Item.Root variant="outline" size="sm" class="min-h-11">
+            <Item.Media
+              variant="icon"
+              class="size-9 rounded-lg border bg-muted text-accent"
+            >
+              {#if isDarkMode}
+                <MoonIcon class="size-4" />
+              {:else}
+                <SunIcon class="size-4" />
+              {/if}
+            </Item.Media>
+            <Item.Content>
+              <Item.Title>Dark mode</Item.Title>
+            </Item.Content>
+            <Item.Actions>
+              <Switch
+                checked={isDarkMode}
+                onCheckedChange={handleThemeCheckedChange}
+                aria-label="Use dark theme"
+              />
+            </Item.Actions>
+          </Item.Root>
         </section>
 
         <section
-          class="settings-section space-y-5 border-t border-border/60 pt-8"
+          class="settings-section space-y-4 border-t border-border/60 pt-7"
         >
           {@render settingHeader("target", "Drill")}
           <Field.Field>
@@ -1259,7 +1359,7 @@
         </section>
 
         <section
-          class="settings-section space-y-5 border-t border-border/60 pt-8"
+          class="settings-section space-y-4 border-t border-border/60 pt-7"
         >
           {@render settingHeader("eye", "Color")}
           <Field.Field>
@@ -1320,10 +1420,11 @@
         </section>
 
         <section
-          class="settings-section space-y-5 border-t border-border/60 pt-8"
+          class="settings-section space-y-4 border-t border-border/60 pt-7"
         >
           {@render settingHeader("eye", "Shape")}
           <Field.Field>
+            <Field.Label for="trainer-shape">Shape</Field.Label>
             <Select.Root
               type="single"
               value={settings.targetShape}
@@ -1362,7 +1463,7 @@
         </section>
 
         <section
-          class="settings-section space-y-5 border-t border-border/60 pt-8"
+          class="settings-section space-y-4 border-t border-border/60 pt-7"
         >
           {@render settingHeader("motion", "Motion")}
           <Field.Field>
@@ -1403,7 +1504,7 @@
         </section>
 
         <section
-          class="settings-section space-y-5 border-t border-border/60 pt-8"
+          class="settings-section space-y-4 border-t border-border/60 pt-7"
         >
           {@render settingHeader("calibration", "Screen scale")}
           <div class="grid grid-cols-2 gap-2">
@@ -1432,7 +1533,7 @@
               />
             </Field.Field>
           </div>
-          <Item.Root variant="outline" size="sm">
+          <Item.Root variant="outline" size="sm" class="min-h-11">
             <Item.Content>
               <Item.Title>Show trail</Item.Title>
             </Item.Content>
@@ -1445,7 +1546,7 @@
           </Item.Root>
         </section>
 
-        <section class="settings-section border-t border-border/60 pt-8">
+        <section class="settings-section border-t border-border/60 pt-7">
           <Button
             class="pressable-ui w-full justify-start"
             variant="outline"
@@ -1457,7 +1558,7 @@
         </section>
 
         <section
-          class="settings-section space-y-5 border-t border-border/60 pt-8"
+          class="settings-section space-y-4 border-t border-border/60 pt-7"
         >
           {@render settingHeader("eye", "About")}
           <p class="text-sm leading-6 text-muted-foreground">
