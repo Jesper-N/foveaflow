@@ -2,14 +2,22 @@
   import { getPatternPreviewPath } from "$lib/engine/pattern-preview";
   import type { PatternId } from "$lib/engine/types";
 
-  let { patternId }: { patternId: PatternId } = $props();
+  let {
+    patternId,
+    compact = false,
+  }: { patternId: PatternId; compact?: boolean } = $props();
 
   const pathData = $derived(getPatternPreviewPath(patternId));
 </script>
 
 <svg
   data-slot="pattern-path-preview"
-  class="size-preview h-7 w-11 shrink-0 rounded-lg border border-border/70 bg-background/80 text-accent"
+  class={[
+    "shrink-0",
+    compact
+      ? "size-4 text-current"
+      : "size-preview h-7 w-11 rounded-lg border border-border/70 bg-background/80 text-accent",
+  ]}
   viewBox="0 0 48 32"
   fill="none"
   aria-hidden="true"

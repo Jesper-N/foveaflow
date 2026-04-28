@@ -69,12 +69,6 @@ body {
   inset: 0;
 }
 
-button,
-input,
-select {
-  font: inherit;
-}
-
 button {
   -webkit-tap-highlight-color: transparent;
 }

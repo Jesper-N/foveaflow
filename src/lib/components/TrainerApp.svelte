@@ -32,7 +32,6 @@
     type Calibration,
     speedToPixelsPerSecond,
   } from "$lib/engine/calibration";
-  import { calculateFpsStats } from "$lib/engine/metrics";
   import {
     DEFAULT_BALL_COLOR,
     exercisePresets,
@@ -280,7 +279,6 @@
   let context: CanvasRenderingContext2D | null = null;
   let animationFrame = 0;
   let lastTimestamp = 0;
-  let lastFpsUpdateMs = 0;
   let arena: Arena = { width: 1, height: 1 };
   let elapsedSec = 0;
   let travelPx = 0;
@@ -291,9 +289,6 @@
   let canvasTheme: ReturnType<typeof getCanvasTheme> | null = null;
   let gridPath: Path2D | null = null;
   const targetFrames: TargetFrame[] = [];
-  const frameTimesMs = new Array<number>(600);
-  let frameTimeIndex = 0;
-  let frameTimeCount = 0;
 
   const getPreservedSettings = (currentSettings: TrainerSettings) => ({
     speed: currentSettings.speed,
@@ -332,7 +327,6 @@
       untrack(() => routeSlug),
     ),
   );
-  let fpsStats = $state(calculateFpsStats([]));
   let panelOpen = $state(false);
   let storageReady = $state(false);
   let hudAutoHideReady = $state(false);
@@ -600,29 +594,8 @@
     currentSpeedPxPerSec = getSpeedPxPerSec(elapsedSec);
     travelPx += currentSpeedPxPerSec * deltaSec;
     elapsedSec += deltaSec;
-    pushFrameTime(deltaMs, timestamp);
     drawFrame();
     animationFrame = requestAnimationFrame(tick);
-  };
-
-  const pushFrameTime = (deltaMs: number, timestamp: number) => {
-    frameTimesMs[frameTimeIndex] = deltaMs;
-    frameTimeIndex = (frameTimeIndex + 1) % frameTimesMs.length;
-    frameTimeCount = Math.min(frameTimeCount + 1, frameTimesMs.length);
-    if (timestamp - lastFpsUpdateMs < 250) return;
-    lastFpsUpdateMs = timestamp;
-    fpsStats = calculateFpsStats(getRecentFrameTimes(240));
-  };
-
-  const getRecentFrameTimes = (limit: number) => {
-    const count = Math.min(frameTimeCount, limit);
-    const recentTimes = new Array<number>(count);
-    const start =
-      (frameTimeIndex - count + frameTimesMs.length) % frameTimesMs.length;
-    for (let index = 0; index < count; index += 1) {
-      recentTimes[index] = frameTimesMs[(start + index) % frameTimesMs.length];
-    }
-    return recentTimes;
   };
 
   const getSpeedPxPerSec = (timeSec: number) => {
@@ -1029,16 +1002,20 @@
 
 {#snippet previewSelectLabel(patternId: PatternId, label: string)}
   <span class="flex min-w-0 items-center gap-2">
-    <PatternPathPreview {patternId} />
+    <PatternPathPreview {patternId} compact />
     <span class="truncate">{label}</span>
   </span>
 {/snippet}
 
 {#snippet modeSelectLabel(modeId: TrainingMode, label: string)}
   <span class="flex min-w-0 items-center gap-2">
-    <ModePathPreview mode={modeId} />
+    <ModePathPreview mode={modeId} compact />
     <span class="truncate">{label}</span>
   </span>
+{/snippet}
+
+{#snippet triggerLabel(label: string)}
+  <span class="min-w-0 truncate">{label}</span>
 {/snippet}
 
 <ModeWatcher track={false} defaultMode="system" />
@@ -1072,16 +1049,16 @@
   {/if}
 
   <div
-    class="trainer-hud-shell absolute top-3 z-20 sm:top-4"
-    style="left: 50%; width: min(calc(100vw - 1.5rem), 72rem); transform: translate3d(-50%, 0, 0);"
+    class="trainer-hud-shell absolute top-3 z-20 max-w-[calc(100dvw-1.5rem)] sm:top-4"
+    style="left: 50%; transform: translate3d(-50%, 0, 0);"
     data-hidden={hudHidden}
   >
     <header
-      class="trainer-hud flex min-h-12 items-center justify-between gap-3 rounded-[2rem] border bg-popover/90 px-3 py-2 text-popover-foreground shadow-[0_18px_44px_-34px_rgba(20,24,22,0.42)] backdrop-blur-md"
+      class="trainer-hud flex min-h-12 max-w-full items-center gap-2 rounded-[2rem] border bg-popover/90 px-3 py-2 text-popover-foreground shadow-[0_18px_44px_-34px_rgba(20,24,22,0.42)] backdrop-blur-md sm:px-3.5 2xl:px-4 2xl:py-2.5"
       aria-hidden={hudHidden}
       inert={hudHidden}
     >
-      <div class="flex min-w-0 items-center gap-3">
+      <div class="flex shrink-0 items-center gap-2">
         <h1
           class="flex shrink-0 items-center gap-2 text-sm font-semibold tracking-tight text-foreground"
         >
@@ -1097,108 +1074,108 @@
             aria-hidden="true"
             class="hidden h-5 w-7 object-contain dark:block"
           />
-          <span>{siteMetadata.name}</span>
+          <span class="sr-only xl:not-sr-only">{siteMetadata.name}</span>
         </h1>
+      </div>
 
-        <div class="hidden h-6 w-px bg-border/70 md:block"></div>
-
-        <div class="hidden min-w-0 items-center gap-2 md:flex">
-          <Select.Root
-            type="single"
-            value={settings.presetId}
-            onValueChange={handlePresetChange}
-            onOpenChange={handleHeaderPresetOpenChange}
+      <div class="hidden min-w-0 items-center gap-2 md:flex">
+        <Select.Root
+          type="single"
+          value={settings.presetId}
+          onValueChange={handlePresetChange}
+          onOpenChange={handleHeaderPresetOpenChange}
+        >
+          <Select.Trigger
+            class={[
+              "overflow-hidden",
+              settings.presetId === "pursuit"
+                ? "w-36 lg:w-40 2xl:w-44"
+                : "w-52 lg:w-56 2xl:w-60",
+            ]}
+            aria-label="Drill"
           >
-            <Select.Trigger
-              size="sm"
-              class="w-40 bg-muted/70 font-medium"
-              aria-label="Drill"
-            >
-              {getPresetName(settings.presetId)}
-            </Select.Trigger>
-            <Select.Content>
+            {@render triggerLabel(getPresetName(settings.presetId))}
+          </Select.Trigger>
+          <Select.Content>
+            <Select.Group>
               {#each exercisePresets as preset (preset.id)}
                 <Select.Item value={preset.id}>
                   {@render modeSelectLabel(preset.id, preset.name)}
                 </Select.Item>
               {/each}
-            </Select.Content>
-          </Select.Root>
+            </Select.Group>
+          </Select.Content>
+        </Select.Root>
 
-          {#if settings.presetId === "pursuit"}
-            <Select.Root
-              type="single"
-              value={settings.patternId}
-              onValueChange={handlePatternChange}
-              onOpenChange={handleHeaderPatternOpenChange}
+        {#if settings.presetId === "pursuit"}
+          <Select.Root
+            type="single"
+            value={settings.patternId}
+            onValueChange={handlePatternChange}
+            onOpenChange={handleHeaderPatternOpenChange}
+          >
+            <Select.Trigger
+              class="w-36 overflow-hidden lg:w-40 2xl:w-44"
+              aria-label="Motion path"
             >
-              <Select.Trigger
-                size="sm"
-                class="w-44 bg-muted/70 font-medium"
-                aria-label="Motion path"
-              >
-                {getPatternName(settings.patternId)}
-              </Select.Trigger>
-              <Select.Content class={patternSelectContentClass}>
+              {@render triggerLabel(getPatternName(settings.patternId))}
+            </Select.Trigger>
+            <Select.Content class={patternSelectContentClass}>
+              <Select.Group>
                 {#each pursuitPatternOptions as option (option.id)}
                   <Select.Item value={option.id}>
                     {@render previewSelectLabel(option.id, option.name)}
                   </Select.Item>
                 {/each}
-              </Select.Content>
-            </Select.Root>
-          {/if}
-        </div>
+              </Select.Group>
+            </Select.Content>
+          </Select.Root>
+        {/if}
+      </div>
 
-        <div class="hidden min-w-0 items-center gap-2 xl:flex">
-          <div
-            class="flex h-9 w-40 items-center gap-3 rounded-full border bg-muted/60 px-3"
-          >
-            <span class="text-xs font-medium text-muted-foreground">Size</span>
-            <Slider
-              bind:value={sizeSliderValue, setSizeSliderValue}
-              min={4}
-              max={100}
-              step={1}
-              aria-label="Header target size"
-            />
-            <span class="w-8 text-right text-xs font-semibold tabular-nums">
-              {Math.round(settings.baseRadiusPx)}
-            </span>
-          </div>
-
-          <div
-            class="flex h-9 w-48 items-center gap-3 rounded-full border bg-muted/60 px-3"
-          >
-            <span class="text-xs font-medium text-muted-foreground">Speed</span>
-            <Slider
-              bind:value={speedSliderValue, setSpeedSliderValue}
-              min={0.5}
-              max={maxSpeedByUnit[settings.speed.unit]}
-              step={speedStepByUnit[settings.speed.unit]}
-              aria-label="Header target speed"
-            />
-            <span class="w-14 text-right text-xs font-semibold tabular-nums">
-              {settings.speed.value.toFixed(1)}
-            </span>
-          </div>
+      <div class="hidden min-w-0 items-center gap-2 xl:flex">
+        <div
+          class="flex h-9 w-44 items-center gap-3 rounded-full border bg-muted/60 px-3 2xl:w-48"
+        >
+          <span class="w-8 text-xs font-medium text-muted-foreground 2xl:w-9">
+            Size
+          </span>
+          <Slider
+            bind:value={sizeSliderValue, setSizeSliderValue}
+            min={4}
+            max={100}
+            step={1}
+            aria-label="Header target size"
+          />
+          <span class="w-10 text-right text-xs font-semibold tabular-nums">
+            {Math.round(settings.baseRadiusPx)}
+          </span>
         </div>
 
         <div
-          class="hidden h-9 items-center rounded-full border bg-muted/60 px-3 text-xs font-medium text-muted-foreground lg:flex"
+          class="flex h-9 w-44 items-center gap-3 rounded-full border bg-muted/60 px-3 2xl:w-48"
         >
-          <span class="tabular-nums text-foreground">
-            {fpsStats.average || "-"}
+          <span class="w-8 text-xs font-medium text-muted-foreground 2xl:w-9">
+            Speed
           </span>
-          <span class="pl-1">fps</span>
+          <Slider
+            bind:value={speedSliderValue, setSpeedSliderValue}
+            min={0.5}
+            max={maxSpeedByUnit[settings.speed.unit]}
+            step={speedStepByUnit[settings.speed.unit]}
+            aria-label="Header target speed"
+          />
+          <span class="w-12 text-right text-xs font-semibold tabular-nums">
+            {settings.speed.value.toFixed(1)}
+          </span>
         </div>
       </div>
 
-      <nav class="flex shrink-0 items-center gap-1" aria-label="App actions">
+      <nav class="flex shrink-0 items-center gap-2" aria-label="App actions">
         <Button
           class="pressable-ui"
           variant="outline"
-          size="lg"
+          size="icon"
           href="https://github.com/Jesper-N/eye-trainer"
           target="_blank"
           rel="noopener noreferrer"
@@ -1215,7 +1192,7 @@
         <Button
           class="pressable-ui"
           variant="outline"
-          size="lg"
+          size="icon"
           href="/guide/"
           aria-label="Open guide"
         >
@@ -1225,7 +1202,7 @@
         <Button
           class="pressable-ui"
           variant="outline"
-          size="lg"
+          size="icon"
           aria-label="Open controls"
           onclick={() => {
             revealHud();
@@ -1243,8 +1220,10 @@
       side="right"
       class="overflow-y-auto px-6 py-7 data-[side=right]:w-[min(440px,100vw)] data-[side=right]:sm:max-w-[440px] sm:px-7"
     >
-      <SheetHeader>
-        <SheetTitle>Controls</SheetTitle>
+      <SheetHeader class="px-0 pt-3 pb-7">
+        <SheetTitle class="text-2xl font-semibold tracking-tight">
+          Controls
+        </SheetTitle>
       </SheetHeader>
 
       <div class="grid gap-7 pb-12 text-sm">
@@ -1293,11 +1272,13 @@
                 {getPresetName(settings.presetId)}
               </Select.Trigger>
               <Select.Content>
-                {#each exercisePresets as preset (preset.id)}
-                  <Select.Item value={preset.id}>
-                    {@render modeSelectLabel(preset.id, preset.name)}
-                  </Select.Item>
-                {/each}
+                <Select.Group>
+                  {#each exercisePresets as preset (preset.id)}
+                    <Select.Item value={preset.id}>
+                      {@render modeSelectLabel(preset.id, preset.name)}
+                    </Select.Item>
+                  {/each}
+                </Select.Group>
               </Select.Content>
             </Select.Root>
           </Field.Field>
@@ -1318,11 +1299,13 @@
                   {getPatternName(settings.patternId)}
                 </Select.Trigger>
                 <Select.Content class={patternSelectContentClass}>
-                  {#each pursuitPatternOptions as option (option.id)}
-                    <Select.Item value={option.id}>
-                      {@render previewSelectLabel(option.id, option.name)}
-                    </Select.Item>
-                  {/each}
+                  <Select.Group>
+                    {#each pursuitPatternOptions as option (option.id)}
+                      <Select.Item value={option.id}>
+                        {@render previewSelectLabel(option.id, option.name)}
+                      </Select.Item>
+                    {/each}
+                  </Select.Group>
                 </Select.Content>
               </Select.Root>
             </Field.Field>
@@ -1343,11 +1326,13 @@
                 {getBehaviorName(behaviorValue)}
               </Select.Trigger>
               <Select.Content>
-                {#each behaviorOptions as option (option.id)}
-                  <Select.Item value={option.id}>
-                    {option.name}
-                  </Select.Item>
-                {/each}
+                <Select.Group>
+                  {#each behaviorOptions as option (option.id)}
+                    <Select.Item value={option.id}>
+                      {option.name}
+                    </Select.Item>
+                  {/each}
+                </Select.Group>
               </Select.Content>
             </Select.Root>
           </Field.Field>
@@ -1464,11 +1449,13 @@
                 {getShapeName(settings.targetShape)}
               </Select.Trigger>
               <Select.Content>
-                {#each shapeOptions as option (option.id)}
-                  <Select.Item value={option.id}>
-                    {option.name}
-                  </Select.Item>
-                {/each}
+                <Select.Group>
+                  {#each shapeOptions as option (option.id)}
+                    <Select.Item value={option.id}>
+                      {option.name}
+                    </Select.Item>
+                  {/each}
+                </Select.Group>
               </Select.Content>
             </Select.Root>
           </Field.Field>
@@ -1521,9 +1508,11 @@
                 {settings.speed.unit}
               </Select.Trigger>
               <Select.Content>
-                <Select.Item value="deg/s">deg/s</Select.Item>
-                <Select.Item value="cm/s">cm/s</Select.Item>
-                <Select.Item value="screen/s">screen/s</Select.Item>
+                <Select.Group>
+                  <Select.Item value="deg/s">deg/s</Select.Item>
+                  <Select.Item value="cm/s">cm/s</Select.Item>
+                  <Select.Item value="screen/s">screen/s</Select.Item>
+                </Select.Group>
               </Select.Content>
             </Select.Root>
           </Field.Field>
