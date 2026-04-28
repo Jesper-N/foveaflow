@@ -31,9 +31,6 @@
     (route) => route.mode === "pursuit",
   );
 
-  const enterEase = "motion-safe:ease-[cubic-bezier(0.215,0.61,0.355,1)]";
-  const enterFromTop = `motion-safe:animate-in motion-safe:fade-in-0 motion-safe:slide-in-from-top-1 motion-safe:duration-200 motion-safe:fill-mode-both motion-reduce:animate-none ${enterEase}`;
-  const enterFromBottom = `motion-safe:animate-in motion-safe:fade-in-0 motion-safe:slide-in-from-bottom-3 motion-safe:zoom-in-95 motion-safe:duration-300 motion-safe:fill-mode-both motion-reduce:animate-none ${enterEase}`;
   const interactiveItem =
     "pressable-ui will-change-transform motion-reduce:will-change-auto";
 </script>
@@ -42,7 +39,7 @@
   class="fixed inset-0 min-h-[100dvh] overflow-auto bg-background text-foreground selection:bg-accent/30"
 >
   <div class="mx-auto grid w-full max-w-7xl gap-12 px-4 py-5 sm:px-6 lg:px-8">
-    <nav class={`flex items-center justify-between gap-4 ${enterFromTop}`}>
+    <nav class="flex items-center justify-between gap-4">
       <Button
         href="/"
         variant="outline"
@@ -62,7 +59,7 @@
     </nav>
 
     <section
-      class={`grid min-h-[calc(100dvh-7rem)] items-center gap-10 py-8 md:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)] md:py-12 ${enterFromBottom}`}
+      class="grid min-h-[calc(100dvh-7rem)] items-center gap-10 py-8 md:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)] md:py-12"
     >
       <div class="max-w-3xl">
         <Badge variant="secondary" class="mb-5 px-3 py-1">Guide</Badge>
@@ -132,7 +129,7 @@
 
     <Separator />
 
-    <section class={`grid gap-6 md:grid-cols-[0.8fr_1.2fr] ${enterFromBottom}`}>
+    <section class="grid gap-6 md:grid-cols-[0.8fr_1.2fr]">
       <div>
         <Badge variant="outline" class="mb-4">Drills</Badge>
         <h2 class="text-2xl leading-tight font-semibold tracking-tight">
@@ -167,9 +164,7 @@
 
     <Separator />
 
-    <section
-      class={`grid gap-6 md:grid-cols-[1.15fr_0.85fr] motion-safe:delay-75 ${enterFromBottom}`}
-    >
+    <section class="grid gap-6 md:grid-cols-[1.15fr_0.85fr]">
       <div class="grid gap-3">
         {#each featuredRoutes as route (route.slug)}
           <Item.Root variant="outline" class={`bg-card/60 ${interactiveItem}`}>
@@ -225,9 +220,7 @@
 
     <Separator />
 
-    <section
-      class={`grid gap-6 md:grid-cols-[0.8fr_1.2fr] motion-safe:delay-100 ${enterFromBottom}`}
-    >
+    <section class="grid gap-6 md:grid-cols-[0.8fr_1.2fr]">
       <div>
         <Badge variant="outline" class="mb-4">Controls</Badge>
         <h2 class="text-2xl leading-tight font-semibold tracking-tight">
@@ -277,10 +270,7 @@
 
     <Separator />
 
-    <section
-      id="faq"
-      class={`grid gap-6 md:grid-cols-[0.8fr_1.2fr] motion-safe:delay-150 ${enterFromBottom}`}
-    >
+    <section id="faq" class="grid gap-6 md:grid-cols-[0.8fr_1.2fr]">
       <div>
         <Badge variant="outline" class="mb-4">FAQ</Badge>
         <h2 class="text-2xl leading-tight font-semibold tracking-tight">
@@ -309,9 +299,7 @@
 
     <Separator />
 
-    <section
-      class={`grid gap-6 pb-16 md:grid-cols-[0.8fr_1.2fr] motion-safe:delay-200 ${enterFromBottom}`}
-    >
+    <section class="grid gap-6 pb-16 md:grid-cols-[0.8fr_1.2fr]">
       <div>
         <Badge variant="outline" class="mb-4">References</Badge>
         <h2 class="text-2xl leading-tight font-semibold tracking-tight">
