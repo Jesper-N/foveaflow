@@ -5,6 +5,7 @@ import ThemeFavicon from "../lib/components/ThemeFavicon.astro";
 import { generateSetInitialModeExpression } from "mode-watcher";
 import {
   absoluteUrl,
+  buildTrainerRouteStructuredData,
   getSiteOrigin,
   siteMetadata,
   trainerRoutes,
@@ -27,6 +28,9 @@ const initialModeExpression = generateSetInitialModeExpression({
 const siteOrigin = getSiteOrigin(Astro.site);
 const canonicalUrl = absoluteUrl(route.path, siteOrigin);
 const ogImageUrl = absoluteUrl(siteMetadata.imagePath, siteOrigin);
+const structuredData = JSON.stringify(
+  buildTrainerRouteStructuredData(route, siteOrigin),
+);
 ---
 
 <script is:inline set:html={initialModeExpression} />
@@ -64,6 +68,7 @@ const ogImageUrl = absoluteUrl(siteMetadata.imagePath, siteOrigin);
       name="twitter:image:alt"
       content="Eye Trainer canvas with a moving practice target"
     />
+    <script is:inline type="application/ld+json" set:html={structuredData} />
     <title>{route.title}</title>
   </head>
   <body>

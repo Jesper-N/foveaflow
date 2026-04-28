@@ -14,6 +14,7 @@
   import * as Item from "$lib/components/ui/item/index.js";
   import { Separator } from "$lib/components/ui/separator/index.js";
   import {
+    audienceNotes,
     faqItems,
     guideMetadata,
     legalPages,
@@ -160,6 +161,47 @@
               </Item.Title>
               <Item.Description class="line-clamp-none leading-6">
                 {trainingModeNote.body}
+              </Item.Description>
+            </Item.Content>
+          </Item.Root>
+        {/each}
+      </div>
+    </section>
+
+    <Separator />
+
+    <section
+      class={`guide-enter-delay-1 grid gap-6 md:grid-cols-[0.8fr_1.2fr] ${guideEnterUp}`}
+    >
+      <div>
+        <Badge variant="outline" class="mb-4">Best fit</Badge>
+        <h2 class="text-2xl leading-tight font-semibold tracking-tight">
+          Best for gamers, IT workers, and heavy screen users
+        </h2>
+        <p class="mt-4 max-w-[34rem] text-base leading-7 text-muted-foreground">
+          Use it as a short visual tracking warmup or practice break, not as
+          medical care.
+        </p>
+      </div>
+
+      <div class="grid gap-3">
+        {#each audienceNotes as audienceNote (audienceNote.title)}
+          <Item.Root
+            variant="outline"
+            class={`bg-background/70 ${interactiveItem}`}
+          >
+            <Item.Media
+              variant="icon"
+              class="size-9 rounded-lg border bg-muted text-accent"
+            >
+              <ActivityIcon class="size-4" />
+            </Item.Media>
+            <Item.Content>
+              <Item.Title class="line-clamp-none">
+                {audienceNote.title}
+              </Item.Title>
+              <Item.Description class="line-clamp-none leading-6">
+                {audienceNote.body}
               </Item.Description>
             </Item.Content>
           </Item.Root>

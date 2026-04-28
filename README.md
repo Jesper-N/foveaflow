@@ -7,9 +7,9 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.2-38bdf8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-[Eye Trainer](https://eye-trainer.app/) is a free browser tool for visual tracking practice. It covers smooth pursuit, reaction jumps, random motion paths, peripheral awareness, and multiple object tracking.
+[Eye Trainer](https://eye-trainer.app/) is a free browser visual tracking tool for gamers, IT workers, and heavy screen users. It includes smooth pursuit paths, reaction jumps, random motion, peripheral awareness, and distractor tracking.
 
-It runs without an account or install. The app keeps the canvas full screen, gives direct control over target motion, and stores preferences on the current device with `localStorage`.
+It runs without an account or install. The app keeps the canvas full screen, gives direct control over target motion, and stores settings on the current device with `localStorage`.
 
 ## What it does
 
@@ -31,11 +31,18 @@ It runs without an account or install. The app keeps the canvas full screen, giv
 - multiple object tracking trainer
 - peripheral vision practice
 - browser eye trainer
+- eye tracking trainer for gamers
+- FPS eye training warmup
+- visual tracking practice for IT workers
+- screen work eye tracking practice
+- eye tracking practice for screen fatigue
+- visual tracking practice for tired eyes
 
 ## Background reading
 
 - [Visual guidance of smooth pursuit eye movements](https://pmc.ncbi.nlm.nih.gov/articles/PMC2887486/)
 - [Visual learning in multiple-object tracking](https://pmc.ncbi.nlm.nih.gov/articles/PMC2375111/)
+- [FPS Eye Training Warmup (HIGH FPS)](https://www.youtube.com/watch?v=WAPKAZhOFM4)
 
 ## Tech stack
 

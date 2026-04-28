@@ -6,11 +6,11 @@ export const defaultSiteUrl = "https://eye-trainer.app";
 
 export const siteMetadata = {
   name: "Eye Trainer",
-  title: "Free eye tracking trainer for smooth pursuit practice",
+  title: "Free eye trainer for gamers, IT workers, and heavy screen users",
   description:
-    "Use a free browser eye tracking trainer for smooth pursuit, reaction jumps, peripheral awareness, and Multiple Distractions. No account.",
+    "Free browser eye trainer for smooth pursuit, reaction jumps, and distractors. For gamers, IT workers, and heavy screen users. No account.",
   shortDescription:
-    "A free browser tool for visual tracking practice. No account, no install, no paid plan.",
+    "Free visual tracking practice for gamers, IT workers, and heavy screen users. No account or install.",
   imagePath: "/metadata/og.png",
   repositoryUrl: "https://github.com/Jesper-N/eye-trainer",
   lastUpdated: "2026-04-28",
@@ -22,52 +22,88 @@ export const siteMetadata = {
     "multiple object tracking trainer",
     "peripheral vision practice",
     "browser eye trainer",
+    "eye tracking trainer for gamers",
+    "FPS eye training warmup",
+    "visual tracking practice for IT workers",
+    "screen work eye tracking practice",
+    "eye tracking practice for screen fatigue",
+    "visual tracking practice for tired eyes",
   ],
 } as const;
+
+export const audienceNotes = [
+  {
+    title: "Gamers",
+    body: "Warm up before FPS games or aim training with short tracking and refocus drills.",
+  },
+  {
+    title: "IT workers",
+    body: "Break up long sessions spent scanning code, logs, dashboards, terminals, and tickets.",
+  },
+  {
+    title: "Heavy screen users",
+    body: "Use a quick tracking break when your eyes feel tired after reading, meetings, or too many tabs.",
+  },
+] as const;
 
 export const trainingModeNotes = [
   {
     title: "Smooth Pursuit",
-    body: "Follow one moving marker with your eyes while keeping your head still.",
+    body: "Follow a single moving target while keeping your head still.",
   },
   {
     title: "Reaction jumps",
-    body: "Watch for a marker that changes position, then refocus on it cleanly.",
+    body: "Refocus on a target when it jumps to a new spot.",
   },
   {
     title: "Multiple Distractions",
-    body: "Keep attention on the target while distractors cross the same space.",
+    body: "Track one target while other moving markers cross the same space.",
   },
 ] as const;
 
 export const safetyNote =
-  "This is practice software, not medical care. Stop if you feel eye strain, dizziness, headache, nausea, or any other discomfort.";
+  "Practice software, not medical care. Stop if you feel eye strain, dizziness, headache, nausea, or any other discomfort.";
 
 export const faqItems = [
   {
     question: "What is Eye Trainer?",
     answer:
-      "Eye Trainer is a free browser tool for visual tracking practice. It includes Smooth Pursuit paths, Reaction jumps, and Multiple Distractions.",
+      "Eye Trainer is a free browser tool for visual tracking practice. It includes smooth pursuit paths, reaction jumps, and distractor tracking.",
   },
   {
     question: "Is Eye Trainer free?",
     answer:
-      "Yes. Eye Trainer is free to use, does not ask for an account, and does not have a paid plan.",
+      "Yes. Eye Trainer is free, has no paid plan, and does not require an account.",
   },
   {
     question: "What is Smooth Pursuit mode?",
     answer:
-      "Smooth Pursuit mode shows one moving target on the screen. You choose the motion path, then follow the target with your eyes.",
+      "Smooth Pursuit mode shows one moving target. Pick a path, then follow it with your eyes while keeping your head still.",
   },
   {
     question: "What are Reaction jumps and Multiple Distractions?",
     answer:
-      "Reaction jumps moves the target to new positions for refocus practice. Multiple Distractions keeps one target on screen while distractors move through the same area.",
+      "Reaction jumps asks you to refocus when the target moves. Multiple Distractions keeps one target on screen while other markers move around it.",
   },
   {
     question: "Can Eye Trainer improve eyesight?",
     answer:
-      "Eye Trainer does not claim to improve eyesight, treat eye conditions, or replace vision therapy. It is a simple practice tool for looking at moving targets on a screen.",
+      "No. Eye Trainer does not improve eyesight, treat eye conditions, or replace vision therapy. It is only a screen-based practice tool.",
+  },
+  {
+    question: "Is Eye Trainer good for gamers?",
+    answer:
+      "It can work as a quick visual warmup before FPS games, aim training, or other fast games with moving targets.",
+  },
+  {
+    question: "Is Eye Trainer useful for IT workers?",
+    answer:
+      "It is a simple break for people who spend long sessions scanning code, logs, dashboards, tickets, terminals, and multiple windows.",
+  },
+  {
+    question: "Can Eye Trainer help with tired eyes from screen work?",
+    answer:
+      "Eye Trainer can give you a short tracking break during long screen sessions, but it does not treat eye strain, weak eyesight, or any medical condition.",
   },
   {
     question: "Do I need an account or app install?",
@@ -77,7 +113,7 @@ export const faqItems = [
   {
     question: "What settings can I change?",
     answer:
-      "You can change the mode, motion pattern, target size, speed, shape, color, opacity, trail, distractor count, viewing distance, and screen scale.",
+      "You can adjust the mode, motion path, target size, speed, shape, color, opacity, trail, distractor count, viewing distance, and screen scale.",
   },
   {
     question: "Can I use Eye Trainer on a phone?",
@@ -87,11 +123,11 @@ export const faqItems = [
 ] as const;
 
 export const guideMetadata = {
-  title: "Eye Trainer Guide: Visual Tracking Practice Tool",
+  title: "Eye Trainer Guide: Visual Tracking Practice",
   description:
-    "Learn how to use Eye Trainer, a free browser tool for Smooth Pursuit, Reaction jumps, peripheral awareness, and Multiple Distractions.",
+    "Use Eye Trainer for smooth pursuit, reaction jumps, and distractor tracking. For gamers, IT workers, and heavy screen users.",
   summary:
-    "Eye Trainer is a free browser tool for visual tracking practice. Use the guide to choose a mode, open a pattern URL, adjust the target, and keep the safety limits clear.",
+    "Use the guide to pick a drill, open a pattern URL, adjust the target, and keep the safety limits clear.",
 } as const;
 
 export const legalPages = {
@@ -210,7 +246,7 @@ export const legalPages = {
         id: "what-the-app-is",
         heading: "What the app is",
         body: [
-          "Eye Trainer is a free browser tool for visual tracking practice. It shows moving targets, reaction jumps, and Multiple Distractions patterns on a screen.",
+          "Eye Trainer is a free browser tool for visual tracking practice. It shows moving targets, reaction jumps, and distractor tracking patterns on a screen.",
           "The patterns are simple screen paths and timing drills. They are not clinical exercises, and the site does not promise medical results.",
         ],
       },
@@ -287,6 +323,10 @@ export const referenceLinks = [
     label: "Visual learning in multiple-object tracking",
     url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC2375111/",
   },
+  {
+    label: "FPS Eye Training Warmup (HIGH FPS)",
+    url: "https://www.youtube.com/watch?v=WAPKAZhOFM4",
+  },
 ] as const;
 
 const toSlug = (value: string) =>
@@ -316,7 +356,7 @@ export const trainerRoutes = [
       patternId: option.id,
       label: option.name,
       title: `${siteMetadata.name}: ${option.name} pattern`,
-      description: `Load Smooth Pursuit with the ${option.name} motion path ready to use.`,
+      description: `Open Smooth Pursuit with the ${option.name} path already selected for a quick browser tracking session.`,
     })),
   {
     slug: "reaction-jumps",
@@ -325,7 +365,7 @@ export const trainerRoutes = [
     label: "Reaction jumps",
     title: `${siteMetadata.name}: Reaction jumps`,
     description:
-      "Load Reaction jumps directly, without changing the mode first.",
+      "Open Reaction jumps for a quick browser refocus drill with a target that moves to new spots.",
   },
   {
     slug: "multiple-distractions",
@@ -334,7 +374,7 @@ export const trainerRoutes = [
     label: "Multiple Distractions",
     title: `${siteMetadata.name}: Multiple Distractions`,
     description:
-      "Load Multiple Distractions directly, without changing the mode first.",
+      "Open Multiple Distractions to track one target while other markers move around it.",
   },
 ] satisfies TrainerRoute[];
 
@@ -390,6 +430,7 @@ export const buildStructuredData = (site: URL) => {
         url: appUrl,
         description: siteMetadata.shortDescription,
         inLanguage: "en",
+        keywords: siteMetadata.keywords.join(", "),
       },
       {
         "@type": "WebApplication",
@@ -398,6 +439,7 @@ export const buildStructuredData = (site: URL) => {
         url: appUrl,
         image: imageUrl,
         applicationCategory: "EducationalApplication",
+        applicationSubCategory: "Visual tracking practice",
         operatingSystem: "Any",
         browserRequirements: "Requires JavaScript and a modern browser.",
         isAccessibleForFree: true,
@@ -409,6 +451,11 @@ export const buildStructuredData = (site: URL) => {
           url: absoluteUrl("/pricing.md", site),
         },
         description: siteMetadata.description,
+        keywords: siteMetadata.keywords.join(", "),
+        audience: audienceNotes.map((audienceNote) => ({
+          "@type": "Audience",
+          audienceType: audienceNote.title,
+        })),
         featureList: [
           "Smooth pursuit tracking practice",
           "Reaction jump practice",
@@ -439,6 +486,7 @@ export const buildGuideStructuredData = (site: URL) => {
         url: appUrl,
         description: siteMetadata.shortDescription,
         inLanguage: "en",
+        keywords: siteMetadata.keywords.join(", "),
       },
       {
         "@type": "WebApplication",
@@ -447,10 +495,33 @@ export const buildGuideStructuredData = (site: URL) => {
         url: appUrl,
         image: imageUrl,
         applicationCategory: "EducationalApplication",
+        applicationSubCategory: "Visual tracking practice",
         operatingSystem: "Any",
+        browserRequirements: "Requires JavaScript and a modern browser.",
         isAccessibleForFree: true,
+        offers: {
+          "@type": "Offer",
+          price: "0",
+          priceCurrency: "USD",
+          availability: "https://schema.org/InStock",
+          url: absoluteUrl("/pricing.md", site),
+        },
         description: siteMetadata.description,
+        keywords: siteMetadata.keywords.join(", "),
+        audience: audienceNotes.map((audienceNote) => ({
+          "@type": "Audience",
+          audienceType: audienceNote.title,
+        })),
+        featureList: [
+          "Smooth pursuit tracking practice",
+          "Reaction jump practice",
+          "Multiple distractions practice",
+          "Adjustable speed, size, shape, color, opacity, and trail",
+          "Viewing distance and screen scale calibration",
+        ],
         dateModified: siteMetadata.lastUpdated,
+        sameAs: [siteMetadata.repositoryUrl],
+        citation: referenceLinks.map((referenceLink) => referenceLink.url),
       },
       {
         "@type": "WebPage",
@@ -461,7 +532,9 @@ export const buildGuideStructuredData = (site: URL) => {
         description: guideMetadata.description,
         image: imageUrl,
         inLanguage: "en",
+        keywords: siteMetadata.keywords.join(", "),
         dateModified: siteMetadata.lastUpdated,
+        citation: referenceLinks.map((referenceLink) => referenceLink.url),
         isPartOf: {
           "@id": `${appUrl}#website`,
         },
@@ -511,6 +584,102 @@ export const buildGuideStructuredData = (site: URL) => {
             position: 2,
             name: "Guide",
             item: guideUrl,
+          },
+        ],
+      },
+    ],
+  };
+};
+
+export const buildTrainerRouteStructuredData = (
+  route: TrainerRoute,
+  site: URL,
+) => {
+  const appUrl = absoluteUrl("/", site);
+  const routeUrl = absoluteUrl(route.path, site);
+  const imageUrl = absoluteUrl(siteMetadata.imagePath, site);
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": `${appUrl}#website`,
+        name: siteMetadata.name,
+        url: appUrl,
+        description: siteMetadata.shortDescription,
+        inLanguage: "en",
+        keywords: siteMetadata.keywords.join(", "),
+      },
+      {
+        "@type": "WebApplication",
+        "@id": `${appUrl}#app`,
+        name: siteMetadata.name,
+        url: appUrl,
+        image: imageUrl,
+        applicationCategory: "EducationalApplication",
+        applicationSubCategory: "Visual tracking practice",
+        operatingSystem: "Any",
+        browserRequirements: "Requires JavaScript and a modern browser.",
+        isAccessibleForFree: true,
+        offers: {
+          "@type": "Offer",
+          price: "0",
+          priceCurrency: "USD",
+          availability: "https://schema.org/InStock",
+          url: absoluteUrl("/pricing.md", site),
+        },
+        description: siteMetadata.description,
+        keywords: siteMetadata.keywords.join(", "),
+        audience: audienceNotes.map((audienceNote) => ({
+          "@type": "Audience",
+          audienceType: audienceNote.title,
+        })),
+        featureList: [
+          "Smooth pursuit tracking practice",
+          "Reaction jump practice",
+          "Multiple distractions practice",
+          "Adjustable speed, size, shape, color, opacity, and trail",
+          "Viewing distance and screen scale calibration",
+        ],
+        dateModified: siteMetadata.lastUpdated,
+        sameAs: [siteMetadata.repositoryUrl],
+        citation: referenceLinks.map((referenceLink) => referenceLink.url),
+      },
+      {
+        "@type": "WebPage",
+        "@id": `${routeUrl}#webpage`,
+        name: route.title,
+        headline: route.title,
+        url: routeUrl,
+        description: route.description,
+        image: imageUrl,
+        inLanguage: "en",
+        keywords: siteMetadata.keywords.join(", "),
+        dateModified: siteMetadata.lastUpdated,
+        citation: referenceLinks.map((referenceLink) => referenceLink.url),
+        isPartOf: {
+          "@id": `${appUrl}#website`,
+        },
+        about: {
+          "@id": `${appUrl}#app`,
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${routeUrl}#breadcrumb`,
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: siteMetadata.name,
+            item: appUrl,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: route.label,
+            item: routeUrl,
           },
         ],
       },
@@ -629,7 +798,7 @@ export const buildLlmsText = (site: URL) => {
     "",
     siteMetadata.shortDescription,
     "",
-    "Eye Trainer is useful for people who want a simple place to practice visual tracking in the browser. It is not a medical device and does not claim to treat or diagnose vision problems.",
+    "Eye Trainer is a free browser tool for visual tracking practice. The best fit is gamers, IT workers, developers, sysadmins, support engineers, heavy screen users, and people who want a short break for tired eyes. It is practice software, not a medical device, and it does not claim to treat eye strain, weak eyesight, or vision problems.",
     "",
     "## Main page",
     `- App: ${absoluteUrl("/", site)}`,
@@ -649,8 +818,13 @@ export const buildLlmsText = (site: URL) => {
       (trainingModeNote) =>
         `- ${trainingModeNote.title}: ${trainingModeNote.body}`,
     ),
-    "- Controls for speed, target size, target shape, color, opacity, trail, distractor count, viewing distance, and screen scale.",
+    "- Controls for speed, target size, shape, color, opacity, trail, distractor count, viewing distance, and screen scale.",
     "- Settings stay on the current device with localStorage.",
+    "",
+    "## Best fit",
+    ...audienceNotes.map(
+      (audienceNote) => `- ${audienceNote.title}: ${audienceNote.body}`,
+    ),
     "",
     "## Good query matches",
     ...siteMetadata.keywords.map((keyword) => `- ${keyword}`),
@@ -677,6 +851,7 @@ export const buildPricingText = (site: URL) => {
     "- Account required: no",
     "- Install required: no",
     "- Included: all current drills, motion patterns, visual settings, calibration controls, and local settings storage",
+    "- Best fit: gamers, IT workers, developers, sysadmins, support engineers, heavy screen users, and people whose eyes feel tired during long screen sessions",
     "- Paid plan: none",
     "",
     `Use the app: ${absoluteUrl("/", site)}`,
