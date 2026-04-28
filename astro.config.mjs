@@ -3,7 +3,6 @@ import { defineConfig } from "astro/config";
 
 import svelte from "@astrojs/svelte";
 import tailwindcss from "@tailwindcss/vite";
-import cloudflare from "@astrojs/cloudflare";
 
 /** @returns {import("vite").Plugin} */
 function devWatcherListenerLimit() {
@@ -29,6 +28,4 @@ export default defineConfig({
   vite: {
     plugins: [devWatcherListenerLimit(), tailwindcss()],
   },
-
-  adapter: cloudflare(),
 });
