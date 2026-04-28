@@ -4,6 +4,7 @@
   import BookOpenIcon from "@lucide/svelte/icons/book-open";
   import CrosshairIcon from "@lucide/svelte/icons/crosshair";
   import ExternalLinkIcon from "@lucide/svelte/icons/external-link";
+  import FileTextIcon from "@lucide/svelte/icons/file-text";
   import MousePointerIcon from "@lucide/svelte/icons/mouse-pointer-2";
   import ShieldCheckIcon from "@lucide/svelte/icons/shield-check";
   import SlidersHorizontalIcon from "@lucide/svelte/icons/sliders-horizontal";
@@ -15,8 +16,10 @@
   import {
     faqItems,
     guideMetadata,
+    legalPages,
     referenceLinks,
     safetyNote,
+    siteMetadata,
     trainerRoutes,
     trainingModeNotes,
   } from "$lib/seo";
@@ -309,7 +312,7 @@
     <Separator />
 
     <section
-      class={`guide-enter-delay-4 grid gap-6 pb-16 md:grid-cols-[0.8fr_1.2fr] ${guideEnterUp}`}
+      class={`guide-enter-delay-4 grid gap-6 md:grid-cols-[0.8fr_1.2fr] ${guideEnterUp}`}
     >
       <div>
         <Badge variant="outline" class="mb-4">References</Badge>
@@ -344,5 +347,21 @@
         {/each}
       </div>
     </section>
+
+    <footer
+      class={`guide-enter-delay-4 flex flex-col gap-3 border-t border-border/60 pt-6 pb-10 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between ${guideEnterUp}`}
+    >
+      <span>{siteMetadata.name} is free. No account, no paid plan.</span>
+      <div class="flex flex-wrap gap-2">
+        <Button href={legalPages.privacy.path} variant="ghost" size="sm">
+          <ShieldCheckIcon class="size-4" />
+          <span class="pl-1">{legalPages.privacy.label}</span>
+        </Button>
+        <Button href={legalPages.terms.path} variant="ghost" size="sm">
+          <FileTextIcon class="size-4" />
+          <span class="pl-1">{legalPages.terms.label}</span>
+        </Button>
+      </div>
+    </footer>
   </div>
 </main>

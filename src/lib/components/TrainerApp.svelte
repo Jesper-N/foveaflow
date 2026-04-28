@@ -3,9 +3,11 @@
   import ActivityIcon from "@lucide/svelte/icons/activity";
   import BookOpenIcon from "@lucide/svelte/icons/book-open";
   import EyeIcon from "@lucide/svelte/icons/eye";
+  import FileTextIcon from "@lucide/svelte/icons/file-text";
   import MoonIcon from "@lucide/svelte/icons/moon";
   import RotateCcwIcon from "@lucide/svelte/icons/rotate-ccw";
   import SettingsIcon from "@lucide/svelte/icons/settings-2";
+  import ShieldCheckIcon from "@lucide/svelte/icons/shield-check";
   import SunIcon from "@lucide/svelte/icons/sun";
   import TargetIcon from "@lucide/svelte/icons/crosshair";
   import { ModeWatcher, mode, toggleMode } from "mode-watcher";
@@ -50,6 +52,7 @@
   import {
     findTrainerRoute,
     getTrainerRoute,
+    legalPages,
     safetyNote,
     siteMetadata,
     trainingModeNotes,
@@ -1451,6 +1454,20 @@
             {/each}
           </div>
           <p class="text-xs leading-5 text-muted-foreground">{safetyNote}</p>
+          <div class="flex flex-wrap gap-2">
+            <Button href="/guide/" variant="outline" size="sm">
+              <BookOpenIcon class="size-4" />
+              <span class="pl-1">Guide</span>
+            </Button>
+            <Button href={legalPages.privacy.path} variant="outline" size="sm">
+              <ShieldCheckIcon class="size-4" />
+              <span class="pl-1">{legalPages.privacy.label}</span>
+            </Button>
+            <Button href={legalPages.terms.path} variant="outline" size="sm">
+              <FileTextIcon class="size-4" />
+              <span class="pl-1">{legalPages.terms.label}</span>
+            </Button>
+          </div>
         </section>
       </div>
     </SheetContent>
