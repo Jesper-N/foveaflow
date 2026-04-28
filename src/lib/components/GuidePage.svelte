@@ -31,6 +31,8 @@
     (route) => route.mode === "pursuit",
   );
 
+  const guideEnterTop = "guide-enter guide-enter-top";
+  const guideEnterUp = "guide-enter guide-enter-up";
   const interactiveItem =
     "pressable-ui will-change-transform motion-reduce:will-change-auto";
 </script>
@@ -39,7 +41,7 @@
   class="fixed inset-0 min-h-[100dvh] overflow-auto bg-background text-foreground selection:bg-accent/30"
 >
   <div class="mx-auto grid w-full max-w-7xl gap-12 px-4 py-5 sm:px-6 lg:px-8">
-    <nav class="flex items-center justify-between gap-4">
+    <nav class={`flex items-center justify-between gap-4 ${guideEnterTop}`}>
       <Button
         href="/"
         variant="outline"
@@ -59,7 +61,7 @@
     </nav>
 
     <section
-      class="grid min-h-[calc(100dvh-7rem)] items-center gap-10 py-8 md:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)] md:py-12"
+      class={`grid min-h-[calc(100dvh-7rem)] items-center gap-10 py-8 md:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)] md:py-12 ${guideEnterUp}`}
     >
       <div class="max-w-3xl">
         <Badge variant="secondary" class="mb-5 px-3 py-1">Guide</Badge>
@@ -129,7 +131,7 @@
 
     <Separator />
 
-    <section class="grid gap-6 md:grid-cols-[0.8fr_1.2fr]">
+    <section class={`grid gap-6 md:grid-cols-[0.8fr_1.2fr] ${guideEnterUp}`}>
       <div>
         <Badge variant="outline" class="mb-4">Drills</Badge>
         <h2 class="text-2xl leading-tight font-semibold tracking-tight">
@@ -164,7 +166,9 @@
 
     <Separator />
 
-    <section class="grid gap-6 md:grid-cols-[1.15fr_0.85fr]">
+    <section
+      class={`guide-enter-delay-1 grid gap-6 md:grid-cols-[1.15fr_0.85fr] ${guideEnterUp}`}
+    >
       <div class="grid gap-3">
         {#each featuredRoutes as route (route.slug)}
           <Item.Root variant="outline" class={`bg-card/60 ${interactiveItem}`}>
@@ -220,7 +224,9 @@
 
     <Separator />
 
-    <section class="grid gap-6 md:grid-cols-[0.8fr_1.2fr]">
+    <section
+      class={`guide-enter-delay-2 grid gap-6 md:grid-cols-[0.8fr_1.2fr] ${guideEnterUp}`}
+    >
       <div>
         <Badge variant="outline" class="mb-4">Controls</Badge>
         <h2 class="text-2xl leading-tight font-semibold tracking-tight">
@@ -270,7 +276,10 @@
 
     <Separator />
 
-    <section id="faq" class="grid gap-6 md:grid-cols-[0.8fr_1.2fr]">
+    <section
+      id="faq"
+      class={`guide-enter-delay-3 grid gap-6 md:grid-cols-[0.8fr_1.2fr] ${guideEnterUp}`}
+    >
       <div>
         <Badge variant="outline" class="mb-4">FAQ</Badge>
         <h2 class="text-2xl leading-tight font-semibold tracking-tight">
@@ -299,7 +308,9 @@
 
     <Separator />
 
-    <section class="grid gap-6 pb-16 md:grid-cols-[0.8fr_1.2fr]">
+    <section
+      class={`guide-enter-delay-4 grid gap-6 pb-16 md:grid-cols-[0.8fr_1.2fr] ${guideEnterUp}`}
+    >
       <div>
         <Badge variant="outline" class="mb-4">References</Badge>
         <h2 class="text-2xl leading-tight font-semibold tracking-tight">
