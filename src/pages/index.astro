@@ -2,14 +2,25 @@
 import "../styles/global.css";
 import TrainerApp from "../lib/components/TrainerApp.svelte";
 import { generateSetInitialModeExpression } from "mode-watcher";
+import {
+  absoluteUrl,
+  buildStructuredData,
+  faqItems,
+  getSiteOrigin,
+  referenceLinks,
+  safetyNote,
+  siteMetadata,
+  trainingModeNotes,
+} from "../lib/seo";
 
 const initialModeExpression = generateSetInitialModeExpression({
   defaultMode: "dark",
 });
 
-const pageTitle = "Eye Trainer";
-const pageDescription =
-  "Visual-skill trainer for smooth pursuit, random tracking, and full-field reaction practice.";
+const siteOrigin = getSiteOrigin(Astro.site);
+const canonicalUrl = absoluteUrl("/", siteOrigin);
+const ogImageUrl = absoluteUrl(siteMetadata.imagePath, siteOrigin);
+const structuredData = JSON.stringify(buildStructuredData(siteOrigin));
 ---
 
 <script is:inline set:html={initialModeExpression} />
@@ -21,23 +32,85 @@ const pageDescription =
     <link rel="icon" href="/metadata/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="/metadata/apple-touch-icon.png" />
     <link rel="manifest" href="/metadata/site.webmanifest" />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="description" content={pageDescription} />
+    <meta name="description" content={siteMetadata.description} />
+    <meta name="robots" content="index,follow,max-image-preview:large" />
+    <meta name="application-name" content={siteMetadata.name} />
+    <meta name="apple-mobile-web-app-title" content={siteMetadata.name} />
     <meta name="theme-color" content="#95E217" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content={pageTitle} />
-    <meta property="og:description" content={pageDescription} />
-    <meta property="og:image" content="/metadata/og.png" />
+    <meta property="og:site_name" content={siteMetadata.name} />
+    <meta property="og:title" content={siteMetadata.title} />
+    <meta property="og:description" content={siteMetadata.description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta
+      property="og:image:alt"
+      content="Eye Trainer canvas with a moving practice target"
+    />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={pageTitle} />
-    <meta name="twitter:description" content={pageDescription} />
-    <meta name="twitter:image" content="/metadata/og.png" />
-    <title>{pageTitle}</title>
+    <meta name="twitter:title" content={siteMetadata.title} />
+    <meta name="twitter:description" content={siteMetadata.description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <meta
+      name="twitter:image:alt"
+      content="Eye Trainer canvas with a moving practice target"
+    />
+    <script is:inline type="application/ld+json" set:html={structuredData} />
+    <title>{siteMetadata.title}</title>
   </head>
   <body>
-    <TrainerApp client:only="svelte" />
+    <TrainerApp client:load />
+    <noscript>
+      <main class="noscript-shell">
+        <section class="noscript-panel">
+          <p class="noscript-kicker">Free browser tool</p>
+          <h1>{siteMetadata.title}</h1>
+          <p>{siteMetadata.shortDescription}</p>
+          <p>
+            Eye Trainer needs JavaScript to run the moving target canvas. With
+            JavaScript on, you can set the speed, target size, target shape,
+            color, trail, viewing distance, and screen scale.
+          </p>
+          <h2>What you can practice</h2>
+          <ul>
+            {
+              trainingModeNotes.map((trainingModeNote) => (
+                <li>
+                  <strong>{trainingModeNote.title}:</strong>{" "}
+                  {trainingModeNote.body}
+                </li>
+              ))
+            }
+          </ul>
+          <h2>Safety</h2>
+          <p>{safetyNote}</p>
+          <h2>Common questions</h2>
+          {
+            faqItems.map((faqItem) => (
+              <article>
+                <h3>{faqItem.question}</h3>
+                <p>{faqItem.answer}</p>
+              </article>
+            ))
+          }
+          <h2>Background reading</h2>
+          <ul>
+            {
+              referenceLinks.map((referenceLink) => (
+                <li>
+                  <a href={referenceLink.url}>{referenceLink.label}</a>
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+      </main>
+    </noscript>
   </body>
 </html>

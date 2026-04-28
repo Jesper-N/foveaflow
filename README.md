@@ -2,7 +2,7 @@
 
 ![Eye Trainer app showcase](docs/showcase.gif)
 
-> Showcase GIF placeholder. Add `docs/showcase.gif` when the first demo capture is ready.
+> Demo capture pending. Add `docs/showcase.gif` when the first short walkthrough is ready.
 
 [![Astro](https://img.shields.io/badge/Astro-6.1-ff5d01?logo=astro&logoColor=white)](https://astro.build/)
 [![Svelte](https://img.shields.io/badge/Svelte-5.55-ff3e00?logo=svelte&logoColor=white)](https://svelte.dev/)
@@ -11,20 +11,35 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.2-38bdf8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-Eye Trainer is a browser-based visual-skill trainer for smooth pursuit, random tracking, reaction practice, and multiple object tracking.
+Eye Trainer is a free browser tool for visual tracking practice. It covers smooth pursuit, reaction jumps, random motion paths, peripheral awareness, and multiple object tracking.
 
-It is built to be fast, adjustable, and easy to run locally. The app keeps the training surface full-screen, gives you direct control over motion and target behavior, and stores your preferences in the browser so you can keep tweaking without starting over every session.
+It runs without an account or install. The app keeps the canvas full screen, gives direct control over target motion, and stores preferences on the current device with `localStorage`.
 
 ## What it does
 
-- Runs three training modes: Focus Tracking, Reaction Time, and Multiple Objects.
-- Includes motion patterns such as random walk, figure eight, bounce, sweeps, lissajous, orbit shift, and corner tour.
+- Runs three drills: Smooth Pursuit, Reaction jumps, and Multiple Distractions.
+- Includes motion paths such as random, figure eight, bounce, sweeps, lissajous, shifting orbit, and corner tour.
 - Supports speed controls in `deg/s`, `cm/s`, and `screen/s`.
 - Lets you tune target size, shape, color, opacity, trail behavior, distractor count, and distractor brightness.
 - Includes calibration settings for viewing distance and CSS pixels per centimeter.
 - Persists settings in `localStorage`.
 - Uses a canvas renderer with light and dark themes.
 - Keeps safety checks close to the engine, including saturated-red replacement and flash-frequency helpers.
+
+## Good search matches
+
+- free eye tracking trainer
+- smooth pursuit practice
+- visual tracking exercise
+- reaction time trainer
+- multiple object tracking trainer
+- peripheral vision practice
+- browser eye trainer
+
+## Background reading
+
+- [Visual guidance of smooth pursuit eye movements](https://pmc.ncbi.nlm.nih.gov/articles/PMC2887486/)
+- [Visual learning in multiple-object tracking](https://pmc.ncbi.nlm.nih.gov/articles/PMC2375111/)
 
 ## Tech stack
 
@@ -96,7 +111,7 @@ Use `bun run format:svelte` when you only need to format source files after Svel
 
 ## Safety note
 
-Eye Trainer is practice software, not medical advice and not a vision treatment plan. Stop using it if you feel eye strain, dizziness, headache, nausea, or any other discomfort. If you have a medical eye condition, light sensitivity, seizures, or recent eye surgery, talk to a qualified clinician before using visual training tools.
+Eye Trainer is practice software, not medical care. Stop if you feel eye strain, dizziness, headache, nausea, or any other discomfort. If you have an eye condition, light sensitivity, seizures, or recent eye surgery, ask a qualified clinician before using visual training tools.
 
 ## Roadmap
 

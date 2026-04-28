@@ -40,7 +40,7 @@ export const DEFAULT_BALL_COLOR = "#76d900";
 export const exercisePresets = [
   {
     id: "pursuit",
-    name: "Focus Tracking",
+    name: "Smooth Pursuit",
     patternId: "randomWalk",
     speed: { unit: "deg/s", value: 30 },
     baseRadiusPx: 35,
@@ -53,7 +53,7 @@ export const exercisePresets = [
   },
   {
     id: "reactionTime",
-    name: "Reaction Time",
+    name: "Reaction jumps",
     patternId: "teleport",
     speed: { unit: "deg/s", value: 30 },
     baseRadiusPx: 35,
@@ -66,7 +66,7 @@ export const exercisePresets = [
   },
   {
     id: "mot",
-    name: "Multiple Objects",
+    name: "Multiple Distractions",
     patternId: "multipleObjectTracking",
     speed: { unit: "deg/s", value: 30 },
     baseRadiusPx: 35,
@@ -80,27 +80,27 @@ export const exercisePresets = [
 ] satisfies ExercisePreset[];
 
 export const patternOptions: Array<{ id: PatternId; name: string }> = [
-  { id: "randomWalk", name: "Random Walk" },
+  { id: "randomWalk", name: "Random" },
   { id: "circle", name: "Circle" },
   { id: "ellipse", name: "Ellipse" },
-  { id: "figureEight", name: "Figure 8" },
+  { id: "figureEight", name: "Figure eight" },
   { id: "wave", name: "Wave" },
   { id: "diagonal", name: "Diagonal" },
   { id: "bounce", name: "Bounce" },
-  { id: "directionChange", name: "Direction Change" },
-  { id: "horizontalSweep", name: "Horizontal Sweep" },
-  { id: "verticalSweep", name: "Vertical Sweep" },
-  { id: "perimeterLoop", name: "Perimeter Loop" },
-  { id: "diamondLoop", name: "Diamond Loop" },
-  { id: "spiralBloom", name: "Spiral Bloom" },
+  { id: "directionChange", name: "Hard turns" },
+  { id: "horizontalSweep", name: "Horizontal sweep" },
+  { id: "verticalSweep", name: "Vertical sweep" },
+  { id: "perimeterLoop", name: "Edge loop" },
+  { id: "diamondLoop", name: "Diamond loop" },
+  { id: "spiralBloom", name: "Opening spiral" },
   { id: "clover", name: "Clover" },
-  { id: "zigZag", name: "Zig Zag" },
-  { id: "stairStep", name: "Stair Step" },
+  { id: "zigZag", name: "Zigzag" },
+  { id: "stairStep", name: "Stair steps" },
   { id: "lissajous", name: "Lissajous" },
   { id: "hourglass", name: "Hourglass" },
-  { id: "orbitShift", name: "Orbit Shift" },
-  { id: "cornerTour", name: "Corner Tour" },
-  { id: "multipleObjectTracking", name: "Multiple Object Tracking" },
+  { id: "orbitShift", name: "Shifting orbit" },
+  { id: "cornerTour", name: "Corner tour" },
+  { id: "multipleObjectTracking", name: "Multiple object tracking" },
 ];
 
 export const firstPreset = exercisePresets[0];

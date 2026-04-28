@@ -1,6 +1,7 @@
 {
   "name": "Eye Trainer",
   "short_name": "Eye Trainer",
+  "description": "Free browser practice for smooth pursuit, reaction jumps, and multiple object tracking.",
   "icons": [
     {
       "src": "/metadata/android-chrome-192x192.png",
@@ -15,5 +16,6 @@
   ],
   "theme_color": "#94E516",
   "background_color": "#171717",
-  "display": "standalone"
+  "display": "standalone",
+  "categories": ["education", "health", "sports"]
 }

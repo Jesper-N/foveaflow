@@ -3,6 +3,7 @@ dist/
 .astro/
 test-results/
 .DS_Store
+AGENTS.md
 
 # wrangler files
 .wrangler

@@ -81,6 +81,60 @@ canvas {
   display: block;
 }
 
+.noscript-shell {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  overflow: auto;
+  background: var(--background);
+  color: var(--foreground);
+  padding: 2rem;
+}
+
+.noscript-panel {
+  width: min(100%, 46rem);
+  margin: 0 auto;
+  line-height: 1.65;
+}
+
+.noscript-panel h1 {
+  max-width: 14ch;
+  margin: 0;
+  font-size: clamp(2rem, 8vw, 4.5rem);
+  line-height: 0.95;
+  letter-spacing: 0;
+}
+
+.noscript-panel h2 {
+  margin-top: 2rem;
+  font-size: 1.125rem;
+}
+
+.noscript-panel h3 {
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
+}
+
+.noscript-panel p,
+.noscript-panel li {
+  max-width: 42rem;
+  color: var(--muted-foreground);
+}
+
+.noscript-panel a {
+  color: var(--foreground);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.noscript-kicker {
+  margin: 0 0 0.75rem;
+  color: var(--accent);
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);

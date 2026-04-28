@@ -4,6 +4,8 @@ import { defineConfig } from "astro/config";
 import svelte from "@astrojs/svelte";
 import tailwindcss from "@tailwindcss/vite";
 
+const site = process.env.SITE_URL ?? "https://eye-trainer.app";
+
 /** @returns {import("vite").Plugin} */
 function devWatcherListenerLimit() {
   return {
@@ -23,6 +25,7 @@ function devWatcherListenerLimit() {
 
 // https://astro.build/config
 export default defineConfig({
+  site,
   integrations: [svelte()],
 
   vite: {

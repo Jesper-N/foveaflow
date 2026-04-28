@@ -46,6 +46,7 @@
   } from "$lib/engine/profiles";
   import { createRng } from "$lib/engine/random";
   import { darkenHexColor, safeStimulusColor } from "$lib/engine/safety";
+  import { safetyNote, siteMetadata, trainingModeNotes } from "$lib/seo";
   import {
     loadSettings,
     saveSettings,
@@ -82,11 +83,11 @@
     | "sizePulse";
 
   const behaviorOptions: Array<{ id: BehaviorId; name: string }> = [
-    { id: "constant", name: "Constant" },
+    { id: "constant", name: "Steady speed" },
     { id: "wavePattern", name: "Speed wave" },
-    { id: "surgePattern", name: "Speed surges" },
-    { id: "alternatingPattern", name: "Alternating speed" },
-    { id: "climbPattern", name: "Climb loop" },
+    { id: "surgePattern", name: "Short bursts" },
+    { id: "alternatingPattern", name: "Alternating pace" },
+    { id: "climbPattern", name: "Build and reset" },
     { id: "sizePulse", name: "Size pulse" },
   ];
 
@@ -906,7 +907,7 @@
           aria-hidden="true"
           class="hidden h-5 w-7 object-contain dark:block"
         />
-        <span>Eye Trainer</span>
+        <span>{siteMetadata.name}</span>
       </h1>
 
       <Select.Root
@@ -917,7 +918,7 @@
         <Select.Trigger
           size="sm"
           class="hidden w-40 bg-muted/70 font-medium sm:flex"
-          aria-label="Mode"
+          aria-label="Drill"
         >
           {getPresetName(settings.presetId)}
         </Select.Trigger>
@@ -939,7 +940,7 @@
           <Select.Trigger
             size="sm"
             class="hidden w-44 bg-muted/70 font-medium sm:flex"
-            aria-label="Pattern"
+            aria-label="Motion path"
           >
             {getPatternName(settings.patternId)}
           </Select.Trigger>
@@ -991,7 +992,7 @@
     size="icon"
     href="https://github.com/Jesper-N/eye-trainer"
     target="_blank"
-    rel="noreferrer"
+    rel="noopener noreferrer"
     aria-label="Open GitHub repository"
   >
     <svg viewBox="0 0 24 24" class="size-4" aria-hidden="true">
@@ -1006,7 +1007,7 @@
     class="ui-enter ui-enter-slow pressable-ui absolute right-3 top-3 z-20"
     variant="outline"
     size="icon"
-    aria-label="Open settings"
+    aria-label="Open controls"
     onclick={() => (panelOpen = true)}
   >
     <SettingsIcon />
@@ -1018,10 +1019,32 @@
       class="w-[min(420px,100vw)] overflow-y-auto px-7 py-8 sm:max-w-[420px]"
     >
       <SheetHeader>
-        <SheetTitle>Settings</SheetTitle>
+        <SheetTitle>Controls</SheetTitle>
       </SheetHeader>
 
       <div class="grid gap-9 pb-12 text-sm">
+        <section class="settings-section space-y-5">
+          {@render settingHeader("eye", "About")}
+          <p class="text-sm leading-6 text-muted-foreground">
+            {siteMetadata.shortDescription}
+          </p>
+          <div class="grid gap-3">
+            {#each trainingModeNotes as trainingModeNote (trainingModeNote.title)}
+              <Item.Root variant="outline" size="sm">
+                <Item.Content>
+                  <Item.Title class="line-clamp-none">
+                    {trainingModeNote.title}
+                  </Item.Title>
+                  <Item.Description class="line-clamp-none leading-6">
+                    {trainingModeNote.body}
+                  </Item.Description>
+                </Item.Content>
+              </Item.Root>
+            {/each}
+          </div>
+          <p class="text-xs leading-5 text-muted-foreground">{safetyNote}</p>
+        </section>
+
         <section class="settings-section space-y-5">
           {@render settingHeader("theme", "Theme")}
           <Button
@@ -1042,9 +1065,9 @@
         <section
           class="settings-section space-y-5 border-t border-border/60 pt-8"
         >
-          {@render settingHeader("target", "Mode")}
+          {@render settingHeader("target", "Drill")}
           <Field.Field>
-            <Field.Label for="trainer-mode">Mode</Field.Label>
+            <Field.Label for="trainer-mode">Drill</Field.Label>
             <Select.Root
               type="single"
               value={settings.presetId}
@@ -1053,7 +1076,7 @@
               <Select.Trigger
                 id="trainer-mode"
                 class="w-full"
-                aria-label="Mode"
+                aria-label="Drill"
               >
                 {getPresetName(settings.presetId)}
               </Select.Trigger>
@@ -1069,7 +1092,7 @@
 
           {#if settings.presetId === "pursuit"}
             <Field.Field>
-              <Field.Label for="trainer-pattern">Pattern</Field.Label>
+              <Field.Label for="trainer-pattern">Motion path</Field.Label>
               <Select.Root
                 type="single"
                 value={settings.patternId}
@@ -1078,7 +1101,7 @@
                 <Select.Trigger
                   id="trainer-pattern"
                   class="w-full"
-                  aria-label="Pattern"
+                  aria-label="Motion path"
                 >
                   {getPatternName(settings.patternId)}
                 </Select.Trigger>
@@ -1094,7 +1117,7 @@
           {/if}
 
           <Field.Field>
-            <Field.Label for="trainer-behavior">Behavior</Field.Label>
+            <Field.Label for="trainer-behavior">Motion feel</Field.Label>
             <Select.Root
               type="single"
               value={behaviorValue}
@@ -1103,7 +1126,7 @@
               <Select.Trigger
                 id="trainer-behavior"
                 class="w-full"
-                aria-label="Behavior"
+                aria-label="Motion feel"
               >
                 {getBehaviorName(behaviorValue)}
               </Select.Trigger>
@@ -1119,7 +1142,7 @@
 
           {#if isMotMode}
             <div class="space-y-5 pt-1">
-              {@render settingHeader("eye", "Visual load")}
+              {@render settingHeader("eye", "Objects")}
               <Field.Field>
                 {@render sliderRow("Targets", String(settings.targetCount))}
                 <Slider
@@ -1296,10 +1319,10 @@
         <section
           class="settings-section space-y-5 border-t border-border/60 pt-8"
         >
-          {@render settingHeader("calibration", "Calibration")}
+          {@render settingHeader("calibration", "Screen scale")}
           <div class="grid grid-cols-2 gap-2">
             <Field.Field>
-              <Field.Label for="trainer-distance">Distance cm</Field.Label>
+              <Field.Label for="trainer-distance">Viewing distance</Field.Label>
               <Input
                 id="trainer-distance"
                 type="number"
@@ -1311,7 +1334,7 @@
               />
             </Field.Field>
             <Field.Field>
-              <Field.Label for="trainer-css-px-cm">CSS px/cm</Field.Label>
+              <Field.Label for="trainer-css-px-cm">CSS pixels/cm</Field.Label>
               <Input
                 id="trainer-css-px-cm"
                 type="number"
@@ -1325,10 +1348,13 @@
           </div>
           <Item.Root variant="outline" size="sm">
             <Item.Content>
-              <Item.Title>Trail</Item.Title>
+              <Item.Title>Show trail</Item.Title>
             </Item.Content>
             <Item.Actions>
-              <Switch bind:checked={settings.showTrail} aria-label="Trail" />
+              <Switch
+                bind:checked={settings.showTrail}
+                aria-label="Show trail"
+              />
             </Item.Actions>
           </Item.Root>
         </section>
@@ -1340,7 +1366,7 @@
             onclick={resetSettings}
           >
             <RotateCcwIcon class="size-4" />
-            <span class="pl-1">Reset to defaults</span>
+            <span class="pl-1">Reset controls</span>
           </Button>
         </section>
       </div>
