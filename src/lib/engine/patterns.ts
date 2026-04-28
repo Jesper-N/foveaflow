@@ -158,6 +158,22 @@ type RandomWalkState = {
 
 let randomWalkState: RandomWalkState | null = null;
 
+export const withIsolatedPatternSampling = <Result>(
+  samplePreview: () => Result,
+) => {
+  const previousCachedCurve = cachedCurve;
+  const previousRandomWalkState = randomWalkState
+    ? { ...randomWalkState }
+    : null;
+
+  try {
+    return samplePreview();
+  } finally {
+    cachedCurve = previousCachedCurve;
+    randomWalkState = previousRandomWalkState;
+  }
+};
+
 const shortestAngleDelta = (from: number, to: number) => {
   return Math.atan2(Math.sin(to - from), Math.cos(to - from));
 };

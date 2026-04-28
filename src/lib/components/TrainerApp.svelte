@@ -12,6 +12,8 @@
   import TargetIcon from "@lucide/svelte/icons/crosshair";
   import { ModeWatcher, mode, toggleMode } from "mode-watcher";
 
+  import ModePathPreview from "$lib/components/ModePathPreview.svelte";
+  import PatternPathPreview from "$lib/components/PatternPathPreview.svelte";
   import { Button } from "$lib/components/ui/button/index.js";
   import * as Field from "$lib/components/ui/field/index.js";
   import { Input } from "$lib/components/ui/input/index.js";
@@ -39,6 +41,7 @@
     patternOptions,
     settingsFromPreset,
     type TrainerSettings,
+    type TrainingMode,
   } from "$lib/engine/presets";
   import { samplePatternInto } from "$lib/engine/patterns";
   import {
@@ -861,6 +864,8 @@
   const getBehaviorName = (id: BehaviorId) =>
     getOptionName(behaviorOptions, id);
   const getShapeName = (id: TargetShape) => getOptionName(shapeOptions, id);
+  const patternSelectContentClass =
+    "max-h-[min(65dvh,26rem)] overscroll-contain";
 
   const handleShapeChange = (value: string) => {
     if (isTargetShape(value)) settings.targetShape = value;
@@ -949,6 +954,20 @@
   </span>
 {/snippet}
 
+{#snippet previewSelectLabel(patternId: PatternId, label: string)}
+  <span class="flex min-w-0 items-center gap-2">
+    <PatternPathPreview {patternId} />
+    <span class="truncate">{label}</span>
+  </span>
+{/snippet}
+
+{#snippet modeSelectLabel(modeId: TrainingMode, label: string)}
+  <span class="flex min-w-0 items-center gap-2">
+    <ModePathPreview mode={modeId} />
+    <span class="truncate">{label}</span>
+  </span>
+{/snippet}
+
 <ModeWatcher track={false} defaultMode="dark" />
 <svelte:document onvisibilitychange={handleVisibilityChange} />
 
@@ -999,7 +1018,7 @@
         <Select.Content>
           {#each exercisePresets as preset (preset.id)}
             <Select.Item value={preset.id}>
-              {preset.name}
+              {@render modeSelectLabel(preset.id, preset.name)}
             </Select.Item>
           {/each}
         </Select.Content>
@@ -1018,10 +1037,10 @@
           >
             {getPatternName(settings.patternId)}
           </Select.Trigger>
-          <Select.Content>
+          <Select.Content class={patternSelectContentClass}>
             {#each pursuitPatternOptions as option (option.id)}
               <Select.Item value={option.id}>
-                {option.name}
+                {@render previewSelectLabel(option.id, option.name)}
               </Select.Item>
             {/each}
           </Select.Content>
@@ -1145,7 +1164,7 @@
               <Select.Content>
                 {#each exercisePresets as preset (preset.id)}
                   <Select.Item value={preset.id}>
-                    {preset.name}
+                    {@render modeSelectLabel(preset.id, preset.name)}
                   </Select.Item>
                 {/each}
               </Select.Content>
@@ -1167,10 +1186,10 @@
                 >
                   {getPatternName(settings.patternId)}
                 </Select.Trigger>
-                <Select.Content>
+                <Select.Content class={patternSelectContentClass}>
                   {#each pursuitPatternOptions as option (option.id)}
                     <Select.Item value={option.id}>
-                      {option.name}
+                      {@render previewSelectLabel(option.id, option.name)}
                     </Select.Item>
                   {/each}
                 </Select.Content>
