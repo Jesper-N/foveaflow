@@ -6,13 +6,19 @@ export const clampFlashFrequency = (requestedHz: number) => {
 
 export const isFlashSequenceSafe = (flashTimesMs: number[]) => {
   const sortedTimes = [...flashTimesMs].sort((a, b) => a - b);
-  return sortedTimes.every((start, index) => {
-    const end = start + 1000;
-    const flashesInWindow = sortedTimes
-      .slice(index)
-      .filter((time) => time >= start && time < end).length;
-    return flashesInWindow <= MAX_SAFE_FLASHES_PER_SECOND;
-  });
+  let windowStart = 0;
+
+  for (let windowEnd = 0; windowEnd < sortedTimes.length; windowEnd += 1) {
+    while (sortedTimes[windowEnd] - sortedTimes[windowStart] >= 1000) {
+      windowStart += 1;
+    }
+
+    if (windowEnd - windowStart + 1 > MAX_SAFE_FLASHES_PER_SECOND) {
+      return false;
+    }
+  }
+
+  return true;
 };
 
 export const isSaturatedRed = (hexColor: string) => {

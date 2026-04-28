@@ -1,0 +1,14 @@
+{
+  "title": "Eye Trainer",
+  "tagline": "Visual-skill trainer for smooth pursuit, random tracking, and full-field reaction practice.",
+  "colors": {
+    "background": "#171717",
+    "foreground": "#ffffff",
+    "accent": "#94E516"
+  },
+  "logo": "./public/darkmode.svg",
+  "faviconSrc": "./public/darkmode.svg",
+  "faviconTransparent": true,
+  "outputDir": "public/metadata",
+  "font": "Inter"
+}

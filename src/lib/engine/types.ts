@@ -42,11 +42,23 @@ export type PatternId =
   | "randomWalk"
   | "directionChange"
   | "teleport"
+  | "horizontalSweep"
+  | "verticalSweep"
+  | "perimeterLoop"
+  | "diamondLoop"
+  | "spiralBloom"
+  | "clover"
+  | "zigZag"
+  | "stairStep"
+  | "lissajous"
+  | "hourglass"
+  | "orbitShift"
+  | "cornerTour"
   | "multipleObjectTracking";
 
 export type PatternParams = {
   radiusPx: number;
-  boundsRadiusPx?: number;
+  pathMarginPx?: number;
   speedPxPerSec: number;
   travelPx: number;
   targetCount?: number;

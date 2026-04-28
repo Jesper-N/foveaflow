@@ -2,7 +2,7 @@ import type { Calibration } from "./calibration";
 import type { SizeProfile, SpeedProfile } from "./profiles";
 import type { PatternId, SpeedSetting, TargetShape } from "./types";
 
-export type TrainingMode = "pursuit" | "mot";
+export type TrainingMode = "pursuit" | "reactionTime" | "mot";
 
 export type ExercisePreset = {
   id: TrainingMode;
@@ -40,8 +40,21 @@ export const DEFAULT_BALL_COLOR = "#76d900";
 export const exercisePresets = [
   {
     id: "pursuit",
-    name: "Smooth Pursuit",
-    patternId: "ellipse",
+    name: "Focus Tracking",
+    patternId: "randomWalk",
+    speed: { unit: "deg/s", value: 30 },
+    baseRadiusPx: 35,
+    speedProfile: { kind: "constant" },
+    sizeProfile: { kind: "constant" },
+    targetCount: 1,
+    distractorCount: 0,
+    colorA: "#f5c842",
+    colorB: "#3ddbd9",
+  },
+  {
+    id: "reactionTime",
+    name: "Reaction Time",
+    patternId: "teleport",
     speed: { unit: "deg/s", value: 30 },
     baseRadiusPx: 35,
     speedProfile: { kind: "constant" },
@@ -67,15 +80,26 @@ export const exercisePresets = [
 ] satisfies ExercisePreset[];
 
 export const patternOptions: Array<{ id: PatternId; name: string }> = [
+  { id: "randomWalk", name: "Random Walk" },
   { id: "circle", name: "Circle" },
   { id: "ellipse", name: "Ellipse" },
   { id: "figureEight", name: "Figure 8" },
   { id: "wave", name: "Wave" },
   { id: "diagonal", name: "Diagonal" },
   { id: "bounce", name: "Bounce" },
-  { id: "randomWalk", name: "Random Walk" },
   { id: "directionChange", name: "Direction Change" },
-  { id: "teleport", name: "Teleport" },
+  { id: "horizontalSweep", name: "Horizontal Sweep" },
+  { id: "verticalSweep", name: "Vertical Sweep" },
+  { id: "perimeterLoop", name: "Perimeter Loop" },
+  { id: "diamondLoop", name: "Diamond Loop" },
+  { id: "spiralBloom", name: "Spiral Bloom" },
+  { id: "clover", name: "Clover" },
+  { id: "zigZag", name: "Zig Zag" },
+  { id: "stairStep", name: "Stair Step" },
+  { id: "lissajous", name: "Lissajous" },
+  { id: "hourglass", name: "Hourglass" },
+  { id: "orbitShift", name: "Orbit Shift" },
+  { id: "cornerTour", name: "Corner Tour" },
   { id: "multipleObjectTracking", name: "Multiple Object Tracking" },
 ];
 

@@ -6,6 +6,10 @@ import { generateSetInitialModeExpression } from "mode-watcher";
 const initialModeExpression = generateSetInitialModeExpression({
   defaultMode: "dark",
 });
+
+const pageTitle = "Eye Trainer";
+const pageDescription =
+  "Visual-skill trainer for smooth pursuit, random tracking, and full-field reaction practice.";
 ---
 
 <script is:inline set:html={initialModeExpression} />
@@ -13,15 +17,25 @@ const initialModeExpression = generateSetInitialModeExpression({
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="/metadata/favicon.svg" />
+    <link rel="icon" href="/metadata/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="/metadata/apple-touch-icon.png" />
+    <link rel="manifest" href="/metadata/site.webmanifest" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <meta
-      name="description"
-      content="Visual-skill trainer for smooth pursuit, random tracking, and multiple-object full-field practice."
-    />
-    <title>Eye Trainer</title>
+    <meta name="description" content={pageDescription} />
+    <meta name="theme-color" content="#95E217" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:image" content="/metadata/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content="/metadata/og.png" />
+    <title>{pageTitle}</title>
   </head>
   <body>
     <TrainerApp client:only="svelte" />

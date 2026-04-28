@@ -23,7 +23,129 @@ const pingPong = (value: number, length: number) => {
   return wrapped <= length ? wrapped : length * 2 - wrapped;
 };
 
+const smoothStep = (value: number) => {
+  const progress = clamp(value, 0, 1);
+  return progress * progress * (3 - 2 * progress);
+};
+
+const pointOnSegment = (
+  points: Array<[number, number]>,
+  distancePx: number,
+  closed = true,
+) => {
+  if (points.length === 0) return [0, 0] satisfies [number, number];
+  if (points.length === 1) return points[0];
+
+  let totalLength = 0;
+  const segmentCount = closed ? points.length : points.length - 1;
+  for (let index = 0; index < segmentCount; index += 1) {
+    const start = points[index];
+    const end = points[(index + 1) % points.length];
+    totalLength += Math.hypot(end[0] - start[0], end[1] - start[1]);
+  }
+
+  if (totalLength <= 0) return points[0];
+
+  let remaining = positiveModulo(distancePx, totalLength);
+  for (let index = 0; index < segmentCount; index += 1) {
+    const start = points[index];
+    const end = points[(index + 1) % points.length];
+    const length = Math.hypot(end[0] - start[0], end[1] - start[1]);
+    if (remaining <= length) {
+      const progress = length <= 0 ? 0 : remaining / length;
+      return [
+        start[0] + (end[0] - start[0]) * progress,
+        start[1] + (end[1] - start[1]) * progress,
+      ] satisfies [number, number];
+    }
+    remaining -= length;
+  }
+
+  return points[0];
+};
+
+const waypoint = (
+  rng: Rng,
+  index: number,
+  left: number,
+  top: number,
+  right: number,
+  bottom: number,
+) =>
+  [
+    rng.rangeAt(index * 2 + 40_000, left, right),
+    rng.rangeAt(index * 2 + 40_001, top, bottom),
+  ] satisfies [number, number];
+
+const sampleClosedCurve = (
+  key: string,
+  travelPx: number,
+  samples: number,
+  pointAt: (phase: number) => [number, number],
+) => {
+  if (cachedCurve?.key !== key) {
+    cachedCurve = buildClosedCurve(key, samples, pointAt);
+  }
+
+  return sampleCurvePath(cachedCurve, travelPx);
+};
+
+type CurvePath = {
+  key: string;
+  points: Array<[number, number]>;
+  lengths: number[];
+  totalLength: number;
+};
+
+let cachedCurve: CurvePath | null = null;
+
+const buildClosedCurve = (
+  key: string,
+  samples: number,
+  pointAt: (phase: number) => [number, number],
+): CurvePath => {
+  const points: Array<[number, number]> = [];
+  const lengths: number[] = [];
+  let totalLength = 0;
+
+  for (let index = 0; index <= samples; index += 1) {
+    points.push(pointAt(index / samples));
+  }
+
+  for (let index = 0; index < samples; index += 1) {
+    const start = points[index];
+    const end = points[index + 1];
+    const length = Math.hypot(end[0] - start[0], end[1] - start[1]);
+    lengths.push(length);
+    totalLength += length;
+  }
+
+  return { key, points, lengths, totalLength };
+};
+
+const sampleCurvePath = (path: CurvePath, travelPx: number) => {
+  if (path.totalLength <= 0) return path.points[0];
+
+  let remaining = positiveModulo(travelPx, path.totalLength);
+  for (let index = 0; index < path.lengths.length; index += 1) {
+    const length = path.lengths[index];
+    if (remaining <= length) {
+      const start = path.points[index];
+      const end = path.points[index + 1];
+      const progress = length <= 0 ? 0 : remaining / length;
+      return [
+        start[0] + (end[0] - start[0]) * progress,
+        start[1] + (end[1] - start[1]) * progress,
+      ] satisfies [number, number];
+    }
+    remaining -= length;
+  }
+
+  return path.points[0];
+};
+
 type RandomWalkState = {
+  seed: number;
   key: string;
   x: number;
   y: number;
@@ -34,7 +156,7 @@ type RandomWalkState = {
   lastTravelPx: number;
 };
 
-const randomWalkStates = new Map<number, RandomWalkState>();
+let randomWalkState: RandomWalkState | null = null;
 
 const shortestAngleDelta = (from: number, to: number) => {
   return Math.atan2(Math.sin(to - from), Math.cos(to - from));
@@ -51,6 +173,7 @@ const initializeRandomWalk = (
 ) => {
   const heading = rng.rangeAt(90_001, 0, TAU);
   const state: RandomWalkState = {
+    seed: rng.seed,
     key,
     x: rng.rangeAt(90_002, left, right),
     y: rng.rangeAt(90_003, top, bottom),
@@ -60,7 +183,7 @@ const initializeRandomWalk = (
     nextTurnTravel: travelPx + rng.rangeAt(90_004, 150, 340),
     lastTravelPx: travelPx,
   };
-  randomWalkStates.set(rng.seed, state);
+  randomWalkState = state;
   return state;
 };
 
@@ -166,8 +289,9 @@ export const samplePatternInto = (
   rng: Rng,
 ): number => {
   const radiusPx = Math.max(1, params.radiusPx);
-  const boundsRadiusPx = Math.max(1, params.boundsRadiusPx ?? radiusPx);
-  const margin = Math.max(boundsRadiusPx + 8, 16);
+  const requestedMargin = Math.max(params.pathMarginPx ?? 16, radiusPx + 8);
+  const maxMargin = Math.max(1, Math.min(arena.width, arena.height) / 2);
+  const margin = Math.min(requestedMargin, maxMargin);
   const left = margin;
   const top = margin;
   const right = Math.max(left, arena.width - margin);
@@ -182,6 +306,7 @@ export const samplePatternInto = (
   const travelPx = params.travelPx || elapsedSec * speedPxPerSec;
   const primaryColor = params.colorA ?? DEFAULT_TARGET_COLOR;
   const secondaryColor = params.colorB ?? DEFAULT_SECONDARY_COLOR;
+  const curveKey = `${id}:${Math.round(left)}:${Math.round(top)}:${Math.round(right)}:${Math.round(bottom)}`;
 
   if (id === "circle") {
     const radius = Math.max(1, Math.min(rx, ry));
@@ -232,14 +357,24 @@ export const samplePatternInto = (
   }
 
   if (id === "wave") {
-    const x = left + positiveModulo(travelPx, width);
-    const wavePhase = (x / width) * TAU * 2.5 + elapsedSec * 0.35;
+    const [x, y] = sampleClosedCurve(
+      `${curveKey}:120`,
+      travelPx,
+      120,
+      (phase) => {
+        const angle = phase * TAU;
+        return [
+          cx + Math.cos(angle) * rx,
+          cy + Math.sin(angle * 3) * ry * 0.42,
+        ];
+      },
+    );
     return writeTarget(
       frames,
       0,
       "target",
       x,
-      cy + Math.sin(wavePhase) * ry * 0.82,
+      y,
       params,
       "target",
       radiusPx,
@@ -276,9 +411,14 @@ export const samplePatternInto = (
   }
 
   if (id === "randomWalk") {
-    const stateKey = `${Math.round(arena.width)}:${Math.round(arena.height)}:${Math.round(boundsRadiusPx)}`;
-    let state = randomWalkStates.get(rng.seed);
-    if (!state || state.key !== stateKey || travelPx < state.lastTravelPx) {
+    const stateKey = `${Math.round(arena.width)}:${Math.round(arena.height)}`;
+    let state = randomWalkState;
+    if (
+      !state ||
+      state.seed !== rng.seed ||
+      state.key !== stateKey ||
+      travelPx < state.lastTravelPx
+    ) {
       state = initializeRandomWalk(
         rng,
         stateKey,
@@ -305,13 +445,11 @@ export const samplePatternInto = (
   }
 
   if (id === "directionChange") {
-    const segmentPx = Math.max(90, Math.min(arena.width, arena.height) * 0.22);
+    const segmentPx = Math.max(420, Math.min(arena.width, arena.height) * 0.62);
     const segment = Math.floor(travelPx / segmentPx);
-    const partial = (travelPx - segment * segmentPx) / segmentPx;
-    const x1 = rng.rangeAt(segment * 4, left, right);
-    const y1 = rng.rangeAt(segment * 4 + 1, top, bottom);
-    const x2 = rng.rangeAt(segment * 4 + 2, left, right);
-    const y2 = rng.rangeAt(segment * 4 + 3, top, bottom);
+    const partial = smoothStep((travelPx - segment * segmentPx) / segmentPx);
+    const [x1, y1] = waypoint(rng, segment, left, top, right, bottom);
+    const [x2, y2] = waypoint(rng, segment + 1, left, top, right, bottom);
 
     return writeTarget(
       frames,
@@ -327,9 +465,9 @@ export const samplePatternInto = (
   }
 
   if (id === "teleport") {
-    const intervalSec = 0.86;
-    const bucket = Math.floor(elapsedSec / intervalSec);
-    const phase = (elapsedSec - bucket * intervalSec) / intervalSec;
+    const jumpDistancePx = clamp(Math.min(width, height) * 0.55, 420, 820);
+    const bucket = Math.floor(travelPx / jumpDistancePx);
+    const phase = (travelPx - bucket * jumpDistancePx) / jumpDistancePx;
     return writeTarget(
       frames,
       0,
@@ -341,6 +479,275 @@ export const samplePatternInto = (
       radiusPx,
       primaryColor,
       phase < 0.08 ? 0.35 : 1,
+    );
+  }
+
+  if (id === "horizontalSweep") {
+    return writeTarget(
+      frames,
+      0,
+      "target",
+      left + pingPong(travelPx * 0.72, width),
+      cy,
+      params,
+      "target",
+      radiusPx,
+      primaryColor,
+    );
+  }
+
+  if (id === "verticalSweep") {
+    return writeTarget(
+      frames,
+      0,
+      "target",
+      cx,
+      top + pingPong(travelPx * 0.72, height),
+      params,
+      "target",
+      radiusPx,
+      primaryColor,
+    );
+  }
+
+  if (id === "perimeterLoop") {
+    const [x, y] = pointOnSegment(
+      [
+        [left, top],
+        [right, top],
+        [right, bottom],
+        [left, bottom],
+      ],
+      travelPx * 0.62,
+    );
+    return writeTarget(
+      frames,
+      0,
+      "target",
+      x,
+      y,
+      params,
+      "target",
+      radiusPx,
+      primaryColor,
+    );
+  }
+
+  if (id === "diamondLoop") {
+    const [x, y] = pointOnSegment(
+      [
+        [cx, top],
+        [right, cy],
+        [cx, bottom],
+        [left, cy],
+      ],
+      travelPx * 0.68,
+    );
+    return writeTarget(
+      frames,
+      0,
+      "target",
+      x,
+      y,
+      params,
+      "target",
+      radiusPx,
+      primaryColor,
+    );
+  }
+
+  if (id === "spiralBloom") {
+    const [x, y] = sampleClosedCurve(
+      `${curveKey}:140`,
+      travelPx,
+      140,
+      (phase) => {
+        const angle = phase * TAU;
+        const bloom = 0.42 + 0.5 * ((1 - Math.cos(angle)) / 2);
+        return [
+          cx + Math.cos(angle) * rx * bloom,
+          cy + Math.sin(angle) * ry * bloom,
+        ];
+      },
+    );
+    return writeTarget(
+      frames,
+      0,
+      "target",
+      x,
+      y,
+      params,
+      "target",
+      radiusPx,
+      primaryColor,
+    );
+  }
+
+  if (id === "clover") {
+    const [x, y] = sampleClosedCurve(
+      `${curveKey}:160`,
+      travelPx,
+      160,
+      (phase) => {
+        const angle = phase * TAU;
+        const petal = 0.58 + 0.3 * Math.cos(angle * 4);
+        return [
+          cx + Math.cos(angle) * rx * petal,
+          cy + Math.sin(angle) * ry * petal,
+        ];
+      },
+    );
+    return writeTarget(
+      frames,
+      0,
+      "target",
+      x,
+      y,
+      params,
+      "target",
+      radiusPx,
+      primaryColor,
+    );
+  }
+
+  if (id === "zigZag") {
+    const lanes = 5;
+    const points = Array.from({ length: lanes }, (_, index) => {
+      const x = index % 2 === 0 ? left : right;
+      const y = top + (height * index) / (lanes - 1);
+      return [x, y] satisfies [number, number];
+    });
+    const [x, y] = pointOnSegment(points, travelPx * 1.08, true);
+    return writeTarget(
+      frames,
+      0,
+      "target",
+      x,
+      y,
+      params,
+      "target",
+      radiusPx,
+      primaryColor,
+    );
+  }
+
+  if (id === "stairStep") {
+    const rows = 4;
+    const columns = 5;
+    const rowHeight = height / Math.max(1, rows - 1);
+    const columnWidth = width / Math.max(1, columns - 1);
+    const stepDistance = Math.max(1, (rowHeight + columnWidth) * 0.75);
+    const step = Math.floor((travelPx * 0.72) / stepDistance);
+    const phase = smoothStep(
+      (travelPx * 0.72 - step * stepDistance) / stepDistance,
+    );
+    const row = step % rows;
+    const column = Math.floor(step / rows) % columns;
+    const nextRow = (row + 1) % rows;
+    const nextColumn = nextRow === 0 ? (column + 1) % columns : column;
+    return writeTarget(
+      frames,
+      0,
+      "target",
+      left + (column + (nextColumn - column) * phase) * columnWidth,
+      top + (row + (nextRow - row) * phase) * rowHeight,
+      params,
+      "target",
+      radiusPx,
+      primaryColor,
+    );
+  }
+
+  if (id === "lissajous") {
+    const [x, y] = sampleClosedCurve(
+      `${curveKey}:180`,
+      travelPx * 0.82,
+      180,
+      (phase) => {
+        const angle = phase * TAU;
+        return [
+          cx + Math.sin(angle * 3 + Math.PI / 2) * rx,
+          cy + Math.sin(angle * 2) * ry,
+        ];
+      },
+    );
+    return writeTarget(
+      frames,
+      0,
+      "target",
+      x,
+      y,
+      params,
+      "target",
+      radiusPx,
+      primaryColor,
+    );
+  }
+
+  if (id === "hourglass") {
+    const [x, y] = sampleClosedCurve(
+      `${curveKey}:160`,
+      travelPx * 0.82,
+      160,
+      (phase) => {
+        const angle = phase * TAU;
+        const vertical = Math.sin(angle);
+        const pinch = 0.22 + 0.74 * Math.abs(vertical);
+        return [cx + Math.sin(angle * 2) * rx * pinch, cy + vertical * ry];
+      },
+    );
+    return writeTarget(
+      frames,
+      0,
+      "target",
+      x,
+      y,
+      params,
+      "target",
+      radiusPx,
+      primaryColor,
+    );
+  }
+
+  if (id === "orbitShift") {
+    const scale = Math.max(1, (rx + ry) / 2);
+    const angle = travelPx / Math.max(1, scale * 0.76);
+    const drift = Math.sin(angle * 0.5) * rx * 0.38;
+    return writeTarget(
+      frames,
+      0,
+      "target",
+      cx + drift + Math.cos(angle) * rx * 0.42,
+      cy + Math.sin(angle) * ry * 0.82,
+      params,
+      "target",
+      radiusPx,
+      primaryColor,
+    );
+  }
+
+  if (id === "cornerTour") {
+    const insetX = width * 0.18;
+    const insetY = height * 0.18;
+    const [x, y] = pointOnSegment(
+      [
+        [left, top],
+        [right - insetX, top + insetY],
+        [right, bottom],
+        [left + insetX, bottom - insetY],
+      ],
+      travelPx * 0.64,
+    );
+    return writeTarget(
+      frames,
+      0,
+      "target",
+      x,
+      y,
+      params,
+      "target",
+      radiusPx,
+      primaryColor,
     );
   }
 
