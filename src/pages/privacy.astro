@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import LegalPage from "../lib/components/LegalPage.svelte";
+import ThemeFavicon from "../lib/components/ThemeFavicon.astro";
 import { generateSetInitialModeExpression } from "mode-watcher";
 import {
   absoluteUrl,
@@ -11,7 +12,7 @@ import {
 } from "../lib/seo";
 
 const initialModeExpression = generateSetInitialModeExpression({
-  defaultMode: "dark",
+  defaultMode: "system",
 });
 
 const page = legalPages.privacy;
@@ -28,10 +29,7 @@ const structuredData = JSON.stringify(
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/metadata/favicon.svg" />
-    <link rel="icon" href="/metadata/favicon.ico" sizes="any" />
-    <link rel="apple-touch-icon" href="/metadata/apple-touch-icon.png" />
-    <link rel="manifest" href="/metadata/site.webmanifest" />
+    <ThemeFavicon />
     <link rel="canonical" href={canonicalUrl} />
     <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt" />
     <meta name="viewport" content="width=device-width" />

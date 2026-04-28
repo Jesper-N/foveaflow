@@ -335,7 +335,12 @@
   let fpsStats = $state(calculateFpsStats([]));
   let panelOpen = $state(false);
   let storageReady = $state(false);
-  let colorMode = $state<"light" | "dark">("dark");
+  let colorMode = $state<"light" | "dark">(
+    typeof document !== "undefined" &&
+      !document.documentElement.classList.contains("dark")
+      ? "light"
+      : "dark",
+  );
 
   let safeBallColor = $derived(safeStimulusColor(settings.ballColor));
   let distractorColor = $derived(
@@ -968,7 +973,7 @@
   </span>
 {/snippet}
 
-<ModeWatcher track={false} defaultMode="dark" />
+<ModeWatcher track={false} defaultMode="system" />
 <svelte:document onvisibilitychange={handleVisibilityChange} />
 
 <main

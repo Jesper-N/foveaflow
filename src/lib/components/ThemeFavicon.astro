@@ -1,0 +1,32 @@
+<link
+  rel="icon"
+  type="image/svg+xml"
+  href="/lightmode.svg?v=2"
+  data-theme-favicon
+/>
+<link rel="icon" href="/metadata/favicon.ico" sizes="any" />
+<link rel="apple-touch-icon" href="/metadata/apple-touch-icon.png" />
+<link rel="manifest" href="/metadata/site.webmanifest" />
+
+<script is:inline>
+  (() => {
+    const icon = document.querySelector("[data-theme-favicon]");
+    if (!icon) return;
+
+    const updateIcon = () => {
+      icon.setAttribute(
+        "href",
+        document.documentElement.classList.contains("dark")
+          ? "/darkmode.svg?v=2"
+          : "/lightmode.svg?v=2",
+      );
+    };
+
+    updateIcon();
+
+    new MutationObserver(updateIcon).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+  })();
+</script>
