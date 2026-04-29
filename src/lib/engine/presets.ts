@@ -142,7 +142,7 @@ export const settingsFromPreset = (
   distractorBrightness: 0.7,
   targetOpacity: 1,
   targetShape: "circle",
-  lilacChaserScale: 1.3,
+  lilacChaserScale: 1,
   lilacChaserBallColor: "#ff00fe",
   calibration,
   ...overrides,

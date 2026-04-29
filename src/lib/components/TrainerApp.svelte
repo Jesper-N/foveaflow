@@ -298,6 +298,10 @@
   const targetFrames: TargetFrame[] = [];
   const lilacChaserDotCount = 12;
   const lilacChaserStepSec = 0.1;
+  const lilacChaserOrbitRatio = 0.3381;
+  const lilacChaserDotRatio = 0.0399;
+  const lilacChaserCrossArmRatio = 0.0132;
+  const lilacChaserCrossStrokeRatio = 0.0125;
   const lilacChaserTheme = {
     background: "#d8d8da",
     cross: "#050505",
@@ -514,7 +518,7 @@
         isTargetShape(saved.targetShape)
           ? saved.targetShape
           : "circle",
-      lilacChaserScale: resolveNumber(saved.lilacChaserScale, 0.75, 1.5, 1.3),
+      lilacChaserScale: resolveNumber(saved.lilacChaserScale, 0.75, 1.5, 1),
       lilacChaserBallColor: isLilacChaserBallColor(saved.lilacChaserBallColor)
         ? saved.lilacChaserBallColor
         : "#ff00fe",
@@ -694,9 +698,9 @@
     const centerY = arena.height / 2;
     const minSide = Math.min(arena.width, arena.height);
     const scale = settings.lilacChaserScale;
-    const orbitRadius = clamp(minSide * 0.27 * scale, 72 * scale, 240 * scale);
-    const dotRadius = clamp(minSide * 0.032 * scale, 10 * scale, 26 * scale);
-    const crossRadius = clamp(minSide * 0.011 * scale, 6 * scale, 9 * scale);
+    const orbitRadius = minSide * lilacChaserOrbitRatio * scale;
+    const dotRadius = minSide * lilacChaserDotRatio * scale;
+    const crossRadius = minSide * lilacChaserCrossArmRatio * scale;
     const hiddenIndex =
       Math.floor(elapsedSec / lilacChaserStepSec) % lilacChaserDotCount;
 
@@ -715,7 +719,7 @@
     }
 
     ctx.strokeStyle = lilacChaserTheme.cross;
-    ctx.lineWidth = Math.max(7 * scale, crossRadius * 0.75);
+    ctx.lineWidth = minSide * lilacChaserCrossStrokeRatio * scale;
     ctx.lineCap = "round";
     ctx.beginPath();
     ctx.moveTo(centerX - crossRadius, centerY);
