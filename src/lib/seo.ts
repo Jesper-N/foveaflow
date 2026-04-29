@@ -11,7 +11,7 @@ export const siteMetadata = {
     "Practice smooth pursuit, reaction jumps, and distractor tracking in your browser. Made for gamers, IT professionals, and people who spend long hours on screens.",
   shortDescription:
     "Free visual tracking practice for gamers, IT professionals, and people who spend long hours on screens. No account or install required.",
-  imagePath: "/metadata/og.png",
+  imagePath: "/metadata/og.jpg",
   repositoryUrl: "https://github.com/Jesper-N/eye-trainer",
   lastUpdated: "2026-04-29",
   keywords: [
