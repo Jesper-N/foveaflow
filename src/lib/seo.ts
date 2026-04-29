@@ -6,11 +6,11 @@ export const defaultSiteUrl = "https://eye-trainer.app";
 
 export const siteMetadata = {
   name: "Eye Trainer",
-  title: "Free eye trainer for gamers, IT workers, and heavy screen users",
+  title: "Free eye trainer for gamers and IT professionals",
   description:
-    "Free browser eye trainer for smooth pursuit, reaction jumps, and distractors. For gamers, IT workers, and heavy screen users. No account.",
+    "Practice smooth pursuit, reaction jumps, and distractor tracking in your browser. Made for gamers, IT professionals, and people who spend long hours on screens.",
   shortDescription:
-    "Free visual tracking practice for gamers, IT workers, and heavy screen users. No account or install.",
+    "Free visual tracking practice for gamers, IT professionals, and people who spend long hours on screens. No account or install required.",
   imagePath: "/metadata/og.png",
   repositoryUrl: "https://github.com/Jesper-N/eye-trainer",
   lastUpdated: "2026-04-29",
@@ -24,7 +24,8 @@ export const siteMetadata = {
     "browser eye trainer",
     "eye tracking trainer for gamers",
     "FPS eye training warmup",
-    "visual tracking practice for IT workers",
+    "visual tracking practice for IT professionals",
+    "visual tracking practice for IT people",
     "screen work eye tracking practice",
     "eye tracking practice for screen fatigue",
     "visual tracking practice for tired eyes",
@@ -39,11 +40,11 @@ export const audienceNotes = [
     body: "Warm up before FPS games or aim training with short tracking and refocus drills.",
   },
   {
-    title: "IT workers",
+    title: "IT professionals",
     body: "Break up long sessions spent scanning code, logs, dashboards, terminals, and tickets.",
   },
   {
-    title: "Heavy screen users",
+    title: "Long screen sessions",
     body: "Use a quick tracking break when your eyes feel tired after reading, meetings, or too many tabs.",
   },
 ] as const;
@@ -85,7 +86,7 @@ export const faqItems = [
   {
     question: "What are Reaction jumps and Multiple Distractions?",
     answer:
-      "Reaction jumps asks you to refocus when the target moves. Multiple Distractions keeps one target on screen while other markers move around it.",
+      "Reaction jumps helps you refocus when the target moves. Multiple Distractions is distractor tracking: follow one target while other markers move around it.",
   },
   {
     question: "Can Eye Trainer improve eyesight or reaction time?",
@@ -98,7 +99,7 @@ export const faqItems = [
       "It can work as a quick visual warmup before FPS games, aim training, or other fast games with moving targets.",
   },
   {
-    question: "Is Eye Trainer useful for IT workers?",
+    question: "Is Eye Trainer useful for IT professionals?",
     answer:
       "It is a simple break for people who spend long sessions scanning code, logs, dashboards, tickets, terminals, and multiple windows.",
   },
@@ -110,7 +111,7 @@ export const faqItems = [
   {
     question: "Do I need an account or app install?",
     answer:
-      "No. The tool runs in a modern browser and stores settings on the current device with localStorage.",
+      "No. The tool runs in a modern browser and stores settings locally in your browser.",
   },
   {
     question: "What settings can I change?",
@@ -127,7 +128,7 @@ export const faqItems = [
 export const guideMetadata = {
   title: "Eye Trainer Guide: Visual Tracking Practice",
   description:
-    "Use Eye Trainer for smooth pursuit, reaction jumps, and distractor tracking. For gamers, IT workers, and heavy screen users.",
+    "Use Eye Trainer for smooth pursuit, reaction jumps, and distractor tracking. Built for gamers, IT professionals, and people who spend long hours on screens.",
   summary:
     "Use the guide to pick a drill, open a pattern URL, adjust the target, and keep the safety limits clear.",
 } as const;
@@ -139,7 +140,7 @@ export const legalPages = {
     title: "Privacy Policy",
     label: "Privacy",
     description:
-      "How Eye Trainer handles browser settings, localStorage, Cloudflare hosting, and basic analytics.",
+      "How Eye Trainer handles locally stored browser settings, Cloudflare hosting, and basic analytics.",
     summary:
       "Eye Trainer is built to work without an account. The app keeps your settings in your browser and uses Cloudflare to serve the site.",
     sections: [
@@ -155,7 +156,7 @@ export const legalPages = {
         id: "browser-settings",
         heading: "Settings saved in your browser",
         body: [
-          "Eye Trainer uses localStorage so the app can remember your settings on the current device. That can include the selected mode, motion pattern, speed, target size, color, opacity, trail setting, viewing distance, screen scale, and theme.",
+          "Eye Trainer stores settings locally in your browser so the app can remember them on the current device. That can include the selected mode, motion pattern, speed, target size, color, opacity, trail setting, viewing distance, screen scale, and theme.",
           "Those settings stay in your browser unless your browser syncs, backs up, or exports its site data. You can remove them by clearing site data for eye-trainer.app.",
         ],
       },
@@ -338,6 +339,12 @@ const toSlug = (value: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
 
+const toTitleCase = (value: string) =>
+  value
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+
 export type TrainerRoute = {
   slug: string;
   path: `/${string}/`;
@@ -357,26 +364,26 @@ export const trainerRoutes = [
       mode: "pursuit" as const,
       patternId: option.id,
       label: option.name,
-      title: `${siteMetadata.name}: ${option.name} pattern`,
-      description: `Open Smooth Pursuit with the ${option.name} path already selected for a quick browser tracking session.`,
+      title: `${toTitleCase(option.name)} Smooth Pursuit | ${siteMetadata.name}`,
+      description: `Start the ${option.name.toLowerCase()} smooth pursuit pattern in your browser. Follow one target with adjustable speed, size, color, and trail. No account needed.`,
     })),
   {
     slug: "reaction-jumps",
     path: "/reaction-jumps/",
     mode: "reactionTime",
     label: "Reaction jumps",
-    title: `${siteMetadata.name}: Reaction jumps`,
+    title: `Reaction Jumps | ${siteMetadata.name}`,
     description:
-      "Open Reaction jumps for a quick browser refocus drill with a target that moves to new spots.",
+      "Start Reaction jumps in your browser. Practice quick refocusing as the target moves to new spots. No account needed.",
   },
   {
     slug: "multiple-distractions",
     path: "/multiple-distractions/",
     mode: "mot",
     label: "Multiple Distractions",
-    title: `${siteMetadata.name}: Multiple Distractions`,
+    title: `Multiple Distractions | ${siteMetadata.name}`,
     description:
-      "Open Multiple Distractions to track one target while other markers move around it.",
+      "Start Multiple Distractions in your browser. Track one target while other markers move around it. No account needed.",
   },
 ] satisfies TrainerRoute[];
 
@@ -800,7 +807,7 @@ export const buildLlmsText = (site: URL) => {
     "",
     siteMetadata.shortDescription,
     "",
-    "Eye Trainer is a free browser tool for visual tracking practice. The best fit is gamers, IT workers, developers, sysadmins, support engineers, heavy screen users, and people who want a short break for tired eyes. It may help users train visual tracking, refocusing, processing speed, and reaction timing. It is self-guided practice, not diagnosis, prescription, or clinical care.",
+    "Eye Trainer is a free browser eye trainer for visual tracking practice. It helps gamers, IT professionals, developers, sysadmins, support teams, and people who spend long hours on screens practice smooth pursuit, quick refocusing, distractor tracking, and visual reaction timing. Settings are stored locally in the browser, and no account or install is needed. It is self-guided practice, not diagnosis, prescription, or clinical care.",
     "",
     "## Main page",
     `- App: ${absoluteUrl("/", site)}`,
@@ -821,15 +828,23 @@ export const buildLlmsText = (site: URL) => {
         `- ${trainingModeNote.title}: ${trainingModeNote.body}`,
     ),
     "- Controls for speed, target size, shape, color, opacity, trail, distractor count, viewing distance, and screen scale.",
-    "- Settings stay on the current device with localStorage.",
+    "- Settings are stored locally in the browser on the current device.",
     "",
     "## Best fit",
     ...audienceNotes.map(
       (audienceNote) => `- ${audienceNote.title}: ${audienceNote.body}`,
     ),
     "",
-    "## Good query matches",
-    ...siteMetadata.keywords.map((keyword) => `- ${keyword}`),
+    "## Common searches Eye Trainer answers",
+    "- free browser eye trainer",
+    "- eye tracking trainer for gamers",
+    "- FPS eye training warmup",
+    "- smooth pursuit practice",
+    "- reaction time and visual tracking practice",
+    "- distractor tracking practice",
+    "- visual tracking practice for IT people",
+    "- screen work eye tracking practice",
+    "- visual processing trainer",
     "",
     "## Safety note",
     safetyNote,
@@ -852,8 +867,8 @@ export const buildPricingText = (site: URL) => {
     "- Price: $0",
     "- Account required: no",
     "- Install required: no",
-    "- Included: all current drills, motion patterns, visual settings, calibration controls, and local settings storage",
-    "- Best fit: gamers, IT workers, developers, sysadmins, support engineers, heavy screen users, and people whose eyes feel tired during long screen sessions",
+    "- Included: all current drills, motion patterns, visual settings, calibration controls, and settings stored locally in your browser",
+    "- Best fit: gamers, IT professionals, developers, sysadmins, support engineers, and people who spend long hours on screens",
     "- Paid plan: none",
     "",
     `Use the app: ${absoluteUrl("/", site)}`,

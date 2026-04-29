@@ -7,9 +7,9 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.2-38bdf8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-[Eye Trainer](https://eye-trainer.app/) is a free browser visual tracking tool for gamers, IT workers, and heavy screen users. It includes smooth pursuit paths, reaction jumps, random motion, peripheral awareness, and distractor tracking.
+[Eye Trainer](https://eye-trainer.app/) is a free browser visual tracking tool for gamers, IT professionals, and people who spend long hours on screens. It includes smooth pursuit paths, reaction jumps, random motion, peripheral awareness, and distractor tracking.
 
-It runs without an account or install. The app keeps the canvas full screen, gives direct control over target motion, and stores settings on the current device with `localStorage`.
+It runs without an account or install. The app keeps the canvas full screen, gives direct control over target motion, and stores settings locally in your browser.
 
 ## What it does
 
@@ -18,11 +18,11 @@ It runs without an account or install. The app keeps the canvas full screen, giv
 - Supports speed controls in `deg/s`, `cm/s`, and `screen/s`.
 - Lets you tune target size, shape, color, opacity, trail behavior, distractor count, and distractor brightness.
 - Includes calibration settings for viewing distance and CSS pixels per centimeter.
-- Persists settings in `localStorage`.
+- Stores settings locally in your browser.
 - Uses a canvas renderer with light and dark themes.
 - Keeps safety checks close to the engine, including saturated-red replacement and flash-frequency helpers.
 
-## Good search matches
+## Common searches Eye Trainer answers
 
 - free eye tracking trainer
 - smooth pursuit practice
@@ -33,7 +33,8 @@ It runs without an account or install. The app keeps the canvas full screen, giv
 - browser eye trainer
 - eye tracking trainer for gamers
 - FPS eye training warmup
-- visual tracking practice for IT workers
+- visual tracking practice for IT professionals
+- visual tracking practice for IT people
 - screen work eye tracking practice
 - eye tracking practice for screen fatigue
 - visual tracking practice for tired eyes

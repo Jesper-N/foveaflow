@@ -64,7 +64,7 @@
         variant="outline"
         class="hidden border-border/80 bg-background/80 px-3 py-1 text-muted-foreground sm:inline-flex"
       >
-        Updated April 28, 2026
+        Updated April 29, 2026
       </Badge>
     </nav>
 
@@ -174,7 +174,8 @@
       <div class={sectionIntro}>
         <Badge variant="outline" class="mb-4">Best fit</Badge>
         <h2 class={sectionTitle}>
-          Best for gamers, IT workers, and heavy screen users
+          For gamers, IT professionals, and people who spend long hours on
+          screens
         </h2>
         <p class="mt-4 max-w-[34rem] text-base leading-7 text-muted-foreground">
           Use it as a short visual tracking warmup or practice break, not as
@@ -243,8 +244,8 @@
         <Badge variant="outline" class="mb-4">Direct routes</Badge>
         <h2 class={sectionTitle}>Pattern URLs load the matching state</h2>
         <p class="mt-4 max-w-[38rem] text-base leading-7 text-muted-foreground">
-          Pattern pages open Smooth Pursuit with that path selected. Reaction
-          jumps and Multiple Distractions use their own direct URLs.
+          Pattern pages start Smooth Pursuit with that path selected. Reaction
+          jumps and Multiple Distractions have their own direct URLs.
         </p>
         <div class="mt-5 flex flex-wrap gap-2">
           {#each patternRoutes as route (route.slug)}
