@@ -2,7 +2,7 @@ import type { Calibration } from "./calibration";
 import type { SizeProfile, SpeedProfile } from "./profiles";
 import type { PatternId, SpeedSetting, TargetShape } from "./types";
 
-export type TrainingMode = "pursuit" | "reactionTime" | "mot";
+export type TrainingMode = "pursuit" | "reactionTime" | "mot" | "lilacChaser";
 
 export type ExercisePreset = {
   id: TrainingMode;
@@ -32,6 +32,8 @@ export type TrainerSettings = {
   distractorBrightness: number;
   targetOpacity: number;
   targetShape: TargetShape;
+  lilacChaserScale: number;
+  lilacChaserBallColor: string;
   calibration: Calibration;
 };
 
@@ -76,6 +78,19 @@ export const exercisePresets = [
     distractorCount: 5,
     colorA: "#3ddbd9",
     colorB: "#f5c842",
+  },
+  {
+    id: "lilacChaser",
+    name: "Lilac Chaser",
+    patternId: "circle",
+    speed: { unit: "deg/s", value: 20 },
+    baseRadiusPx: 35,
+    speedProfile: { kind: "constant" },
+    sizeProfile: { kind: "constant" },
+    targetCount: 1,
+    distractorCount: 0,
+    colorA: "#f65ac2",
+    colorB: "#111111",
   },
 ] satisfies ExercisePreset[];
 
@@ -127,6 +142,8 @@ export const settingsFromPreset = (
   distractorBrightness: 0.7,
   targetOpacity: 1,
   targetShape: "circle",
+  lilacChaserScale: 1.3,
+  lilacChaserBallColor: "#ff00fe",
   calibration,
   ...overrides,
 });

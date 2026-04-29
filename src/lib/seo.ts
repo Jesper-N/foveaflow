@@ -62,6 +62,10 @@ export const trainingModeNotes = [
     title: "Multiple Distractions",
     body: "Track one target while other moving markers cross the same space.",
   },
+  {
+    title: "Lilac Chaser",
+    body: "Focus on the center cross while one pink marker disappears at a time around the circle.",
+  },
 ] as const;
 
 export const safetyNote =
@@ -385,6 +389,15 @@ export const trainerRoutes = [
     description:
       "Start Multiple Distractions in your browser. Track one target while other markers move around it. No account needed.",
   },
+  {
+    slug: "lilac-chaser",
+    path: "/lilac-chaser/",
+    mode: "lilacChaser",
+    label: "Lilac Chaser",
+    title: `Lilac Chaser | ${siteMetadata.name}`,
+    description:
+      "Start the Lilac Chaser peripheral vision exercise in your browser. Focus on the center cross while the pink markers rotate through a disappearing gap. No account needed.",
+  },
 ] satisfies TrainerRoute[];
 
 export const findTrainerRoute = (slug: string | undefined) => {
@@ -395,6 +408,7 @@ export const findTrainerRoute = (slug: string | undefined) => {
 export const getTrainerRoute = (mode: TrainingMode, patternId: PatternId) => {
   if (mode === "reactionTime") return findTrainerRoute("reaction-jumps");
   if (mode === "mot") return findTrainerRoute("multiple-distractions");
+  if (mode === "lilacChaser") return findTrainerRoute("lilac-chaser");
 
   return (
     trainerRoutes.find(

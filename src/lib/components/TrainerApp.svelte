@@ -162,6 +162,13 @@
     return shapeOptions.some((option) => option.id === value);
   };
 
+  const isLilacChaserBallColor = (value: unknown): value is string => {
+    return (
+      typeof value === "string" &&
+      lilacChaserColorOptions.some((option) => option.id === value)
+    );
+  };
+
   const resolveNumber = (
     value: unknown,
     min: number,
@@ -289,6 +296,19 @@
   let canvasTheme: ReturnType<typeof getCanvasTheme> | null = null;
   let gridPath: Path2D | null = null;
   const targetFrames: TargetFrame[] = [];
+  const lilacChaserDotCount = 12;
+  const lilacChaserStepSec = 0.1;
+  const lilacChaserTheme = {
+    background: "#d8d8da",
+    cross: "#050505",
+  };
+  const lilacChaserColorOptions = [
+    { id: "#ff00fe", name: "Magenta" },
+    { id: "#ff3030", name: "Red" },
+    { id: "#245cff", name: "Blue" },
+    { id: "#ffcc00", name: "Gold" },
+    { id: "#00d7ff", name: "Cyan" },
+  ] as const;
 
   const getPreservedSettings = (currentSettings: TrainerSettings) => ({
     speed: currentSettings.speed,
@@ -300,6 +320,8 @@
     distractorBrightness: currentSettings.distractorBrightness,
     targetOpacity: currentSettings.targetOpacity,
     targetShape: currentSettings.targetShape,
+    lilacChaserScale: currentSettings.lilacChaserScale,
+    lilacChaserBallColor: currentSettings.lilacChaserBallColor,
   });
 
   const applyRouteToSettings = (
@@ -333,6 +355,7 @@
   let hudVisible = $state(true);
   let headerPresetSelectOpen = $state(false);
   let headerPatternSelectOpen = $state(false);
+  let headerLilacChaserColorSelectOpen = $state(false);
   let colorMode = $state<"light" | "dark">(
     typeof document !== "undefined" &&
       !document.documentElement.classList.contains("dark")
@@ -345,6 +368,7 @@
     darkenHexColor(safeBallColor, settings.distractorBrightness),
   );
   let isMotMode = $derived(settings.presetId === "mot");
+  let isLilacChaserMode = $derived(settings.presetId === "lilacChaser");
   let isDarkMode = $derived(colorMode === "dark");
 
   const refreshBaseSpeed = () => {
@@ -380,7 +404,8 @@
       !hudVisible &&
       !panelOpen &&
       !headerPresetSelectOpen &&
-      !headerPatternSelectOpen,
+      !headerPatternSelectOpen &&
+      !headerLilacChaserColorSelectOpen,
   );
   let hudHideTimeout: number | undefined;
 
@@ -489,6 +514,10 @@
         isTargetShape(saved.targetShape)
           ? saved.targetShape
           : "circle",
+      lilacChaserScale: resolveNumber(saved.lilacChaserScale, 0.75, 1.5, 1.3),
+      lilacChaserBallColor: isLilacChaserBallColor(saved.lilacChaserBallColor)
+        ? saved.lilacChaserBallColor
+        : "#ff00fe",
     });
   };
 
@@ -516,6 +545,14 @@
     const next = readSliderNumber(value);
     if (next === null) return;
     settings.baseRadiusPx = clamp(next, 4, 100);
+  };
+
+  const lilacChaserScaleSliderValue = () => [settings.lilacChaserScale];
+
+  const setLilacChaserScaleSliderValue = (value: number[] | undefined) => {
+    const next = readSliderNumber(value);
+    if (next === null) return;
+    settings.lilacChaserScale = clamp(next, 0.75, 1.5);
   };
 
   const opacitySliderValue = () => [settings.targetOpacity];
@@ -636,6 +673,11 @@
   const drawFrame = () => {
     if (!context) return;
     const ctx = context;
+    if (isLilacChaserMode) {
+      drawLilacChaserFrame(ctx);
+      return;
+    }
+
     const theme = canvasTheme ?? getCanvasTheme();
     ctx.fillStyle = settings.showTrail ? theme.trail : theme.background;
     ctx.fillRect(0, 0, arena.width, arena.height);
@@ -645,6 +687,42 @@
     for (let index = 0; index < frameCount; index += 1) {
       drawTarget(ctx, targetFrames[index]);
     }
+  };
+
+  const drawLilacChaserFrame = (ctx: CanvasRenderingContext2D) => {
+    const centerX = arena.width / 2;
+    const centerY = arena.height / 2;
+    const minSide = Math.min(arena.width, arena.height);
+    const scale = settings.lilacChaserScale;
+    const orbitRadius = clamp(minSide * 0.27 * scale, 72 * scale, 240 * scale);
+    const dotRadius = clamp(minSide * 0.032 * scale, 10 * scale, 26 * scale);
+    const crossRadius = clamp(minSide * 0.011 * scale, 6 * scale, 9 * scale);
+    const hiddenIndex =
+      Math.floor(elapsedSec / lilacChaserStepSec) % lilacChaserDotCount;
+
+    ctx.fillStyle = lilacChaserTheme.background;
+    ctx.fillRect(0, 0, arena.width, arena.height);
+
+    ctx.fillStyle = settings.lilacChaserBallColor;
+    for (let index = 0; index < lilacChaserDotCount; index += 1) {
+      if (index === hiddenIndex) continue;
+      const angle = -Math.PI / 2 + (index / lilacChaserDotCount) * Math.PI * 2;
+      const x = centerX + Math.cos(angle) * orbitRadius;
+      const y = centerY + Math.sin(angle) * orbitRadius;
+      ctx.beginPath();
+      ctx.arc(x, y, dotRadius, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    ctx.strokeStyle = lilacChaserTheme.cross;
+    ctx.lineWidth = Math.max(7 * scale, crossRadius * 0.75);
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.moveTo(centerX - crossRadius, centerY);
+    ctx.lineTo(centerX + crossRadius, centerY);
+    ctx.moveTo(centerX, centerY - crossRadius);
+    ctx.lineTo(centerX, centerY + crossRadius);
+    ctx.stroke();
   };
 
   const drawGuides = (
@@ -741,6 +819,8 @@
       distractorBrightness: settings.distractorBrightness,
       targetOpacity: settings.targetOpacity,
       targetShape: settings.targetShape,
+      lilacChaserScale: settings.lilacChaserScale,
+      lilacChaserBallColor: settings.lilacChaserBallColor,
     });
     refreshBaseSpeed();
   };
@@ -778,7 +858,10 @@
   };
 
   const isHudInteractionOpen = () =>
-    panelOpen || headerPresetSelectOpen || headerPatternSelectOpen;
+    panelOpen ||
+    headerPresetSelectOpen ||
+    headerPatternSelectOpen ||
+    headerLilacChaserColorSelectOpen;
 
   const startHudAutoHideTimer = () => {
     clearHudAutoHideTimer();
@@ -806,6 +889,11 @@
 
   const handleHeaderPatternOpenChange = (open: boolean) => {
     headerPatternSelectOpen = open;
+    if (open) revealHud();
+  };
+
+  const handleHeaderLilacChaserColorOpenChange = (open: boolean) => {
+    headerLilacChaserColorSelectOpen = open;
     if (open) revealHud();
   };
 
@@ -906,6 +994,8 @@
   const getBehaviorName = (id: BehaviorId) =>
     getOptionName(behaviorOptions, id);
   const getShapeName = (id: TargetShape) => getOptionName(shapeOptions, id);
+  const getLilacChaserColorName = (id: string) =>
+    getOptionName([...lilacChaserColorOptions], id);
   const patternSelectContentClass =
     "max-h-[min(65dvh,26rem)] overscroll-contain";
 
@@ -934,6 +1024,10 @@
 
   const handleBehaviorChange = (value: string) => {
     if (isBehaviorId(value)) setBehavior(value);
+  };
+
+  const handleLilacChaserColorChange = (value: string) => {
+    if (isLilacChaserBallColor(value)) settings.lilacChaserBallColor = value;
   };
 
   const handleCalibrationInput = (
@@ -1016,6 +1110,17 @@
 
 {#snippet triggerLabel(label: string)}
   <span class="min-w-0 truncate">{label}</span>
+{/snippet}
+
+{#snippet colorSelectLabel(color: string, label: string)}
+  <span class="flex min-w-0 items-center gap-2">
+    <span
+      class="size-3 shrink-0 rounded-full border border-border/60"
+      style:background-color={color}
+      aria-hidden="true"
+    ></span>
+    <span class="truncate">{label}</span>
+  </span>
 {/snippet}
 
 <ModeWatcher track={false} defaultMode="system" />
@@ -1133,43 +1238,91 @@
         {/if}
       </div>
 
-      <div class="hidden min-w-0 items-center gap-2 xl:flex">
-        <div
-          class="flex h-9 w-44 items-center gap-3 rounded-full border bg-muted/60 px-3 2xl:w-48"
-        >
-          <span class="w-8 text-xs font-medium text-muted-foreground 2xl:w-9">
-            Size
-          </span>
-          <Slider
-            bind:value={sizeSliderValue, setSizeSliderValue}
-            min={4}
-            max={100}
-            step={1}
-            aria-label="Header target size"
-          />
-          <span class="w-10 text-right text-xs font-semibold tabular-nums">
-            {Math.round(settings.baseRadiusPx)}
-          </span>
-        </div>
+      {#if !isLilacChaserMode}
+        <div class="hidden min-w-0 items-center gap-2 xl:flex">
+          <div
+            class="flex h-9 w-44 items-center gap-3 rounded-full border bg-muted/60 px-3 2xl:w-48"
+          >
+            <span class="w-8 text-xs font-medium text-muted-foreground 2xl:w-9">
+              Size
+            </span>
+            <Slider
+              bind:value={sizeSliderValue, setSizeSliderValue}
+              min={4}
+              max={100}
+              step={1}
+              aria-label="Header target size"
+            />
+            <span class="w-10 text-right text-xs font-semibold tabular-nums">
+              {Math.round(settings.baseRadiusPx)}
+            </span>
+          </div>
 
-        <div
-          class="flex h-9 w-44 items-center gap-3 rounded-full border bg-muted/60 px-3 2xl:w-48"
-        >
-          <span class="w-8 text-xs font-medium text-muted-foreground 2xl:w-9">
-            Speed
-          </span>
-          <Slider
-            bind:value={speedSliderValue, setSpeedSliderValue}
-            min={0.5}
-            max={maxSpeedByUnit[settings.speed.unit]}
-            step={speedStepByUnit[settings.speed.unit]}
-            aria-label="Header target speed"
-          />
-          <span class="w-12 text-right text-xs font-semibold tabular-nums">
-            {settings.speed.value.toFixed(1)}
-          </span>
+          <div
+            class="flex h-9 w-44 items-center gap-3 rounded-full border bg-muted/60 px-3 2xl:w-48"
+          >
+            <span class="w-8 text-xs font-medium text-muted-foreground 2xl:w-9">
+              Speed
+            </span>
+            <Slider
+              bind:value={speedSliderValue, setSpeedSliderValue}
+              min={0.5}
+              max={maxSpeedByUnit[settings.speed.unit]}
+              step={speedStepByUnit[settings.speed.unit]}
+              aria-label="Header target speed"
+            />
+            <span class="w-12 text-right text-xs font-semibold tabular-nums">
+              {settings.speed.value.toFixed(1)}
+            </span>
+          </div>
         </div>
-      </div>
+      {:else}
+        <div class="hidden min-w-0 items-center gap-2 xl:flex">
+          <Select.Root
+            type="single"
+            value={settings.lilacChaserBallColor}
+            onValueChange={handleLilacChaserColorChange}
+            onOpenChange={handleHeaderLilacChaserColorOpenChange}
+          >
+            <Select.Trigger
+              class="w-36 overflow-hidden lg:w-40"
+              aria-label="Lilac Chaser ball color"
+            >
+              {@render triggerLabel(
+                getLilacChaserColorName(settings.lilacChaserBallColor),
+              )}
+            </Select.Trigger>
+            <Select.Content>
+              <Select.Group>
+                {#each lilacChaserColorOptions as option (option.id)}
+                  <Select.Item value={option.id}>
+                    {@render colorSelectLabel(option.id, option.name)}
+                  </Select.Item>
+                {/each}
+              </Select.Group>
+            </Select.Content>
+          </Select.Root>
+          <div
+            class="flex h-9 w-48 items-center gap-3 rounded-full border bg-muted/60 px-3 2xl:w-52"
+          >
+            <span class="w-9 text-xs font-medium text-muted-foreground">
+              Scale
+            </span>
+            <Slider
+              bind:value={
+                lilacChaserScaleSliderValue, setLilacChaserScaleSliderValue
+              }
+              min={0.75}
+              max={1.5}
+              step={0.05}
+              aria-label="Lilac Chaser scale"
+            />
+            <span class="w-12 text-right text-xs font-semibold tabular-nums">
+              {settings.lilacChaserScale.toFixed(2)}x
+            </span>
+          </div>
+        </div>
+      {/if}
 
       <nav class="flex shrink-0 items-center gap-2" aria-label="App actions">
         <Button
@@ -1311,31 +1464,77 @@
             </Field.Field>
           {/if}
 
-          <Field.Field>
-            <Field.Label for="trainer-behavior">Motion feel</Field.Label>
-            <Select.Root
-              type="single"
-              value={behaviorValue}
-              onValueChange={handleBehaviorChange}
-            >
-              <Select.Trigger
-                id="trainer-behavior"
-                class="w-full"
-                aria-label="Motion feel"
+          {#if !isLilacChaserMode}
+            <Field.Field>
+              <Field.Label for="trainer-behavior">Motion feel</Field.Label>
+              <Select.Root
+                type="single"
+                value={behaviorValue}
+                onValueChange={handleBehaviorChange}
               >
-                {getBehaviorName(behaviorValue)}
-              </Select.Trigger>
-              <Select.Content>
-                <Select.Group>
-                  {#each behaviorOptions as option (option.id)}
-                    <Select.Item value={option.id}>
-                      {option.name}
-                    </Select.Item>
-                  {/each}
-                </Select.Group>
-              </Select.Content>
-            </Select.Root>
-          </Field.Field>
+                <Select.Trigger
+                  id="trainer-behavior"
+                  class="w-full"
+                  aria-label="Motion feel"
+                >
+                  {getBehaviorName(behaviorValue)}
+                </Select.Trigger>
+                <Select.Content>
+                  <Select.Group>
+                    {#each behaviorOptions as option (option.id)}
+                      <Select.Item value={option.id}>
+                        {option.name}
+                      </Select.Item>
+                    {/each}
+                  </Select.Group>
+                </Select.Content>
+              </Select.Root>
+            </Field.Field>
+          {:else}
+            <Field.Field>
+              <Field.Label for="lilac-chaser-color">Ball color</Field.Label>
+              <Select.Root
+                type="single"
+                value={settings.lilacChaserBallColor}
+                onValueChange={handleLilacChaserColorChange}
+              >
+                <Select.Trigger
+                  id="lilac-chaser-color"
+                  class="w-full"
+                  aria-label="Lilac Chaser ball color"
+                >
+                  {@render colorSelectLabel(
+                    settings.lilacChaserBallColor,
+                    getLilacChaserColorName(settings.lilacChaserBallColor),
+                  )}
+                </Select.Trigger>
+                <Select.Content>
+                  <Select.Group>
+                    {#each lilacChaserColorOptions as option (option.id)}
+                      <Select.Item value={option.id}>
+                        {@render colorSelectLabel(option.id, option.name)}
+                      </Select.Item>
+                    {/each}
+                  </Select.Group>
+                </Select.Content>
+              </Select.Root>
+            </Field.Field>
+            <Field.Field>
+              {@render sliderRow(
+                "Scale",
+                `${settings.lilacChaserScale.toFixed(2)}x`,
+              )}
+              <Slider
+                bind:value={
+                  lilacChaserScaleSliderValue, setLilacChaserScaleSliderValue
+                }
+                min={0.75}
+                max={1.5}
+                step={0.05}
+                aria-label="Lilac Chaser scale"
+              />
+            </Field.Field>
+          {/if}
 
           {#if isMotMode}
             <div class="space-y-5 pt-1">
@@ -1369,197 +1568,202 @@
           {/if}
         </section>
 
-        <section
-          class="settings-section space-y-4 border-t border-border/60 pt-7"
-        >
-          {@render settingHeader("eye", "Color")}
-          <Field.Field>
-            <label
-              class="flex h-11 cursor-pointer items-center gap-3 rounded-full border bg-input/50 px-3 transition-[color,box-shadow,background-color] hover:ring-4 hover:ring-ring/30"
-              for="trainer-color"
-            >
-              <span
-                class="size-6 rounded-full border shadow-sm"
-                style:background-color={settings.ballColor}
-              ></span>
-              <span class="font-mono text-sm uppercase text-foreground">
-                {settings.ballColor}
-              </span>
-              <Input
-                id="trainer-color"
-                class="sr-only"
-                type="color"
-                value={settings.ballColor}
-                oninput={handleColorInput}
-                aria-label="Ball color"
-              />
-            </label>
-          </Field.Field>
+        {#if !isLilacChaserMode}
+          <section
+            class="settings-section space-y-4 border-t border-border/60 pt-7"
+          >
+            {@render settingHeader("eye", "Color")}
+            <Field.Field>
+              <label
+                class="flex h-11 cursor-pointer items-center gap-3 rounded-full border bg-input/50 px-3 transition-[color,box-shadow,background-color] hover:ring-4 hover:ring-ring/30"
+                for="trainer-color"
+              >
+                <span
+                  class="size-6 rounded-full border shadow-sm"
+                  style:background-color={settings.ballColor}
+                ></span>
+                <span class="font-mono text-sm uppercase text-foreground">
+                  {settings.ballColor}
+                </span>
+                <Input
+                  id="trainer-color"
+                  class="sr-only"
+                  type="color"
+                  value={settings.ballColor}
+                  oninput={handleColorInput}
+                  aria-label="Ball color"
+                />
+              </label>
+            </Field.Field>
 
-          {#if isMotMode}
+            {#if isMotMode}
+              <Field.Field>
+                {@render sliderRow(
+                  "Distractor color",
+                  `${Math.round(settings.distractorBrightness * 100)}%`,
+                )}
+                <Slider
+                  bind:value={
+                    distractorBrightnessSliderValue,
+                    setDistractorBrightnessSliderValue
+                  }
+                  min={0.35}
+                  max={1}
+                  step={0.01}
+                  aria-label="Distractor color brightness"
+                />
+              </Field.Field>
+            {/if}
+
             <Field.Field>
               {@render sliderRow(
-                "Distractor color",
-                `${Math.round(settings.distractorBrightness * 100)}%`,
+                "Opacity",
+                `${Math.round(settings.targetOpacity * 100)}%`,
               )}
               <Slider
-                bind:value={
-                  distractorBrightnessSliderValue,
-                  setDistractorBrightnessSliderValue
-                }
-                min={0.35}
+                bind:value={opacitySliderValue, setOpacitySliderValue}
+                min={0}
                 max={1}
                 step={0.01}
-                aria-label="Distractor color brightness"
+                aria-label="Target opacity"
               />
             </Field.Field>
-          {/if}
+          </section>
 
-          <Field.Field>
-            {@render sliderRow(
-              "Opacity",
-              `${Math.round(settings.targetOpacity * 100)}%`,
-            )}
-            <Slider
-              bind:value={opacitySliderValue, setOpacitySliderValue}
-              min={0}
-              max={1}
-              step={0.01}
-              aria-label="Target opacity"
-            />
-          </Field.Field>
-        </section>
-
-        <section
-          class="settings-section space-y-4 border-t border-border/60 pt-7"
-        >
-          {@render settingHeader("eye", "Shape")}
-          <Field.Field>
-            <Field.Label for="trainer-shape">Shape</Field.Label>
-            <Select.Root
-              type="single"
-              value={settings.targetShape}
-              onValueChange={handleShapeChange}
-            >
-              <Select.Trigger
-                id="trainer-shape"
-                class="w-full"
-                aria-label="Shape"
-              >
-                {getShapeName(settings.targetShape)}
-              </Select.Trigger>
-              <Select.Content>
-                <Select.Group>
-                  {#each shapeOptions as option (option.id)}
-                    <Select.Item value={option.id}>
-                      {option.name}
-                    </Select.Item>
-                  {/each}
-                </Select.Group>
-              </Select.Content>
-            </Select.Root>
-          </Field.Field>
-
-          <Field.Field>
-            {@render sliderRow(
-              "Size",
-              `${Math.round(settings.baseRadiusPx)} px`,
-            )}
-            <Slider
-              bind:value={sizeSliderValue, setSizeSliderValue}
-              min={4}
-              max={100}
-              step={1}
-              aria-label="Target size"
-            />
-          </Field.Field>
-        </section>
-
-        <section
-          class="settings-section space-y-4 border-t border-border/60 pt-7"
-        >
-          {@render settingHeader("motion", "Motion")}
-          <Field.Field>
-            {@render sliderRow(
-              "Speed",
-              `${settings.speed.value.toFixed(1)} ${settings.speed.unit}`,
-            )}
-            <Slider
-              bind:value={speedSliderValue, setSpeedSliderValue}
-              min={0.5}
-              max={maxSpeedByUnit[settings.speed.unit]}
-              step={speedStepByUnit[settings.speed.unit]}
-              aria-label="Speed"
-            />
-          </Field.Field>
-
-          <Field.Field>
-            <Field.Label for="trainer-speed-unit">Unit</Field.Label>
-            <Select.Root
-              type="single"
-              value={settings.speed.unit}
-              onValueChange={handleSpeedUnitChange}
-            >
-              <Select.Trigger
-                id="trainer-speed-unit"
-                class="w-full"
-                aria-label="Speed unit"
-              >
-                {settings.speed.unit}
-              </Select.Trigger>
-              <Select.Content>
-                <Select.Group>
-                  <Select.Item value="deg/s">deg/s</Select.Item>
-                  <Select.Item value="cm/s">cm/s</Select.Item>
-                  <Select.Item value="screen/s">screen/s</Select.Item>
-                </Select.Group>
-              </Select.Content>
-            </Select.Root>
-          </Field.Field>
-        </section>
-
-        <section
-          class="settings-section space-y-4 border-t border-border/60 pt-7"
-        >
-          {@render settingHeader("calibration", "Screen scale")}
-          <div class="grid grid-cols-2 gap-2">
+          <section
+            class="settings-section space-y-4 border-t border-border/60 pt-7"
+          >
+            {@render settingHeader("eye", "Shape")}
             <Field.Field>
-              <Field.Label for="trainer-distance">Viewing distance</Field.Label>
-              <Input
-                id="trainer-distance"
-                type="number"
-                min="20"
-                max="120"
-                value={settings.calibration.viewingDistanceCm}
-                oninput={(event) =>
-                  handleCalibrationInput(event, "viewingDistanceCm")}
-              />
+              <Field.Label for="trainer-shape">Shape</Field.Label>
+              <Select.Root
+                type="single"
+                value={settings.targetShape}
+                onValueChange={handleShapeChange}
+              >
+                <Select.Trigger
+                  id="trainer-shape"
+                  class="w-full"
+                  aria-label="Shape"
+                >
+                  {getShapeName(settings.targetShape)}
+                </Select.Trigger>
+                <Select.Content>
+                  <Select.Group>
+                    {#each shapeOptions as option (option.id)}
+                      <Select.Item value={option.id}>
+                        {option.name}
+                      </Select.Item>
+                    {/each}
+                  </Select.Group>
+                </Select.Content>
+              </Select.Root>
             </Field.Field>
+
             <Field.Field>
-              <Field.Label for="trainer-css-px-cm">CSS pixels/cm</Field.Label>
-              <Input
-                id="trainer-css-px-cm"
-                type="number"
-                min="10"
-                max="120"
-                step="0.1"
-                value={settings.calibration.cssPxPerCm}
-                oninput={(event) => handleCalibrationInput(event, "cssPxPerCm")}
+              {@render sliderRow(
+                "Size",
+                `${Math.round(settings.baseRadiusPx)} px`,
+              )}
+              <Slider
+                bind:value={sizeSliderValue, setSizeSliderValue}
+                min={4}
+                max={100}
+                step={1}
+                aria-label="Target size"
               />
             </Field.Field>
-          </div>
-          <Item.Root variant="outline" size="sm" class="min-h-11">
-            <Item.Content>
-              <Item.Title>Show trail</Item.Title>
-            </Item.Content>
-            <Item.Actions>
-              <Switch
-                bind:checked={settings.showTrail}
-                aria-label="Show trail"
+          </section>
+
+          <section
+            class="settings-section space-y-4 border-t border-border/60 pt-7"
+          >
+            {@render settingHeader("motion", "Motion")}
+            <Field.Field>
+              {@render sliderRow(
+                "Speed",
+                `${settings.speed.value.toFixed(1)} ${settings.speed.unit}`,
+              )}
+              <Slider
+                bind:value={speedSliderValue, setSpeedSliderValue}
+                min={0.5}
+                max={maxSpeedByUnit[settings.speed.unit]}
+                step={speedStepByUnit[settings.speed.unit]}
+                aria-label="Speed"
               />
-            </Item.Actions>
-          </Item.Root>
-        </section>
+            </Field.Field>
+
+            <Field.Field>
+              <Field.Label for="trainer-speed-unit">Unit</Field.Label>
+              <Select.Root
+                type="single"
+                value={settings.speed.unit}
+                onValueChange={handleSpeedUnitChange}
+              >
+                <Select.Trigger
+                  id="trainer-speed-unit"
+                  class="w-full"
+                  aria-label="Speed unit"
+                >
+                  {settings.speed.unit}
+                </Select.Trigger>
+                <Select.Content>
+                  <Select.Group>
+                    <Select.Item value="deg/s">deg/s</Select.Item>
+                    <Select.Item value="cm/s">cm/s</Select.Item>
+                    <Select.Item value="screen/s">screen/s</Select.Item>
+                  </Select.Group>
+                </Select.Content>
+              </Select.Root>
+            </Field.Field>
+          </section>
+
+          <section
+            class="settings-section space-y-4 border-t border-border/60 pt-7"
+          >
+            {@render settingHeader("calibration", "Screen scale")}
+            <div class="grid grid-cols-2 gap-2">
+              <Field.Field>
+                <Field.Label for="trainer-distance"
+                  >Viewing distance</Field.Label
+                >
+                <Input
+                  id="trainer-distance"
+                  type="number"
+                  min="20"
+                  max="120"
+                  value={settings.calibration.viewingDistanceCm}
+                  oninput={(event) =>
+                    handleCalibrationInput(event, "viewingDistanceCm")}
+                />
+              </Field.Field>
+              <Field.Field>
+                <Field.Label for="trainer-css-px-cm">CSS pixels/cm</Field.Label>
+                <Input
+                  id="trainer-css-px-cm"
+                  type="number"
+                  min="10"
+                  max="120"
+                  step="0.1"
+                  value={settings.calibration.cssPxPerCm}
+                  oninput={(event) =>
+                    handleCalibrationInput(event, "cssPxPerCm")}
+                />
+              </Field.Field>
+            </div>
+            <Item.Root variant="outline" size="sm" class="min-h-11">
+              <Item.Content>
+                <Item.Title>Show trail</Item.Title>
+              </Item.Content>
+              <Item.Actions>
+                <Switch
+                  bind:checked={settings.showTrail}
+                  aria-label="Show trail"
+                />
+              </Item.Actions>
+            </Item.Root>
+          </section>
+        {/if}
 
         <section class="settings-section border-t border-border/60 pt-7">
           <Button
