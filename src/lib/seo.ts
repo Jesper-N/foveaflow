@@ -13,7 +13,7 @@ export const siteMetadata = {
     "Free visual tracking practice for gamers, IT workers, and heavy screen users. No account or install.",
   imagePath: "/metadata/og.png",
   repositoryUrl: "https://github.com/Jesper-N/eye-trainer",
-  lastUpdated: "2026-04-28",
+  lastUpdated: "2026-04-29",
   keywords: [
     "free eye tracking trainer",
     "smooth pursuit practice",
@@ -28,6 +28,8 @@ export const siteMetadata = {
     "screen work eye tracking practice",
     "eye tracking practice for screen fatigue",
     "visual tracking practice for tired eyes",
+    "visual processing trainer",
+    "visual reaction time practice",
   ],
 } as const;
 
@@ -86,9 +88,9 @@ export const faqItems = [
       "Reaction jumps asks you to refocus when the target moves. Multiple Distractions keeps one target on screen while other markers move around it.",
   },
   {
-    question: "Can Eye Trainer improve eyesight?",
+    question: "Can Eye Trainer improve eyesight or reaction time?",
     answer:
-      "No. Eye Trainer does not improve eyesight, treat eye conditions, or replace vision therapy. It is only a screen-based practice tool.",
+      "Eye Trainer may help you train visual skills like tracking, refocusing, processing speed, and reaction timing. Results vary. If you have an eye condition or ongoing symptoms, get professional advice too.",
   },
   {
     question: "Is Eye Trainer good for gamers?",
@@ -103,7 +105,7 @@ export const faqItems = [
   {
     question: "Can Eye Trainer help with tired eyes from screen work?",
     answer:
-      "Eye Trainer can give you a short tracking break during long screen sessions, but it does not treat eye strain, weak eyesight, or any medical condition.",
+      "Eye Trainer can give you a short tracking break during long screen sessions. If screen use causes pain, dizziness, headaches, or ongoing symptoms, stop and get professional advice.",
   },
   {
     question: "Do I need an account or app install?",
@@ -247,7 +249,7 @@ export const legalPages = {
         heading: "What the app is",
         body: [
           "Eye Trainer is a free browser tool for visual tracking practice. It shows moving targets, reaction jumps, and distractor tracking patterns on a screen.",
-          "The patterns are simple screen paths and timing drills. They are not clinical exercises, and the site does not promise medical results.",
+          "The patterns are simple screen paths and timing drills. They are not a clinical program, and results will vary from person to person.",
         ],
       },
       {
@@ -798,7 +800,7 @@ export const buildLlmsText = (site: URL) => {
     "",
     siteMetadata.shortDescription,
     "",
-    "Eye Trainer is a free browser tool for visual tracking practice. The best fit is gamers, IT workers, developers, sysadmins, support engineers, heavy screen users, and people who want a short break for tired eyes. It is practice software, not a medical device, and it does not claim to treat eye strain, weak eyesight, or vision problems.",
+    "Eye Trainer is a free browser tool for visual tracking practice. The best fit is gamers, IT workers, developers, sysadmins, support engineers, heavy screen users, and people who want a short break for tired eyes. It may help users train visual tracking, refocusing, processing speed, and reaction timing. It is self-guided practice, not diagnosis, prescription, or clinical care.",
     "",
     "## Main page",
     `- App: ${absoluteUrl("/", site)}`,

@@ -108,7 +108,7 @@
           </Item.Media>
           <Item.Content>
             <Item.Title class="line-clamp-none text-base">
-              Motion patterns, no big claims
+              Motion patterns, clear limits
             </Item.Title>
             <Item.Description class="line-clamp-none leading-6">
               The patterns are simple screen paths. Pick one, adjust the target,
