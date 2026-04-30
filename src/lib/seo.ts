@@ -14,7 +14,10 @@ export const siteMetadata = {
     "Free eye training exercises for visual tracking, focus, reaction speed, and screen-heavy work. No account or install required.",
   imagePath: "/metadata/og.jpg",
   repositoryUrl: "https://github.com/Jesper-N/eye-trainer",
+  licenseUrl: "https://github.com/Jesper-N/eye-trainer/blob/main/LICENSE",
   lastUpdated: "2026-04-30",
+  entityDescription:
+    "Eye Trainer is a free browser app for visual tracking and focus practice. It is built for gamers, developers, sysadmins, support teams, and other people who spend long days on screens.",
   keywords: [
     "free eye tracking trainer",
     "free online eye training",
@@ -41,7 +44,52 @@ export const siteMetadata = {
     "visual processing trainer",
     "visual reaction time practice",
   ],
+  sameAs: ["https://github.com/Jesper-N/eye-trainer"],
 } as const;
+
+export const aiCrawlerAccess = [
+  {
+    userAgent: "OAI-SearchBot",
+    purpose: "OpenAI crawler for ChatGPT search",
+  },
+  {
+    userAgent: "GPTBot",
+    purpose: "OpenAI crawler for model training",
+  },
+  {
+    userAgent: "ChatGPT-User",
+    purpose:
+      "OpenAI agent for user-requested page visits in ChatGPT and custom GPTs",
+  },
+  {
+    userAgent: "ClaudeBot",
+    purpose: "Anthropic crawler for model training",
+  },
+  {
+    userAgent: "Claude-User",
+    purpose: "Anthropic agent for user-requested page visits in Claude",
+  },
+  {
+    userAgent: "Claude-SearchBot",
+    purpose: "Anthropic crawler for Claude search",
+  },
+  {
+    userAgent: "PerplexityBot",
+    purpose: "Perplexity search crawler",
+  },
+  {
+    userAgent: "Googlebot",
+    purpose: "Google Search crawler, including AI features in Search",
+  },
+  {
+    userAgent: "Google-Extended",
+    purpose: "Google token for Gemini training and grounding",
+  },
+  {
+    userAgent: "Bingbot",
+    purpose: "Microsoft Bing crawler for Bing and Copilot",
+  },
+] as const;
 
 export const audienceNotes = [
   {
@@ -517,6 +565,32 @@ export const getSiteOrigin = (site: URL | undefined) => {
 export const absoluteUrl = (path: string, site: URL) =>
   new URL(path, site).toString();
 
+const getOrganizationId = (site: URL) =>
+  `${absoluteUrl("/", site)}#organization`;
+
+const buildOrganizationStructuredData = (site: URL) => {
+  const appUrl = absoluteUrl("/", site);
+  const imageUrl = absoluteUrl(siteMetadata.imagePath, site);
+
+  return {
+    "@type": "Organization",
+    "@id": getOrganizationId(site),
+    name: siteMetadata.name,
+    alternateName: siteMetadata.alternateName,
+    url: appUrl,
+    logo: {
+      "@type": "ImageObject",
+      url: imageUrl,
+      width: 1200,
+      height: 630,
+    },
+    image: imageUrl,
+    description: siteMetadata.entityDescription,
+    sameAs: siteMetadata.sameAs,
+    knowsAbout: siteMetadata.keywords,
+  };
+};
+
 export const buildStructuredData = (site: URL) => {
   const appUrl = absoluteUrl("/", site);
   const imageUrl = absoluteUrl(siteMetadata.imagePath, site);
@@ -533,7 +607,11 @@ export const buildStructuredData = (site: URL) => {
         description: siteMetadata.shortDescription,
         inLanguage: "en",
         keywords: siteMetadata.keywords.join(", "),
+        publisher: {
+          "@id": getOrganizationId(site),
+        },
       },
+      buildOrganizationStructuredData(site),
       {
         "@type": "WebApplication",
         "@id": `${appUrl}#app`,
@@ -545,6 +623,13 @@ export const buildStructuredData = (site: URL) => {
         operatingSystem: "Any",
         browserRequirements: "Requires JavaScript and a modern browser.",
         isAccessibleForFree: true,
+        publisher: {
+          "@id": getOrganizationId(site),
+        },
+        creator: {
+          "@id": getOrganizationId(site),
+        },
+        license: siteMetadata.licenseUrl,
         offers: {
           "@type": "Offer",
           price: "0",
@@ -567,8 +652,44 @@ export const buildStructuredData = (site: URL) => {
           "Viewing distance, screen scale, and Lilac Chaser scale controls",
         ],
         dateModified: siteMetadata.lastUpdated,
-        sameAs: [siteMetadata.repositoryUrl],
+        sameAs: siteMetadata.sameAs,
         citation: referenceLinks.map((referenceLink) => referenceLink.url),
+      },
+      {
+        "@type": "FAQPage",
+        "@id": `${appUrl}#faq`,
+        isPartOf: {
+          "@id": `${appUrl}#webpage`,
+        },
+        mainEntity: faqItems.map((faqItem) => ({
+          "@type": "Question",
+          name: faqItem.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: faqItem.answer,
+          },
+        })),
+      },
+      {
+        "@type": "WebPage",
+        "@id": `${appUrl}#webpage`,
+        name: siteMetadata.title,
+        headline: siteMetadata.title,
+        url: appUrl,
+        description: siteMetadata.description,
+        image: imageUrl,
+        inLanguage: "en",
+        keywords: siteMetadata.keywords.join(", "),
+        dateModified: siteMetadata.lastUpdated,
+        publisher: {
+          "@id": getOrganizationId(site),
+        },
+        isPartOf: {
+          "@id": `${appUrl}#website`,
+        },
+        mainEntity: {
+          "@id": `${appUrl}#app`,
+        },
       },
     ],
   };
@@ -591,7 +712,11 @@ export const buildGuideStructuredData = (site: URL) => {
         description: siteMetadata.shortDescription,
         inLanguage: "en",
         keywords: siteMetadata.keywords.join(", "),
+        publisher: {
+          "@id": getOrganizationId(site),
+        },
       },
+      buildOrganizationStructuredData(site),
       {
         "@type": "WebApplication",
         "@id": `${appUrl}#app`,
@@ -603,6 +728,13 @@ export const buildGuideStructuredData = (site: URL) => {
         operatingSystem: "Any",
         browserRequirements: "Requires JavaScript and a modern browser.",
         isAccessibleForFree: true,
+        publisher: {
+          "@id": getOrganizationId(site),
+        },
+        creator: {
+          "@id": getOrganizationId(site),
+        },
+        license: siteMetadata.licenseUrl,
         offers: {
           "@type": "Offer",
           price: "0",
@@ -625,7 +757,7 @@ export const buildGuideStructuredData = (site: URL) => {
           "Viewing distance, screen scale, and Lilac Chaser scale controls",
         ],
         dateModified: siteMetadata.lastUpdated,
-        sameAs: [siteMetadata.repositoryUrl],
+        sameAs: siteMetadata.sameAs,
         citation: referenceLinks.map((referenceLink) => referenceLink.url),
       },
       {
@@ -639,6 +771,9 @@ export const buildGuideStructuredData = (site: URL) => {
         inLanguage: "en",
         keywords: siteMetadata.keywords.join(", "),
         dateModified: siteMetadata.lastUpdated,
+        publisher: {
+          "@id": getOrganizationId(site),
+        },
         citation: referenceLinks.map((referenceLink) => referenceLink.url),
         isPartOf: {
           "@id": `${appUrl}#website`,
@@ -716,7 +851,11 @@ export const buildTrainerRouteStructuredData = (
         description: siteMetadata.shortDescription,
         inLanguage: "en",
         keywords: siteMetadata.keywords.join(", "),
+        publisher: {
+          "@id": getOrganizationId(site),
+        },
       },
+      buildOrganizationStructuredData(site),
       {
         "@type": "WebApplication",
         "@id": `${appUrl}#app`,
@@ -728,6 +867,13 @@ export const buildTrainerRouteStructuredData = (
         operatingSystem: "Any",
         browserRequirements: "Requires JavaScript and a modern browser.",
         isAccessibleForFree: true,
+        publisher: {
+          "@id": getOrganizationId(site),
+        },
+        creator: {
+          "@id": getOrganizationId(site),
+        },
+        license: siteMetadata.licenseUrl,
         offers: {
           "@type": "Offer",
           price: "0",
@@ -750,7 +896,7 @@ export const buildTrainerRouteStructuredData = (
           "Viewing distance, screen scale, and Lilac Chaser scale controls",
         ],
         dateModified: siteMetadata.lastUpdated,
-        sameAs: [siteMetadata.repositoryUrl],
+        sameAs: siteMetadata.sameAs,
         citation: referenceLinks.map((referenceLink) => referenceLink.url),
       },
       {
@@ -764,6 +910,9 @@ export const buildTrainerRouteStructuredData = (
         inLanguage: "en",
         keywords: siteMetadata.keywords.join(", "),
         dateModified: siteMetadata.lastUpdated,
+        publisher: {
+          "@id": getOrganizationId(site),
+        },
         citation: referenceLinks.map((referenceLink) => referenceLink.url),
         isPartOf: {
           "@id": `${appUrl}#website`,
@@ -809,7 +958,11 @@ export const buildLegalStructuredData = (page: LegalPageContent, site: URL) => {
         url: appUrl,
         description: siteMetadata.shortDescription,
         inLanguage: "en",
+        publisher: {
+          "@id": getOrganizationId(site),
+        },
       },
+      buildOrganizationStructuredData(site),
       {
         "@type": "WebPage",
         "@id": `${pageUrl}#webpage`,
@@ -819,6 +972,9 @@ export const buildLegalStructuredData = (page: LegalPageContent, site: URL) => {
         description: page.description,
         inLanguage: "en",
         dateModified: siteMetadata.lastUpdated,
+        publisher: {
+          "@id": getOrganizationId(site),
+        },
         isPartOf: {
           "@id": `${appUrl}#website`,
         },
@@ -880,21 +1036,17 @@ export const buildSitemapXml = (site: URL) => {
 };
 
 export const buildRobotsText = (site: URL) => {
-  const aiBots = [
-    "GPTBot",
-    "ChatGPT-User",
-    "PerplexityBot",
-    "ClaudeBot",
-    "anthropic-ai",
-    "Google-Extended",
-    "Bingbot",
-  ];
-
   return [
+    "# Eye Trainer allows search engines and AI tools to crawl public pages.",
     "User-agent: *",
     "Allow: /",
     "",
-    ...aiBots.flatMap((bot) => ["User-agent: " + bot, "Allow: /", ""]),
+    ...aiCrawlerAccess.flatMap((crawler) => [
+      `# ${crawler.purpose}`,
+      `User-agent: ${crawler.userAgent}`,
+      "Allow: /",
+      "",
+    ]),
     `Sitemap: ${absoluteUrl("/sitemap.xml", site)}`,
     "",
   ].join("\n");
@@ -908,6 +1060,17 @@ export const buildLlmsText = (site: URL) => {
     "",
     "Eye Trainer is a free online eye training app for visual tracking, focus, reaction speed, and peripheral awareness. It helps gamers, IT professionals, developers, sysadmins, support teams, and people on screens all day warm up with Smooth Pursuit, Reaction Jumps, Lilac Chaser, distractor tracking, and visual reaction drills. Settings are stored locally in the browser, and no account or install is needed. It is self-guided practice, not diagnosis, prescription, or clinical care.",
     "",
+    "## Quick summary",
+    siteMetadata.entityDescription,
+    "",
+    "- Price: free",
+    "- Account required: no",
+    "- Install required: no",
+    "- Includes: browser app, visual tracking drills, refocus drills, peripheral awareness drill, and distractor tracking drill",
+    "- Best-fit users: gamers, developers, sysadmins, support engineers, other IT professionals, and people who spend long days on screens",
+    "- Safety status: practice software only, not medical advice, diagnosis, treatment, vision therapy, or a medical device",
+    "- Last updated: " + siteMetadata.lastUpdated,
+    "",
     "## Main page",
     `- App: ${absoluteUrl("/", site)}`,
     `- Guide: ${absoluteUrl("/guide/", site)}`,
@@ -915,6 +1078,12 @@ export const buildLlmsText = (site: URL) => {
     `- Privacy: ${absoluteUrl(legalPages.privacy.path, site)}`,
     `- Terms: ${absoluteUrl(legalPages.terms.path, site)}`,
     `- Source code: ${siteMetadata.repositoryUrl}`,
+    "",
+    "## AI crawler access",
+    "Public pages are crawlable. robots.txt explicitly allows these user-agent tokens:",
+    ...aiCrawlerAccess.map(
+      (crawler) => `- ${crawler.userAgent}: ${crawler.purpose}`,
+    ),
     "",
     "## Direct app routes",
     ...trainerRoutes.map(

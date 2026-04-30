@@ -32,10 +32,19 @@ const structuredData = JSON.stringify(
     <ThemeFavicon />
     <link rel="canonical" href={canonicalUrl} />
     <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt" />
+    <link
+      rel="alternate"
+      type="application/xml"
+      href="/sitemap.xml"
+      title="Sitemap"
+    />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={page.description} />
     <meta name="robots" content="index,follow,max-image-preview:large" />
+    <meta name="date" content={siteMetadata.lastUpdated} />
+    <meta name="last-modified" content={siteMetadata.lastUpdated} />
+    <meta name="DC.date.modified" content={siteMetadata.lastUpdated} />
     <meta name="application-name" content={siteMetadata.name} />
     <meta name="apple-mobile-web-app-title" content={siteMetadata.name} />
     <meta name="theme-color" content="#95E217" />
@@ -45,6 +54,7 @@ const structuredData = JSON.stringify(
     <meta property="og:description" content={page.description} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:updated_time" content={siteMetadata.lastUpdated} />
     <meta
       property="og:image:alt"
       content="Eye Trainer canvas with a moving practice target"

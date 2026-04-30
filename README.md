@@ -22,30 +22,6 @@ It runs without an account or install. The app keeps the canvas full screen, giv
 - Uses a canvas renderer with light and dark themes.
 - Keeps safety checks close to the engine, including saturated-red replacement and flash-frequency helpers.
 
-## Common searches Eye Trainer answers
-
-- free eye tracking trainer
-- free online eye training
-- eye training exercises
-- FPS eye training exercises
-- eye focus exercises
-- smooth pursuit practice
-- visual tracking exercise
-- reaction time trainer
-- multiple object tracking trainer
-- peripheral vision practice
-- lilac chaser exercise
-- lilac chaser illusion
-- peripheral awareness training
-- browser eye trainer
-- eye tracking trainer for gamers
-- FPS eye training warmup
-- visual tracking practice for IT professionals
-- visual tracking practice for IT people
-- screen work eye tracking practice
-- eye tracking practice for screen fatigue
-- visual tracking practice for tired eyes
-
 ## Background reading
 
 - [Visual guidance of smooth pursuit eye movements](https://pmc.ncbi.nlm.nih.gov/articles/PMC2887486/)
