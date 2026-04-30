@@ -93,7 +93,7 @@ canvas {
   line-height: 1.65;
 }
 
-.noscript-panel h1 {
+.noscript-title {
   max-width: 14ch;
   margin: 0;
   font-size: 2.5rem;
@@ -132,7 +132,7 @@ canvas {
 }
 
 @media (min-width: 48rem) {
-  .noscript-panel h1 {
+  .noscript-title {
     font-size: 4.5rem;
   }
 }

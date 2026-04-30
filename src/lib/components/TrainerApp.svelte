@@ -1208,7 +1208,7 @@
       inert={hudHidden}
     >
       <div class="flex shrink-0 items-center gap-2">
-        <h1
+        <div
           class="flex shrink-0 items-center gap-2 text-base font-semibold tracking-tight text-foreground"
         >
           <img
@@ -1224,7 +1224,7 @@
             class="hidden size-7 object-contain dark:block"
           />
           <span class="sr-only xl:not-sr-only">{siteMetadata.name}</span>
-        </h1>
+        </div>
       </div>
 
       <div

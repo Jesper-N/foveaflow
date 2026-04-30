@@ -27,8 +27,7 @@
 
   const featuredRoutes = trainerRoutes.filter((route) =>
     [
-      "random",
-      "circle",
+      "smooth-pursuit",
       "reaction-jumps",
       "multiple-distractions",
       "lilac-chaser",
@@ -36,7 +35,7 @@
   );
 
   const patternRoutes = trainerRoutes.filter(
-    (route) => route.mode === "pursuit",
+    (route) => route.mode === "pursuit" && !route.indexable,
   );
 
   const guideEnterTop = "guide-enter guide-enter-top";
@@ -89,9 +88,9 @@
           {guideMetadata.summary}
         </p>
         <div class="mt-8 flex flex-wrap gap-3">
-          <Button href="/random/" class="pressable-ui">
+          <Button href="/smooth-pursuit/" class="pressable-ui">
             <CrosshairIcon class="size-4" />
-            <span class="pl-1">Open Random pattern</span>
+            <span class="pl-1">Open Smooth Pursuit</span>
           </Button>
           <Button href="#faq" variant="outline" class="pressable-ui">
             <BookOpenIcon class="size-4" />

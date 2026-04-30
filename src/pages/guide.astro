@@ -21,10 +21,9 @@ const ogImageUrl = absoluteUrl(siteMetadata.imagePath, siteOrigin);
 const structuredData = JSON.stringify(buildGuideStructuredData(siteOrigin));
 ---
 
-<script is:inline set:html={initialModeExpression} />
-
 <html lang="en">
   <head>
+    <script is:inline set:html={initialModeExpression} />
     <meta charset="utf-8" />
     <ThemeFavicon />
     <link rel="canonical" href={canonicalUrl} />

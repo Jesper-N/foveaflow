@@ -24,10 +24,9 @@ const ogImageUrl = absoluteUrl(siteMetadata.imagePath, siteOrigin);
 const structuredData = JSON.stringify(buildStructuredData(siteOrigin));
 ---
 
-<script is:inline set:html={initialModeExpression} />
-
 <html lang="en">
   <head>
+    <script is:inline set:html={initialModeExpression} />
     <meta charset="utf-8" />
     <ThemeFavicon />
     <link rel="canonical" href={canonicalUrl} />
@@ -73,12 +72,13 @@ const structuredData = JSON.stringify(buildStructuredData(siteOrigin));
     <title>{siteMetadata.title}</title>
   </head>
   <body>
+    <h1 class="sr-only">{siteMetadata.title}</h1>
     <TrainerApp client:load />
     <noscript>
       <main class="noscript-shell">
         <section class="noscript-panel">
           <p class="noscript-kicker">Free browser tool</p>
-          <h1>{siteMetadata.title}</h1>
+          <p class="noscript-title">{siteMetadata.title}</p>
           <p>{siteMetadata.shortDescription}</p>
           <p>
             Eye Trainer needs JavaScript to run the moving target canvas. With

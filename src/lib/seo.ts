@@ -481,11 +481,25 @@ export type TrainerRoute = {
   mode: TrainingMode;
   patternId?: PatternId;
   label: string;
+  heading: string;
   title: string;
   description: string;
+  indexable: boolean;
 };
 
 export const trainerRoutes = [
+  {
+    slug: "smooth-pursuit",
+    path: "/smooth-pursuit/",
+    mode: "pursuit",
+    patternId: "randomWalk",
+    label: "Smooth Pursuit",
+    heading: "Smooth Pursuit Eye Training",
+    title: `Smooth Pursuit Eye Training | ${siteMetadata.name}`,
+    description:
+      "Train steady visual tracking with Smooth Pursuit. Follow one moving target online with adjustable speed, path, color, and trail.",
+    indexable: true,
+  },
   ...patternOptions
     .filter((option) => option.id !== "multipleObjectTracking")
     .map((option) => ({
@@ -494,37 +508,49 @@ export const trainerRoutes = [
       mode: "pursuit" as const,
       patternId: option.id,
       label: option.name,
+      heading: `${toTitleCase(option.name)} Smooth Pursuit Eye Training`,
       title: `${toTitleCase(option.name)} Smooth Pursuit Eye Training | ${siteMetadata.name}`,
       description: `Boost visual tracking with the ${option.name.toLowerCase()} Smooth Pursuit drill. Follow one moving target online with adjustable speed, color, and trail.`,
+      indexable: false,
     })),
   {
     slug: "reaction-jumps",
     path: "/reaction-jumps/",
     mode: "reactionTime",
     label: "Reaction Jumps",
+    heading: "Reaction Jumps Eye Training",
     title: `Reaction Jumps Eye Training | ${siteMetadata.name}`,
     description:
       "Sharpen reaction speed and quick refocus with Reaction Jumps. Find each new target position fast and lock on before the next jump.",
+    indexable: true,
   },
   {
     slug: "multiple-distractions",
     path: "/multiple-distractions/",
     mode: "mot",
     label: "Multiple Distractions",
+    heading: "Distractor Tracking Focus Training",
     title: `Distractor Tracking Focus Training | ${siteMetadata.name}`,
     description:
       "Train focus under pressure with Multiple Distractions. Track the brightest target while darker balls compete for your attention.",
+    indexable: true,
   },
   {
     slug: "lilac-chaser",
     path: "/lilac-chaser/",
     mode: "lilacChaser",
     label: "Lilac Chaser",
+    heading: "Lilac Chaser Peripheral Vision Drill",
     title: `Lilac Chaser Peripheral Vision Drill | ${siteMetadata.name}`,
     description:
       "Boost peripheral awareness with Lilac Chaser. Keep your eyes on the center cross while disappearing balls challenge focus.",
+    indexable: true,
   },
 ] satisfies TrainerRoute[];
+
+export const indexableTrainerRoutes = trainerRoutes.filter(
+  (route) => route.indexable,
+);
 
 export const findTrainerRoute = (slug: string | undefined) => {
   if (!slug) return null;
@@ -548,7 +574,7 @@ const sitemapEntries = [
   { path: "/guide/", changefreq: "monthly", priority: "0.8" },
   { path: legalPages.privacy.path, changefreq: "yearly", priority: "0.3" },
   { path: legalPages.terms.path, changefreq: "yearly", priority: "0.3" },
-  ...trainerRoutes.map((route) => ({
+  ...indexableTrainerRoutes.map((route) => ({
     path: route.path,
     changefreq: "monthly",
     priority: "0.7",
@@ -801,7 +827,7 @@ export const buildGuideStructuredData = (site: URL) => {
         "@type": "ItemList",
         "@id": `${guideUrl}#routes`,
         name: "Eye Trainer practice routes",
-        itemListElement: trainerRoutes.map((route, index) => ({
+        itemListElement: indexableTrainerRoutes.map((route, index) => ({
           "@type": "ListItem",
           position: index + 1,
           name: route.label,
@@ -1086,7 +1112,7 @@ export const buildLlmsText = (site: URL) => {
     ),
     "",
     "## Direct app routes",
-    ...trainerRoutes.map(
+    ...indexableTrainerRoutes.map(
       (route) => `- ${route.label}: ${absoluteUrl(route.path, site)}`,
     ),
     "",

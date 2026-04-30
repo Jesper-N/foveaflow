@@ -28,15 +28,17 @@ const initialModeExpression = generateSetInitialModeExpression({
 const siteOrigin = getSiteOrigin(Astro.site);
 const canonicalUrl = absoluteUrl(route.path, siteOrigin);
 const ogImageUrl = absoluteUrl(siteMetadata.imagePath, siteOrigin);
+const robotsContent = route.indexable
+  ? "index,follow,max-image-preview:large"
+  : "noindex,follow";
 const structuredData = JSON.stringify(
   buildTrainerRouteStructuredData(route, siteOrigin),
 );
 ---
 
-<script is:inline set:html={initialModeExpression} />
-
 <html lang="en">
   <head>
+    <script is:inline set:html={initialModeExpression} />
     <meta charset="utf-8" />
     <ThemeFavicon />
     <link rel="canonical" href={canonicalUrl} />
@@ -50,7 +52,7 @@ const structuredData = JSON.stringify(
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={route.description} />
-    <meta name="robots" content="index,follow,max-image-preview:large" />
+    <meta name="robots" content={robotsContent} />
     <meta name="date" content={siteMetadata.lastUpdated} />
     <meta name="last-modified" content={siteMetadata.lastUpdated} />
     <meta name="DC.date.modified" content={siteMetadata.lastUpdated} />
@@ -82,6 +84,7 @@ const structuredData = JSON.stringify(
     <title>{route.title}</title>
   </head>
   <body>
+    <h1 class="sr-only">{route.heading}</h1>
     <TrainerApp routeSlug={route.slug} client:load />
   </body>
 </html>
