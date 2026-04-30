@@ -92,6 +92,9 @@
           grid: "rgba(16, 18, 22, 0.075)",
         };
   };
+
+  const FULL_CIRCLE_RADIANS = Math.PI * 2;
+
   type BehaviorId =
     | "constant"
     | "wavePattern"
@@ -308,6 +311,8 @@
   let rng = createRng(seed);
   let canvasTheme: ReturnType<typeof getCanvasTheme> | null = null;
   let gridPath: Path2D | null = null;
+  let canvasScale = 1;
+  let lastLilacChaserHiddenIndex = -1;
   const targetFrames: TargetFrame[] = [];
   const lilacChaserDotCount = 12;
   const lilacChaserStepSec = 0.1;
@@ -326,6 +331,14 @@
     { id: "#ffcc00", name: "Gold" },
     { id: "#00d7ff", name: "Cyan" },
   ] as const;
+  const lilacChaserUnitPoints = Array.from(
+    { length: lilacChaserDotCount },
+    (_, index) => {
+      const angle =
+        -Math.PI / 2 + (index / lilacChaserDotCount) * FULL_CIRCLE_RADIANS;
+      return [Math.cos(angle), Math.sin(angle)] as const;
+    },
+  );
 
   const getPreservedSettings = (currentSettings: TrainerSettings) => ({
     speed: currentSettings.speed,
@@ -444,7 +457,7 @@
 
   const attachCanvas: Attachment<HTMLCanvasElement> = (node) => {
     canvas = node;
-    context = node.getContext("2d", { alpha: false });
+    context = node.getContext("2d", { alpha: false, desynchronized: true });
 
     const resizeObserver = new ResizeObserver(resizeCanvas);
     resizeObserver.observe(node);
@@ -604,6 +617,8 @@
     const next = readSliderNumber(value);
     if (next === null) return;
     settings.lilacChaserScale = clamp(next, 0.75, 1.5);
+    invalidateLilacChaserFrame();
+    if (isLilacChaserMode) drawFrame();
   };
 
   const opacitySliderValue = () => [settings.targetOpacity];
@@ -638,23 +653,37 @@
     settings.distractorBrightness = clamp(next, 0.35, 1);
   };
 
-  const resizeCanvas = () => {
+  const resizeCanvas = (entries?: ResizeObserverEntry[]) => {
     if (!context) return;
-    const rect = canvas.getBoundingClientRect();
-    arena = {
+    const observedRect = entries?.[0]?.contentRect;
+    const rect = observedRect ?? canvas.getBoundingClientRect();
+    const nextArena = {
       width: Math.max(1, rect.width),
       height: Math.max(1, rect.height),
     };
+    const arenaChanged =
+      nextArena.width !== arena.width || nextArena.height !== arena.height;
+    arena = nextArena;
     const scale = resolveCanvasScale(
       arena.width,
       arena.height,
       window.devicePixelRatio || 1,
     );
-    canvas.width = Math.max(1, Math.round(arena.width * scale));
-    canvas.height = Math.max(1, Math.round(arena.height * scale));
-    context.setTransform(scale, 0, 0, scale, 0, 0);
-    refreshBaseSpeed();
-    rebuildGridPath();
+    const canvasWidth = Math.max(1, Math.round(arena.width * scale));
+    const canvasHeight = Math.max(1, Math.round(arena.height * scale));
+    const backingStoreChanged =
+      canvas.width !== canvasWidth || canvas.height !== canvasHeight;
+    if (canvas.width !== canvasWidth) canvas.width = canvasWidth;
+    if (canvas.height !== canvasHeight) canvas.height = canvasHeight;
+    if (backingStoreChanged || canvasScale !== scale) {
+      canvasScale = scale;
+      context.setTransform(scale, 0, 0, scale, 0, 0);
+    }
+    if (arenaChanged) {
+      refreshBaseSpeed();
+      rebuildGridPath();
+      invalidateLilacChaserFrame();
+    }
     drawFrame();
   };
 
@@ -699,7 +728,7 @@
     currentSpeedPxPerSec = getSpeedPxPerSec(elapsedSec);
     travelPx += currentSpeedPxPerSec * deltaSec;
     elapsedSec += deltaSec;
-    drawFrame();
+    if (shouldDrawTickFrame()) drawFrame();
     animationFrame = requestAnimationFrame(tick);
   };
 
@@ -771,6 +800,18 @@
     }
   };
 
+  const getLilacChaserHiddenIndex = () =>
+    Math.floor(elapsedSec / lilacChaserStepSec) % lilacChaserDotCount;
+
+  const invalidateLilacChaserFrame = () => {
+    lastLilacChaserHiddenIndex = -1;
+  };
+
+  const shouldDrawTickFrame = () => {
+    if (!isLilacChaserMode) return true;
+    return getLilacChaserHiddenIndex() !== lastLilacChaserHiddenIndex;
+  };
+
   const drawLilacChaserFrame = (ctx: CanvasRenderingContext2D) => {
     const centerX = arena.width / 2;
     const centerY = arena.height / 2;
@@ -779,8 +820,8 @@
     const orbitRadius = minSide * lilacChaserOrbitRatio * scale;
     const dotRadius = minSide * lilacChaserDotRatio * scale;
     const crossRadius = minSide * lilacChaserCrossArmRatio * scale;
-    const hiddenIndex =
-      Math.floor(elapsedSec / lilacChaserStepSec) % lilacChaserDotCount;
+    const hiddenIndex = getLilacChaserHiddenIndex();
+    lastLilacChaserHiddenIndex = hiddenIndex;
 
     ctx.fillStyle = lilacChaserTheme.background;
     ctx.fillRect(0, 0, arena.width, arena.height);
@@ -788,11 +829,11 @@
     ctx.fillStyle = settings.lilacChaserBallColor;
     for (let index = 0; index < lilacChaserDotCount; index += 1) {
       if (index === hiddenIndex) continue;
-      const angle = -Math.PI / 2 + (index / lilacChaserDotCount) * Math.PI * 2;
-      const x = centerX + Math.cos(angle) * orbitRadius;
-      const y = centerY + Math.sin(angle) * orbitRadius;
+      const point = lilacChaserUnitPoints[index];
+      const x = centerX + point[0] * orbitRadius;
+      const y = centerY + point[1] * orbitRadius;
       ctx.beginPath();
-      ctx.arc(x, y, dotRadius, 0, Math.PI * 2);
+      ctx.arc(x, y, dotRadius, 0, FULL_CIRCLE_RADIANS);
       ctx.fill();
     }
 
@@ -819,7 +860,9 @@
   const drawTarget = (ctx: CanvasRenderingContext2D, frame: TargetFrame) => {
     if (!frame.visible) return;
 
-    ctx.globalAlpha = frame.alpha * settings.targetOpacity;
+    const alpha = frame.alpha * settings.targetOpacity;
+    if (alpha <= 0) return;
+    if (alpha !== 1) ctx.globalAlpha = alpha;
     ctx.fillStyle = frame.color;
     drawStimulusShape(
       ctx,
@@ -828,7 +871,7 @@
       frame.radiusPx,
       settings.targetShape,
     );
-    ctx.globalAlpha = 1;
+    if (alpha !== 1) ctx.globalAlpha = 1;
   };
 
   const drawStimulusShape = (
@@ -838,13 +881,12 @@
     radiusPx: number,
     shape: TargetShape,
   ) => {
-    ctx.beginPath();
-
     if (shape === "square") {
-      ctx.rect(x - radiusPx, y - radiusPx, radiusPx * 2, radiusPx * 2);
-      ctx.fill();
+      ctx.fillRect(x - radiusPx, y - radiusPx, radiusPx * 2, radiusPx * 2);
       return;
     }
+
+    ctx.beginPath();
 
     if (shape === "diamond") {
       ctx.moveTo(x, y - radiusPx * 1.25);
@@ -877,7 +919,7 @@
       return;
     }
 
-    ctx.arc(x, y, radiusPx, 0, Math.PI * 2);
+    ctx.arc(x, y, radiusPx, 0, FULL_CIRCLE_RADIANS);
     if (shape === "ring") {
       ctx.lineWidth = Math.max(3, radiusPx * 0.28);
       ctx.strokeStyle = ctx.fillStyle;
@@ -905,6 +947,8 @@
       lilacChaserBallColor: settings.lilacChaserBallColor,
     });
     refreshBaseSpeed();
+    invalidateLilacChaserFrame();
+    drawFrame();
   };
 
   const getBrowserRouteSlug = () => {
@@ -929,6 +973,7 @@
     travelPx = 0;
     currentSpeedPxPerSec = 0;
     refreshBaseSpeed();
+    invalidateLilacChaserFrame();
     drawFrame();
     setBrowserPath("/");
   };
@@ -1109,7 +1154,10 @@
   };
 
   const handleLilacChaserColorChange = (value: string) => {
-    if (isLilacChaserBallColor(value)) settings.lilacChaserBallColor = value;
+    if (!isLilacChaserBallColor(value)) return;
+    settings.lilacChaserBallColor = value;
+    invalidateLilacChaserFrame();
+    if (isLilacChaserMode) drawFrame();
   };
 
   const handleCalibrationInput = (

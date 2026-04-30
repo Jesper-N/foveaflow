@@ -10,7 +10,6 @@ import type { Rng } from "./random";
 const TAU = Math.PI * 2;
 const DEFAULT_TARGET_COLOR = "#76d900";
 const DEFAULT_SECONDARY_COLOR = "#3ddbd9";
-
 const clamp = (value: number, min: number, max: number) =>
   Math.min(max, Math.max(min, value));
 
@@ -76,6 +75,16 @@ const waypoint = (
     rng.rangeAt(index * 2 + 40_000, left, right),
     rng.rangeAt(index * 2 + 40_001, top, bottom),
   ] satisfies [number, number];
+
+const curveCacheKey = (
+  id: PatternId,
+  left: number,
+  top: number,
+  right: number,
+  bottom: number,
+  samples: number,
+) =>
+  `${id}:${Math.round(left)}:${Math.round(top)}:${Math.round(right)}:${Math.round(bottom)}:${samples}`;
 
 const sampleClosedCurve = (
   key: string,
@@ -158,6 +167,23 @@ type RandomWalkState = {
 
 let randomWalkState: RandomWalkState | null = null;
 
+type MotObjectParams = {
+  speedScaleX: number;
+  speedScaleY: number;
+  phaseX: number;
+  phaseY: number;
+};
+
+type MotParamsCache = {
+  seed: number;
+  total: number;
+  width: number;
+  height: number;
+  objects: MotObjectParams[];
+};
+
+let motParamsCache: MotParamsCache | null = null;
+
 export const withIsolatedPatternSampling = <Result>(
   samplePreview: () => Result,
 ) => {
@@ -165,12 +191,14 @@ export const withIsolatedPatternSampling = <Result>(
   const previousRandomWalkState = randomWalkState
     ? { ...randomWalkState }
     : null;
+  const previousMotParamsCache = motParamsCache;
 
   try {
     return samplePreview();
   } finally {
     cachedCurve = previousCachedCurve;
     randomWalkState = previousRandomWalkState;
+    motParamsCache = previousMotParamsCache;
   }
 };
 
@@ -258,20 +286,18 @@ const advanceRandomWalk = (
 const writeTarget = (
   frames: TargetFrame[],
   index: number,
-  id: string,
   x: number,
   y: number,
   params: PatternParams,
-  role: TargetRole = "target",
   radiusPx = params.radiusPx,
   color = params.colorA ?? DEFAULT_TARGET_COLOR,
   alpha = 1,
   visible = true,
+  role: TargetRole = "target",
 ) => {
   let frame = frames[index];
   if (!frame) {
     frame = {
-      id,
       x,
       y,
       radiusPx,
@@ -284,7 +310,6 @@ const writeTarget = (
     return index + 1;
   }
 
-  frame.id = id;
   frame.x = x;
   frame.y = y;
   frame.radiusPx = radiusPx;
@@ -292,8 +317,44 @@ const writeTarget = (
   frame.alpha = alpha;
   frame.visible = visible;
   frame.role = role;
-  frame.label = undefined;
   return index + 1;
+};
+
+const getMotObjectParams = (
+  rng: Rng,
+  total: number,
+  width: number,
+  height: number,
+) => {
+  if (
+    motParamsCache &&
+    motParamsCache.seed === rng.seed &&
+    motParamsCache.total === total &&
+    motParamsCache.width === width &&
+    motParamsCache.height === height
+  ) {
+    return motParamsCache.objects;
+  }
+
+  const objects: MotObjectParams[] = [];
+  for (let index = 0; index < total; index += 1) {
+    const base = index * 10;
+    objects.push({
+      speedScaleX: rng.rangeAt(base, 0.52, 1.26),
+      speedScaleY: rng.rangeAt(base + 1, 0.48, 1.18),
+      phaseX: rng.rangeAt(base + 2, 0, width * 2),
+      phaseY: rng.rangeAt(base + 3, 0, height * 2),
+    });
+  }
+
+  motParamsCache = {
+    seed: rng.seed,
+    total,
+    width,
+    height,
+    objects,
+  };
+  return objects;
 };
 
 export const samplePatternInto = (
@@ -322,7 +383,6 @@ export const samplePatternInto = (
   const travelPx = params.travelPx || elapsedSec * speedPxPerSec;
   const primaryColor = params.colorA ?? DEFAULT_TARGET_COLOR;
   const secondaryColor = params.colorB ?? DEFAULT_SECONDARY_COLOR;
-  const curveKey = `${id}:${Math.round(left)}:${Math.round(top)}:${Math.round(right)}:${Math.round(bottom)}`;
 
   if (id === "circle") {
     const radius = Math.max(1, Math.min(rx, ry));
@@ -330,11 +390,9 @@ export const samplePatternInto = (
     return writeTarget(
       frames,
       0,
-      "target",
       cx + Math.cos(angle) * radius,
       cy + Math.sin(angle) * radius,
       params,
-      "target",
       radiusPx,
       primaryColor,
     );
@@ -346,11 +404,9 @@ export const samplePatternInto = (
     return writeTarget(
       frames,
       0,
-      "target",
       cx + Math.cos(angle) * rx,
       cy + Math.sin(angle) * ry,
       params,
-      "target",
       radiusPx,
       primaryColor,
     );
@@ -362,11 +418,9 @@ export const samplePatternInto = (
     return writeTarget(
       frames,
       0,
-      "target",
       cx + Math.sin(angle) * rx,
       cy + Math.sin(angle * 2) * ry * 0.72,
       params,
-      "target",
       radiusPx,
       primaryColor,
     );
@@ -374,7 +428,7 @@ export const samplePatternInto = (
 
   if (id === "wave") {
     const [x, y] = sampleClosedCurve(
-      `${curveKey}:120`,
+      curveCacheKey(id, left, top, right, bottom, 120),
       travelPx,
       120,
       (phase) => {
@@ -385,28 +439,16 @@ export const samplePatternInto = (
         ];
       },
     );
-    return writeTarget(
-      frames,
-      0,
-      "target",
-      x,
-      y,
-      params,
-      "target",
-      radiusPx,
-      primaryColor,
-    );
+    return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
   }
 
   if (id === "diagonal") {
     return writeTarget(
       frames,
       0,
-      "target",
       left + pingPong(travelPx * 0.72, width),
       top + pingPong(travelPx, height),
       params,
-      "target",
       radiusPx,
       primaryColor,
     );
@@ -416,11 +458,9 @@ export const samplePatternInto = (
     return writeTarget(
       frames,
       0,
-      "target",
       left + pingPong(travelPx * 0.93 + width * 0.18, width),
       top + pingPong(travelPx * 0.67 + height * 0.41, height),
       params,
-      "target",
       radiusPx,
       primaryColor,
     );
@@ -450,11 +490,9 @@ export const samplePatternInto = (
     return writeTarget(
       frames,
       0,
-      "target",
       state.x,
       state.y,
       params,
-      "target",
       radiusPx,
       primaryColor,
     );
@@ -470,11 +508,9 @@ export const samplePatternInto = (
     return writeTarget(
       frames,
       0,
-      "target",
       x1 + (x2 - x1) * partial,
       y1 + (y2 - y1) * partial,
       params,
-      "target",
       radiusPx,
       primaryColor,
     );
@@ -487,11 +523,9 @@ export const samplePatternInto = (
     return writeTarget(
       frames,
       0,
-      "target",
       rng.rangeAt(bucket * 2, left, right),
       rng.rangeAt(bucket * 2 + 1, top, bottom),
       params,
-      "target",
       radiusPx,
       primaryColor,
       phase < 0.08 ? 0.35 : 1,
@@ -502,11 +536,9 @@ export const samplePatternInto = (
     return writeTarget(
       frames,
       0,
-      "target",
       left + pingPong(travelPx * 0.72, width),
       cy,
       params,
-      "target",
       radiusPx,
       primaryColor,
     );
@@ -516,11 +548,9 @@ export const samplePatternInto = (
     return writeTarget(
       frames,
       0,
-      "target",
       cx,
       top + pingPong(travelPx * 0.72, height),
       params,
-      "target",
       radiusPx,
       primaryColor,
     );
@@ -536,17 +566,7 @@ export const samplePatternInto = (
       ],
       travelPx * 0.62,
     );
-    return writeTarget(
-      frames,
-      0,
-      "target",
-      x,
-      y,
-      params,
-      "target",
-      radiusPx,
-      primaryColor,
-    );
+    return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
   }
 
   if (id === "diamondLoop") {
@@ -559,22 +579,12 @@ export const samplePatternInto = (
       ],
       travelPx * 0.68,
     );
-    return writeTarget(
-      frames,
-      0,
-      "target",
-      x,
-      y,
-      params,
-      "target",
-      radiusPx,
-      primaryColor,
-    );
+    return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
   }
 
   if (id === "spiralBloom") {
     const [x, y] = sampleClosedCurve(
-      `${curveKey}:140`,
+      curveCacheKey(id, left, top, right, bottom, 140),
       travelPx,
       140,
       (phase) => {
@@ -586,22 +596,12 @@ export const samplePatternInto = (
         ];
       },
     );
-    return writeTarget(
-      frames,
-      0,
-      "target",
-      x,
-      y,
-      params,
-      "target",
-      radiusPx,
-      primaryColor,
-    );
+    return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
   }
 
   if (id === "clover") {
     const [x, y] = sampleClosedCurve(
-      `${curveKey}:160`,
+      curveCacheKey(id, left, top, right, bottom, 160),
       travelPx,
       160,
       (phase) => {
@@ -613,17 +613,7 @@ export const samplePatternInto = (
         ];
       },
     );
-    return writeTarget(
-      frames,
-      0,
-      "target",
-      x,
-      y,
-      params,
-      "target",
-      radiusPx,
-      primaryColor,
-    );
+    return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
   }
 
   if (id === "zigZag") {
@@ -634,17 +624,7 @@ export const samplePatternInto = (
       return [x, y] satisfies [number, number];
     });
     const [x, y] = pointOnSegment(points, travelPx * 1.08, true);
-    return writeTarget(
-      frames,
-      0,
-      "target",
-      x,
-      y,
-      params,
-      "target",
-      radiusPx,
-      primaryColor,
-    );
+    return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
   }
 
   if (id === "stairStep") {
@@ -664,11 +644,9 @@ export const samplePatternInto = (
     return writeTarget(
       frames,
       0,
-      "target",
       left + (column + (nextColumn - column) * phase) * columnWidth,
       top + (row + (nextRow - row) * phase) * rowHeight,
       params,
-      "target",
       radiusPx,
       primaryColor,
     );
@@ -676,7 +654,7 @@ export const samplePatternInto = (
 
   if (id === "lissajous") {
     const [x, y] = sampleClosedCurve(
-      `${curveKey}:180`,
+      curveCacheKey(id, left, top, right, bottom, 180),
       travelPx * 0.82,
       180,
       (phase) => {
@@ -687,22 +665,12 @@ export const samplePatternInto = (
         ];
       },
     );
-    return writeTarget(
-      frames,
-      0,
-      "target",
-      x,
-      y,
-      params,
-      "target",
-      radiusPx,
-      primaryColor,
-    );
+    return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
   }
 
   if (id === "hourglass") {
     const [x, y] = sampleClosedCurve(
-      `${curveKey}:160`,
+      curveCacheKey(id, left, top, right, bottom, 160),
       travelPx * 0.82,
       160,
       (phase) => {
@@ -712,17 +680,7 @@ export const samplePatternInto = (
         return [cx + Math.sin(angle * 2) * rx * pinch, cy + vertical * ry];
       },
     );
-    return writeTarget(
-      frames,
-      0,
-      "target",
-      x,
-      y,
-      params,
-      "target",
-      radiusPx,
-      primaryColor,
-    );
+    return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
   }
 
   if (id === "orbitShift") {
@@ -732,11 +690,9 @@ export const samplePatternInto = (
     return writeTarget(
       frames,
       0,
-      "target",
       cx + drift + Math.cos(angle) * rx * 0.42,
       cy + Math.sin(angle) * ry * 0.82,
       params,
-      "target",
       radiusPx,
       primaryColor,
     );
@@ -754,17 +710,7 @@ export const samplePatternInto = (
       ],
       travelPx * 0.64,
     );
-    return writeTarget(
-      frames,
-      0,
-      "target",
-      x,
-      y,
-      params,
-      "target",
-      radiusPx,
-      primaryColor,
-    );
+    return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
   }
 
   if (id === "multipleObjectTracking") {
@@ -775,26 +721,23 @@ export const samplePatternInto = (
       20,
     );
     const total = targetCount + distractorCount;
+    const objects = getMotObjectParams(rng, total, width, height);
     let count = 0;
 
     for (let index = 0; index < total; index += 1) {
-      const base = index * 10;
-      const speedScaleX = rng.rangeAt(base, 0.52, 1.26);
-      const speedScaleY = rng.rangeAt(base + 1, 0.48, 1.18);
-      const phaseX = rng.rangeAt(base + 2, 0, width * 2);
-      const phaseY = rng.rangeAt(base + 3, 0, height * 2);
+      const object = objects[index];
       const role: TargetRole = index < targetCount ? "target" : "distractor";
       count = writeTarget(
         frames,
         count,
-        `${role}-${index}`,
-        left + pingPong(travelPx * speedScaleX + phaseX, width),
-        top + pingPong(travelPx * speedScaleY + phaseY, height),
+        left + pingPong(travelPx * object.speedScaleX + object.phaseX, width),
+        top + pingPong(travelPx * object.speedScaleY + object.phaseY, height),
         params,
-        role,
         radiusPx,
         role === "target" ? primaryColor : secondaryColor,
         1,
+        true,
+        role,
       );
     }
 

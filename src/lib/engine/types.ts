@@ -13,7 +13,6 @@ export type SpeedSetting = {
 export type TargetRole = "target" | "distractor";
 
 export type TargetFrame = {
-  id: string;
   x: number;
   y: number;
   radiusPx: number;
@@ -21,7 +20,6 @@ export type TargetFrame = {
   alpha: number;
   visible: boolean;
   role: TargetRole;
-  label?: string;
 };
 
 export type TargetShape =
