@@ -35,6 +35,7 @@
     type Calibration,
     speedToPixelsPerSecond,
   } from "$lib/engine/calibration";
+  import { resolveCanvasScale } from "$lib/engine/canvas";
   import {
     DEFAULT_BALL_COLOR,
     exercisePresets,
@@ -640,14 +641,18 @@
   const resizeCanvas = () => {
     if (!context) return;
     const rect = canvas.getBoundingClientRect();
-    const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
     arena = {
       width: Math.max(1, rect.width),
       height: Math.max(1, rect.height),
     };
-    canvas.width = Math.max(1, Math.round(arena.width * dpr));
-    canvas.height = Math.max(1, Math.round(arena.height * dpr));
-    context.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const scale = resolveCanvasScale(
+      arena.width,
+      arena.height,
+      window.devicePixelRatio || 1,
+    );
+    canvas.width = Math.max(1, Math.round(arena.width * scale));
+    canvas.height = Math.max(1, Math.round(arena.height * scale));
+    context.setTransform(scale, 0, 0, scale, 0, 0);
     refreshBaseSpeed();
     rebuildGridPath();
     drawFrame();
