@@ -113,11 +113,11 @@
           </Item.Media>
           <Item.Content>
             <Item.Title class="line-clamp-none text-base">
-              Motion patterns, clear limits
+              Pick a drill and tune the target
             </Item.Title>
             <Item.Description class="line-clamp-none leading-6">
-              The patterns are simple screen paths. Pick one, adjust the target,
-              and use the app for a short practice session.
+              Choose a path, set the speed and target style, then use it for a
+              short visual tracking session.
             </Item.Description>
           </Item.Content>
         </Item.Root>
@@ -218,8 +218,8 @@
           screens
         </h2>
         <p class="mt-4 max-w-[34rem] text-base leading-7 text-muted-foreground">
-          Use it as a short visual tracking warmup or practice break, not as
-          medical care.
+          Use it as a quick visual warmup or active screen break, not as medical
+          care.
         </p>
       </div>
 

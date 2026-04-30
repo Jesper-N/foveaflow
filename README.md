@@ -7,13 +7,13 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.2-38bdf8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-[Eye Trainer](https://eye-trainer.app/) is a free browser visual tracking tool for gamers, IT professionals, and people who spend long hours on screens. It includes smooth pursuit paths, reaction jumps, Lilac Chaser peripheral focus practice, random motion, and distractor tracking.
+[Eye Trainer](https://eye-trainer.app/) is a free online eye training app for visual tracking, focus, reaction speed, and peripheral awareness. It includes Smooth Pursuit paths, Reaction Jumps, Lilac Chaser peripheral focus practice, random motion, and distractor tracking.
 
 It runs without an account or install. The app keeps the canvas full screen, gives direct control over target motion, and stores settings locally in your browser.
 
 ## What it does
 
-- Runs four drills: Smooth Pursuit, Reaction jumps, Multiple Distractions, and Lilac Chaser.
+- Runs four drills: Smooth Pursuit, Reaction Jumps, Multiple Distractions, and Lilac Chaser.
 - Includes motion paths such as random, figure eight, bounce, sweeps, lissajous, shifting orbit, and corner tour.
 - Supports speed controls in `deg/s`, `cm/s`, and `screen/s`.
 - Lets you tune target size, shape, color, opacity, trail behavior, distractor count, distractor brightness, and Lilac Chaser scale.
@@ -25,6 +25,10 @@ It runs without an account or install. The app keeps the canvas full screen, giv
 ## Common searches Eye Trainer answers
 
 - free eye tracking trainer
+- free online eye training
+- eye training exercises
+- FPS eye training exercises
+- eye focus exercises
 - smooth pursuit practice
 - visual tracking exercise
 - reaction time trainer

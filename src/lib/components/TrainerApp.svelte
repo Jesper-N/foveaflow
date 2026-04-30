@@ -1209,23 +1209,28 @@
     >
       <div class="flex shrink-0 items-center gap-2">
         <h1
-          class="flex shrink-0 items-center gap-2 text-sm font-semibold tracking-tight text-foreground"
+          class="flex shrink-0 items-center gap-2 text-base font-semibold tracking-tight text-foreground"
         >
           <img
-            src="/lightmode.svg"
+            src="/lightmode.webp"
             alt=""
             aria-hidden="true"
-            class="h-5 w-7 object-contain dark:hidden"
+            class="size-7 object-contain dark:hidden"
           />
           <img
-            src="/darkmode.svg"
+            src="/darkmode.webp"
             alt=""
             aria-hidden="true"
-            class="hidden h-5 w-7 object-contain dark:block"
+            class="hidden size-7 object-contain dark:block"
           />
           <span class="sr-only xl:not-sr-only">{siteMetadata.name}</span>
         </h1>
       </div>
+
+      <div
+        class="hidden h-8 w-px shrink-0 bg-border/80 md:block"
+        aria-hidden="true"
+      ></div>
 
       <div class="hidden min-w-0 items-center gap-2 md:flex">
         <Select.Root
@@ -1361,6 +1366,11 @@
           </div>
         </div>
       {/if}
+
+      <div
+        class="hidden h-8 w-px shrink-0 bg-border/80 md:block"
+        aria-hidden="true"
+      ></div>
 
       <nav class="flex shrink-0 items-center gap-2" aria-label="App actions">
         <Button

@@ -6,16 +6,22 @@ export const defaultSiteUrl = "https://eye-trainer.app";
 
 export const siteMetadata = {
   name: "Eye Trainer",
-  title: "Free eye trainer for gamers and IT professionals",
+  alternateName: "EyeTrainer",
+  title: "Eye Trainer - Sharpen Visual Tracking & Focus",
   description:
-    "Practice smooth pursuit, reaction jumps, Lilac Chaser, and distractor tracking. Built for gamers, IT professionals, and people who spend long hours on screens.",
+    "Practice visual tracking, quick refocus, and reaction drills for gaming, IT work, and screen-heavy days. Built for short, focused visual warmups.",
   shortDescription:
-    "Free visual tracking practice with smooth pursuit, reaction jumps, Lilac Chaser, and distractor tracking. No account or install required.",
+    "Free eye training exercises for visual tracking, focus, reaction speed, and screen-heavy work. No account or install required.",
   imagePath: "/metadata/og.jpg",
   repositoryUrl: "https://github.com/Jesper-N/eye-trainer",
   lastUpdated: "2026-04-30",
   keywords: [
     "free eye tracking trainer",
+    "free online eye training",
+    "eye training exercises",
+    "FPS eye training exercises",
+    "eye focus exercises",
+    "visual focus training",
     "smooth pursuit practice",
     "visual tracking exercise",
     "reaction time trainer",
@@ -40,15 +46,15 @@ export const siteMetadata = {
 export const audienceNotes = [
   {
     title: "Gamers",
-    body: "Warm up before FPS games or aim training with short tracking and refocus drills.",
+    body: "Sharpen your visual warmup before FPS games with tracking, refocus, peripheral awareness, and character movement reading drills.",
   },
   {
     title: "IT professionals",
-    body: "Break up long sessions spent scanning code, logs, dashboards, terminals, and tickets.",
+    body: "Sharpen focus between code, logs, dashboards, terminals, tickets, and multi-monitor work.",
   },
   {
     title: "People on screens all day",
-    body: "Use a quick tracking break when your eyes feel tired after reading, meetings, or too many tabs.",
+    body: "Give tired screen eyes a quick active break after reading, meetings, or too many tabs.",
   },
 ] as const;
 
@@ -56,54 +62,52 @@ export const trainingModeGuides = [
   {
     mode: "pursuit",
     title: "Smooth Pursuit",
-    summary:
-      "Follow one moving ball with your eyes while keeping your head still.",
+    summary: "Train smooth visual tracking by following one moving target.",
     steps: [
       "Keep your head still and let your eyes do the work.",
       "Track the ball as smoothly as you can instead of jumping ahead of it.",
       "Use predictable paths for steady tracking. Use random paths or hard turns when you want more target-search work.",
     ],
     benefits:
-      "Smooth pursuit practice trains steady visual tracking, attention on a moving target, and controlled eye movement across more of your usable range. Predictable paths are good for rhythm and control. Less predictable paths add more visual search and reaction demand.",
+      "Smooth Pursuit helps train steady tracking, moving-target focus, and controlled eye movement across more of your usable range. Predictable paths build rhythm and control. Random paths and hard turns add more visual search and reaction demand.",
   },
   {
     mode: "reactionTime",
-    title: "Reaction jumps",
+    title: "Reaction Jumps",
     summary:
-      "Find the ball after each jump and focus on the new position as quickly as you can.",
+      "Train quick refocus by snapping your eyes to each new target position.",
     steps: [
       "Keep your head still and start with your eyes on the ball.",
       "When it jumps, find the new location and actually focus on it before the next jump.",
       "Use slower speeds for clean refocusing. Raise the speed when you want a sharper reaction drill.",
     ],
     benefits:
-      "Reaction jumps practice quick target acquisition, saccadic eye movement, peripheral detection, and fast refocusing. It is useful when you want to react to a new visual target without moving your head first.",
+      "Reaction Jumps trains quick target acquisition, saccadic eye movement, peripheral detection, and fast refocusing. It is useful when you want to react to a new visual target without moving your head first.",
   },
   {
     mode: "mot",
     title: "Multiple Distractions",
     summary:
-      "Track the brightest ball while darker balls move through the same space.",
+      "Sharpen selective focus by tracking the brightest target through moving distractions.",
     steps: [
       "Keep your head still and lock onto the main, brightest ball.",
       "Follow it like Smooth Pursuit, but do not let the darker balls pull your eyes away.",
       "Start with fewer distractors, then add more when you can keep the target cleanly.",
     ],
     benefits:
-      "Multiple Distractions practice selective attention, visual tracking under clutter, and target identity. The job is not just following motion. You also have to keep choosing the right object when similar objects compete for attention.",
+      "Multiple Distractions trains selective attention, visual tracking under clutter, and target identity. The job is not just following motion. You also have to keep choosing the right object when similar objects compete for attention.",
   },
   {
     mode: "lilacChaser",
     title: "Lilac Chaser",
-    summary:
-      "Keep your eyes on the center cross while fixed colored balls disappear one at a time around the circle.",
+    summary: "Train peripheral awareness by holding focus on the center cross.",
     steps: [
       "Look only at the black cross in the middle.",
       "Do not follow the balls with your eyes.",
       "Let the disappearing gap move around the fixed circle. With steady focus, the colored balls may fade and the missing spot can look like a moving green afterimage.",
     ],
     benefits:
-      "Lilac Chaser practice trains fixation, peripheral awareness, visual attention, and noticing change away from the point you are looking at. For gaming, it can be a short warmup for catching movement near the edge of your vision without constantly shifting your gaze.",
+      "Lilac Chaser trains fixation, peripheral awareness, visual attention, and noticing change away from the point you are looking at. For gaming, it can be a short warmup for catching movement near the edge of your vision without constantly shifting your gaze.",
   },
 ] as const;
 
@@ -123,52 +127,52 @@ export const faqItems = [
   {
     question: "What is Eye Trainer?",
     answer:
-      "Eye Trainer is a free browser tool for visual tracking practice. It includes smooth pursuit paths, reaction jumps, Lilac Chaser, and distractor tracking.",
+      "Eye Trainer is a free online eye training app for visual tracking, focus, reaction speed, and peripheral awareness. It includes Smooth Pursuit, Reaction Jumps, Lilac Chaser, and distractor tracking with no account or install.",
   },
   {
     question: "Is Eye Trainer free?",
     answer:
-      "Yes. Eye Trainer is free, has no paid plan, and does not require an account.",
+      "Yes. Eye Trainer is free to use, with no account, subscription, or paid plan.",
   },
   {
     question: "What is Smooth Pursuit mode?",
     answer:
-      "Smooth Pursuit shows one moving ball. Keep your head still and track the ball with your eyes. Predictable paths are good for steady control; random paths and hard turns add more target-search work.",
+      "Smooth Pursuit is a moving-target eye training drill. Keep your head still and track the ball with your eyes. Predictable paths build steady control; random paths and hard turns add more target-search work.",
   },
   {
-    question: "What is Reaction jumps mode?",
+    question: "What is Reaction Jumps mode?",
     answer:
-      "Reaction jumps keeps the ball still, then moves it to a new spot. Find the new location and focus on it before the next jump.",
+      "Reaction Jumps trains quick refocus. The target holds still, then jumps to a new spot so you can find it fast and focus before the next move.",
   },
   {
     question: "What is Multiple Distractions mode?",
     answer:
-      "Multiple Distractions is selective tracking practice. Follow the brightest ball while darker balls move through the same space and try to pull your attention away.",
+      "Multiple Distractions is focus training under visual clutter. Follow the brightest ball while darker balls move through the same space and compete for your attention.",
   },
   {
     question: "What is Lilac Chaser mode?",
     answer:
-      "Lilac Chaser is a peripheral focus drill. Keep your eyes on the center cross while one ball disappears at a time around a fixed circle. With steady fixation, many people perceive a moving green afterimage where the missing ball is.",
+      "Lilac Chaser is a peripheral vision and focus drill. Keep your eyes on the center cross while one ball disappears at a time around a fixed circle. With steady fixation, many people perceive a moving green afterimage where the missing ball is.",
   },
   {
     question: "Can Eye Trainer improve eyesight or reaction time?",
     answer:
-      "Eye Trainer may help you train visual skills like tracking, refocusing, peripheral awareness, processing speed, and reaction timing. Results vary. If you have an eye condition or ongoing symptoms, get professional advice too.",
+      "Eye Trainer may help you train visual skills like tracking, refocusing, peripheral awareness, processing speed, and reaction timing. Results vary, and it is not a replacement for professional care if you have an eye condition or ongoing symptoms.",
   },
   {
     question: "Is Eye Trainer good for gamers?",
     answer:
-      "It can work as a quick visual warmup before FPS games, aim training, or other fast games with moving targets.",
+      "Yes. Use Eye Trainer as a quick visual warmup before FPS games or any game where tracking targets and reading character movement matters.",
   },
   {
     question: "Is Eye Trainer useful for IT professionals?",
     answer:
-      "It is a simple break for people who spend long sessions scanning code, logs, dashboards, tickets, terminals, and multiple windows.",
+      "Yes. It gives developers, sysadmins, and support teams a short visual reset between code, logs, dashboards, terminals, tickets, and multiple windows.",
   },
   {
     question: "Can Eye Trainer help with tired eyes from screen work?",
     answer:
-      "Eye Trainer can give you a short tracking break during long screen sessions. If screen use causes pain, dizziness, headaches, or ongoing symptoms, stop and get professional advice.",
+      "Eye Trainer can be a short active break during long screen sessions. If screen use causes pain, dizziness, headaches, or ongoing symptoms, stop and get professional advice.",
   },
   {
     question: "Do I need an account or app install?",
@@ -188,11 +192,11 @@ export const faqItems = [
 ] as const;
 
 export const guideMetadata = {
-  title: "Eye Trainer Guide: Visual Tracking Practice",
+  title: "Eye Trainer Guide - Visual Tracking & Focus Drills",
   description:
-    "Use Eye Trainer for smooth pursuit, reaction jumps, Lilac Chaser, and distractor tracking. For gamers, IT professionals, and people on screens all day.",
+    "Learn the Smooth Pursuit, Reaction Jumps, Lilac Chaser, and distractor drills that train focus, tracking, reaction speed, and peripheral awareness.",
   summary:
-    "Use the guide to pick a drill, open a direct URL, adjust the settings, and keep the safety limits clear.",
+    "Choose a drill, tune the target, and start a short eye training session with clear safety limits.",
 } as const;
 
 export const legalPages = {
@@ -442,35 +446,35 @@ export const trainerRoutes = [
       mode: "pursuit" as const,
       patternId: option.id,
       label: option.name,
-      title: `${toTitleCase(option.name)} Smooth Pursuit | ${siteMetadata.name}`,
-      description: `Start the ${option.name.toLowerCase()} smooth pursuit pattern in your browser. Follow one target with adjustable speed, size, color, and trail. No account needed.`,
+      title: `${toTitleCase(option.name)} Smooth Pursuit Eye Training | ${siteMetadata.name}`,
+      description: `Boost visual tracking with the ${option.name.toLowerCase()} Smooth Pursuit drill. Follow one moving target online with adjustable speed, color, and trail.`,
     })),
   {
     slug: "reaction-jumps",
     path: "/reaction-jumps/",
     mode: "reactionTime",
-    label: "Reaction jumps",
-    title: `Reaction Jumps | ${siteMetadata.name}`,
+    label: "Reaction Jumps",
+    title: `Reaction Jumps Eye Training | ${siteMetadata.name}`,
     description:
-      "Practice Reaction jumps in your browser. Find each new ball position quickly and refocus before the next jump. No account needed.",
+      "Sharpen reaction speed and quick refocus with Reaction Jumps. Find each new target position fast and lock on before the next jump.",
   },
   {
     slug: "multiple-distractions",
     path: "/multiple-distractions/",
     mode: "mot",
     label: "Multiple Distractions",
-    title: `Multiple Distractions | ${siteMetadata.name}`,
+    title: `Distractor Tracking Focus Training | ${siteMetadata.name}`,
     description:
-      "Practice Multiple Distractions in your browser. Track the brightest ball while darker balls move through the same space. No account needed.",
+      "Train focus under pressure with Multiple Distractions. Track the brightest target while darker balls compete for your attention.",
   },
   {
     slug: "lilac-chaser",
     path: "/lilac-chaser/",
     mode: "lilacChaser",
     label: "Lilac Chaser",
-    title: `Lilac Chaser Exercise | ${siteMetadata.name}`,
+    title: `Lilac Chaser Peripheral Vision Drill | ${siteMetadata.name}`,
     description:
-      "Practice Lilac Chaser in your browser. Keep your eyes on the center cross while fixed balls disappear one by one around the circle. No account needed.",
+      "Boost peripheral awareness with Lilac Chaser. Keep your eyes on the center cross while disappearing balls challenge focus.",
   },
 ] satisfies TrainerRoute[];
 
@@ -524,6 +528,7 @@ export const buildStructuredData = (site: URL) => {
         "@type": "WebSite",
         "@id": `${appUrl}#website`,
         name: siteMetadata.name,
+        alternateName: siteMetadata.alternateName,
         url: appUrl,
         description: siteMetadata.shortDescription,
         inLanguage: "en",
@@ -536,7 +541,7 @@ export const buildStructuredData = (site: URL) => {
         url: appUrl,
         image: imageUrl,
         applicationCategory: "EducationalApplication",
-        applicationSubCategory: "Visual tracking practice",
+        applicationSubCategory: "Eye training and visual tracking practice",
         operatingSystem: "Any",
         browserRequirements: "Requires JavaScript and a modern browser.",
         isAccessibleForFree: true,
@@ -554,10 +559,10 @@ export const buildStructuredData = (site: URL) => {
           audienceType: audienceNote.title,
         })),
         featureList: [
-          "Smooth pursuit tracking practice",
-          "Reaction jump and quick refocus practice",
-          "Lilac Chaser peripheral focus practice",
-          "Multiple Distractions selective attention practice",
+          "Smooth Pursuit eye tracking drills",
+          "Reaction Jumps quick refocus drills",
+          "Lilac Chaser peripheral vision drill",
+          "Multiple Distractions focus training",
           "Adjustable speed, size, shape, color, opacity, and trail",
           "Viewing distance, screen scale, and Lilac Chaser scale controls",
         ],
@@ -581,6 +586,7 @@ export const buildGuideStructuredData = (site: URL) => {
         "@type": "WebSite",
         "@id": `${appUrl}#website`,
         name: siteMetadata.name,
+        alternateName: siteMetadata.alternateName,
         url: appUrl,
         description: siteMetadata.shortDescription,
         inLanguage: "en",
@@ -593,7 +599,7 @@ export const buildGuideStructuredData = (site: URL) => {
         url: appUrl,
         image: imageUrl,
         applicationCategory: "EducationalApplication",
-        applicationSubCategory: "Visual tracking practice",
+        applicationSubCategory: "Eye training and visual tracking practice",
         operatingSystem: "Any",
         browserRequirements: "Requires JavaScript and a modern browser.",
         isAccessibleForFree: true,
@@ -611,10 +617,10 @@ export const buildGuideStructuredData = (site: URL) => {
           audienceType: audienceNote.title,
         })),
         featureList: [
-          "Smooth pursuit tracking practice",
-          "Reaction jump and quick refocus practice",
-          "Lilac Chaser peripheral focus practice",
-          "Multiple Distractions selective attention practice",
+          "Smooth Pursuit eye tracking drills",
+          "Reaction Jumps quick refocus drills",
+          "Lilac Chaser peripheral vision drill",
+          "Multiple Distractions focus training",
           "Adjustable speed, size, shape, color, opacity, and trail",
           "Viewing distance, screen scale, and Lilac Chaser scale controls",
         ],
@@ -705,6 +711,7 @@ export const buildTrainerRouteStructuredData = (
         "@type": "WebSite",
         "@id": `${appUrl}#website`,
         name: siteMetadata.name,
+        alternateName: siteMetadata.alternateName,
         url: appUrl,
         description: siteMetadata.shortDescription,
         inLanguage: "en",
@@ -717,7 +724,7 @@ export const buildTrainerRouteStructuredData = (
         url: appUrl,
         image: imageUrl,
         applicationCategory: "EducationalApplication",
-        applicationSubCategory: "Visual tracking practice",
+        applicationSubCategory: "Eye training and visual tracking practice",
         operatingSystem: "Any",
         browserRequirements: "Requires JavaScript and a modern browser.",
         isAccessibleForFree: true,
@@ -735,10 +742,10 @@ export const buildTrainerRouteStructuredData = (
           audienceType: audienceNote.title,
         })),
         featureList: [
-          "Smooth pursuit tracking practice",
-          "Reaction jump and quick refocus practice",
-          "Lilac Chaser peripheral focus practice",
-          "Multiple Distractions selective attention practice",
+          "Smooth Pursuit eye tracking drills",
+          "Reaction Jumps quick refocus drills",
+          "Lilac Chaser peripheral vision drill",
+          "Multiple Distractions focus training",
           "Adjustable speed, size, shape, color, opacity, and trail",
           "Viewing distance, screen scale, and Lilac Chaser scale controls",
         ],
@@ -798,6 +805,7 @@ export const buildLegalStructuredData = (page: LegalPageContent, site: URL) => {
         "@type": "WebSite",
         "@id": `${appUrl}#website`,
         name: siteMetadata.name,
+        alternateName: siteMetadata.alternateName,
         url: appUrl,
         description: siteMetadata.shortDescription,
         inLanguage: "en",
@@ -898,7 +906,7 @@ export const buildLlmsText = (site: URL) => {
     "",
     siteMetadata.shortDescription,
     "",
-    "Eye Trainer is a free browser eye trainer for visual tracking practice. It helps gamers, IT professionals, developers, sysadmins, support teams, and people who spend long hours on screens practice smooth pursuit, quick refocusing, Lilac Chaser peripheral awareness, distractor tracking, and visual reaction timing. Settings are stored locally in the browser, and no account or install is needed. It is self-guided practice, not diagnosis, prescription, or clinical care.",
+    "Eye Trainer is a free online eye training app for visual tracking, focus, reaction speed, and peripheral awareness. It helps gamers, IT professionals, developers, sysadmins, support teams, and people on screens all day warm up with Smooth Pursuit, Reaction Jumps, Lilac Chaser, distractor tracking, and visual reaction drills. Settings are stored locally in the browser, and no account or install is needed. It is self-guided practice, not diagnosis, prescription, or clinical care.",
     "",
     "## Main page",
     `- App: ${absoluteUrl("/", site)}`,
@@ -939,6 +947,10 @@ export const buildLlmsText = (site: URL) => {
     "",
     "## Common searches Eye Trainer answers",
     "- free browser eye trainer",
+    "- free online eye training",
+    "- eye training exercises",
+    "- FPS eye training exercises",
+    "- eye focus exercises",
     "- eye tracking trainer for gamers",
     "- FPS eye training warmup",
     "- smooth pursuit practice",
@@ -965,14 +977,14 @@ export const buildPricingText = (site: URL) => {
   return [
     "# Pricing",
     "",
-    "Eye Trainer is free.",
+    "Eye Trainer is free online eye training for visual tracking and focus.",
     "",
     "## Free",
     "- Price: $0",
     "- Account required: no",
     "- Install required: no",
-    "- Included: all current drills, motion patterns, Lilac Chaser, visual settings, calibration controls, and settings stored locally in your browser",
-    "- Best fit: gamers, IT professionals, developers, sysadmins, support engineers, and people who spend long hours on screens",
+    "- Included: Smooth Pursuit, Reaction Jumps, Multiple Distractions, Lilac Chaser, motion patterns, visual settings, calibration controls, and settings stored locally in your browser",
+    "- Best fit: gamers, IT professionals, developers, sysadmins, support engineers, and people on screens all day",
     "- Paid plan: none",
     "",
     `Use the app: ${absoluteUrl("/", site)}`,

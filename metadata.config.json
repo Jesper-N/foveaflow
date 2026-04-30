@@ -1,13 +1,13 @@
 {
   "title": "Eye Trainer",
-  "tagline": "Free visual tracking practice with smooth pursuit, reaction jumps, Lilac Chaser, and distractor tracking.",
+  "tagline": "Free eye training exercises for visual tracking, focus, reaction speed, and screen-heavy work.",
   "colors": {
     "background": "#171717",
     "foreground": "#ffffff",
     "accent": "#94E516"
   },
-  "logo": "./public/darkmode.svg",
-  "faviconSrc": "./public/darkmode.svg",
+  "logo": "./public/darkmode.png",
+  "faviconSrc": "./public/lightmode.png",
   "faviconTransparent": true,
   "outputDir": "public/metadata",
   "font": "Inter"
