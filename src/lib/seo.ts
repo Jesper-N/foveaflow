@@ -434,11 +434,11 @@ export type LegalPageContent = (typeof legalPages)[keyof typeof legalPages];
 export const referenceLinks = [
   {
     label: "Visual guidance of smooth pursuit eye movements",
-    url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC2887486/",
+    url: "https://pubmed.ncbi.nlm.nih.gov/20510853/",
   },
   {
     label: "Spatial allocation of attention during smooth pursuit",
-    url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC2827938/",
+    url: "https://pubmed.ncbi.nlm.nih.gov/19533852/",
   },
   {
     label: "Saccadic reaction time factors",
@@ -446,11 +446,11 @@ export const referenceLinks = [
   },
   {
     label: "Role of peripheral vision in saccade planning",
-    url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC2629530/",
+    url: "https://pubmed.ncbi.nlm.nih.gov/19146326/",
   },
   {
     label: "Visual learning in multiple-object tracking",
-    url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC2375111/",
+    url: "https://pubmed.ncbi.nlm.nih.gov/18493599/",
   },
   {
     label: "Lilac chaser illusion",
@@ -579,8 +579,6 @@ const sitemapEntries = [
     changefreq: "monthly",
     priority: "0.7",
   })),
-  { path: "/llms.txt", changefreq: "monthly", priority: "0.7" },
-  { path: "/pricing.md", changefreq: "monthly", priority: "0.6" },
 ] as const;
 
 export const getSiteOrigin = (site: URL | undefined) => {

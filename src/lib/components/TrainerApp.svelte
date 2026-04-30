@@ -56,6 +56,7 @@
     findTrainerRoute,
     getTrainingModeGuide,
     getTrainerRoute,
+    indexableTrainerRoutes,
     legalPages,
     safetyNote,
     siteMetadata,
@@ -1180,6 +1181,14 @@
     data-testid="trainer-canvas"
     aria-label="Eye trainer moving target canvas"
   ></canvas>
+
+  <nav class="sr-only" aria-label="Practice pages">
+    <a href="/">Eye Trainer home</a>
+    <a href="/guide/">Eye Trainer guide</a>
+    {#each indexableTrainerRoutes as route (route.slug)}
+      <a href={route.path}>{route.label}</a>
+    {/each}
+  </nav>
 
   {#if hudHidden}
     <button
