@@ -51,15 +51,17 @@ const structuredData = buildStructuredData(siteOrigin);
           </ul>
           <h2>Safety</h2>
           <p>{safetyNote}</p>
-          <h2>Common questions</h2>
-          {
-            faqItems.map((faqItem) => (
-              <article>
-                <h3>{faqItem.question}</h3>
-                <p>{faqItem.answer}</p>
-              </article>
-            ))
-          }
+          <section data-nosnippet>
+            <h2>Common questions</h2>
+            {
+              faqItems.map((faqItem) => (
+                <article>
+                  <h3>{faqItem.question}</h3>
+                  <p>{faqItem.answer}</p>
+                </article>
+              ))
+            }
+          </section>
           <h2>Background reading</h2>
           <ul>
             {

@@ -91,7 +91,7 @@
           {guideMetadata.summary}
         </p>
         <div class="mt-8 flex flex-wrap gap-3">
-            <Button href="/smooth-pursuit/" class="pressable-ui">
+          <Button href="/smooth-pursuit/" class="pressable-ui">
             <CrosshairIcon class="size-4" />
             <span class="pl-1">Open Smooth Pursuit</span>
           </Button>
@@ -357,6 +357,7 @@
 
     <section
       id="faq"
+      data-nosnippet
       class={`guide-enter-delay-3 ${sectionGrid} ${guideEnterUp}`}
     >
       <div class={sectionIntro}>

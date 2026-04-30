@@ -680,21 +680,6 @@ export const buildStructuredData = (site: URL) => {
         citation: referenceLinks.map((referenceLink) => referenceLink.url),
       },
       {
-        "@type": "FAQPage",
-        "@id": `${appUrl}#faq`,
-        isPartOf: {
-          "@id": `${appUrl}#webpage`,
-        },
-        mainEntity: faqItems.map((faqItem) => ({
-          "@type": "Question",
-          name: faqItem.question,
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: faqItem.answer,
-          },
-        })),
-      },
-      {
         "@type": "WebPage",
         "@id": `${appUrl}#webpage`,
         name: siteMetadata.title,
