@@ -1,10 +1,8 @@
 ---
 import "../styles/global.css";
+import SeoHead from "../lib/components/SeoHead.astro";
 import TrainerApp from "../lib/components/TrainerApp.svelte";
-import ThemeFavicon from "../lib/components/ThemeFavicon.astro";
-import { generateSetInitialModeExpression } from "mode-watcher";
 import {
-  absoluteUrl,
   buildStructuredData,
   faqItems,
   getSiteOrigin,
@@ -14,65 +12,20 @@ import {
   trainingModeNotes,
 } from "../lib/seo";
 
-const initialModeExpression = generateSetInitialModeExpression({
-  defaultMode: "system",
-});
-
 const siteOrigin = getSiteOrigin(Astro.site);
-const canonicalUrl = absoluteUrl("/", siteOrigin);
-const ogImageUrl = absoluteUrl(siteMetadata.imagePath, siteOrigin);
-const structuredData = JSON.stringify(buildStructuredData(siteOrigin));
+const structuredData = buildStructuredData(siteOrigin);
 ---
 
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <script is:inline set:html={initialModeExpression} />
-    <ThemeFavicon />
-    <link rel="canonical" href={canonicalUrl} />
-    <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt" />
-    <link
-      rel="alternate"
-      type="application/xml"
-      href="/sitemap.xml"
-      title="Sitemap"
+    <SeoHead
+      title={siteMetadata.title}
+      description={siteMetadata.description}
+      canonicalPath="/"
+      {structuredData}
     />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <meta name="description" content={siteMetadata.description} />
-    <meta name="robots" content="index,follow,max-image-preview:large" />
-    <meta name="date" content={siteMetadata.lastUpdated} />
-    <meta name="last-modified" content={siteMetadata.lastUpdated} />
-    <meta name="DC.date.modified" content={siteMetadata.lastUpdated} />
-    <meta name="application-name" content={siteMetadata.name} />
-    <meta name="apple-mobile-web-app-title" content={siteMetadata.name} />
-    <meta name="theme-color" content="#95E217" />
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content={siteMetadata.name} />
-    <meta property="og:title" content={siteMetadata.title} />
-    <meta property="og:description" content={siteMetadata.description} />
-    <meta property="og:url" content={canonicalUrl} />
-    <meta property="og:image" content={ogImageUrl} />
-    <meta property="og:updated_time" content={siteMetadata.lastUpdated} />
-    <meta
-      property="og:image:alt"
-      content="Eye Trainer canvas with a moving practice target"
-    />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={siteMetadata.title} />
-    <meta name="twitter:description" content={siteMetadata.description} />
-    <meta name="twitter:image" content={ogImageUrl} />
-    <meta
-      name="twitter:image:alt"
-      content="Eye Trainer canvas with a moving practice target"
-    />
-    <script is:inline type="application/ld+json" set:html={structuredData} />
-    <title>{siteMetadata.title}</title>
   </head>
   <body>
-    <h1 class="sr-only">{siteMetadata.title}</h1>
     <TrainerApp client:load />
     <noscript>
       <main class="noscript-shell">

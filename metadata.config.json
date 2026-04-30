@@ -6,8 +6,8 @@
     "foreground": "#ffffff",
     "accent": "#94E516"
   },
-  "logo": "./public/darkmode.png",
-  "faviconSrc": "./public/lightmode.png",
+  "logo": "./metadata-templates/source-assets/darkmode.png",
+  "faviconSrc": "./metadata-templates/source-assets/lightmode.png",
   "faviconTransparent": true,
   "outputDir": "public/metadata",
   "font": "Inter"

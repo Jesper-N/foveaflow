@@ -7,15 +7,19 @@
   },
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
-    "build": "astro build",
+    "build": "astro build && bun run csp:headers",
+    "csp:headers": "bun scripts/apply-csp.ts",
     "preview": "bun run build && wrangler dev",
     "astro": "astro",
     "lint": "astro check",
     "check": "astro check",
+    "test": "bun test",
+    "audit": "bun audit",
+    "verify": "bun run check && bun run test && bun run audit",
     "format": "prettier --write .",
     "format:svelte": "prettier --write \"src/**/*.{svelte,astro,ts,css}\"",
     "generate-types": "wrangler types",
-    "deploy": "bun run build && wrangler deploy"
+    "deploy": "bun run verify && bun run build && wrangler deploy"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.8",
@@ -45,6 +49,6 @@
     "wrangler": "^4.85.0"
   },
   "overrides": {
-    "vite": "^7"
+    "yaml": "^2.8.3"
   }
 }

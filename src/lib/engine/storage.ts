@@ -4,6 +4,11 @@ const SETTINGS_KEY = "eye-trainer.settings.v2";
 
 export type StoredSettings = Partial<TrainerSettings>;
 
+type TimerApi<TimerId> = {
+  setTimeout: (callback: () => void, delayMs: number) => TimerId;
+  clearTimeout: (timerId: TimerId) => void;
+};
+
 const hasBrowserStorage = () =>
   typeof window !== "undefined" && "localStorage" in window;
 
@@ -37,4 +42,49 @@ export const saveSettings = (settings: TrainerSettings) => {
   } catch {
     // Storage can be unavailable or full. Training must keep running.
   }
+};
+
+const defaultTimers: TimerApi<ReturnType<typeof setTimeout>> = {
+  setTimeout: (callback, timeoutDelayMs) =>
+    globalThis.setTimeout(callback, timeoutDelayMs),
+  clearTimeout: (timerId) => globalThis.clearTimeout(timerId),
+};
+
+export const createDebouncedSettingsSaver = <
+  TimerId = ReturnType<typeof setTimeout>,
+>(
+  persist: (settings: TrainerSettings) => void = saveSettings,
+  delayMs = 250,
+  timers: TimerApi<TimerId> = defaultTimers as unknown as TimerApi<TimerId>,
+) => {
+  let timeout: TimerId | undefined;
+  let latestSettings: TrainerSettings | undefined;
+
+  const clearPendingTimeout = () => {
+    if (timeout === undefined) return;
+    timers.clearTimeout(timeout);
+    timeout = undefined;
+  };
+
+  const flush = () => {
+    clearPendingTimeout();
+    if (!latestSettings) return;
+
+    const settings = latestSettings;
+    latestSettings = undefined;
+    persist(settings);
+  };
+
+  return {
+    schedule(settings: TrainerSettings) {
+      latestSettings = settings;
+      clearPendingTimeout();
+      timeout = timers.setTimeout(flush, delayMs);
+    },
+    flush,
+    cancel() {
+      clearPendingTimeout();
+      latestSettings = undefined;
+    },
+  };
 };

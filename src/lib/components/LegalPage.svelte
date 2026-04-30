@@ -26,7 +26,7 @@
   class="fixed inset-0 min-h-[100dvh] overflow-auto bg-background text-foreground selection:bg-accent/30"
 >
   <div class="mx-auto grid w-full max-w-5xl gap-10 px-4 py-5 sm:px-6 lg:px-8">
-    <nav class={`flex items-center justify-between gap-4 ${guideEnterTop}`}>
+    <header class={`flex items-center justify-between gap-4 ${guideEnterTop}`}>
       <Button
         href="/"
         variant="outline"
@@ -37,7 +37,7 @@
         <span class="pl-1">Open Eye Trainer</span>
       </Button>
 
-      <div class="hidden items-center gap-1 sm:flex" aria-label="Legal pages">
+      <nav class="hidden items-center gap-1 sm:flex" aria-label="Legal pages">
         {#each navLinks as navLink (navLink.href)}
           <Button
             href={navLink.href}
@@ -48,8 +48,8 @@
             {navLink.label}
           </Button>
         {/each}
-      </div>
-    </nav>
+      </nav>
+    </header>
 
     <section
       class={`grid gap-8 pt-10 pb-10 md:grid-cols-[minmax(0,1fr)_18rem] md:items-end md:pt-20 md:pb-14 ${guideEnterUp}`}
@@ -98,13 +98,13 @@
     <section
       class={`grid gap-6 border-t border-border/60 pt-10 md:grid-cols-[15rem_minmax(0,1fr)] md:gap-10 ${guideEnterUp}`}
     >
-      <aside class="md:sticky md:top-6 md:self-start">
+      <div class="md:sticky md:top-6 md:self-start">
         <Item.Root variant="muted" class="border border-border/70">
           <Item.Content>
             <Item.Title class="line-clamp-none text-sm">
               On this page
             </Item.Title>
-            <div class="mt-3 grid gap-1">
+            <nav class="mt-3 grid gap-1" aria-label="On this page">
               {#each page.sections as section (section.id)}
                 <a
                   href={`#${section.id}`}
@@ -113,10 +113,10 @@
                   {section.heading}
                 </a>
               {/each}
-            </div>
+            </nav>
           </Item.Content>
         </Item.Root>
-      </aside>
+      </div>
 
       <div class="grid gap-4 pb-6">
         {#each page.sections as section (section.id)}

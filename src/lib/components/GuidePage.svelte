@@ -53,7 +53,10 @@
   class="fixed inset-0 min-h-[100dvh] overflow-auto bg-background text-foreground selection:bg-accent/30"
 >
   <div class="mx-auto grid w-full max-w-7xl gap-10 px-4 py-5 sm:px-6 lg:px-8">
-    <nav class={`flex items-center justify-between gap-4 ${guideEnterTop}`}>
+    <nav
+      class={`flex items-center justify-between gap-4 ${guideEnterTop}`}
+      aria-label="Guide navigation"
+    >
       <Button
         href="/"
         variant="outline"
@@ -88,7 +91,7 @@
           {guideMetadata.summary}
         </p>
         <div class="mt-8 flex flex-wrap gap-3">
-          <Button href="/smooth-pursuit/" class="pressable-ui">
+            <Button href="/smooth-pursuit/" class="pressable-ui">
             <CrosshairIcon class="size-4" />
             <span class="pl-1">Open Smooth Pursuit</span>
           </Button>
@@ -279,7 +282,10 @@
         {/each}
       </div>
 
-      <div class="md:sticky md:top-8 md:self-start md:pt-2">
+      <nav
+        class="md:sticky md:top-8 md:self-start md:pt-2"
+        aria-label="Pattern routes"
+      >
         <Badge variant="outline" class="mb-4">Direct routes</Badge>
         <h2 class={sectionTitle}>Pattern URLs load the matching state</h2>
         <p class="mt-4 max-w-[38rem] text-base leading-7 text-muted-foreground">
@@ -299,7 +305,7 @@
             </Button>
           {/each}
         </div>
-      </div>
+      </nav>
     </section>
 
     <section class={`guide-enter-delay-2 ${sectionGrid} ${guideEnterUp}`}>

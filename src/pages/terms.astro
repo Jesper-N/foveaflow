@@ -1,76 +1,27 @@
 ---
 import "../styles/global.css";
 import LegalPage from "../lib/components/LegalPage.svelte";
-import ThemeFavicon from "../lib/components/ThemeFavicon.astro";
-import { generateSetInitialModeExpression } from "mode-watcher";
+import SeoHead from "../lib/components/SeoHead.astro";
 import {
-  absoluteUrl,
   buildLegalStructuredData,
   getSiteOrigin,
   legalPages,
-  siteMetadata,
 } from "../lib/seo";
-
-const initialModeExpression = generateSetInitialModeExpression({
-  defaultMode: "system",
-});
 
 const page = legalPages.terms;
 const siteOrigin = getSiteOrigin(Astro.site);
-const canonicalUrl = absoluteUrl(page.path, siteOrigin);
-const ogImageUrl = absoluteUrl(siteMetadata.imagePath, siteOrigin);
-const structuredData = JSON.stringify(
-  buildLegalStructuredData(page, siteOrigin),
-);
+const structuredData = buildLegalStructuredData(page, siteOrigin);
 ---
 
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <script is:inline set:html={initialModeExpression} />
-    <ThemeFavicon />
-    <link rel="canonical" href={canonicalUrl} />
-    <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt" />
-    <link
-      rel="alternate"
-      type="application/xml"
-      href="/sitemap.xml"
-      title="Sitemap"
+    <SeoHead
+      title={page.metaTitle}
+      description={page.description}
+      canonicalPath={page.path}
+      ogType="article"
+      {structuredData}
     />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <meta name="description" content={page.description} />
-    <meta name="robots" content="index,follow,max-image-preview:large" />
-    <meta name="date" content={siteMetadata.lastUpdated} />
-    <meta name="last-modified" content={siteMetadata.lastUpdated} />
-    <meta name="DC.date.modified" content={siteMetadata.lastUpdated} />
-    <meta name="application-name" content={siteMetadata.name} />
-    <meta name="apple-mobile-web-app-title" content={siteMetadata.name} />
-    <meta name="theme-color" content="#95E217" />
-    <meta property="og:type" content="article" />
-    <meta property="og:site_name" content={siteMetadata.name} />
-    <meta property="og:title" content={page.metaTitle} />
-    <meta property="og:description" content={page.description} />
-    <meta property="og:url" content={canonicalUrl} />
-    <meta property="og:image" content={ogImageUrl} />
-    <meta property="og:updated_time" content={siteMetadata.lastUpdated} />
-    <meta
-      property="og:image:alt"
-      content="Eye Trainer canvas with a moving practice target"
-    />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="article:modified_time" content={siteMetadata.lastUpdated} />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={page.metaTitle} />
-    <meta name="twitter:description" content={page.description} />
-    <meta name="twitter:image" content={ogImageUrl} />
-    <meta
-      name="twitter:image:alt"
-      content="Eye Trainer canvas with a moving practice target"
-    />
-    <script is:inline type="application/ld+json" set:html={structuredData} />
-    <title>{page.metaTitle}</title>
   </head>
   <body>
     <LegalPage page={page} />

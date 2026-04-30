@@ -6,6 +6,8 @@
   import EyeIcon from "@lucide/svelte/icons/eye";
   import FileTextIcon from "@lucide/svelte/icons/file-text";
   import MoonIcon from "@lucide/svelte/icons/moon";
+  import PauseIcon from "@lucide/svelte/icons/pause";
+  import PlayIcon from "@lucide/svelte/icons/play";
   import RotateCcwIcon from "@lucide/svelte/icons/rotate-ccw";
   import SettingsIcon from "@lucide/svelte/icons/settings-2";
   import ShieldCheckIcon from "@lucide/svelte/icons/shield-check";
@@ -63,8 +65,8 @@
     trainingModeNotes,
   } from "$lib/seo";
   import {
+    createDebouncedSettingsSaver,
     loadSettings,
-    saveSettings,
     type StoredSettings,
   } from "$lib/engine/storage";
   import type {
@@ -364,6 +366,7 @@
     ),
   );
   let panelOpen = $state(false);
+  let motionPaused = $state(false);
   let storageReady = $state(false);
   let hudAutoHideReady = $state(false);
   let hudVisible = $state(true);
@@ -378,6 +381,8 @@
   );
 
   let safeBallColor = $derived(safeStimulusColor(settings.ballColor));
+  let activeRoute = $derived(findTrainerRoute(routeSlug));
+  let pageHeading = $derived(activeRoute?.heading ?? siteMetadata.title);
   let distractorColor = $derived(
     darkenHexColor(safeBallColor, settings.distractorBrightness),
   );
@@ -425,9 +430,15 @@
       !headerLilacChaserColorSelectOpen,
   );
   let hudHideTimeout: number | undefined;
+  const settingsSaver = createDebouncedSettingsSaver();
 
   $effect(() => {
-    if (storageReady) saveSettings(settings);
+    const settingsSnapshot = $state.snapshot(settings);
+    if (storageReady) settingsSaver.schedule(settingsSnapshot);
+  });
+
+  $effect(() => {
+    if (motionPaused) drawFrame();
   });
 
   const attachCanvas: Attachment<HTMLCanvasElement> = (node) => {
@@ -447,7 +458,7 @@
 
     canvasTheme = getCanvasTheme();
     resizeCanvas();
-    if (!document.hidden) startLoop();
+    if (shouldAnimateMotion()) startLoop();
 
     return () => {
       cancelAnimationFrame(animationFrame);
@@ -481,9 +492,22 @@
     storageReady = true;
     startHudAutoHideTimer();
 
+    const reduceMotionQuery = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    );
+    if (reduceMotionQuery.matches) setMotionPaused(true);
+    const handleReduceMotionChange = (event: MediaQueryListEvent) => {
+      if (event.matches) setMotionPaused(true);
+    };
+    reduceMotionQuery.addEventListener("change", handleReduceMotionChange);
+    window.addEventListener("pagehide", settingsSaver.flush);
+
     return () => {
+      settingsSaver.flush();
       clearHudAutoHideTimer();
       window.removeEventListener("popstate", handlePopState);
+      window.removeEventListener("pagehide", settingsSaver.flush);
+      reduceMotionQuery.removeEventListener("change", handleReduceMotionChange);
       modeUnsubscribe();
     };
   });
@@ -643,13 +667,26 @@
     gridPath = path;
   };
 
-  const startLoop = () => {
+  const shouldAnimateMotion = () => !motionPaused && !document.hidden;
+
+  const stopLoop = () => {
     cancelAnimationFrame(animationFrame);
+    animationFrame = 0;
     lastTimestamp = 0;
+  };
+
+  const startLoop = () => {
+    if (!shouldAnimateMotion()) return;
+    stopLoop();
     animationFrame = requestAnimationFrame(tick);
   };
 
   const tick = (timestamp: number) => {
+    if (!shouldAnimateMotion()) {
+      stopLoop();
+      return;
+    }
+
     const deltaMs =
       lastTimestamp === 0 ? 16.7 : Math.min(80, timestamp - lastTimestamp);
     lastTimestamp = timestamp;
@@ -659,6 +696,20 @@
     elapsedSec += deltaSec;
     drawFrame();
     animationFrame = requestAnimationFrame(tick);
+  };
+
+  const setMotionPaused = (paused: boolean) => {
+    motionPaused = paused;
+    if (paused) {
+      stopLoop();
+      drawFrame();
+      return;
+    }
+    startLoop();
+  };
+
+  const toggleMotionPaused = () => {
+    setMotionPaused(!motionPaused);
   };
 
   const getSpeedPxPerSec = (timeSec: number) => {
@@ -1075,8 +1126,7 @@
 
   const handleVisibilityChange = () => {
     if (document.hidden) {
-      cancelAnimationFrame(animationFrame);
-      lastTimestamp = 0;
+      stopLoop();
       return;
     }
     startLoop();
@@ -1159,11 +1209,13 @@
 
 {#snippet colorSelectLabel(color: string, label: string)}
   <span class="flex min-w-0 items-center gap-2">
-    <span
+    <svg
+      viewBox="0 0 12 12"
       class="size-3 shrink-0 rounded-full border border-border/60"
-      style:background-color={color}
       aria-hidden="true"
-    ></span>
+    >
+      <circle cx="6" cy="6" r="6" fill={color} />
+    </svg>
     <span class="truncate">{label}</span>
   </span>
 {/snippet}
@@ -1175,11 +1227,21 @@
 <main
   class="relative h-dvh w-dvw overflow-hidden bg-background text-foreground"
 >
+  <h1 class="sr-only">{pageHeading}</h1>
+  <p id="trainer-canvas-description" class="sr-only">
+    Animated visual tracking area. Use Pause motion to stop target movement
+    before changing controls.
+  </p>
+  <p id="trainer-motion-status" class="sr-only" aria-live="polite">
+    Motion {motionPaused ? "paused" : "playing"}.
+  </p>
+
   <canvas
     {@attach attachCanvas}
     class="absolute inset-0 h-full w-full touch-none"
     data-testid="trainer-canvas"
     aria-label="Eye trainer moving target canvas"
+    aria-describedby="trainer-canvas-description trainer-motion-status"
   ></canvas>
 
   <nav class="sr-only" aria-label="Practice pages">
@@ -1207,8 +1269,7 @@
   {/if}
 
   <div
-    class="trainer-hud-shell absolute top-3 z-20 max-w-[calc(100dvw-1.5rem)] sm:top-4"
-    style="left: 50%; transform: translate3d(-50%, 0, 0);"
+    class="trainer-hud-shell absolute top-3 left-1/2 z-20 max-w-[calc(100dvw-1.5rem)] -translate-x-1/2 sm:top-4"
     data-hidden={hudHidden}
   >
     <header
@@ -1221,16 +1282,14 @@
           class="flex shrink-0 items-center gap-2 text-base font-semibold tracking-tight text-foreground"
         >
           <img
-            src="/lightmode.webp"
+            src={isDarkMode
+              ? "/metadata/favicon-dark-96x96.png"
+              : "/metadata/favicon-96x96.png"}
             alt=""
             aria-hidden="true"
-            class="size-7 object-contain dark:hidden"
-          />
-          <img
-            src="/darkmode.webp"
-            alt=""
-            aria-hidden="true"
-            class="hidden size-7 object-contain dark:block"
+            width="28"
+            height="28"
+            class="size-7 object-contain"
           />
           <span class="sr-only xl:not-sr-only">{siteMetadata.name}</span>
         </div>
@@ -1383,6 +1442,22 @@
 
       <nav class="flex shrink-0 items-center gap-2" aria-label="App actions">
         <Button
+          class="pressable-ui hidden sm:inline-flex"
+          variant="outline"
+          size="icon"
+          aria-label={motionPaused ? "Resume motion" : "Pause motion"}
+          aria-pressed={motionPaused}
+          aria-describedby="trainer-motion-status"
+          onclick={toggleMotionPaused}
+        >
+          {#if motionPaused}
+            <PlayIcon />
+          {:else}
+            <PauseIcon />
+          {/if}
+        </Button>
+
+        <Button
           class="pressable-ui"
           variant="outline"
           size="icon"
@@ -1439,6 +1514,34 @@
       <div class="grid gap-7 pb-12 text-sm">
         <section class="settings-section space-y-4">
           {@render settingHeader("theme", "Theme")}
+          <Item.Root variant="outline" size="sm" class="min-h-11 sm:hidden">
+            <Item.Media
+              variant="icon"
+              class="size-9 rounded-lg border bg-muted text-accent"
+            >
+              {#if motionPaused}
+                <PlayIcon class="size-4" />
+              {:else}
+                <PauseIcon class="size-4" />
+              {/if}
+            </Item.Media>
+            <Item.Content>
+              <Item.Title>Motion</Item.Title>
+            </Item.Content>
+            <Item.Actions>
+              <Button
+                class="pressable-ui"
+                variant="outline"
+                size="sm"
+                aria-pressed={motionPaused}
+                aria-describedby="trainer-motion-status"
+                onclick={toggleMotionPaused}
+              >
+                {motionPaused ? "Resume" : "Pause"}
+              </Button>
+            </Item.Actions>
+          </Item.Root>
+
           <Item.Root variant="outline" size="sm" class="min-h-11">
             <Item.Media
               variant="icon"
@@ -1641,10 +1744,13 @@
                 class="flex h-11 cursor-pointer items-center gap-3 rounded-full border bg-input/50 px-3 transition-[color,box-shadow,background-color] hover:ring-4 hover:ring-ring/30"
                 for="trainer-color"
               >
-                <span
+                <svg
+                  viewBox="0 0 24 24"
                   class="size-6 rounded-full border shadow-sm"
-                  style:background-color={settings.ballColor}
-                ></span>
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="12" fill={settings.ballColor} />
+                </svg>
                 <span class="font-mono text-sm uppercase text-foreground">
                   {settings.ballColor}
                 </span>
