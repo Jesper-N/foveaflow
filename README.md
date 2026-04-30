@@ -7,16 +7,16 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.2-38bdf8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-[Eye Trainer](https://eye-trainer.app/) is a free browser visual tracking tool for gamers, IT professionals, and people who spend long hours on screens. It includes smooth pursuit paths, reaction jumps, random motion, peripheral awareness, and distractor tracking.
+[Eye Trainer](https://eye-trainer.app/) is a free browser visual tracking tool for gamers, IT professionals, and people who spend long hours on screens. It includes smooth pursuit paths, reaction jumps, Lilac Chaser peripheral focus practice, random motion, and distractor tracking.
 
 It runs without an account or install. The app keeps the canvas full screen, gives direct control over target motion, and stores settings locally in your browser.
 
 ## What it does
 
-- Runs three drills: Smooth Pursuit, Reaction jumps, and Multiple Distractions.
+- Runs four drills: Smooth Pursuit, Reaction jumps, Multiple Distractions, and Lilac Chaser.
 - Includes motion paths such as random, figure eight, bounce, sweeps, lissajous, shifting orbit, and corner tour.
 - Supports speed controls in `deg/s`, `cm/s`, and `screen/s`.
-- Lets you tune target size, shape, color, opacity, trail behavior, distractor count, and distractor brightness.
+- Lets you tune target size, shape, color, opacity, trail behavior, distractor count, distractor brightness, and Lilac Chaser scale.
 - Includes calibration settings for viewing distance and CSS pixels per centimeter.
 - Stores settings locally in your browser.
 - Uses a canvas renderer with light and dark themes.
@@ -30,6 +30,9 @@ It runs without an account or install. The app keeps the canvas full screen, giv
 - reaction time trainer
 - multiple object tracking trainer
 - peripheral vision practice
+- lilac chaser exercise
+- lilac chaser illusion
+- peripheral awareness training
 - browser eye trainer
 - eye tracking trainer for gamers
 - FPS eye training warmup
@@ -43,6 +46,7 @@ It runs without an account or install. The app keeps the canvas full screen, giv
 
 - [Visual guidance of smooth pursuit eye movements](https://pmc.ncbi.nlm.nih.gov/articles/PMC2887486/)
 - [Visual learning in multiple-object tracking](https://pmc.ncbi.nlm.nih.gov/articles/PMC2375111/)
+- [Lilac chaser illusion](https://en.wikipedia.org/wiki/Lilac_chaser)
 - [FPS Eye Training Warmup (HIGH FPS)](https://www.youtube.com/watch?v=WAPKAZhOFM4)
 
 ## Tech stack

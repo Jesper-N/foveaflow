@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount, untrack } from "svelte";
+  import type { Attachment } from "svelte/attachments";
   import ActivityIcon from "@lucide/svelte/icons/activity";
   import BookOpenIcon from "@lucide/svelte/icons/book-open";
   import EyeIcon from "@lucide/svelte/icons/eye";
@@ -53,6 +54,7 @@
   import { darkenHexColor, safeStimulusColor } from "$lib/engine/safety";
   import {
     findTrainerRoute,
+    getTrainingModeGuide,
     getTrainerRoute,
     legalPages,
     safetyNote,
@@ -126,6 +128,13 @@
 
   const pursuitPatternOptions = patternOptions.filter(
     (option) => option.id !== "multipleObjectTracking",
+  );
+  const unpredictivePatternIds: PatternId[] = ["randomWalk", "directionChange"];
+  const unpredictivePatternOptions = pursuitPatternOptions.filter((option) =>
+    unpredictivePatternIds.includes(option.id),
+  );
+  const predictivePatternOptions = pursuitPatternOptions.filter(
+    (option) => !unpredictivePatternIds.includes(option.id),
   );
 
   let { routeSlug = "" }: { routeSlug?: string } = $props();
@@ -373,6 +382,9 @@
   );
   let isMotMode = $derived(settings.presetId === "mot");
   let isLilacChaserMode = $derived(settings.presetId === "lilacChaser");
+  let activeTrainingModeGuide = $derived(
+    getTrainingModeGuide(settings.presetId),
+  );
   let isDarkMode = $derived(colorMode === "dark");
 
   const refreshBaseSpeed = () => {
@@ -417,6 +429,32 @@
     if (storageReady) saveSettings(settings);
   });
 
+  const attachCanvas: Attachment<HTMLCanvasElement> = (node) => {
+    canvas = node;
+    context = node.getContext("2d", { alpha: false });
+
+    const resizeObserver = new ResizeObserver(resizeCanvas);
+    resizeObserver.observe(node);
+    const themeObserver = new MutationObserver(() => {
+      canvasTheme = getCanvasTheme();
+      drawFrame();
+    });
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    canvasTheme = getCanvasTheme();
+    resizeCanvas();
+    if (!document.hidden) startLoop();
+
+    return () => {
+      cancelAnimationFrame(animationFrame);
+      themeObserver.disconnect();
+      resizeObserver.disconnect();
+    };
+  };
+
   onMount(() => {
     const savedSettings = loadSettings();
     const browserRouteSlug = getBrowserRouteSlug();
@@ -439,30 +477,13 @@
       canvasTheme = getCanvasTheme();
       drawFrame();
     });
-    context = canvas.getContext("2d", { alpha: false });
-    const resizeObserver = new ResizeObserver(resizeCanvas);
-    resizeObserver.observe(canvas);
-    const themeObserver = new MutationObserver(() => {
-      canvasTheme = getCanvasTheme();
-      drawFrame();
-    });
-    themeObserver.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
     storageReady = true;
-    canvasTheme = getCanvasTheme();
-    resizeCanvas();
-    if (!document.hidden) startLoop();
     startHudAutoHideTimer();
 
     return () => {
-      cancelAnimationFrame(animationFrame);
       clearHudAutoHideTimer();
       window.removeEventListener("popstate", handlePopState);
       modeUnsubscribe();
-      themeObserver.disconnect();
-      resizeObserver.disconnect();
     };
   });
 
@@ -1105,6 +1126,25 @@
   </span>
 {/snippet}
 
+{#snippet patternSelectGroups()}
+  <Select.Group>
+    <Select.GroupHeading>Unpredictive</Select.GroupHeading>
+    {#each unpredictivePatternOptions as option (option.id)}
+      <Select.Item value={option.id}>
+        {@render previewSelectLabel(option.id, option.name)}
+      </Select.Item>
+    {/each}
+  </Select.Group>
+  <Select.Group>
+    <Select.GroupHeading>Predictive</Select.GroupHeading>
+    {#each predictivePatternOptions as option (option.id)}
+      <Select.Item value={option.id}>
+        {@render previewSelectLabel(option.id, option.name)}
+      </Select.Item>
+    {/each}
+  </Select.Group>
+{/snippet}
+
 {#snippet modeSelectLabel(modeId: TrainingMode, label: string)}
   <span class="flex min-w-0 items-center gap-2">
     <ModePathPreview mode={modeId} compact />
@@ -1135,7 +1175,7 @@
   class="relative h-dvh w-dvw overflow-hidden bg-background text-foreground"
 >
   <canvas
-    bind:this={canvas}
+    {@attach attachCanvas}
     class="absolute inset-0 h-full w-full touch-none"
     data-testid="trainer-canvas"
     aria-label="Eye trainer moving target canvas"
@@ -1230,13 +1270,7 @@
               {@render triggerLabel(getPatternName(settings.patternId))}
             </Select.Trigger>
             <Select.Content class={patternSelectContentClass}>
-              <Select.Group>
-                {#each pursuitPatternOptions as option (option.id)}
-                  <Select.Item value={option.id}>
-                    {@render previewSelectLabel(option.id, option.name)}
-                  </Select.Item>
-                {/each}
-              </Select.Group>
+              {@render patternSelectGroups()}
             </Select.Content>
           </Select.Root>
         {/if}
@@ -1456,13 +1490,7 @@
                   {getPatternName(settings.patternId)}
                 </Select.Trigger>
                 <Select.Content class={patternSelectContentClass}>
-                  <Select.Group>
-                    {#each pursuitPatternOptions as option (option.id)}
-                      <Select.Item value={option.id}>
-                        {@render previewSelectLabel(option.id, option.name)}
-                      </Select.Item>
-                    {/each}
-                  </Select.Group>
+                  {@render patternSelectGroups()}
                 </Select.Content>
               </Select.Root>
             </Field.Field>
@@ -1539,6 +1567,18 @@
               />
             </Field.Field>
           {/if}
+
+          <Item.Root variant="outline" size="sm" class="min-h-11">
+            <Item.Content>
+              <Item.Title class="line-clamp-none">
+                How to use {activeTrainingModeGuide.title}
+              </Item.Title>
+              <Item.Description class="line-clamp-none leading-6">
+                {activeTrainingModeGuide.steps.join(" ")}
+                What it trains: {activeTrainingModeGuide.benefits}
+              </Item.Description>
+            </Item.Content>
+          </Item.Root>
 
           {#if isMotMode}
             <div class="space-y-5 pt-1">

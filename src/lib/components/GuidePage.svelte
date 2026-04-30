@@ -21,13 +21,18 @@
     safetyNote,
     siteMetadata,
     trainerRoutes,
+    trainingModeGuides,
     trainingModeNotes,
   } from "$lib/seo";
 
   const featuredRoutes = trainerRoutes.filter((route) =>
-    ["random", "circle", "reaction-jumps", "multiple-distractions"].includes(
-      route.slug,
-    ),
+    [
+      "random",
+      "circle",
+      "reaction-jumps",
+      "multiple-distractions",
+      "lilac-chaser",
+    ].includes(route.slug),
   );
 
   const patternRoutes = trainerRoutes.filter(
@@ -64,7 +69,7 @@
         variant="outline"
         class="hidden border-border/80 bg-background/80 px-3 py-1 text-muted-foreground sm:inline-flex"
       >
-        Updated April 29, 2026
+        Updated April 30, 2026
       </Badge>
     </nav>
 
@@ -172,6 +177,41 @@
 
     <section class={`guide-enter-delay-1 ${sectionGrid} ${guideEnterUp}`}>
       <div class={sectionIntro}>
+        <Badge variant="outline" class="mb-4">Mode guide</Badge>
+        <h2 class={sectionTitle}>How to use each drill</h2>
+        <p class="mt-4 max-w-[34rem] text-base leading-7 text-muted-foreground">
+          Keep your head still unless a drill says otherwise. These modes are
+          about eye movement, attention, and focus, not neck movement.
+        </p>
+      </div>
+
+      <div class="grid gap-3">
+        {#each trainingModeGuides as modeGuide (modeGuide.mode)}
+          <Item.Root
+            variant="outline"
+            class={`bg-background/70 ${interactiveItem}`}
+          >
+            <Item.Media
+              variant="icon"
+              class="size-9 rounded-lg border bg-muted text-accent"
+            >
+              <CrosshairIcon class="size-4" />
+            </Item.Media>
+            <Item.Content>
+              <Item.Title class="line-clamp-none">{modeGuide.title}</Item.Title>
+              <Item.Description class="line-clamp-none leading-6">
+                {modeGuide.summary}
+                {modeGuide.steps.join(" ")}
+                {modeGuide.benefits}
+              </Item.Description>
+            </Item.Content>
+          </Item.Root>
+        {/each}
+      </div>
+    </section>
+
+    <section class={`guide-enter-delay-1 ${sectionGrid} ${guideEnterUp}`}>
+      <div class={sectionIntro}>
         <Badge variant="outline" class="mb-4">Best fit</Badge>
         <h2 class={sectionTitle}>
           For gamers, IT professionals, and people who spend long hours on
@@ -245,7 +285,8 @@
         <h2 class={sectionTitle}>Pattern URLs load the matching state</h2>
         <p class="mt-4 max-w-[38rem] text-base leading-7 text-muted-foreground">
           Pattern pages start Smooth Pursuit with that path selected. Reaction
-          jumps and Multiple Distractions have their own direct URLs.
+          jumps, Multiple Distractions, and Lilac Chaser have their own direct
+          URLs.
         </p>
         <div class="mt-5 flex flex-wrap gap-2">
           {#each patternRoutes as route (route.slug)}
@@ -283,7 +324,8 @@
             <Item.Title class="line-clamp-none">Motion and target</Item.Title>
             <Item.Description class="line-clamp-none leading-6">
               Speed, size, shape, color, opacity, and trail change the feel of
-              the same moving marker.
+              the moving drills. Lilac Chaser has its own ball color and scale
+              controls.
             </Item.Description>
           </Item.Content>
         </Item.Root>

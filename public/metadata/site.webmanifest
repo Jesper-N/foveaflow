@@ -1,7 +1,7 @@
 {
   "name": "Eye Trainer",
   "short_name": "Eye Trainer",
-  "description": "Free visual tracking practice for gamers, IT professionals, and people who spend long hours on screens.",
+  "description": "Free visual tracking practice with smooth pursuit, reaction jumps, Lilac Chaser, and distractor tracking.",
   "icons": [
     {
       "src": "/metadata/android-chrome-192x192.png",
