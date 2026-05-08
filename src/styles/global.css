@@ -10,14 +10,6 @@
   font-display: swap;
 }
 
-@font-face {
-  font-family: "Geist Mono";
-  src: url("../assets/fonts/GeistMono-Italic[wght].woff2") format("woff2");
-  font-weight: 100 900;
-  font-style: italic;
-  font-display: swap;
-}
-
 @custom-variant dark (&:is(.dark *));
 
 @theme {
