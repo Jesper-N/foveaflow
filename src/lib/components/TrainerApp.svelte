@@ -1415,7 +1415,7 @@
     >
       <div class="flex shrink-0 items-center gap-2">
         <div
-          class="flex shrink-0 items-center gap-2 text-base font-semibold tracking-tight text-foreground"
+          class="flex shrink-0 items-center gap-2 text-base font-semibold text-foreground"
         >
           <img
             src={isDarkMode
@@ -1640,7 +1640,7 @@
                     {drawerSeoContent.kicker}
                   </p>
                   <Drawer.Title
-                    class="max-w-[28ch] text-2xl leading-[1.04] font-semibold tracking-tight text-balance sm:text-3xl lg:text-[2.125rem]"
+                    class="max-w-[28ch] text-2xl leading-[1.04] font-semibold text-balance sm:text-3xl lg:text-[2.125rem]"
                   >
                     {drawerSeoContent.heading}
                   </Drawer.Title>

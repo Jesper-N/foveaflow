@@ -39,7 +39,6 @@
     "typescript": "^5.9.3"
   },
   "devDependencies": {
-    "@fontsource-variable/geist": "^5.2.8",
     "@internationalized/date": "^3.12.1",
     "@types/bun": "^1.3.13",
     "prettier-plugin-astro": "^0.14.1",

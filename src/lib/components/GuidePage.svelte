@@ -44,8 +44,7 @@
   const sectionGrid =
     "grid gap-6 border-t border-border/60 pt-10 md:grid-cols-[0.72fr_1.28fr] md:gap-10";
   const sectionIntro = "md:sticky md:top-8 md:self-start";
-  const sectionTitle =
-    "max-w-[18rem] text-2xl leading-tight font-semibold tracking-tight";
+  const sectionTitle = "max-w-[18rem] text-2xl leading-tight font-semibold";
 </script>
 
 <main
@@ -80,7 +79,7 @@
       <div class="max-w-3xl">
         <Badge variant="secondary" class="mb-5 px-3 py-1">Guide</Badge>
         <h1
-          class="max-w-[13ch] text-4xl leading-none font-semibold tracking-tight text-foreground md:text-6xl"
+          class="max-w-[13ch] text-4xl leading-none font-semibold text-foreground md:text-6xl"
         >
           {guideMetadata.heading}
         </h1>
