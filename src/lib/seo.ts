@@ -1,579 +1,27 @@
-import { patternOptions } from "./engine/presets";
-import type { TrainingMode } from "./engine/presets";
-import type { PatternId } from "./engine/types";
+import { legalPageLinks } from "./content/legal";
+import { guideFaqItems, guideMetadata } from "./content/page-copy";
+import { aiCrawlerAccess, siteMetadata } from "./content/site";
+import {
+  audienceNotes,
+  referenceLinks,
+  safetyNote,
+  trainingModeGuides,
+  trainingModeNotes,
+} from "./content/training";
+import {
+  indexableTrainerRoutes,
+  trainerRoutes,
+  type TrainerRoute,
+} from "./content/trainer-routes";
+import type { LegalPageContent } from "./content/legal";
 
 export const defaultSiteUrl = "https://eye-trainer.app";
-
-export const siteMetadata = {
-  name: "Eye Trainer",
-  alternateName: "EyeTrainer",
-  title: "Eye Trainer - Sharpen Visual Tracking & Focus",
-  description:
-    "Practice visual tracking, quick refocus, and reaction drills for gaming, IT work, and screen-heavy days. Built for short, focused visual warmups.",
-  shortDescription:
-    "Free eye training exercises for visual tracking, focus, reaction speed, and screen-heavy work. No account or install required.",
-  imagePath: "/metadata/og.jpg",
-  repositoryUrl: "https://github.com/Jesper-N/eye-trainer",
-  licenseUrl: "https://github.com/Jesper-N/eye-trainer/blob/main/LICENSE",
-  lastUpdated: "2026-04-30",
-  entityDescription:
-    "Eye Trainer is a free browser app for visual tracking and focus practice. It is built for gamers, developers, sysadmins, support teams, and other people who spend long days on screens.",
-  keywords: [
-    "free eye tracking trainer",
-    "free online eye training",
-    "eye training exercises",
-    "FPS eye training exercises",
-    "eye focus exercises",
-    "visual focus training",
-    "smooth pursuit practice",
-    "visual tracking exercise",
-    "reaction time trainer",
-    "multiple object tracking trainer",
-    "peripheral vision practice",
-    "lilac chaser exercise",
-    "lilac chaser illusion",
-    "peripheral awareness training",
-    "browser eye trainer",
-    "eye tracking trainer for gamers",
-    "FPS eye training warmup",
-    "visual tracking practice for IT professionals",
-    "visual tracking practice for IT people",
-    "screen work eye tracking practice",
-    "eye tracking practice for screen fatigue",
-    "visual tracking practice for tired eyes",
-    "visual processing trainer",
-    "visual reaction time practice",
-  ],
-  sameAs: ["https://github.com/Jesper-N/eye-trainer"],
-} as const;
-
-export const aiCrawlerAccess = [
-  {
-    userAgent: "OAI-SearchBot",
-    purpose: "OpenAI crawler for ChatGPT search",
-  },
-  {
-    userAgent: "GPTBot",
-    purpose: "OpenAI crawler for model training",
-  },
-  {
-    userAgent: "ChatGPT-User",
-    purpose:
-      "OpenAI agent for user-requested page visits in ChatGPT and custom GPTs",
-  },
-  {
-    userAgent: "ClaudeBot",
-    purpose: "Anthropic crawler for model training",
-  },
-  {
-    userAgent: "Claude-User",
-    purpose: "Anthropic agent for user-requested page visits in Claude",
-  },
-  {
-    userAgent: "Claude-SearchBot",
-    purpose: "Anthropic crawler for Claude search",
-  },
-  {
-    userAgent: "PerplexityBot",
-    purpose: "Perplexity search crawler",
-  },
-  {
-    userAgent: "Googlebot",
-    purpose: "Google Search crawler, including AI features in Search",
-  },
-  {
-    userAgent: "Google-Extended",
-    purpose: "Google token for Gemini training and grounding",
-  },
-  {
-    userAgent: "Bingbot",
-    purpose: "Microsoft Bing crawler for Bing and Copilot",
-  },
-] as const;
-
-export const audienceNotes = [
-  {
-    title: "Gamers",
-    body: "Sharpen your visual warmup before FPS games with tracking, refocus, peripheral awareness, and character movement reading drills.",
-  },
-  {
-    title: "IT professionals",
-    body: "Sharpen focus between code, logs, dashboards, terminals, tickets, and multi-monitor work.",
-  },
-  {
-    title: "People on screens all day",
-    body: "Give tired screen eyes a quick active break after reading, meetings, or too many tabs.",
-  },
-] as const;
-
-export const trainingModeGuides = [
-  {
-    mode: "pursuit",
-    title: "Smooth Pursuit",
-    summary: "Train smooth visual tracking by following one moving target.",
-    steps: [
-      "Keep your head still and let your eyes do the work.",
-      "Track the ball as smoothly as you can instead of jumping ahead of it.",
-      "Use predictable paths for steady tracking. Use random paths or hard turns when you want more target-search work.",
-    ],
-    benefits:
-      "Smooth Pursuit helps train steady tracking, moving-target focus, and controlled eye movement across more of your usable range. Predictable paths build rhythm and control. Random paths and hard turns add more visual search and reaction demand.",
-  },
-  {
-    mode: "reactionTime",
-    title: "Reaction Jumps",
-    summary:
-      "Train quick refocus by snapping your eyes to each new target position.",
-    steps: [
-      "Keep your head still and start with your eyes on the ball.",
-      "When it jumps, find the new location and actually focus on it before the next jump.",
-      "Use slower speeds for clean refocusing. Raise the speed when you want a sharper reaction drill.",
-    ],
-    benefits:
-      "Reaction Jumps trains quick target acquisition, saccadic eye movement, peripheral detection, and fast refocusing. It is useful when you want to react to a new visual target without moving your head first.",
-  },
-  {
-    mode: "mot",
-    title: "Multiple Distractions",
-    summary:
-      "Sharpen selective focus by tracking the brightest target through moving distractions.",
-    steps: [
-      "Keep your head still and lock onto the main, brightest ball.",
-      "Follow it like Smooth Pursuit, but do not let the darker balls pull your eyes away.",
-      "Start with fewer distractors, then add more when you can keep the target cleanly.",
-    ],
-    benefits:
-      "Multiple Distractions trains selective attention, visual tracking under clutter, and target identity. The job is not just following motion. You also have to keep choosing the right object when similar objects compete for attention.",
-  },
-  {
-    mode: "lilacChaser",
-    title: "Lilac Chaser",
-    summary: "Train peripheral awareness by holding focus on the center cross.",
-    steps: [
-      "Look only at the black cross in the middle.",
-      "Do not follow the balls with your eyes.",
-      "Let the disappearing gap move around the fixed circle. With steady focus, the colored balls may fade and the missing spot can look like a moving green afterimage.",
-    ],
-    benefits:
-      "Lilac Chaser trains fixation, peripheral awareness, visual attention, and noticing change away from the point you are looking at. For gaming, it can be a short warmup for catching movement near the edge of your vision without constantly shifting your gaze.",
-  },
-] as const;
-
-export const trainingModeNotes = trainingModeGuides.map((guide) => ({
-  title: guide.title,
-  body: guide.summary,
-}));
-
-export const getTrainingModeGuide = (mode: TrainingMode) =>
-  trainingModeGuides.find((guide) => guide.mode === mode) ??
-  trainingModeGuides[0];
-
-export const safetyNote =
-  "Practice software, not medical care. Stop if you feel eye strain, dizziness, headache, nausea, or any other discomfort.";
-
-export const faqItems = [
-  {
-    question: "What is Eye Trainer?",
-    answer:
-      "Eye Trainer is a free online eye training app for visual tracking, focus, reaction speed, and peripheral awareness. It includes Smooth Pursuit, Reaction Jumps, Lilac Chaser, and distractor tracking with no account or install.",
-  },
-  {
-    question: "Is Eye Trainer free?",
-    answer:
-      "Yes. Eye Trainer is free to use, with no account, subscription, or paid plan.",
-  },
-  {
-    question: "What is Smooth Pursuit mode?",
-    answer:
-      "Smooth Pursuit is a moving-target eye training drill. Keep your head still and track the ball with your eyes. Predictable paths build steady control; random paths and hard turns add more target-search work.",
-  },
-  {
-    question: "What is Reaction Jumps mode?",
-    answer:
-      "Reaction Jumps trains quick refocus. The target holds still, then jumps to a new spot so you can find it fast and focus before the next move.",
-  },
-  {
-    question: "What is Multiple Distractions mode?",
-    answer:
-      "Multiple Distractions is focus training under visual clutter. Follow the brightest ball while darker balls move through the same space and compete for your attention.",
-  },
-  {
-    question: "What is Lilac Chaser mode?",
-    answer:
-      "Lilac Chaser is a peripheral vision and focus drill. Keep your eyes on the center cross while one ball disappears at a time around a fixed circle. With steady fixation, many people perceive a moving green afterimage where the missing ball is.",
-  },
-  {
-    question: "Can Eye Trainer improve eyesight or reaction time?",
-    answer:
-      "Eye Trainer may help you train visual skills like tracking, refocusing, peripheral awareness, processing speed, and reaction timing. Results vary, and it is not a replacement for professional care if you have an eye condition or ongoing symptoms.",
-  },
-  {
-    question: "Is Eye Trainer good for gamers?",
-    answer:
-      "Yes. Use Eye Trainer as a quick visual warmup before FPS games or any game where tracking targets and reading character movement matters.",
-  },
-  {
-    question: "Is Eye Trainer useful for IT professionals?",
-    answer:
-      "Yes. It gives developers, sysadmins, and support teams a short visual reset between code, logs, dashboards, terminals, tickets, and multiple windows.",
-  },
-  {
-    question: "Can Eye Trainer help with tired eyes from screen work?",
-    answer:
-      "Eye Trainer can be a short active break during long screen sessions. If screen use causes pain, dizziness, headaches, or ongoing symptoms, stop and get professional advice.",
-  },
-  {
-    question: "Do I need an account or app install?",
-    answer:
-      "No. The tool runs in a modern browser and stores settings locally in your browser.",
-  },
-  {
-    question: "What settings can I change?",
-    answer:
-      "You can adjust the mode, motion path, target size, speed, shape, color, opacity, trail, distractor count, viewing distance, screen scale, and Lilac Chaser size and color.",
-  },
-  {
-    question: "Can I use Eye Trainer on a phone?",
-    answer:
-      "Yes, but a larger screen gives the moving target more room. A desktop, laptop, or tablet usually feels better for longer paths.",
-  },
-] as const;
-
-export const guideMetadata = {
-  title: "Eye Trainer Guide - Visual Tracking & Focus Drills",
-  description:
-    "Learn the Smooth Pursuit, Reaction Jumps, Lilac Chaser, and distractor drills that train focus, tracking, reaction speed, and peripheral awareness.",
-  summary:
-    "Choose a drill, tune the target, and start a short eye training session with clear safety limits.",
-} as const;
-
-export const legalPages = {
-  privacy: {
-    path: "/privacy/",
-    metaTitle: "Privacy Policy | Eye Trainer",
-    title: "Privacy Policy",
-    label: "Privacy",
-    description:
-      "How Eye Trainer handles locally stored browser settings, Cloudflare hosting, and basic analytics.",
-    summary:
-      "Eye Trainer is built to work without an account. The app keeps your settings in your browser and uses Cloudflare to serve the site.",
-    sections: [
-      {
-        id: "data-we-do-not-collect",
-        heading: "Data we do not collect",
-        body: [
-          "You do not need to create an account to use Eye Trainer. The app does not ask for your name, email address, payment details, or health records.",
-          "Your practice choices are not uploaded to an Eye Trainer account because there are no accounts.",
-        ],
-      },
-      {
-        id: "browser-settings",
-        heading: "Settings saved in your browser",
-        body: [
-          "Eye Trainer stores settings locally in your browser so the app can remember them on the current device. That can include the selected mode, motion pattern, speed, target size, color, opacity, trail setting, viewing distance, screen scale, and theme.",
-          "Those settings stay in your browser unless your browser syncs, backs up, or exports its site data. You can remove them by clearing site data for eye-trainer.app.",
-        ],
-      },
-      {
-        id: "cloudflare",
-        heading: "Cloudflare hosting and analytics",
-        body: [
-          "The site runs on Cloudflare. Cloudflare may process request data such as IP address, user agent, requested URL, and timing data to deliver the site, protect it from abuse, and show basic traffic and performance metrics.",
-          "Cloudflare Web Analytics may load a small beacon script. Cloudflare says Web Analytics measures page views and performance without collecting or using visitor personal data.",
-        ],
-        links: [
-          {
-            label: "Cloudflare Web Analytics",
-            url: "https://www.cloudflare.com/web-analytics/",
-          },
-          {
-            label: "Cloudflare data collection docs",
-            url: "https://developers.cloudflare.com/web-analytics/data-metrics/data-origin-and-collection/",
-          },
-        ],
-      },
-      {
-        id: "cookies",
-        heading: "Cookies",
-        body: [
-          "Eye Trainer does not set advertising cookies. Cloudflare may set security cookies when it needs them to keep the site available and safe.",
-        ],
-        links: [
-          {
-            label: "Cloudflare cookie reference",
-            url: "https://developers.cloudflare.com/fundamentals/reference/policies-compliances/cloudflare-cookies/",
-          },
-        ],
-      },
-      {
-        id: "how-data-is-used",
-        heading: "How data is used",
-        body: [
-          "Data is used to run the site, keep it secure, understand whether pages load correctly, and see which public pages people use. Eye Trainer does not sell visitor data.",
-        ],
-      },
-      {
-        id: "your-choices",
-        heading: "Your choices",
-        body: [
-          "You can clear saved Eye Trainer settings from your browser's site data controls. You can also use browser or extension settings to block optional analytics scripts.",
-          "If JavaScript is turned off, the moving target app will not run. The guide and policy pages still work as normal pages.",
-        ],
-      },
-      {
-        id: "children",
-        heading: "Children",
-        body: [
-          "Eye Trainer can be used without sending personal details. It is not built to collect personal information from children.",
-        ],
-      },
-      {
-        id: "contact",
-        heading: "Contact",
-        body: [
-          "For project questions, use the GitHub repository. Do not post private information in a public issue.",
-        ],
-        links: [
-          {
-            label: "Eye Trainer on GitHub",
-            url: siteMetadata.repositoryUrl,
-          },
-        ],
-      },
-    ],
-  },
-  terms: {
-    path: "/terms/",
-    metaTitle: "Terms of Use | Eye Trainer",
-    title: "Terms of Use",
-    label: "Terms",
-    description:
-      "The terms for using Eye Trainer, including safety limits, medical disclaimers, free access, and acceptable use.",
-    summary:
-      "Eye Trainer is a free browser tool. Use it safely, stop if it feels bad, and do not treat it as medical care.",
-    sections: [
-      {
-        id: "agreement",
-        heading: "Agreement",
-        body: [
-          "By using Eye Trainer, you agree to these terms. If you do not agree, do not use the site.",
-        ],
-      },
-      {
-        id: "what-the-app-is",
-        heading: "What the app is",
-        body: [
-          "Eye Trainer is a free browser tool for visual tracking practice. It shows moving targets, reaction jumps, Lilac Chaser fixation practice, and distractor tracking patterns on a screen.",
-          "The patterns are simple screen paths and timing drills. They are not a clinical program, and results will vary from person to person.",
-        ],
-      },
-      {
-        id: "not-medical-care",
-        heading: "Not medical care",
-        body: [
-          "Eye Trainer is not medical advice, diagnosis, treatment, vision therapy, or a medical device. It does not replace an optometrist, ophthalmologist, doctor, therapist, or other qualified professional.",
-          safetyNote,
-          "If you have a vision condition, recent eye injury, surgery, neurological symptoms, or any concern about using moving visual targets, ask a qualified professional before using the app.",
-        ],
-      },
-      {
-        id: "use-safely",
-        heading: "Use safely",
-        body: [
-          "Use the app in a safe place where you can stop easily. Do not use it while driving, walking around, operating equipment, or doing anything that needs your full attention.",
-          "You choose the settings and session length. Keep sessions short if you are unsure, and take breaks.",
-        ],
-      },
-      {
-        id: "free-access",
-        heading: "Free access",
-        body: [
-          "Eye Trainer is free to use. There is no account, paid plan, subscription, or in-app purchase.",
-        ],
-      },
-      {
-        id: "acceptable-use",
-        heading: "Acceptable use",
-        body: [
-          "Do not attack, overload, scrape aggressively, or try to gain unauthorized access to the site or its infrastructure.",
-        ],
-      },
-      {
-        id: "open-source",
-        heading: "Source code",
-        body: [
-          "The source code is public on GitHub under the license in the repository. These terms cover use of the hosted Eye Trainer site.",
-        ],
-        links: [
-          {
-            label: "Eye Trainer on GitHub",
-            url: siteMetadata.repositoryUrl,
-          },
-        ],
-      },
-      {
-        id: "availability",
-        heading: "Availability and warranty",
-        body: [
-          "The site is provided as is. It may change, break, or go offline. To the fullest extent allowed by law, Eye Trainer is provided without warranties of any kind.",
-        ],
-      },
-      {
-        id: "changes",
-        heading: "Changes to these terms",
-        body: [
-          "These terms may be updated when the app or site changes. The date at the top shows the latest version.",
-        ],
-      },
-    ],
-  },
-} as const;
-
-export type LegalPageContent = (typeof legalPages)[keyof typeof legalPages];
-
-export const referenceLinks = [
-  {
-    label: "Visual guidance of smooth pursuit eye movements",
-    url: "https://pubmed.ncbi.nlm.nih.gov/20510853/",
-  },
-  {
-    label: "Spatial allocation of attention during smooth pursuit",
-    url: "https://pubmed.ncbi.nlm.nih.gov/19533852/",
-  },
-  {
-    label: "Saccadic reaction time factors",
-    url: "https://pubmed.ncbi.nlm.nih.gov/33324183/",
-  },
-  {
-    label: "Role of peripheral vision in saccade planning",
-    url: "https://pubmed.ncbi.nlm.nih.gov/19146326/",
-  },
-  {
-    label: "Visual learning in multiple-object tracking",
-    url: "https://pubmed.ncbi.nlm.nih.gov/18493599/",
-  },
-  {
-    label: "Lilac chaser illusion",
-    url: "https://en.wikipedia.org/wiki/Lilac_chaser",
-  },
-  {
-    label: "FPS Eye Training Warmup (HIGH FPS)",
-    url: "https://www.youtube.com/watch?v=WAPKAZhOFM4",
-  },
-] as const;
-
-const toSlug = (value: string) =>
-  value
-    .toLowerCase()
-    .replaceAll("&", "and")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
-
-const toTitleCase = (value: string) =>
-  value
-    .split(" ")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-
-export type TrainerRoute = {
-  slug: string;
-  path: `/${string}/`;
-  mode: TrainingMode;
-  patternId?: PatternId;
-  label: string;
-  heading: string;
-  title: string;
-  description: string;
-  indexable: boolean;
-};
-
-export const trainerRoutes = [
-  {
-    slug: "smooth-pursuit",
-    path: "/smooth-pursuit/",
-    mode: "pursuit",
-    patternId: "randomWalk",
-    label: "Smooth Pursuit",
-    heading: "Smooth Pursuit Eye Training",
-    title: `Smooth Pursuit Eye Training | ${siteMetadata.name}`,
-    description:
-      "Train steady visual tracking with Smooth Pursuit. Follow one moving target online with adjustable speed, path, color, and trail.",
-    indexable: true,
-  },
-  ...patternOptions
-    .filter((option) => option.id !== "multipleObjectTracking")
-    .map((option) => ({
-      slug: toSlug(option.name),
-      path: `/${toSlug(option.name)}/` as const,
-      mode: "pursuit" as const,
-      patternId: option.id,
-      label: option.name,
-      heading: `${toTitleCase(option.name)} Smooth Pursuit Eye Training`,
-      title: `${toTitleCase(option.name)} Smooth Pursuit Eye Training | ${siteMetadata.name}`,
-      description: `Boost visual tracking with the ${option.name.toLowerCase()} Smooth Pursuit drill. Follow one moving target online with adjustable speed, color, and trail.`,
-      indexable: false,
-    })),
-  {
-    slug: "reaction-jumps",
-    path: "/reaction-jumps/",
-    mode: "reactionTime",
-    label: "Reaction Jumps",
-    heading: "Reaction Jumps Eye Training",
-    title: `Reaction Jumps Eye Training | ${siteMetadata.name}`,
-    description:
-      "Sharpen reaction speed and quick refocus with Reaction Jumps. Find each new target position fast and lock on before the next jump.",
-    indexable: true,
-  },
-  {
-    slug: "multiple-distractions",
-    path: "/multiple-distractions/",
-    mode: "mot",
-    label: "Multiple Distractions",
-    heading: "Distractor Tracking Focus Training",
-    title: `Distractor Tracking Focus Training | ${siteMetadata.name}`,
-    description:
-      "Train focus under pressure with Multiple Distractions. Track the brightest target while darker balls compete for your attention.",
-    indexable: true,
-  },
-  {
-    slug: "lilac-chaser",
-    path: "/lilac-chaser/",
-    mode: "lilacChaser",
-    label: "Lilac Chaser",
-    heading: "Lilac Chaser Peripheral Vision Drill",
-    title: `Lilac Chaser Peripheral Vision Drill | ${siteMetadata.name}`,
-    description:
-      "Boost peripheral awareness with Lilac Chaser. Keep your eyes on the center cross while disappearing balls challenge focus.",
-    indexable: true,
-  },
-] satisfies TrainerRoute[];
-
-export const indexableTrainerRoutes = trainerRoutes.filter(
-  (route) => route.indexable,
-);
-
-export const findTrainerRoute = (slug: string | undefined) => {
-  if (!slug) return null;
-  return trainerRoutes.find((route) => route.slug === slug) ?? null;
-};
-
-export const getTrainerRoute = (mode: TrainingMode, patternId: PatternId) => {
-  if (mode === "reactionTime") return findTrainerRoute("reaction-jumps");
-  if (mode === "mot") return findTrainerRoute("multiple-distractions");
-  if (mode === "lilacChaser") return findTrainerRoute("lilac-chaser");
-
-  return (
-    trainerRoutes.find(
-      (route) => route.mode === "pursuit" && route.patternId === patternId,
-    ) ?? null
-  );
-};
 
 const sitemapEntries = [
   { path: "/", changefreq: "weekly", priority: "1.0" },
   { path: "/guide/", changefreq: "monthly", priority: "0.8" },
-  { path: legalPages.privacy.path, changefreq: "yearly", priority: "0.3" },
-  { path: legalPages.terms.path, changefreq: "yearly", priority: "0.3" },
+  { path: legalPageLinks.privacy.path, changefreq: "yearly", priority: "0.3" },
+  { path: legalPageLinks.terms.path, changefreq: "yearly", priority: "0.3" },
   ...indexableTrainerRoutes.map((route) => ({
     path: route.path,
     changefreq: "monthly",
@@ -595,6 +43,7 @@ const getOrganizationId = (site: URL) =>
 const buildOrganizationStructuredData = (site: URL) => {
   const appUrl = absoluteUrl("/", site);
   const imageUrl = absoluteUrl(siteMetadata.imagePath, site);
+  const logoUrl = absoluteUrl("/metadata/favicon-dark-96x96.png", site);
 
   return {
     "@type": "Organization",
@@ -604,14 +53,81 @@ const buildOrganizationStructuredData = (site: URL) => {
     url: appUrl,
     logo: {
       "@type": "ImageObject",
-      url: imageUrl,
-      width: 1200,
-      height: 630,
+      url: logoUrl,
+      width: 96,
+      height: 96,
     },
     image: imageUrl,
     description: siteMetadata.entityDescription,
     sameAs: siteMetadata.sameAs,
     knowsAbout: siteMetadata.keywords,
+  };
+};
+
+const buildWebsiteStructuredData = (site: URL) => {
+  const appUrl = absoluteUrl("/", site);
+
+  return {
+    "@type": "WebSite",
+    "@id": `${appUrl}#website`,
+    name: siteMetadata.name,
+    alternateName: siteMetadata.alternateName,
+    url: appUrl,
+    description: siteMetadata.shortDescription,
+    inLanguage: "en",
+    keywords: siteMetadata.keywords.join(", "),
+    publisher: {
+      "@id": getOrganizationId(site),
+    },
+  };
+};
+
+const buildAppStructuredData = (site: URL) => {
+  const appUrl = absoluteUrl("/", site);
+  const imageUrl = absoluteUrl(siteMetadata.imagePath, site);
+
+  return {
+    "@type": "WebApplication",
+    "@id": `${appUrl}#app`,
+    name: siteMetadata.name,
+    url: appUrl,
+    image: imageUrl,
+    applicationCategory: "EducationalApplication",
+    applicationSubCategory: "Eye training and visual tracking practice",
+    operatingSystem: "Any",
+    browserRequirements: "Requires JavaScript and a modern browser.",
+    isAccessibleForFree: true,
+    publisher: {
+      "@id": getOrganizationId(site),
+    },
+    creator: {
+      "@id": getOrganizationId(site),
+    },
+    license: siteMetadata.licenseUrl,
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+      availability: "https://schema.org/InStock",
+      url: absoluteUrl("/pricing.md", site),
+    },
+    description: siteMetadata.description,
+    keywords: siteMetadata.keywords.join(", "),
+    audience: audienceNotes.map((audienceNote) => ({
+      "@type": "Audience",
+      audienceType: audienceNote.title,
+    })),
+    featureList: [
+      "Smooth Pursuit eye tracking drills",
+      "Reaction Jumps quick refocus drills",
+      "Lilac Chaser peripheral vision drill",
+      "Multiple Distractions focus training",
+      "Adjustable speed, size, shape, color, opacity, and trail",
+      "Viewing distance, screen scale, and Lilac Chaser scale controls",
+    ],
+    dateModified: siteMetadata.lastUpdated,
+    sameAs: siteMetadata.sameAs,
+    citation: referenceLinks.map((referenceLink) => referenceLink.url),
   };
 };
 
@@ -622,63 +138,9 @@ export const buildStructuredData = (site: URL) => {
   return {
     "@context": "https://schema.org",
     "@graph": [
-      {
-        "@type": "WebSite",
-        "@id": `${appUrl}#website`,
-        name: siteMetadata.name,
-        alternateName: siteMetadata.alternateName,
-        url: appUrl,
-        description: siteMetadata.shortDescription,
-        inLanguage: "en",
-        keywords: siteMetadata.keywords.join(", "),
-        publisher: {
-          "@id": getOrganizationId(site),
-        },
-      },
+      buildWebsiteStructuredData(site),
       buildOrganizationStructuredData(site),
-      {
-        "@type": "WebApplication",
-        "@id": `${appUrl}#app`,
-        name: siteMetadata.name,
-        url: appUrl,
-        image: imageUrl,
-        applicationCategory: "EducationalApplication",
-        applicationSubCategory: "Eye training and visual tracking practice",
-        operatingSystem: "Any",
-        browserRequirements: "Requires JavaScript and a modern browser.",
-        isAccessibleForFree: true,
-        publisher: {
-          "@id": getOrganizationId(site),
-        },
-        creator: {
-          "@id": getOrganizationId(site),
-        },
-        license: siteMetadata.licenseUrl,
-        offers: {
-          "@type": "Offer",
-          price: "0",
-          priceCurrency: "USD",
-          availability: "https://schema.org/InStock",
-          url: absoluteUrl("/pricing.md", site),
-        },
-        description: siteMetadata.description,
-        keywords: siteMetadata.keywords.join(", "),
-        audience: audienceNotes.map((audienceNote) => ({
-          "@type": "Audience",
-          audienceType: audienceNote.title,
-        })),
-        featureList: [
-          "Smooth Pursuit eye tracking drills",
-          "Reaction Jumps quick refocus drills",
-          "Lilac Chaser peripheral vision drill",
-          "Multiple Distractions focus training",
-          "Adjustable speed, size, shape, color, opacity, and trail",
-          "Viewing distance, screen scale, and Lilac Chaser scale controls",
-        ],
-        dateModified: siteMetadata.lastUpdated,
-        sameAs: siteMetadata.sameAs,
-        citation: referenceLinks.map((referenceLink) => referenceLink.url),
-      },
+      buildAppStructuredData(site),
       {
         "@type": "WebPage",
         "@id": `${appUrl}#webpage`,
@@ -712,63 +174,9 @@ export const buildGuideStructuredData = (site: URL) => {
   return {
     "@context": "https://schema.org",
     "@graph": [
-      {
-        "@type": "WebSite",
-        "@id": `${appUrl}#website`,
-        name: siteMetadata.name,
-        alternateName: siteMetadata.alternateName,
-        url: appUrl,
-        description: siteMetadata.shortDescription,
-        inLanguage: "en",
-        keywords: siteMetadata.keywords.join(", "),
-        publisher: {
-          "@id": getOrganizationId(site),
-        },
-      },
+      buildWebsiteStructuredData(site),
       buildOrganizationStructuredData(site),
-      {
-        "@type": "WebApplication",
-        "@id": `${appUrl}#app`,
-        name: siteMetadata.name,
-        url: appUrl,
-        image: imageUrl,
-        applicationCategory: "EducationalApplication",
-        applicationSubCategory: "Eye training and visual tracking practice",
-        operatingSystem: "Any",
-        browserRequirements: "Requires JavaScript and a modern browser.",
-        isAccessibleForFree: true,
-        publisher: {
-          "@id": getOrganizationId(site),
-        },
-        creator: {
-          "@id": getOrganizationId(site),
-        },
-        license: siteMetadata.licenseUrl,
-        offers: {
-          "@type": "Offer",
-          price: "0",
-          priceCurrency: "USD",
-          availability: "https://schema.org/InStock",
-          url: absoluteUrl("/pricing.md", site),
-        },
-        description: siteMetadata.description,
-        keywords: siteMetadata.keywords.join(", "),
-        audience: audienceNotes.map((audienceNote) => ({
-          "@type": "Audience",
-          audienceType: audienceNote.title,
-        })),
-        featureList: [
-          "Smooth Pursuit eye tracking drills",
-          "Reaction Jumps quick refocus drills",
-          "Lilac Chaser peripheral vision drill",
-          "Multiple Distractions focus training",
-          "Adjustable speed, size, shape, color, opacity, and trail",
-          "Viewing distance, screen scale, and Lilac Chaser scale controls",
-        ],
-        dateModified: siteMetadata.lastUpdated,
-        sameAs: siteMetadata.sameAs,
-        citation: referenceLinks.map((referenceLink) => referenceLink.url),
-      },
+      buildAppStructuredData(site),
       {
         "@type": "WebPage",
         "@id": `${guideUrl}#webpage`,
@@ -797,7 +205,7 @@ export const buildGuideStructuredData = (site: URL) => {
         isPartOf: {
           "@id": `${guideUrl}#webpage`,
         },
-        mainEntity: faqItems.map((faqItem) => ({
+        mainEntity: guideFaqItems.map((faqItem) => ({
           "@type": "Question",
           name: faqItem.question,
           acceptedAnswer: {
@@ -851,63 +259,9 @@ export const buildTrainerRouteStructuredData = (
   return {
     "@context": "https://schema.org",
     "@graph": [
-      {
-        "@type": "WebSite",
-        "@id": `${appUrl}#website`,
-        name: siteMetadata.name,
-        alternateName: siteMetadata.alternateName,
-        url: appUrl,
-        description: siteMetadata.shortDescription,
-        inLanguage: "en",
-        keywords: siteMetadata.keywords.join(", "),
-        publisher: {
-          "@id": getOrganizationId(site),
-        },
-      },
+      buildWebsiteStructuredData(site),
       buildOrganizationStructuredData(site),
-      {
-        "@type": "WebApplication",
-        "@id": `${appUrl}#app`,
-        name: siteMetadata.name,
-        url: appUrl,
-        image: imageUrl,
-        applicationCategory: "EducationalApplication",
-        applicationSubCategory: "Eye training and visual tracking practice",
-        operatingSystem: "Any",
-        browserRequirements: "Requires JavaScript and a modern browser.",
-        isAccessibleForFree: true,
-        publisher: {
-          "@id": getOrganizationId(site),
-        },
-        creator: {
-          "@id": getOrganizationId(site),
-        },
-        license: siteMetadata.licenseUrl,
-        offers: {
-          "@type": "Offer",
-          price: "0",
-          priceCurrency: "USD",
-          availability: "https://schema.org/InStock",
-          url: absoluteUrl("/pricing.md", site),
-        },
-        description: siteMetadata.description,
-        keywords: siteMetadata.keywords.join(", "),
-        audience: audienceNotes.map((audienceNote) => ({
-          "@type": "Audience",
-          audienceType: audienceNote.title,
-        })),
-        featureList: [
-          "Smooth Pursuit eye tracking drills",
-          "Reaction Jumps quick refocus drills",
-          "Lilac Chaser peripheral vision drill",
-          "Multiple Distractions focus training",
-          "Adjustable speed, size, shape, color, opacity, and trail",
-          "Viewing distance, screen scale, and Lilac Chaser scale controls",
-        ],
-        dateModified: siteMetadata.lastUpdated,
-        sameAs: siteMetadata.sameAs,
-        citation: referenceLinks.map((referenceLink) => referenceLink.url),
-      },
+      buildAppStructuredData(site),
       {
         "@type": "WebPage",
         "@id": `${routeUrl}#webpage`,
@@ -948,6 +302,21 @@ export const buildTrainerRouteStructuredData = (
           },
         ],
       },
+      {
+        "@type": "FAQPage",
+        "@id": `${routeUrl}#faq`,
+        isPartOf: {
+          "@id": `${routeUrl}#webpage`,
+        },
+        mainEntity: route.seoContent.faq.map((faqItem) => ({
+          "@type": "Question",
+          name: faqItem.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: faqItem.answer,
+          },
+        })),
+      },
     ],
   };
 };
@@ -959,18 +328,7 @@ export const buildLegalStructuredData = (page: LegalPageContent, site: URL) => {
   return {
     "@context": "https://schema.org",
     "@graph": [
-      {
-        "@type": "WebSite",
-        "@id": `${appUrl}#website`,
-        name: siteMetadata.name,
-        alternateName: siteMetadata.alternateName,
-        url: appUrl,
-        description: siteMetadata.shortDescription,
-        inLanguage: "en",
-        publisher: {
-          "@id": getOrganizationId(site),
-        },
-      },
+      buildWebsiteStructuredData(site),
       buildOrganizationStructuredData(site),
       {
         "@type": "WebPage",
@@ -1067,7 +425,7 @@ export const buildLlmsText = (site: URL) => {
     "",
     siteMetadata.shortDescription,
     "",
-    "Eye Trainer is a free online eye training app for visual tracking, focus, reaction speed, and peripheral awareness. It helps gamers, IT professionals, developers, sysadmins, support teams, and people on screens all day warm up with Smooth Pursuit, Reaction Jumps, Lilac Chaser, distractor tracking, and visual reaction drills. Settings are stored locally in the browser, and no account or install is needed. It is self-guided practice, not diagnosis, prescription, or clinical care.",
+    "Eye Trainer is a free online eye training app for smooth pursuit, quick refocus, distractor tracking, and peripheral awareness. It helps gamers, IT professionals, developers, sysadmins, support teams, and people on screens all day warm up with browser-based visual drills. Settings are stored locally in the browser, and no account or install is needed. It is self-guided practice, not diagnosis, prescription, or clinical care.",
     "",
     "## Quick summary",
     siteMetadata.entityDescription,
@@ -1084,8 +442,8 @@ export const buildLlmsText = (site: URL) => {
     `- App: ${absoluteUrl("/", site)}`,
     `- Guide: ${absoluteUrl("/guide/", site)}`,
     `- Pricing: ${absoluteUrl("/pricing.md", site)}`,
-    `- Privacy: ${absoluteUrl(legalPages.privacy.path, site)}`,
-    `- Terms: ${absoluteUrl(legalPages.terms.path, site)}`,
+    `- Privacy: ${absoluteUrl(legalPageLinks.privacy.path, site)}`,
+    `- Terms: ${absoluteUrl(legalPageLinks.terms.path, site)}`,
     `- Source code: ${siteMetadata.repositoryUrl}`,
     "",
     "## AI crawler access",
@@ -1098,6 +456,14 @@ export const buildLlmsText = (site: URL) => {
     ...indexableTrainerRoutes.map(
       (route) => `- ${route.label}: ${absoluteUrl(route.path, site)}`,
     ),
+    "",
+    "## Smooth Pursuit pattern pages",
+    ...trainerRoutes
+      .filter((route) => route.mode === "pursuit" && route.patternId)
+      .map(
+        (route) =>
+          `- ${route.label}: ${absoluteUrl(route.path, site)} - ${route.seoContent.body[0]}`,
+      ),
     "",
     "## What the tool includes",
     ...trainingModeNotes.map(

@@ -2,11 +2,8 @@
 import "../styles/global.css";
 import LegalPage from "../lib/components/LegalPage.svelte";
 import SeoHead from "../lib/components/SeoHead.astro";
-import {
-  buildLegalStructuredData,
-  getSiteOrigin,
-  legalPages,
-} from "../lib/seo";
+import { legalPages } from "../lib/content/legal";
+import { buildLegalStructuredData, getSiteOrigin } from "../lib/seo";
 
 const page = legalPages.privacy;
 const siteOrigin = getSiteOrigin(Astro.site);

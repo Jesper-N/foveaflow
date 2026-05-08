@@ -3,11 +3,10 @@ import "../styles/global.css";
 import SeoHead from "../lib/components/SeoHead.astro";
 import TrainerApp from "../lib/components/TrainerApp.svelte";
 import {
-  buildTrainerRouteStructuredData,
-  getSiteOrigin,
   trainerRoutes,
   type TrainerRoute,
-} from "../lib/seo";
+} from "../lib/content/trainer-routes";
+import { buildTrainerRouteStructuredData, getSiteOrigin } from "../lib/seo";
 
 export const getStaticPaths = () => {
   return trainerRoutes.map((route) => ({

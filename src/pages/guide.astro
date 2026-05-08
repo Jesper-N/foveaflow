@@ -2,11 +2,8 @@
 import "../styles/global.css";
 import GuidePage from "../lib/components/GuidePage.svelte";
 import SeoHead from "../lib/components/SeoHead.astro";
-import {
-  buildGuideStructuredData,
-  getSiteOrigin,
-  guideMetadata,
-} from "../lib/seo";
+import { guideMetadata } from "../lib/content/page-copy";
+import { buildGuideStructuredData, getSiteOrigin } from "../lib/seo";
 
 const siteOrigin = getSiteOrigin(Astro.site);
 const structuredData = buildGuideStructuredData(siteOrigin);

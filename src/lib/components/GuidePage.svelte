@@ -12,18 +12,17 @@
   import { Badge } from "$lib/components/ui/badge/index.js";
   import { Button } from "$lib/components/ui/button/index.js";
   import * as Item from "$lib/components/ui/item/index.js";
+  import { legalPageLinks } from "$lib/content/legal";
+  import { guideFaqItems, guideMetadata } from "$lib/content/page-copy";
+  import { siteMetadata } from "$lib/content/site";
+  import { trainerRoutes } from "$lib/content/trainer-routes";
   import {
     audienceNotes,
-    faqItems,
-    guideMetadata,
-    legalPages,
     referenceLinks,
     safetyNote,
-    siteMetadata,
-    trainerRoutes,
     trainingModeGuides,
     trainingModeNotes,
-  } from "$lib/seo";
+  } from "$lib/content/training";
 
   const featuredRoutes = trainerRoutes.filter((route) =>
     [
@@ -71,7 +70,7 @@
         variant="outline"
         class="hidden border-border/80 bg-background/80 px-3 py-1 text-muted-foreground sm:inline-flex"
       >
-        Updated April 30, 2026
+        Updated May 1, 2026
       </Badge>
     </nav>
 
@@ -83,7 +82,7 @@
         <h1
           class="max-w-[13ch] text-4xl leading-none font-semibold tracking-tight text-foreground md:text-6xl"
         >
-          {guideMetadata.title}
+          {guideMetadata.heading}
         </h1>
         <p
           class="mt-6 max-w-[40rem] text-base leading-7 text-muted-foreground md:text-lg md:leading-8"
@@ -91,13 +90,21 @@
           {guideMetadata.summary}
         </p>
         <div class="mt-8 flex flex-wrap gap-3">
-          <Button href="/smooth-pursuit/" class="pressable-ui">
+          <Button href="/" class="pressable-ui">
             <CrosshairIcon class="size-4" />
-            <span class="pl-1">Open Smooth Pursuit</span>
+            <span class="pl-1">Open Eye Trainer</span>
+          </Button>
+          <Button
+            href="/smooth-pursuit/"
+            variant="outline"
+            class="pressable-ui"
+          >
+            <CrosshairIcon class="size-4" />
+            <span class="pl-1">Start with Smooth Pursuit</span>
           </Button>
           <Button href="#faq" variant="outline" class="pressable-ui">
             <BookOpenIcon class="size-4" />
-            <span class="pl-1">Read FAQ</span>
+            <span class="pl-1">Read guide FAQ</span>
           </Button>
         </div>
       </div>
@@ -149,7 +156,7 @@
     <section class={`${sectionGrid} ${guideEnterUp}`}>
       <div class={sectionIntro}>
         <Badge variant="outline" class="mb-4">Drills</Badge>
-        <h2 class={sectionTitle}>Pick the drill that matches the session</h2>
+        <h2 class={sectionTitle}>Choose a drill by the result you want</h2>
       </div>
 
       <div class="grid gap-3">
@@ -180,7 +187,7 @@
     <section class={`guide-enter-delay-1 ${sectionGrid} ${guideEnterUp}`}>
       <div class={sectionIntro}>
         <Badge variant="outline" class="mb-4">Mode guide</Badge>
-        <h2 class={sectionTitle}>How to use each drill</h2>
+        <h2 class={sectionTitle}>How each drill works</h2>
         <p class="mt-4 max-w-[34rem] text-base leading-7 text-muted-foreground">
           Keep your head still unless a drill says otherwise. These modes are
           about eye movement, attention, and focus, not neck movement.
@@ -216,8 +223,7 @@
       <div class={sectionIntro}>
         <Badge variant="outline" class="mb-4">Best fit</Badge>
         <h2 class={sectionTitle}>
-          For gamers, IT professionals, and people who spend long hours on
-          screens
+          Best use cases for gamers, desk workers, and screen-heavy days
         </h2>
         <p class="mt-4 max-w-[34rem] text-base leading-7 text-muted-foreground">
           Use it as a quick visual warmup or active screen break, not as medical
@@ -287,7 +293,7 @@
         aria-label="Pattern routes"
       >
         <Badge variant="outline" class="mb-4">Direct routes</Badge>
-        <h2 class={sectionTitle}>Pattern URLs load the matching state</h2>
+        <h2 class={sectionTitle}>Smooth Pursuit pattern routes</h2>
         <p class="mt-4 max-w-[38rem] text-base leading-7 text-muted-foreground">
           Pattern pages start Smooth Pursuit with that path selected. Reaction
           jumps, Multiple Distractions, and Lilac Chaser have their own direct
@@ -311,7 +317,7 @@
     <section class={`guide-enter-delay-2 ${sectionGrid} ${guideEnterUp}`}>
       <div class={sectionIntro}>
         <Badge variant="outline" class="mb-4">Controls</Badge>
-        <h2 class={sectionTitle}>Useful settings</h2>
+        <h2 class={sectionTitle}>Adjust the settings without guesswork</h2>
       </div>
 
       <div class="grid gap-3">
@@ -362,11 +368,11 @@
     >
       <div class={sectionIntro}>
         <Badge variant="outline" class="mb-4">FAQ</Badge>
-        <h2 class={sectionTitle}>Straight answers</h2>
+        <h2 class={sectionTitle}>Guide FAQ</h2>
       </div>
 
       <div class="grid gap-3">
-        {#each faqItems as faqItem (faqItem.question)}
+        {#each guideFaqItems as faqItem (faqItem.question)}
           <Item.Root
             variant="outline"
             class={`bg-background/70 ${interactiveItem}`}
@@ -387,7 +393,7 @@
     <section class={`guide-enter-delay-4 ${sectionGrid} ${guideEnterUp}`}>
       <div class={sectionIntro}>
         <Badge variant="outline" class="mb-4">References</Badge>
-        <h2 class={sectionTitle}>Background reading</h2>
+        <h2 class={sectionTitle}>Research and background reading</h2>
       </div>
 
       <div class="grid gap-3">
@@ -422,13 +428,13 @@
     >
       <span>{siteMetadata.name} is free. No account, no paid plan.</span>
       <div class="flex flex-wrap gap-2">
-        <Button href={legalPages.privacy.path} variant="ghost" size="sm">
+        <Button href={legalPageLinks.privacy.path} variant="ghost" size="sm">
           <ShieldCheckIcon class="size-4" />
-          <span class="pl-1">{legalPages.privacy.label}</span>
+          <span class="pl-1">{legalPageLinks.privacy.label}</span>
         </Button>
-        <Button href={legalPages.terms.path} variant="ghost" size="sm">
+        <Button href={legalPageLinks.terms.path} variant="ghost" size="sm">
           <FileTextIcon class="size-4" />
-          <span class="pl-1">{legalPages.terms.label}</span>
+          <span class="pl-1">{legalPageLinks.terms.label}</span>
         </Button>
       </div>
     </footer>

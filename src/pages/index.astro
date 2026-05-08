@@ -2,15 +2,14 @@
 import "../styles/global.css";
 import SeoHead from "../lib/components/SeoHead.astro";
 import TrainerApp from "../lib/components/TrainerApp.svelte";
+import { faqItems } from "../lib/content/page-copy";
+import { siteMetadata } from "../lib/content/site";
 import {
-  buildStructuredData,
-  faqItems,
-  getSiteOrigin,
   referenceLinks,
   safetyNote,
-  siteMetadata,
   trainingModeNotes,
-} from "../lib/seo";
+} from "../lib/content/training";
+import { buildStructuredData, getSiteOrigin } from "../lib/seo";
 
 const siteOrigin = getSiteOrigin(Astro.site);
 const structuredData = buildStructuredData(siteOrigin);

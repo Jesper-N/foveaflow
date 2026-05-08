@@ -7,7 +7,8 @@
   import { Badge } from "$lib/components/ui/badge/index.js";
   import { Button } from "$lib/components/ui/button/index.js";
   import * as Item from "$lib/components/ui/item/index.js";
-  import { siteMetadata, type LegalPageContent } from "$lib/seo";
+  import { siteMetadata } from "$lib/content/site";
+  import type { LegalPageContent } from "$lib/content/legal";
 
   let { page }: { page: LegalPageContent } = $props();
 
