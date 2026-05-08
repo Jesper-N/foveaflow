@@ -27,6 +27,7 @@
   import {
     Sheet,
     SheetContent,
+    SheetDescription,
     SheetHeader,
     SheetTitle,
   } from "$lib/components/ui/sheet/index.js";
@@ -1832,17 +1833,13 @@
   </div>
 
   <Sheet bind:open={panelOpen}>
-    <SheetContent
-      side="right"
-      class="overflow-y-auto px-6 py-7 data-[side=right]:w-[min(440px,100vw)] data-[side=right]:sm:max-w-[440px] sm:px-7"
-    >
-      <SheetHeader class="px-0 pt-3 pb-7">
-        <SheetTitle class="text-2xl font-semibold tracking-tight">
-          Controls
-        </SheetTitle>
+    <SheetContent class="overflow-y-auto">
+      <SheetHeader>
+        <SheetTitle>Controls</SheetTitle>
+        <SheetDescription>Change your saved settings.</SheetDescription>
       </SheetHeader>
 
-      <div class="grid gap-7 pb-12 text-sm">
+      <div class="grid gap-7 px-4 pb-12 text-sm">
         <section class="settings-section space-y-4">
           {@render settingHeader("theme", "Theme")}
           <Item.Root variant="outline" size="sm" class="min-h-11 sm:hidden">

@@ -22,12 +22,12 @@
     "deploy": "bun run verify && bun run build && wrangler deploy"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.8",
-    "@astrojs/svelte": "^8.0.5",
-    "@lucide/svelte": "^1.11.0",
+    "@astrojs/check": "^0.9.9",
+    "@astrojs/svelte": "^8.1.0",
+    "@lucide/svelte": "^1.14.0",
     "@tailwindcss/vite": "^4.2.4",
-    "astro": "^6.1.9",
-    "bits-ui": "^2.18.0",
+    "astro": "^6.3.1",
+    "bits-ui": "^2.18.1",
     "clsx": "^2.1.1",
     "mode-watcher": "0.5.1",
     "prettier": "^3.8.3",
@@ -40,14 +40,14 @@
   },
   "devDependencies": {
     "@fontsource-variable/geist": "^5.2.8",
-    "@internationalized/date": "^3.12.0",
+    "@internationalized/date": "^3.12.1",
     "@types/bun": "^1.3.13",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-svelte": "^3.5.1",
     "shadcn-svelte": "^1.2.7",
     "vaul-svelte": "^1.0.0-next.7",
-    "vite": "^7.3.2",
-    "wrangler": "^4.85.0"
+    "vite": "^7.3.3",
+    "wrangler": "^4.90.0"
   },
   "overrides": {
     "yaml": "^2.8.3",
