@@ -16,6 +16,8 @@
     "test": "bun test",
     "audit": "bun audit",
     "verify": "bun run check && bun run test && bun run audit",
+    "tailwind:diagnostics": "bun scripts/tailwind-canonical-classes.ts",
+    "tailwind:fix": "bun scripts/tailwind-canonical-classes.ts --write",
     "format": "prettier --write .",
     "format:svelte": "prettier --write \"src/**/*.{svelte,astro,ts,css}\"",
     "generate-types": "wrangler types",

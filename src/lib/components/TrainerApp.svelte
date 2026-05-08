@@ -357,6 +357,8 @@
     baseRadiusPx: currentSettings.baseRadiusPx,
     speedProfile: currentSettings.speedProfile,
     sizeProfile: currentSettings.sizeProfile,
+    targetCount: currentSettings.targetCount,
+    distractorCount: currentSettings.distractorCount,
     showTrail: currentSettings.showTrail,
     ballColor: currentSettings.ballColor,
     distractorBrightness: currentSettings.distractorBrightness,
@@ -970,6 +972,8 @@
       baseRadiusPx: settings.baseRadiusPx,
       speedProfile: settings.speedProfile,
       sizeProfile: settings.sizeProfile,
+      targetCount: settings.targetCount,
+      distractorCount: settings.distractorCount,
       showTrail: settings.showTrail,
       ballColor: settings.ballColor,
       distractorBrightness: settings.distractorBrightness,
@@ -1631,7 +1635,7 @@
               class="mx-auto flex max-h-[calc(96dvh-0.5rem)] w-full max-w-6xl flex-col overflow-hidden px-6 sm:px-8 lg:px-10"
             >
               <Drawer.Header
-                class="guide-enter guide-enter-top !text-left px-0 py-6"
+                class="guide-enter guide-enter-top text-left! px-0 py-6"
               >
                 <div class="min-w-0 space-y-2">
                   <p

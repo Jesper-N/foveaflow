@@ -2,13 +2,22 @@
   import { Slider as SliderPrimitive } from "bits-ui";
   import { cn, type WithoutChildrenOrChild } from "$lib/utils.js";
 
+  type SliderProps = WithoutChildrenOrChild<SliderPrimitive.RootProps>;
+  type MultipleSliderProps = Omit<
+    Extract<SliderProps, { type: "multiple" }>,
+    "type"
+  > & {
+    type?: "multiple";
+  };
+
   let {
     ref = $bindable(null),
     value = $bindable(),
+    type = "multiple",
     orientation = "horizontal",
     class: className,
     ...restProps
-  }: WithoutChildrenOrChild<SliderPrimitive.RootProps> = $props();
+  }: MultipleSliderProps = $props();
 </script>
 
 <!--
@@ -19,6 +28,7 @@ get along, so we shut typescript up by casting `value` to `never`.
   bind:ref
   bind:value={value as never}
   data-slot="slider"
+  {type}
   {orientation}
   class={cn(
     "data-vertical:min-h-40 relative flex w-full touch-none items-center select-none data-disabled:opacity-50 data-vertical:h-full data-vertical:w-auto data-vertical:flex-col",

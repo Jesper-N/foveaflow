@@ -24,7 +24,7 @@
 </script>
 
 <main
-  class="fixed inset-0 min-h-[100dvh] overflow-auto bg-background text-foreground selection:bg-accent/30"
+  class="fixed inset-0 min-h-dvh overflow-auto bg-background text-foreground selection:bg-accent/30"
 >
   <div class="mx-auto grid w-full max-w-5xl gap-10 px-4 py-5 sm:px-6 lg:px-8">
     <header class={`flex items-center justify-between gap-4 ${guideEnterTop}`}>
@@ -65,7 +65,7 @@
           {page.title}
         </h1>
         <p
-          class="mt-6 max-w-[41rem] text-base leading-7 text-muted-foreground md:text-lg md:leading-8"
+          class="mt-6 max-w-164 text-base leading-7 text-muted-foreground md:text-lg md:leading-8"
         >
           {page.summary}
         </p>
@@ -131,7 +131,7 @@
                   {section.heading}
                 </Item.Title>
                 <div
-                  class="mt-3 grid max-w-[46rem] gap-3 text-sm leading-6 text-muted-foreground"
+                  class="mt-3 grid max-w-184 gap-3 text-sm leading-6 text-muted-foreground"
                 >
                   {#each section.body as paragraph (paragraph)}
                     <p>{paragraph}</p>

@@ -49,7 +49,7 @@
 </script>
 
 <main
-  class="fixed inset-0 min-h-[100dvh] overflow-auto bg-background text-foreground selection:bg-accent/30"
+  class="fixed inset-0 min-h-dvh overflow-auto bg-background text-foreground selection:bg-accent/30"
 >
   <div class="mx-auto grid w-full max-w-7xl gap-10 px-4 py-5 sm:px-6 lg:px-8">
     <nav
@@ -85,7 +85,7 @@
           {guideMetadata.heading}
         </h1>
         <p
-          class="mt-6 max-w-[40rem] text-base leading-7 text-muted-foreground md:text-lg md:leading-8"
+          class="mt-6 max-w-160 text-base leading-7 text-muted-foreground md:text-lg md:leading-8"
         >
           {guideMetadata.summary}
         </p>
@@ -100,7 +100,7 @@
             class="pressable-ui"
           >
             <CrosshairIcon class="size-4" />
-            <span class="pl-1">Start with Smooth Pursuit</span>
+            <span class="pl-1">Try Smooth Pursuit</span>
           </Button>
           <Button href="#faq" variant="outline" class="pressable-ui">
             <BookOpenIcon class="size-4" />
@@ -188,7 +188,7 @@
       <div class={sectionIntro}>
         <Badge variant="outline" class="mb-4">Mode guide</Badge>
         <h2 class={sectionTitle}>How each drill works</h2>
-        <p class="mt-4 max-w-[34rem] text-base leading-7 text-muted-foreground">
+        <p class="mt-4 max-w-136 text-base leading-7 text-muted-foreground">
           Keep your head still unless a drill says otherwise. These modes are
           about eye movement, attention, and focus, not neck movement.
         </p>
@@ -225,7 +225,7 @@
         <h2 class={sectionTitle}>
           Best use cases for gamers, desk workers, and screen-heavy days
         </h2>
-        <p class="mt-4 max-w-[34rem] text-base leading-7 text-muted-foreground">
+        <p class="mt-4 max-w-136 text-base leading-7 text-muted-foreground">
           Use it as a quick visual warmup or active screen break, not as medical
           care.
         </p>
@@ -294,7 +294,7 @@
       >
         <Badge variant="outline" class="mb-4">Direct routes</Badge>
         <h2 class={sectionTitle}>Smooth Pursuit pattern routes</h2>
-        <p class="mt-4 max-w-[38rem] text-base leading-7 text-muted-foreground">
+        <p class="mt-4 max-w-152 text-base leading-7 text-muted-foreground">
           Pattern pages start Smooth Pursuit with that path selected. Reaction
           jumps, Multiple Distractions, and Lilac Chaser have their own direct
           URLs.

@@ -131,7 +131,7 @@ export const homepageSeoContent = {
     "This works well as a short gamer warmup, a between-task reset for screen-heavy work, or a focused practice block when you want to stay sharp.",
   ],
   primaryCta: {
-    label: "Start with Smooth Pursuit",
+    label: "Try Smooth Pursuit",
     href: "/smooth-pursuit/",
   },
   secondaryCta: {
