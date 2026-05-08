@@ -60,7 +60,7 @@
           {page.label}
         </Badge>
         <h1
-          class="max-w-[12ch] text-4xl leading-none font-semibold text-foreground md:text-6xl"
+          class="max-w-[12ch] text-4xl leading-none font-semibold tracking-tight text-foreground md:text-6xl"
         >
           {page.title}
         </h1>
