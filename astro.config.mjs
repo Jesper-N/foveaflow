@@ -4,12 +4,12 @@ import { defineConfig } from "astro/config";
 import svelte from "@astrojs/svelte";
 import tailwindcss from "@tailwindcss/vite";
 
-const site = process.env.SITE_URL ?? "https://eye-trainer.app";
+const site = process.env.SITE_URL ?? "https://foveaflow.com";
 
 /** @returns {import("vite").Plugin} */
 function devWatcherListenerLimit() {
   return {
-    name: "eye-trainer:dev-watcher-listener-limit",
+    name: "foveaflow:dev-watcher-listener-limit",
     enforce: "pre",
     apply: "serve",
     configureServer(server) {

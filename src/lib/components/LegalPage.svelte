@@ -32,10 +32,10 @@
         href="/"
         variant="outline"
         class="pressable-ui"
-        aria-label="Open Eye Trainer"
+        aria-label={`Open ${siteMetadata.name}`}
       >
         <ArrowLeftIcon class="size-4" />
-        <span class="pl-1">Open Eye Trainer</span>
+        <span class="pl-1">Open {siteMetadata.name}</span>
       </Button>
 
       <nav class="hidden items-center gap-1 sm:flex" aria-label="Legal pages">

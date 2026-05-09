@@ -15,7 +15,7 @@ import {
 } from "./content/trainer-routes";
 import type { LegalPageContent } from "./content/legal";
 
-export const defaultSiteUrl = "https://eye-trainer.app";
+export const defaultSiteUrl = "https://foveaflow.com";
 
 const sitemapEntries = [
   { path: "/", changefreq: "weekly", priority: "1.0" },
@@ -217,7 +217,7 @@ export const buildGuideStructuredData = (site: URL) => {
       {
         "@type": "ItemList",
         "@id": `${guideUrl}#routes`,
-        name: "Eye Trainer practice routes",
+        name: "FoveaFlow practice routes",
         itemListElement: indexableTrainerRoutes.map((route, index) => ({
           "@type": "ListItem",
           position: index + 1,
@@ -404,7 +404,7 @@ export const buildSitemapXml = (site: URL) => {
 
 export const buildRobotsText = (site: URL) => {
   return [
-    "# Eye Trainer allows search engines and AI tools to crawl public pages.",
+    "# FoveaFlow allows search engines and AI tools to crawl public pages.",
     "User-agent: *",
     "Allow: /",
     "",
@@ -421,11 +421,11 @@ export const buildRobotsText = (site: URL) => {
 
 export const buildLlmsText = (site: URL) => {
   return [
-    "# Eye Trainer",
+    "# FoveaFlow",
     "",
     siteMetadata.shortDescription,
     "",
-    "Eye Trainer is a free online eye training app for smooth pursuit, quick refocus, distractor tracking, and peripheral awareness. It helps gamers, IT professionals, developers, sysadmins, support teams, and people on screens all day warm up with browser-based visual drills. Settings are stored locally in the browser, and no account or install is needed. It is self-guided practice, not diagnosis, prescription, or clinical care.",
+    "FoveaFlow is a free online eye training app for smooth pursuit, quick refocus, distractor tracking, and peripheral awareness. It helps gamers, IT professionals, developers, sysadmins, support teams, and people on screens all day warm up with browser-based visual drills. Settings are stored locally in the browser, and no account or install is needed. It is self-guided practice, not diagnosis, prescription, or clinical care.",
     "",
     "## Quick summary",
     siteMetadata.entityDescription,
@@ -489,7 +489,7 @@ export const buildLlmsText = (site: URL) => {
       (audienceNote) => `- ${audienceNote.title}: ${audienceNote.body}`,
     ),
     "",
-    "## Common searches Eye Trainer answers",
+    "## Common searches FoveaFlow answers",
     "- free browser eye trainer",
     "- free online eye training",
     "- eye training exercises",
@@ -521,7 +521,7 @@ export const buildPricingText = (site: URL) => {
   return [
     "# Pricing",
     "",
-    "Eye Trainer is free online eye training for visual tracking and focus.",
+    "FoveaFlow is free online eye training for visual tracking and focus.",
     "",
     "## Free",
     "- Price: $0",

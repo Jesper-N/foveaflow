@@ -1,13 +1,13 @@
 export const faqItems = [
   {
-    question: "What is Eye Trainer?",
+    question: "What is FoveaFlow?",
     answer:
-      "Eye Trainer is a free online eye training app for visual tracking, focus, reaction speed, and peripheral awareness. It includes Smooth Pursuit, Reaction Jumps, Lilac Chaser, and distractor tracking with no account or install.",
+      "FoveaFlow is a free online eye training app for visual tracking, focus, reaction speed, and peripheral awareness. It includes Smooth Pursuit, Reaction Jumps, Lilac Chaser, and distractor tracking with no account or install.",
   },
   {
-    question: "Is Eye Trainer free?",
+    question: "Is FoveaFlow free?",
     answer:
-      "Yes. Eye Trainer is free to use, with no account, subscription, or paid plan.",
+      "Yes. FoveaFlow is free to use, with no account, subscription, or paid plan.",
   },
   {
     question: "What is Smooth Pursuit mode?",
@@ -30,24 +30,24 @@ export const faqItems = [
       "Lilac Chaser is a peripheral vision and focus drill. Keep your eyes on the center cross while one ball disappears at a time around a fixed circle. With steady fixation, many people perceive a moving green afterimage where the missing ball is.",
   },
   {
-    question: "Can Eye Trainer improve eyesight or reaction time?",
+    question: "Can FoveaFlow improve eyesight or reaction time?",
     answer:
-      "Eye Trainer may help you train visual skills like tracking, refocusing, peripheral awareness, processing speed, and reaction timing. Results vary, and it is not a replacement for professional care if you have an eye condition or ongoing symptoms.",
+      "FoveaFlow may help you train visual skills like tracking, refocusing, peripheral awareness, processing speed, and reaction timing. Results vary, and it is not a replacement for professional care if you have an eye condition or ongoing symptoms.",
   },
   {
-    question: "Is Eye Trainer good for gamers?",
+    question: "Is FoveaFlow good for gamers?",
     answer:
-      "Yes. Use Eye Trainer as a quick visual warmup before FPS games or any game where tracking targets and reading movement matters.",
+      "Yes. Use FoveaFlow as a quick visual warmup before FPS games or any game where tracking targets and reading movement matters.",
   },
   {
-    question: "Is Eye Trainer useful for IT professionals?",
+    question: "Is FoveaFlow useful for IT professionals?",
     answer:
       "Yes. It gives developers, sysadmins, and support teams a short visual reset between code, logs, dashboards, terminals, tickets, and multiple windows.",
   },
   {
-    question: "Can Eye Trainer help with tired eyes from screen work?",
+    question: "Can FoveaFlow help with tired eyes from screen work?",
     answer:
-      "Eye Trainer can be a short active break during long screen sessions. If screen use causes pain, dizziness, headaches, or ongoing symptoms, stop and get professional advice.",
+      "FoveaFlow can be a short active break during long screen sessions. If screen use causes pain, dizziness, headaches, or ongoing symptoms, stop and get professional advice.",
   },
   {
     question: "Do I need an account or app install?",
@@ -60,7 +60,7 @@ export const faqItems = [
       "You can adjust the mode, motion path, target size, speed, shape, color, opacity, trail, distractor count, viewing distance, screen scale, and Lilac Chaser size and color.",
   },
   {
-    question: "Can I use Eye Trainer on a phone?",
+    question: "Can I use FoveaFlow on a phone?",
     answer:
       "Yes, but a larger screen gives the moving target more room. A desktop, laptop, or tablet usually feels better for longer paths.",
   },
@@ -123,10 +123,10 @@ export type PageSeoContent = {
 
 export const homepageSeoContent = {
   kicker: "Free browser tool",
-  heading: "Eye Trainer",
+  heading: "FoveaFlow",
   hero: "Train visual tracking, quick refocus, and peripheral awareness in your browser.",
   body: [
-    "Eye Trainer is a browser-based set of visual practice drills for people who want a quick session of tracking, refocus, selective attention, or fixation work without downloading an app.",
+    "FoveaFlow is a browser-based set of visual practice drills for people who want a quick session of tracking, refocus, selective attention, or fixation work without downloading an app.",
     "Use Smooth Pursuit to follow one moving target, Reaction Jumps to snap to each new target position, Multiple Distractions to stay with the right target under clutter, and Lilac Chaser to practice steady fixation.",
     "This works well as a short gamer warmup, a between-task reset for screen-heavy work, or a focused practice block when you want to stay sharp.",
   ],
@@ -139,15 +139,15 @@ export const homepageSeoContent = {
     href: "/guide/",
   },
   trustNote:
-    "Updated May 1, 2026. Eye Trainer is practice software, not medical care. Stop if a session causes strain, dizziness, headache, nausea, or any other discomfort.",
+    "Updated May 9, 2026. FoveaFlow is practice software, not medical care. Stop if a session causes strain, dizziness, headache, nausea, or any other discomfort.",
   faq: faqItems,
 } satisfies PageSeoContent;
 
 export const guideMetadata = {
-  title: "Eye Trainer Guide: Visual Tracking Drills and Settings",
-  heading: "Eye Trainer Guide",
+  title: "FoveaFlow Guide: Visual Tracking Drills and Settings",
+  heading: "FoveaFlow Guide",
   description:
-    "Learn which Eye Trainer drill to use, how to set speed and size, and how to choose the right session for tracking, refocus, attention, and peripheral awareness.",
+    "Learn which FoveaFlow drill to use, how to set speed and size, and how to choose the right session for tracking, refocus, attention, and peripheral awareness.",
   summary:
     "Pick the right drill, set the right difficulty, and start a short session that matches your goal.",
 } as const;

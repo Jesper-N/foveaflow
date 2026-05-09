@@ -35,7 +35,7 @@ const smoothPursuitSeoContent = {
   heading: "Smooth Pursuit Eye Training",
   hero: "Follow one moving target and train steady visual tracking.",
   body: [
-    "Smooth Pursuit is Eye Trainer's moving-target drill. Keep your head still, follow one target with your eyes, and stay smooth instead of jumping ahead.",
+    "Smooth Pursuit is FoveaFlow's moving-target drill. Keep your head still, follow one target with your eyes, and stay smooth instead of jumping ahead.",
     "Choose an easy path when you want rhythm and control. Choose a harder path when you want more direction changes and more target-search demand.",
     "Use Smooth Pursuit for short browser-based practice, a pre-game warmup, or a focused reset after dense screen work.",
   ],
@@ -48,7 +48,7 @@ const smoothPursuitSeoContent = {
     href: "/guide/",
   },
   trustNote:
-    "Updated May 1, 2026. This is practice software, not medical care, so stop if the session feels uncomfortable.",
+    "Updated May 9, 2026. This is practice software, not medical care, so stop if the session feels uncomfortable.",
   faq: [
     {
       question: "What is Smooth Pursuit?",
@@ -78,7 +78,7 @@ const smoothPursuitSeoContent = {
     {
       question: "Is this medical treatment?",
       answer:
-        "No. Eye Trainer is practice software and should not replace professional care.",
+        "No. FoveaFlow is practice software and should not replace professional care.",
     },
   ],
 } satisfies PageSeoContent;
@@ -101,7 +101,7 @@ const reactionJumpsSeoContent = {
     href: "/guide/",
   },
   trustNote:
-    "Updated May 1, 2026. Keep sessions brief and controlled. If the drill causes strain or discomfort, stop.",
+    "Updated May 9, 2026. Keep sessions brief and controlled. If the drill causes strain or discomfort, stop.",
   faq: [
     {
       question: "What does Reaction Jumps train?",
@@ -141,7 +141,7 @@ const multipleDistractionsSeoContent = {
   heading: "Distractor Tracking Eye Training",
   hero: "Hold the right target even when the screen gets busy.",
   body: [
-    "Multiple Distractions is Eye Trainer's clutter drill. One target matters most, but other moving objects share the screen and try to pull your attention away.",
+    "Multiple Distractions is FoveaFlow's clutter drill. One target matters most, but other moving objects share the screen and try to pull your attention away.",
     "This mode is a strong fit when you want to practice selective attention and target identity under visual noise.",
     "Use this drill when Smooth Pursuit feels too clean and you want a more realistic visual-attention challenge.",
   ],
@@ -154,7 +154,7 @@ const multipleDistractionsSeoContent = {
     href: "/smooth-pursuit/",
   },
   trustNote:
-    "Updated May 1, 2026. Start with fewer distractors or a bigger target, and stop if the session becomes uncomfortable.",
+    "Updated May 9, 2026. Start with fewer distractors or a bigger target, and stop if the session becomes uncomfortable.",
   faq: [
     {
       question: "What is distractor tracking?",
@@ -207,7 +207,7 @@ const lilacChaserSeoContent = {
     href: "/guide/",
   },
   trustNote:
-    "Updated May 1, 2026. If the visual effect feels strange or uncomfortable, stop the session and rest.",
+    "Updated May 9, 2026. If the visual effect feels strange or uncomfortable, stop the session and rest.",
   faq: [
     {
       question: "What is Lilac Chaser?",
@@ -306,7 +306,7 @@ const buildPatternSeoContent = (
       href: "/smooth-pursuit/",
     },
     trustNote:
-      "Updated May 1, 2026. This is a browser-based practice drill and not medical therapy.",
+      "Updated May 9, 2026. This is a browser-based practice drill and not medical therapy.",
     faq: [
       {
         question: `What is the ${label} drill?`,

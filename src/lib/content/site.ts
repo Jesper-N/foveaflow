@@ -1,17 +1,17 @@
 export const siteMetadata = {
-  name: "Eye Trainer",
-  alternateName: "EyeTrainer",
-  title: "Eye Trainer: Free Online Visual Tracking Drills",
+  name: "FoveaFlow",
+  alternateName: "Fovea Flow",
+  title: "FoveaFlow: Free Online Visual Tracking Drills",
   description:
     "Free online eye training for smooth pursuit, quick refocus, distractor tracking, and peripheral awareness. No account, no install, adjustable settings.",
   shortDescription:
     "Train visual tracking, quick refocus, and peripheral awareness in your browser. Free to use with no account or install.",
   imagePath: "/metadata/og.jpg",
-  repositoryUrl: "https://github.com/Jesper-N/eye-trainer",
-  licenseUrl: "https://github.com/Jesper-N/eye-trainer/blob/main/LICENSE",
-  lastUpdated: "2026-05-01",
+  repositoryUrl: "https://github.com/Jesper-N/foveaflow",
+  licenseUrl: "https://github.com/Jesper-N/foveaflow/blob/main/LICENSE",
+  lastUpdated: "2026-05-09",
   entityDescription:
-    "Eye Trainer is a free browser app for visual tracking drills, quick refocus practice, distractor tracking, and peripheral awareness. It is built for gamers, developers, sysadmins, support teams, and other people who spend long days on screens.",
+    "FoveaFlow is a free browser app for visual tracking drills, quick refocus practice, distractor tracking, and peripheral awareness. It is built for gamers, developers, sysadmins, support teams, and other people who spend long days on screens.",
   keywords: [
     "free eye tracking trainer",
     "free online eye training",
@@ -38,7 +38,7 @@ export const siteMetadata = {
     "visual processing trainer",
     "visual reaction time practice",
   ],
-  sameAs: ["https://github.com/Jesper-N/eye-trainer"],
+  sameAs: ["https://github.com/Jesper-N/foveaflow"],
 } as const;
 
 export const aiCrawlerAccess = [

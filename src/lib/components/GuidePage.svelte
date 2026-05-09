@@ -60,17 +60,17 @@
         href="/"
         variant="outline"
         class="pressable-ui"
-        aria-label="Open Eye Trainer"
+        aria-label={`Open ${siteMetadata.name}`}
       >
         <ArrowLeftIcon class="size-4" />
-        <span class="pl-1">Open Eye Trainer</span>
+        <span class="pl-1">Open {siteMetadata.name}</span>
       </Button>
 
       <Badge
         variant="outline"
         class="hidden border-border/80 bg-background/80 px-3 py-1 text-muted-foreground sm:inline-flex"
       >
-        Updated May 1, 2026
+        Updated May 9, 2026
       </Badge>
     </nav>
 
@@ -92,7 +92,7 @@
         <div class="mt-8 flex flex-wrap gap-3">
           <Button href="/" class="pressable-ui">
             <CrosshairIcon class="size-4" />
-            <span class="pl-1">Open Eye Trainer</span>
+            <span class="pl-1">Open {siteMetadata.name}</span>
           </Button>
           <Button
             href="/smooth-pursuit/"

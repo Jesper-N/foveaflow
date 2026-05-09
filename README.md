@@ -1,4 +1,4 @@
-# Eye Trainer
+# FoveaFlow
 
 [![Astro](https://img.shields.io/badge/Astro-6.1-ff5d01?logo=astro&logoColor=white)](https://astro.build/)
 [![Svelte](https://img.shields.io/badge/Svelte-5.55-ff3e00?logo=svelte&logoColor=white)](https://svelte.dev/)
@@ -7,7 +7,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.2-38bdf8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-[Eye Trainer](https://eye-trainer.app/) is a free online eye training app for visual tracking, focus, reaction speed, and peripheral awareness. It includes Smooth Pursuit paths, Reaction Jumps, Lilac Chaser peripheral focus practice, random motion, and distractor tracking.
+[FoveaFlow](https://foveaflow.com/) is a free online eye training app for visual tracking, focus, reaction speed, and peripheral awareness. It includes Smooth Pursuit paths, Reaction Jumps, Lilac Chaser peripheral focus practice, random motion, and distractor tracking.
 
 It runs without an account or install. The app keeps the canvas full screen, gives direct control over target motion, and stores settings locally in your browser.
 
@@ -99,7 +99,7 @@ Use `bun run format:svelte` when you only need to format source files after Svel
 
 ## Safety note
 
-Eye Trainer is practice software, not medical care. Stop if you feel eye strain, dizziness, headache, nausea, or any other discomfort. If you have an eye condition, light sensitivity, seizures, or recent eye surgery, ask a qualified clinician before using visual training tools.
+FoveaFlow is practice software, not medical care. Stop if you feel eye strain, dizziness, headache, nausea, or any other discomfort. If you have an eye condition, light sensitivity, seizures, or recent eye surgery, ask a qualified clinician before using visual training tools.
 
 ## Roadmap
 

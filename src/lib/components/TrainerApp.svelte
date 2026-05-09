@@ -1371,20 +1371,20 @@
         <p>{faqItem.answer}</p>
       </article>
     {/each}
-    <a href="/guide/">Read the full Eye Trainer guide</a>
+    <a href="/guide/">Read the full {siteMetadata.name} guide</a>
   </section>
 
   <canvas
     {@attach attachCanvas}
     class="absolute inset-0 h-full w-full touch-none"
     data-testid="trainer-canvas"
-    aria-label="Eye trainer moving target canvas"
+    aria-label="Visual tracking moving target canvas"
     aria-describedby="trainer-canvas-description trainer-motion-status"
   ></canvas>
 
   <nav class="sr-only" aria-label="Practice pages">
-    <a href="/">Eye Trainer home</a>
-    <a href="/guide/">Eye Trainer guide</a>
+    <a href="/">{siteMetadata.name} home</a>
+    <a href="/guide/">{siteMetadata.name} guide</a>
     {#each indexableTrainerRoutes as route (route.slug)}
       <a href={route.path}>{route.label}</a>
     {/each}
@@ -1601,7 +1601,7 @@
           class="pressable-ui"
           variant="outline"
           size="icon"
-          href="https://github.com/Jesper-N/eye-trainer"
+          href={siteMetadata.repositoryUrl}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Open GitHub repository"

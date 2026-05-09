@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "compatibility_date": "2026-04-28",
-  "name": "eye-trainer",
+  "name": "foveaflow",
   "assets": {
     "directory": "./dist",
     "not_found_handling": "404-page",

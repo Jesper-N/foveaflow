@@ -1,6 +1,6 @@
 import type { TrainerSettings } from "./presets";
 
-const SETTINGS_KEY = "eye-trainer.settings.v2";
+const SETTINGS_KEY = "foveaflow.settings.v2";
 
 export type StoredSettings = Partial<TrainerSettings>;
 
