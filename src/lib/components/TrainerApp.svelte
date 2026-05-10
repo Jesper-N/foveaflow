@@ -1422,14 +1422,20 @@
           class="flex shrink-0 items-center gap-2 text-base font-semibold tracking-tight text-foreground"
         >
           <img
-            src={isDarkMode
-              ? "/metadata/favicon-light-96x96.png"
-              : "/metadata/favicon-96x96.png"}
+            src="/metadata/favicon-96x96.png"
             alt=""
             aria-hidden="true"
             width="28"
             height="28"
-            class="size-7 object-contain"
+            class="size-7 object-contain dark:hidden"
+          />
+          <img
+            src="/metadata/favicon-light-96x96.png"
+            alt=""
+            aria-hidden="true"
+            width="28"
+            height="28"
+            class="hidden size-7 object-contain dark:block"
           />
           <span class="sr-only xl:not-sr-only">{siteMetadata.name}</span>
         </div>
@@ -2071,7 +2077,7 @@
                 >
                   <circle cx="12" cy="12" r="12" fill={settings.ballColor} />
                 </svg>
-                <span class="font-mono text-sm uppercase text-foreground">
+                <span class="font-sans text-sm uppercase text-foreground">
                   {settings.ballColor}
                 </span>
                 <Input
