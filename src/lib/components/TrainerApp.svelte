@@ -1423,7 +1423,7 @@
         >
           <img
             src={isDarkMode
-              ? "/metadata/favicon-dark-96x96.png"
+              ? "/metadata/favicon-light-96x96.png"
               : "/metadata/favicon-96x96.png"}
             alt=""
             aria-hidden="true"

@@ -43,7 +43,7 @@ const getOrganizationId = (site: URL) =>
 const buildOrganizationStructuredData = (site: URL) => {
   const appUrl = absoluteUrl("/", site);
   const imageUrl = absoluteUrl(siteMetadata.imagePath, site);
-  const logoUrl = absoluteUrl("/metadata/favicon-dark-96x96.png", site);
+  const logoUrl = absoluteUrl("/metadata/favicon-96x96.png", site);
 
   return {
     "@type": "Organization",

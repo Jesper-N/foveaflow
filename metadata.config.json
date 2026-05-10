@@ -7,7 +7,7 @@
     "accent": "#94E516"
   },
   "logo": "./metadata-templates/source-assets/darkmode.png",
-  "faviconSrc": "./metadata-templates/source-assets/lightmode.png",
+  "faviconSrc": "./metadata-templates/source-assets/darkmode.png",
   "faviconTransparent": true,
   "outputDir": "public/metadata",
   "font": "Inter"
