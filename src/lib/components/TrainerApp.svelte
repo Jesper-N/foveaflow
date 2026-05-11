@@ -40,16 +40,26 @@
   } from "$lib/engine/calibration";
   import { resolveCanvasScale } from "$lib/engine/canvas";
   import {
+    getLetterBucket,
+    getLetterForBucket,
+    getReactionLetterBucket,
+  } from "$lib/engine/letters";
+  import {
     DEFAULT_BALL_COLOR,
+    DEFAULT_LETTER_SCALE,
     exercisePresets,
     firstPreset,
     getPreset,
     patternOptions,
     settingsFromPreset,
+    type LetterWeight,
     type TrainerSettings,
     type TrainingMode,
   } from "$lib/engine/presets";
-  import { samplePatternInto } from "$lib/engine/patterns";
+  import {
+    getTeleportJumpDistancePx,
+    samplePatternInto,
+  } from "$lib/engine/patterns";
   import {
     sampleSizeProfile,
     sampleSpeedProfile,
@@ -132,6 +142,21 @@
     { id: "triangle", name: "Triangle" },
     { id: "cross", name: "Cross" },
   ];
+  const letterScaleByShape: Record<TargetShape, number> = {
+    circle: 1,
+    ring: 0.82,
+    square: 1.05,
+    diamond: 0.86,
+    triangle: 0.76,
+    cross: 0.72,
+  };
+  const letterWeightOptions: Array<{ id: LetterWeight; name: string }> = [
+    { id: 400, name: "Regular" },
+    { id: 500, name: "Medium" },
+    { id: 600, name: "Semibold" },
+    { id: 700, name: "Bold" },
+    { id: 800, name: "Heavy" },
+  ];
 
   const maxSpeedByUnit: Record<SpeedUnit, number> = {
     "deg/s": 100,
@@ -188,6 +213,10 @@
 
   const isTargetShape = (value: string): value is TargetShape => {
     return shapeOptions.some((option) => option.id === value);
+  };
+
+  const isLetterWeight = (value: number): value is LetterWeight => {
+    return letterWeightOptions.some((option) => option.id === value);
   };
 
   const isLilacChaserBallColor = (value: unknown): value is string => {
@@ -364,6 +393,10 @@
     distractorBrightness: currentSettings.distractorBrightness,
     targetOpacity: currentSettings.targetOpacity,
     targetShape: currentSettings.targetShape,
+    letterEnabled: currentSettings.letterEnabled,
+    letterColor: currentSettings.letterColor,
+    letterWeight: currentSettings.letterWeight,
+    letterScale: currentSettings.letterScale,
     lilacChaserScale: currentSettings.lilacChaserScale,
     lilacChaserBallColor: currentSettings.lilacChaserBallColor,
   });
@@ -382,6 +415,10 @@
 
     if (route?.mode === "pursuit" && route.patternId) {
       nextSettings.patternId = route.patternId;
+    }
+
+    if (preset.id === "mot" && currentSettings.presetId !== "mot") {
+      nextSettings.distractorCount = preset.distractorCount;
     }
 
     return nextSettings;
@@ -612,6 +649,20 @@
         isTargetShape(saved.targetShape)
           ? saved.targetShape
           : "circle",
+      letterEnabled: saved.letterEnabled !== false,
+      letterColor: isHexColor(saved.letterColor)
+        ? saved.letterColor
+        : "#000000",
+      letterWeight:
+        isFiniteNumber(saved.letterWeight) && isLetterWeight(saved.letterWeight)
+          ? saved.letterWeight
+          : 600,
+      letterScale: resolveNumber(
+        saved.letterScale,
+        0.45,
+        1.2,
+        DEFAULT_LETTER_SCALE,
+      ),
       lilacChaserScale: resolveNumber(saved.lilacChaserScale, 0.75, 1.5, 1),
       lilacChaserBallColor: isLilacChaserBallColor(saved.lilacChaserBallColor)
         ? saved.lilacChaserBallColor
@@ -685,6 +736,14 @@
     const next = readSliderNumber(value);
     if (next === null) return;
     settings.distractorBrightness = clamp(next, 0.35, 1);
+  };
+
+  const letterScaleSliderValue = () => [settings.letterScale];
+
+  const setLetterScaleSliderValue = (value: number[] | undefined) => {
+    const next = readSliderNumber(value);
+    if (next === null) return;
+    settings.letterScale = clamp(next, 0.45, 1.2);
   };
 
   const resizeCanvas = (entries?: ResizeObserverEntry[]) => {
@@ -830,7 +889,7 @@
 
     const frameCount = sampleFrameCount(elapsedSec);
     for (let index = 0; index < frameCount; index += 1) {
-      drawTarget(ctx, targetFrames[index]);
+      drawTarget(ctx, targetFrames[index], index);
     }
   };
 
@@ -891,12 +950,32 @@
     if (gridPath) ctx.stroke(gridPath);
   };
 
-  const drawTarget = (ctx: CanvasRenderingContext2D, frame: TargetFrame) => {
+  const drawTarget = (
+    ctx: CanvasRenderingContext2D,
+    frame: TargetFrame,
+    index: number,
+  ) => {
     if (!frame.visible) return;
 
     const alpha = frame.alpha * settings.targetOpacity;
     if (alpha <= 0) return;
-    if (alpha !== 1) ctx.globalAlpha = alpha;
+
+    if (!settings.letterEnabled) {
+      if (alpha !== 1) ctx.globalAlpha = alpha;
+      ctx.fillStyle = frame.color;
+      drawStimulusShape(
+        ctx,
+        frame.x,
+        frame.y,
+        frame.radiusPx,
+        settings.targetShape,
+      );
+      if (alpha !== 1) ctx.globalAlpha = 1;
+      return;
+    }
+
+    ctx.save();
+    ctx.globalAlpha = alpha;
     ctx.fillStyle = frame.color;
     drawStimulusShape(
       ctx,
@@ -905,7 +984,49 @@
       frame.radiusPx,
       settings.targetShape,
     );
-    if (alpha !== 1) ctx.globalAlpha = 1;
+    drawTargetLetter(ctx, frame, index);
+    ctx.restore();
+  };
+
+  const getLetterFontSize = (radiusPx: number, shape: TargetShape) => {
+    return Math.max(
+      6,
+      radiusPx * letterScaleByShape[shape] * settings.letterScale,
+    );
+  };
+
+  const drawTargetLetter = (
+    ctx: CanvasRenderingContext2D,
+    frame: TargetFrame,
+    index: number,
+  ) => {
+    if (settings.presetId === "reactionTime") {
+      const bucket = getReactionLetterBucket(
+        travelPx,
+        getTeleportJumpDistancePx(arena, frame.radiusPx),
+      );
+      drawLetterGlyph(ctx, getLetterForBucket(seed, index, bucket), frame);
+      return;
+    }
+
+    const bucket = getLetterBucket(elapsedSec);
+    drawLetterGlyph(ctx, getLetterForBucket(seed, index, bucket), frame);
+  };
+
+  const drawLetterGlyph = (
+    ctx: CanvasRenderingContext2D,
+    letter: string,
+    frame: TargetFrame,
+  ) => {
+    const fontSize = getLetterFontSize(frame.radiusPx, settings.targetShape);
+    ctx.save();
+    ctx.fillStyle = settings.letterColor;
+    ctx.font = `${settings.letterWeight} ${fontSize}px Geist, Arial, sans-serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.translate(frame.x, frame.y + fontSize * 0.04);
+    ctx.fillText(letter, 0, 0);
+    ctx.restore();
   };
 
   const drawStimulusShape = (
@@ -973,12 +1094,19 @@
       speedProfile: settings.speedProfile,
       sizeProfile: settings.sizeProfile,
       targetCount: settings.targetCount,
-      distractorCount: settings.distractorCount,
+      distractorCount:
+        preset.id === "mot" && settings.presetId !== "mot"
+          ? preset.distractorCount
+          : settings.distractorCount,
       showTrail: settings.showTrail,
       ballColor: settings.ballColor,
       distractorBrightness: settings.distractorBrightness,
       targetOpacity: settings.targetOpacity,
       targetShape: settings.targetShape,
+      letterEnabled: settings.letterEnabled,
+      letterColor: settings.letterColor,
+      letterWeight: settings.letterWeight,
+      letterScale: settings.letterScale,
       lilacChaserScale: settings.lilacChaserScale,
       lilacChaserBallColor: settings.lilacChaserBallColor,
     });
@@ -1004,7 +1132,11 @@
   };
 
   const resetSettings = () => {
-    settings = settingsFromPreset(firstPreset, DEFAULT_CALIBRATION);
+    const preset = getPreset(settings.presetId);
+    const patternId = settings.patternId;
+    settings = settingsFromPreset(preset, DEFAULT_CALIBRATION, {
+      patternId,
+    });
     seed = 4321;
     rng = createRng(seed);
     elapsedSec = 0;
@@ -1013,7 +1145,7 @@
     refreshBaseSpeed();
     invalidateLilacChaserFrame();
     drawFrame();
-    setBrowserPath("/");
+    syncBrowserPath();
   };
 
   const clearHudAutoHideTimer = () => {
@@ -1171,16 +1303,26 @@
     settings.ballColor = safeStimulusColor(target.value);
   };
 
-  const getOptionName = <T extends string>(
+  const handleLetterColorInput = (event: Event) => {
+    const target = event.currentTarget;
+    if (!(target instanceof HTMLInputElement) || !isHexColor(target.value)) {
+      return;
+    }
+    settings.letterColor = target.value;
+  };
+
+  const getOptionName = <T extends string | number>(
     options: Array<{ id: T; name: string }>,
     id: T,
-  ) => options.find((option) => option.id === id)?.name ?? id;
+  ) => options.find((option) => option.id === id)?.name ?? String(id);
 
   const getPresetName = (id: string) => getPreset(id).name;
   const getPatternName = (id: PatternId) => getOptionName(patternOptions, id);
   const getBehaviorName = (id: BehaviorId) =>
     getOptionName(behaviorOptions, id);
   const getShapeName = (id: TargetShape) => getOptionName(shapeOptions, id);
+  const getLetterWeightName = (id: LetterWeight) =>
+    getOptionName(letterWeightOptions, id);
   const getLilacChaserColorName = (id: string) =>
     getOptionName([...lilacChaserColorOptions], id);
   const patternSelectContentClass =
@@ -1188,6 +1330,11 @@
 
   const handleShapeChange = (value: string) => {
     if (isTargetShape(value)) settings.targetShape = value;
+  };
+
+  const handleLetterWeightChange = (value: string) => {
+    const weight = Number(value);
+    if (isLetterWeight(weight)) settings.letterWeight = weight;
   };
 
   const handleThemeCheckedChange = (checked: boolean) => {
@@ -1843,13 +1990,13 @@
   </div>
 
   <Sheet bind:open={panelOpen}>
-    <SheetContent class="overflow-y-auto">
+    <SheetContent class="min-w-0 overflow-x-hidden overflow-y-auto">
       <SheetHeader>
         <SheetTitle>Controls</SheetTitle>
         <SheetDescription>Change your saved settings.</SheetDescription>
       </SheetHeader>
 
-      <div class="grid gap-7 px-4 pb-12 text-sm">
+      <div class="grid min-w-0 gap-7 px-4 pb-12 text-sm">
         <section class="settings-section space-y-4">
           {@render settingHeader("theme", "Theme")}
           <Item.Root variant="outline" size="sm" class="min-h-11 sm:hidden">
@@ -2067,17 +2214,19 @@
             {@render settingHeader("eye", "Color")}
             <Field.Field>
               <label
-                class="flex h-11 cursor-pointer items-center gap-3 rounded-full border bg-input/50 px-3 transition-[color,box-shadow,background-color] hover:ring-4 hover:ring-ring/30"
+                class="flex h-11 min-w-0 cursor-pointer items-center gap-3 rounded-full border bg-input/50 px-3 transition-[color,box-shadow,background-color] hover:ring-4 hover:ring-ring/30"
                 for="trainer-color"
               >
                 <svg
                   viewBox="0 0 24 24"
-                  class="size-6 rounded-full border shadow-sm"
+                  class="size-6 shrink-0 rounded-full border shadow-sm"
                   aria-hidden="true"
                 >
                   <circle cx="12" cy="12" r="12" fill={settings.ballColor} />
                 </svg>
-                <span class="font-sans text-sm uppercase text-foreground">
+                <span
+                  class="min-w-0 truncate font-sans text-sm uppercase text-foreground"
+                >
                   {settings.ballColor}
                 </span>
                 <Input
@@ -2168,6 +2317,102 @@
                 aria-label="Target size"
               />
             </Field.Field>
+
+            <Item.Root variant="outline" size="sm" class="min-h-11">
+              <Item.Content>
+                <Item.Title>Letter</Item.Title>
+              </Item.Content>
+              <Item.Actions>
+                <Switch
+                  bind:checked={settings.letterEnabled}
+                  aria-label="Show target letters"
+                />
+              </Item.Actions>
+            </Item.Root>
+
+            {#if settings.letterEnabled}
+              <Field.Field>
+                <Field.Label for="trainer-letter-color"
+                  >Letter color</Field.Label
+                >
+                <label
+                  class="flex h-11 min-w-0 cursor-pointer items-center gap-3 rounded-full border bg-input/50 px-3 transition-[color,box-shadow,background-color] hover:ring-4 hover:ring-ring/30"
+                  for="trainer-letter-color"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    class="size-6 shrink-0 rounded-full border bg-background shadow-sm"
+                    aria-hidden="true"
+                  >
+                    <text
+                      x="12"
+                      y="12"
+                      dominant-baseline="middle"
+                      text-anchor="middle"
+                      fill={settings.letterColor}
+                      font-size="15"
+                      font-weight={settings.letterWeight}
+                      font-family="Geist, Arial, sans-serif"
+                    >
+                      A
+                    </text>
+                  </svg>
+                  <span
+                    class="min-w-0 truncate font-sans text-sm uppercase text-foreground"
+                  >
+                    {settings.letterColor}
+                  </span>
+                  <Input
+                    id="trainer-letter-color"
+                    class="sr-only"
+                    type="color"
+                    value={settings.letterColor}
+                    oninput={handleLetterColorInput}
+                    aria-label="Letter color"
+                  />
+                </label>
+              </Field.Field>
+
+              <Field.Field>
+                <Field.Label for="trainer-letter-weight">Weight</Field.Label>
+                <Select.Root
+                  type="single"
+                  value={String(settings.letterWeight)}
+                  onValueChange={handleLetterWeightChange}
+                >
+                  <Select.Trigger
+                    id="trainer-letter-weight"
+                    class="w-full"
+                    aria-label="Letter weight"
+                  >
+                    {getLetterWeightName(settings.letterWeight)}
+                  </Select.Trigger>
+                  <Select.Content>
+                    <Select.Group>
+                      {#each letterWeightOptions as option (option.id)}
+                        <Select.Item value={String(option.id)}>
+                          {option.name}
+                        </Select.Item>
+                      {/each}
+                    </Select.Group>
+                  </Select.Content>
+                </Select.Root>
+              </Field.Field>
+
+              <Field.Field>
+                {@render sliderRow(
+                  "Text size",
+                  `${Math.round(settings.letterScale * 100)}%`,
+                )}
+                <Slider
+                  bind:value={letterScaleSliderValue, setLetterScaleSliderValue}
+                  min={0.45}
+                  max={1.2}
+                  step={0.01}
+                  aria-label="Letter text size"
+                />
+              </Field.Field>
+            {/if}
           </section>
 
           <section

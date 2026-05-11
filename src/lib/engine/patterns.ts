@@ -357,6 +357,19 @@ const getMotObjectParams = (
   return objects;
 };
 
+export const getTeleportJumpDistancePx = (
+  arena: Arena,
+  radiusPx: number,
+  pathMarginPx = 16,
+) => {
+  const requestedMargin = Math.max(pathMarginPx, radiusPx + 8);
+  const maxMargin = Math.max(1, Math.min(arena.width, arena.height) / 2);
+  const margin = Math.min(requestedMargin, maxMargin);
+  const width = Math.max(1, arena.width - margin * 2);
+  const height = Math.max(1, arena.height - margin * 2);
+  return clamp(Math.min(width, height) * 0.55, 420, 820);
+};
+
 export const samplePatternInto = (
   frames: TargetFrame[],
   id: PatternId,
@@ -517,7 +530,11 @@ export const samplePatternInto = (
   }
 
   if (id === "teleport") {
-    const jumpDistancePx = clamp(Math.min(width, height) * 0.55, 420, 820);
+    const jumpDistancePx = getTeleportJumpDistancePx(
+      arena,
+      radiusPx,
+      params.pathMarginPx,
+    );
     const bucket = Math.floor(travelPx / jumpDistancePx);
     const phase = (travelPx - bucket * jumpDistancePx) / jumpDistancePx;
     return writeTarget(

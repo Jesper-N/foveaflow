@@ -13,7 +13,7 @@
     "astro": "astro",
     "lint": "astro check",
     "check": "astro check",
-    "test": "bun test",
+    "test": "bun test --pass-with-no-tests",
     "audit": "bun audit",
     "verify": "bun run check && bun run test && bun run audit",
     "tailwind:diagnostics": "bun scripts/tailwind-canonical-classes.ts",

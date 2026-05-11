@@ -3,6 +3,7 @@ import type { SizeProfile, SpeedProfile } from "./profiles";
 import type { PatternId, SpeedSetting, TargetShape } from "./types";
 
 export type TrainingMode = "pursuit" | "reactionTime" | "mot" | "lilacChaser";
+export type LetterWeight = 400 | 500 | 600 | 700 | 800;
 
 export type ExercisePreset = {
   id: TrainingMode;
@@ -32,12 +33,17 @@ export type TrainerSettings = {
   distractorBrightness: number;
   targetOpacity: number;
   targetShape: TargetShape;
+  letterEnabled: boolean;
+  letterColor: string;
+  letterWeight: LetterWeight;
+  letterScale: number;
   lilacChaserScale: number;
   lilacChaserBallColor: string;
   calibration: Calibration;
 };
 
 export const DEFAULT_BALL_COLOR = "#76d900";
+export const DEFAULT_LETTER_SCALE = 0.5;
 
 export const exercisePresets = [
   {
@@ -142,6 +148,10 @@ export const settingsFromPreset = (
   distractorBrightness: 0.7,
   targetOpacity: 1,
   targetShape: "circle",
+  letterEnabled: true,
+  letterColor: "#000000",
+  letterWeight: 600,
+  letterScale: DEFAULT_LETTER_SCALE,
   lilacChaserScale: 1,
   lilacChaserBallColor: "#ff00fe",
   calibration,
