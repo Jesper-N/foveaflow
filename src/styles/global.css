@@ -344,19 +344,19 @@ canvas {
   }
 
   .page-enter-delay-1 {
-    animation-delay: 80ms;
+    animation-delay: 45ms;
   }
 
   .page-enter-delay-2 {
-    animation-delay: 145ms;
+    animation-delay: 85ms;
   }
 
   .page-enter-delay-3 {
-    animation-delay: 210ms;
+    animation-delay: 125ms;
   }
 
   .page-enter-delay-4 {
-    animation-delay: 275ms;
+    animation-delay: 165ms;
   }
 
   .ui-enter {
