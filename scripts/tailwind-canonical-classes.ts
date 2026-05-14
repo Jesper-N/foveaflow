@@ -1,11 +1,22 @@
 import { createRequire } from "node:module";
-import { readFileSync, writeFileSync } from "node:fs";
+import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, relative, resolve, sep } from "node:path";
+import { fileURLToPath } from "node:url";
 import { __unstable__loadDesignSystem } from "tailwindcss";
 
-const root = resolve(import.meta.dir, "..");
+const root = fileURLToPath(new URL("..", import.meta.url));
 const write = process.argv.includes("--write");
 const require = createRequire(import.meta.url);
+const sourceExtensions = new Set([
+  ".astro",
+  ".css",
+  ".html",
+  ".js",
+  ".jsx",
+  ".svelte",
+  ".ts",
+  ".tsx",
+]);
 
 type Edit = {
   file: string;
@@ -122,13 +133,20 @@ function tokens(value: string) {
   return ranges;
 }
 
+function listSourceFiles(dir: string): string[] {
+  return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    const path = resolve(dir, entry.name);
+
+    if (entry.isDirectory()) return listSourceFiles(path);
+    if (!entry.isFile()) return [];
+
+    const extension = entry.name.slice(entry.name.lastIndexOf("."));
+    return sourceExtensions.has(extension) ? [path] : [];
+  });
+}
+
 const system = await designSystem();
-const sourceFiles = await Array.fromAsync(
-  new Bun.Glob("src/**/*.{astro,css,html,js,jsx,svelte,ts,tsx}").scan({
-    absolute: true,
-    cwd: root,
-  }),
-);
+const sourceFiles = listSourceFiles(resolve(root, "src"));
 const sources = sourceFiles.map((file) => {
   const text = readFileSync(file, "utf8");
   const found = strings(text).flatMap((string) =>
@@ -194,7 +212,9 @@ for (const file of new Set(edits.map((edit) => edit.file))) {
     .sort((a, b) => b.start - a.start)
     .reduce(
       (current, edit) =>
-        `${current.slice(0, edit.start)}${edit.to}${current.slice(edit.end)}`,
+        `${current.substring(0, edit.start)}${edit.to}${current.substring(
+          edit.end,
+        )}`,
       text,
     );
 

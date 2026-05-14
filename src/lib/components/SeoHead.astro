@@ -1,5 +1,5 @@
 ---
-import { generateSetInitialModeExpression } from "mode-watcher";
+import { createInitialModeExpression } from "mode-watcher";
 import { siteMetadata } from "../content/site";
 import { absoluteUrl, getSiteOrigin } from "../seo";
 import ThemeFavicon from "./ThemeFavicon.astro";
@@ -28,7 +28,7 @@ const {
   robots = "index,follow,max-image-preview:large",
 } = Astro.props;
 
-const initialModeExpression = generateSetInitialModeExpression({
+const initialModeExpression = createInitialModeExpression({
   defaultMode: "system",
 });
 const siteOrigin = getSiteOrigin(Astro.site);
