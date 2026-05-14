@@ -14,8 +14,9 @@
     "lint": "astro check",
     "check": "astro check",
     "test": "bun test --pass-with-no-tests",
+    "test:smoke": "playwright test",
     "audit": "bun audit",
-    "verify": "bun run check && bun run test && bun run audit",
+    "verify": "bun run check && bun run test && bun run test:smoke && bun run audit",
     "tailwind:diagnostics": "bun scripts/tailwind-canonical-classes.ts",
     "tailwind:fix": "bun scripts/tailwind-canonical-classes.ts --write",
     "format": "prettier --write .",
@@ -42,6 +43,7 @@
   },
   "devDependencies": {
     "@internationalized/date": "^3.12.1",
+    "@playwright/test": "^1.60.0",
     "@types/bun": "^1.3.14",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-svelte": "^3.5.2",
