@@ -42,12 +42,12 @@
   },
   "devDependencies": {
     "@internationalized/date": "^3.12.1",
-    "@types/bun": "^1.3.13",
+    "@types/bun": "^1.3.14",
     "prettier-plugin-astro": "^0.14.1",
-    "prettier-plugin-svelte": "^3.5.1",
+    "prettier-plugin-svelte": "^3.5.2",
     "shadcn-svelte": "^1.2.7",
-    "vite": "^7.3.3",
-    "wrangler": "^4.90.0"
+    "vite": "^8.0.13",
+    "wrangler": "^4.91.0"
   },
   "overrides": {
     "yaml": "^2.8.3",
