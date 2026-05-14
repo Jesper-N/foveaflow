@@ -577,12 +577,6 @@
     };
     window.addEventListener("popstate", handlePopState);
 
-    const modeUnsubscribe = mode.subscribe((nextMode) => {
-      if (nextMode !== "light" && nextMode !== "dark") return;
-      colorMode = nextMode;
-      canvasTheme = getCanvasTheme();
-      drawFrame();
-    });
     storageReady = true;
     startHudAutoHideTimer();
     startCursorHideTimer();
@@ -604,7 +598,6 @@
       window.removeEventListener("popstate", handlePopState);
       window.removeEventListener("pagehide", settingsSaver.flush);
       reduceMotionQuery.removeEventListener("change", handleReduceMotionChange);
-      modeUnsubscribe();
     };
   });
 
@@ -1407,6 +1400,14 @@
     }
     startLoop();
   };
+
+  $effect(() => {
+    const nextMode = mode.current;
+    if (nextMode !== "light" && nextMode !== "dark") return;
+    colorMode = nextMode;
+    canvasTheme = getCanvasTheme();
+    drawFrame();
+  });
 </script>
 
 {#snippet settingHeader(
