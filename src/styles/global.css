@@ -373,11 +373,14 @@ canvas {
     animation: native-dialog-overlay-enter 100ms ease-out;
   }
 
-  @supports (
-    (backdrop-filter: blur(4px)) or (-webkit-backdrop-filter: blur(4px))
-  ) {
+  @supports (backdrop-filter: blur(4px)) {
     .native-dialog-popover::backdrop {
       backdrop-filter: blur(4px);
+    }
+  }
+
+  @supports (-webkit-backdrop-filter: blur(4px)) {
+    .native-dialog-popover::backdrop {
       -webkit-backdrop-filter: blur(4px);
     }
   }
