@@ -48,7 +48,7 @@ const smoothPursuitSeoContent = {
     href: "/guide/",
   },
   trustNote:
-    "Updated May 9, 2026. This is practice software, not medical care, so stop if the session feels uncomfortable.",
+    "Updated May 14, 2026. This is practice software, not medical care, so stop if the session feels uncomfortable.",
   faq: [
     {
       question: "What is Smooth Pursuit?",
@@ -101,7 +101,7 @@ const reactionJumpsSeoContent = {
     href: "/guide/",
   },
   trustNote:
-    "Updated May 9, 2026. Keep sessions brief and controlled. If the drill causes strain or discomfort, stop.",
+    "Updated May 14, 2026. Keep sessions brief and controlled. If the drill causes strain or discomfort, stop.",
   faq: [
     {
       question: "What does Reaction Jumps train?",
@@ -154,7 +154,7 @@ const multipleDistractionsSeoContent = {
     href: "/smooth-pursuit/",
   },
   trustNote:
-    "Updated May 9, 2026. Start with fewer distractors or a bigger target, and stop if the session becomes uncomfortable.",
+    "Updated May 14, 2026. Start with fewer distractors or a bigger target, and stop if the session becomes uncomfortable.",
   faq: [
     {
       question: "What is distractor tracking?",
@@ -207,7 +207,7 @@ const lilacChaserSeoContent = {
     href: "/guide/",
   },
   trustNote:
-    "Updated May 9, 2026. If the visual effect feels strange or uncomfortable, stop the session and rest.",
+    "Updated May 14, 2026. If the visual effect feels strange or uncomfortable, stop the session and rest.",
   faq: [
     {
       question: "What is Lilac Chaser?",
@@ -306,7 +306,7 @@ const buildPatternSeoContent = (
       href: "/smooth-pursuit/",
     },
     trustNote:
-      "Updated May 9, 2026. This is a browser-based practice drill and not medical therapy.",
+      "Updated May 14, 2026. This is a browser-based practice drill and not medical therapy.",
     faq: [
       {
         question: `What is the ${label} drill?`,
@@ -339,9 +339,9 @@ export const trainerRoutes = [
     patternId: "randomWalk",
     label: "Smooth Pursuit",
     heading: "Smooth Pursuit Eye Training",
-    title: `Smooth Pursuit Eye Training Drill | ${siteMetadata.name}`,
+    title: `${siteMetadata.name} - Free Online Smooth Pursuit Eye Trainer`,
     description:
-      "Practice smooth pursuit eye tracking online. Follow one moving target with adjustable speed, path, size, color, and trail for short visual tracking sessions.",
+      "Free online eye trainer for smooth pursuit, visual tracking, and steady moving-target practice. Browser-based with no account or install.",
     indexable: true,
     seoContent: smoothPursuitSeoContent,
   },
@@ -369,9 +369,9 @@ export const trainerRoutes = [
     mode: "reactionTime",
     label: "Reaction Jumps",
     heading: "Reaction Jumps Eye Training",
-    title: `Reaction Jumps Eye Training Drill | ${siteMetadata.name}`,
+    title: `${siteMetadata.name} - Free Online Reaction Jumps Eye Trainer`,
     description:
-      "Practice quick refocus and target acquisition online. Reaction Jumps moves the target to a new position so you can find it fast and lock on before the next jump.",
+      "Free online eye trainer for quick refocus, target acquisition, and fast visual reaction practice. Browser-based with no account or install.",
     indexable: true,
     seoContent: reactionJumpsSeoContent,
   },
@@ -381,9 +381,9 @@ export const trainerRoutes = [
     mode: "mot",
     label: "Multiple Distractions",
     heading: "Distractor Tracking Eye Training",
-    title: `Distractor Tracking Eye Training | ${siteMetadata.name}`,
+    title: `${siteMetadata.name} - Free Online Multiple Distractions Eye Trainer`,
     description:
-      "Track the brightest target through moving distractions. Train selective attention, target identity, and focus under visual clutter in your browser.",
+      "Free online eye trainer for selective attention, distractor tracking, and focus under visual clutter. Browser-based with no account or install.",
     indexable: true,
     seoContent: multipleDistractionsSeoContent,
   },
@@ -393,9 +393,9 @@ export const trainerRoutes = [
     mode: "lilacChaser",
     label: "Lilac Chaser",
     heading: "Lilac Chaser Fixation and Peripheral Awareness",
-    title: `Lilac Chaser Fixation and Peripheral Awareness | ${siteMetadata.name}`,
+    title: `${siteMetadata.name} - Free Online Lilac Chaser Eye Trainer`,
     description:
-      "Use the lilac chaser drill to practice steady fixation and noticing change in the edges of your vision. Keep your eyes on the center cross and let the pattern work.",
+      "Free online eye trainer for steady fixation, peripheral awareness, and noticing change outside center focus. Browser-based with no account or install.",
     indexable: true,
     seoContent: lilacChaserSeoContent,
   },

@@ -12,6 +12,8 @@ interface Props {
   canonicalPath: `/${string}`;
   structuredData?: unknown;
   ogType?: OpenGraphType;
+  ogDescription?: string;
+  twitterDescription?: string;
   robots?: string;
 }
 
@@ -21,6 +23,8 @@ const {
   canonicalPath,
   structuredData,
   ogType = "website",
+  ogDescription = description,
+  twitterDescription = ogDescription,
   robots = "index,follow,max-image-preview:large",
 } = Astro.props;
 
@@ -58,7 +62,7 @@ const structuredDataJson =
 <meta property="og:type" content={ogType} />
 <meta property="og:site_name" content={siteMetadata.name} />
 <meta property="og:title" content={title} />
-<meta property="og:description" content={description} />
+<meta property="og:description" content={ogDescription} />
 <meta property="og:url" content={canonicalUrl} />
 <meta property="og:image" content={ogImageUrl} />
 <meta property="og:updated_time" content={siteMetadata.lastUpdated} />
@@ -75,7 +79,7 @@ const structuredDataJson =
 }
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
-<meta name="twitter:description" content={description} />
+<meta name="twitter:description" content={twitterDescription} />
 <meta name="twitter:image" content={ogImageUrl} />
 <meta
   name="twitter:image:alt"

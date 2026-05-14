@@ -294,6 +294,26 @@ canvas {
   }
 }
 
+@keyframes native-dialog-overlay-enter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes native-dialog-content-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(-50%, -50%, 0) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(-50%, -50%, 0) scale(1);
+  }
+}
+
 @layer components {
   .guide-enter {
     animation: guide-enter 180ms cubic-bezier(0.215, 0.61, 0.355, 1) backwards;
@@ -329,6 +349,37 @@ canvas {
 
   .ui-enter-slow {
     animation-duration: 220ms;
+  }
+
+  .native-dialog-popover {
+    display: none;
+    inset: auto;
+    top: 50%;
+    left: 50%;
+    width: min(calc(100dvw - 2rem), 44rem);
+    max-height: calc(100dvh - 2rem);
+    margin: 0;
+    overflow: auto;
+    transform: translate3d(-50%, -50%, 0);
+  }
+
+  .native-dialog-popover:popover-open {
+    display: grid;
+    animation: native-dialog-content-enter 100ms ease-out;
+  }
+
+  .native-dialog-popover::backdrop {
+    background: rgb(0 0 0 / 30%);
+    animation: native-dialog-overlay-enter 100ms ease-out;
+  }
+
+  @supports (
+    (backdrop-filter: blur(4px)) or (-webkit-backdrop-filter: blur(4px))
+  ) {
+    .native-dialog-popover::backdrop {
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
   }
 
   .trainer-stage[data-cursor-hidden="true"],
@@ -385,6 +436,8 @@ canvas {
   @media (prefers-reduced-motion: reduce) {
     .guide-enter,
     .ui-enter,
+    .native-dialog-popover:popover-open,
+    .native-dialog-popover::backdrop,
     .trainer-hud,
     .trainer-hud-peek {
       animation: none;

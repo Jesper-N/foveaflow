@@ -1,0 +1,28 @@
+---
+import "../styles/global.css";
+import SeoHead from "../lib/components/SeoHead.astro";
+import SupportPage from "../lib/components/SupportPage.svelte";
+import { findSupportPage } from "../lib/content/support-pages";
+import { buildSupportPageStructuredData, getSiteOrigin } from "../lib/seo";
+
+const page = findSupportPage("fps-eye-training");
+if (!page) throw new Error("Missing support page: fps-eye-training");
+
+const siteOrigin = getSiteOrigin(Astro.site);
+const structuredData = buildSupportPageStructuredData(page, siteOrigin);
+---
+
+<html lang="en">
+  <head>
+    <SeoHead
+      title={page.title}
+      description={page.description}
+      canonicalPath={page.path}
+      ogType="article"
+      {structuredData}
+    />
+  </head>
+  <body>
+    <SupportPage {page} />
+  </body>
+</html>

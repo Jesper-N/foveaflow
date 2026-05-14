@@ -123,12 +123,12 @@ export type PageSeoContent = {
 
 export const homepageSeoContent = {
   kicker: "Free browser tool",
-  heading: "FoveaFlow",
-  hero: "Train visual tracking, quick refocus, and peripheral awareness in your browser.",
+  heading: "Free online eye trainer",
+  hero: "Train visual tracking, quick refocus, peripheral awareness, and focus under distraction in your browser.",
   body: [
-    "FoveaFlow is a browser-based set of visual practice drills for people who want a quick session of tracking, refocus, selective attention, or fixation work without downloading an app.",
-    "Use Smooth Pursuit to follow one moving target, Reaction Jumps to snap to each new target position, Multiple Distractions to stay with the right target under clutter, and Lilac Chaser to practice steady fixation.",
-    "This works well as a short gamer warmup, a between-task reset for screen-heavy work, or a focused practice block when you want to stay sharp.",
+    "FoveaFlow is a free online eye trainer for visual tracking, quick refocus, peripheral awareness, and focus under distraction. It runs in the browser with no account or install.",
+    "Use Smooth Pursuit to follow one moving target, Reaction Jumps to snap focus to new target positions, Multiple Distractions to track the right target through visual clutter, and Lilac Chaser to hold fixation while noticing peripheral change.",
+    "Use FoveaFlow as a short FPS warmup, an active screen break, or a focused visual practice session.",
   ],
   primaryCta: {
     label: "Try Smooth Pursuit",
@@ -139,15 +139,15 @@ export const homepageSeoContent = {
     href: "/guide/",
   },
   trustNote:
-    "Updated May 9, 2026. FoveaFlow is practice software, not medical care. Stop if a session causes strain, dizziness, headache, nausea, or any other discomfort.",
+    "Updated May 14, 2026. FoveaFlow is practice software, not medical care. Stop if a session causes strain, dizziness, headache, nausea, or any other discomfort.",
   faq: faqItems,
 } satisfies PageSeoContent;
 
 export const guideMetadata = {
-  title: "FoveaFlow Guide: Visual Tracking Drills and Settings",
+  title: "FoveaFlow Guide - Eye Trainer Drills & Visual Tracking Settings",
   heading: "FoveaFlow Guide",
   description:
-    "Learn which FoveaFlow drill to use, how to set speed and size, and how to choose the right session for tracking, refocus, attention, and peripheral awareness.",
+    "Choose the right FoveaFlow drill for visual tracking, quick refocus, peripheral awareness, FPS warmups, and focus under distraction.",
   summary:
-    "Pick the right drill, set the right difficulty, and start a short session that matches your goal.",
+    "Use this guide to choose the right FoveaFlow eye trainer drill for visual tracking, quick refocus, peripheral awareness, FPS warmups, or focus under distraction.",
 } as const;

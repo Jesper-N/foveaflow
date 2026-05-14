@@ -1,6 +1,7 @@
 import { legalPageLinks } from "./content/legal";
 import { guideFaqItems, guideMetadata } from "./content/page-copy";
 import { aiCrawlerAccess, siteMetadata } from "./content/site";
+import { supportPages, type SupportPage } from "./content/support-pages";
 import {
   audienceNotes,
   referenceLinks,
@@ -20,6 +21,11 @@ export const defaultSiteUrl = "https://foveaflow.com";
 const sitemapEntries = [
   { path: "/", changefreq: "weekly", priority: "1.0" },
   { path: "/guide/", changefreq: "monthly", priority: "0.8" },
+  ...supportPages.map((page) => ({
+    path: page.path,
+    changefreq: "monthly",
+    priority: "0.65",
+  })),
   { path: legalPageLinks.privacy.path, changefreq: "yearly", priority: "0.3" },
   { path: legalPageLinks.terms.path, changefreq: "yearly", priority: "0.3" },
   ...indexableTrainerRoutes.map((route) => ({
@@ -39,6 +45,8 @@ export const absoluteUrl = (path: string, site: URL) =>
 
 const getOrganizationId = (site: URL) =>
   `${absoluteUrl("/", site)}#organization`;
+
+const getSoftwareId = (site: URL) => `${absoluteUrl("/", site)}#software`;
 
 const buildOrganizationStructuredData = (site: URL) => {
   const appUrl = absoluteUrl("/", site);
@@ -87,14 +95,13 @@ const buildAppStructuredData = (site: URL) => {
   const imageUrl = absoluteUrl(siteMetadata.imagePath, site);
 
   return {
-    "@type": "WebApplication",
-    "@id": `${appUrl}#app`,
+    "@type": "SoftwareApplication",
+    "@id": getSoftwareId(site),
     name: siteMetadata.name,
     url: appUrl,
     image: imageUrl,
-    applicationCategory: "EducationalApplication",
-    applicationSubCategory: "Eye training and visual tracking practice",
-    operatingSystem: "Any",
+    applicationCategory: "WebApplication",
+    operatingSystem: "Any modern browser",
     browserRequirements: "Requires JavaScript and a modern browser.",
     isAccessibleForFree: true,
     publisher: {
@@ -118,12 +125,11 @@ const buildAppStructuredData = (site: URL) => {
       audienceType: audienceNote.title,
     })),
     featureList: [
-      "Smooth Pursuit eye tracking drills",
-      "Reaction Jumps quick refocus drills",
-      "Lilac Chaser peripheral vision drill",
-      "Multiple Distractions focus training",
-      "Adjustable speed, size, shape, color, opacity, and trail",
-      "Viewing distance, screen scale, and Lilac Chaser scale controls",
+      "Smooth Pursuit visual tracking drill",
+      "Reaction Jumps quick refocus drill",
+      "Multiple Distractions distractor tracking drill",
+      "Lilac Chaser fixation and peripheral awareness drill",
+      "Adjustable speed, target size, color, opacity, trail, shape, and path",
     ],
     dateModified: siteMetadata.lastUpdated,
     sameAs: siteMetadata.sameAs,
@@ -159,7 +165,7 @@ export const buildStructuredData = (site: URL) => {
           "@id": `${appUrl}#website`,
         },
         mainEntity: {
-          "@id": `${appUrl}#app`,
+          "@id": getSoftwareId(site),
         },
       },
     ],
@@ -196,7 +202,7 @@ export const buildGuideStructuredData = (site: URL) => {
           "@id": `${appUrl}#website`,
         },
         about: {
-          "@id": `${appUrl}#app`,
+          "@id": getSoftwareId(site),
         },
       },
       {
@@ -248,6 +254,66 @@ export const buildGuideStructuredData = (site: URL) => {
   };
 };
 
+export const buildSupportPageStructuredData = (
+  page: SupportPage,
+  site: URL,
+) => {
+  const pageUrl = absoluteUrl(page.path, site);
+  const appUrl = absoluteUrl("/", site);
+  const imageUrl = absoluteUrl(siteMetadata.imagePath, site);
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      buildWebsiteStructuredData(site),
+      buildOrganizationStructuredData(site),
+      buildAppStructuredData(site),
+      {
+        "@type": "WebPage",
+        "@id": `${pageUrl}#webpage`,
+        name: page.title,
+        headline: page.heading,
+        url: pageUrl,
+        description: page.description,
+        image: imageUrl,
+        inLanguage: "en",
+        keywords: siteMetadata.keywords.join(", "),
+        dateModified: siteMetadata.lastUpdated,
+        publisher: {
+          "@id": getOrganizationId(site),
+        },
+        citation: page.sourceLink
+          ? [page.sourceLink.href, ...referenceLinks.map((link) => link.url)]
+          : referenceLinks.map((link) => link.url),
+        isPartOf: {
+          "@id": `${appUrl}#website`,
+        },
+        about: {
+          "@id": getSoftwareId(site),
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${pageUrl}#breadcrumb`,
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: siteMetadata.name,
+            item: appUrl,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: page.heading,
+            item: pageUrl,
+          },
+        ],
+      },
+    ],
+  };
+};
+
 export const buildTrainerRouteStructuredData = (
   route: TrainerRoute,
   site: URL,
@@ -281,7 +347,7 @@ export const buildTrainerRouteStructuredData = (
           "@id": `${appUrl}#website`,
         },
         about: {
-          "@id": `${appUrl}#app`,
+          "@id": getSoftwareId(site),
         },
       },
       {
@@ -301,21 +367,6 @@ export const buildTrainerRouteStructuredData = (
             item: routeUrl,
           },
         ],
-      },
-      {
-        "@type": "FAQPage",
-        "@id": `${routeUrl}#faq`,
-        isPartOf: {
-          "@id": `${routeUrl}#webpage`,
-        },
-        mainEntity: route.seoContent.faq.map((faqItem) => ({
-          "@type": "Question",
-          name: faqItem.question,
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: faqItem.answer,
-          },
-        })),
       },
     ],
   };
@@ -346,7 +397,7 @@ export const buildLegalStructuredData = (page: LegalPageContent, site: URL) => {
           "@id": `${appUrl}#website`,
         },
         about: {
-          "@id": `${appUrl}#app`,
+          "@id": getSoftwareId(site),
         },
       },
       {
@@ -425,7 +476,7 @@ export const buildLlmsText = (site: URL) => {
     "",
     siteMetadata.shortDescription,
     "",
-    "FoveaFlow is a free online eye training app for smooth pursuit, quick refocus, distractor tracking, and peripheral awareness. It helps gamers, IT professionals, developers, sysadmins, support teams, and people on screens all day warm up with browser-based visual drills. Settings are stored locally in the browser, and no account or install is needed. It is self-guided practice, not diagnosis, prescription, or clinical care.",
+    "FoveaFlow is a free online eye trainer for smooth pursuit, quick refocus, distractor tracking, peripheral awareness, and FPS warmups. It helps gamers, IT professionals, developers, sysadmins, support teams, and people on screens all day warm up with browser-based visual drills. Settings are stored locally in the browser, and no account or install is needed. It is self-guided practice, not diagnosis, prescription, or clinical care.",
     "",
     "## Quick summary",
     siteMetadata.entityDescription,
@@ -433,7 +484,7 @@ export const buildLlmsText = (site: URL) => {
     "- Price: free",
     "- Account required: no",
     "- Install required: no",
-    "- Includes: browser app, visual tracking drills, refocus drills, peripheral awareness drill, and distractor tracking drill",
+    "- Includes: free online eye trainer, visual tracking drills, refocus drills, peripheral awareness drill, and distractor tracking drill",
     "- Best-fit users: gamers, developers, sysadmins, support engineers, other IT professionals, and people who spend long days on screens",
     "- Safety status: practice software only, not medical advice, diagnosis, treatment, vision therapy, or a medical device",
     "- Last updated: " + siteMetadata.lastUpdated,
@@ -441,6 +492,9 @@ export const buildLlmsText = (site: URL) => {
     "## Main page",
     `- App: ${absoluteUrl("/", site)}`,
     `- Guide: ${absoluteUrl("/guide/", site)}`,
+    ...supportPages.map(
+      (page) => `- ${page.heading}: ${absoluteUrl(page.path, site)}`,
+    ),
     `- Pricing: ${absoluteUrl("/pricing.md", site)}`,
     `- Privacy: ${absoluteUrl(legalPageLinks.privacy.path, site)}`,
     `- Terms: ${absoluteUrl(legalPageLinks.terms.path, site)}`,
@@ -455,6 +509,12 @@ export const buildLlmsText = (site: URL) => {
     "## Direct app routes",
     ...indexableTrainerRoutes.map(
       (route) => `- ${route.label}: ${absoluteUrl(route.path, site)}`,
+    ),
+    "",
+    "## Supporting pages",
+    ...supportPages.map(
+      (page) =>
+        `- ${page.heading}: ${page.description} ${absoluteUrl(page.path, site)}`,
     ),
     "",
     "## Smooth Pursuit pattern pages",
@@ -490,6 +550,12 @@ export const buildLlmsText = (site: URL) => {
     ),
     "",
     "## Common searches FoveaFlow answers",
+    "- eye trainer",
+    "- free eye trainer",
+    "- online eye trainer",
+    "- free online eye trainer",
+    "- eye trainer app",
+    "- FPS eye trainer",
     "- free browser eye trainer",
     "- free online eye training",
     "- eye training exercises",

@@ -15,6 +15,7 @@
   import { legalPageLinks } from "$lib/content/legal";
   import { guideFaqItems, guideMetadata } from "$lib/content/page-copy";
   import { siteMetadata } from "$lib/content/site";
+  import { supportPages } from "$lib/content/support-pages";
   import { trainerRoutes } from "$lib/content/trainer-routes";
   import {
     audienceNotes,
@@ -39,8 +40,8 @@
 
   const guideEnterTop = "guide-enter guide-enter-top";
   const guideEnterUp = "guide-enter guide-enter-up";
-  const interactiveItem =
-    "pressable-ui bg-background/70 shadow-[0_16px_36px_-30px_rgba(20,24,22,0.4)]";
+  const guideItemSurface =
+    "bg-background/70 shadow-[0_16px_36px_-30px_rgba(20,24,22,0.4)]";
   const sectionGrid =
     "grid gap-6 border-t border-border/60 pt-10 md:grid-cols-[0.72fr_1.28fr] md:gap-10";
   const sectionIntro = "md:sticky md:top-8 md:self-start";
@@ -70,7 +71,7 @@
         variant="outline"
         class="hidden border-border/80 bg-background/80 px-3 py-1 text-muted-foreground sm:inline-flex"
       >
-        Updated May 9, 2026
+        Updated May 14, 2026
       </Badge>
     </nav>
 
@@ -112,7 +113,7 @@
       <div class="grid gap-4 md:translate-y-6">
         <Item.Root
           variant="outline"
-          class={`border-border/80 p-5 backdrop-blur ${interactiveItem}`}
+          class={`border-border/80 p-5 backdrop-blur ${guideItemSurface}`}
         >
           <Item.Media
             variant="icon"
@@ -133,7 +134,7 @@
 
         <Item.Root
           variant="muted"
-          class={`ml-0 border border-border/70 p-5 md:ml-8 ${interactiveItem}`}
+          class={`ml-0 border border-border/70 p-5 md:ml-8 ${guideItemSurface}`}
         >
           <Item.Media
             variant="icon"
@@ -161,10 +162,7 @@
 
       <div class="grid gap-3">
         {#each trainingModeNotes as trainingModeNote (trainingModeNote.title)}
-          <Item.Root
-            variant="outline"
-            class={`bg-background/70 ${interactiveItem}`}
-          >
+          <Item.Root variant="outline" class={guideItemSurface}>
             <Item.Media
               variant="icon"
               class="size-9 rounded-lg border bg-muted text-accent"
@@ -196,10 +194,7 @@
 
       <div class="grid gap-3">
         {#each trainingModeGuides as modeGuide (modeGuide.mode)}
-          <Item.Root
-            variant="outline"
-            class={`bg-background/70 ${interactiveItem}`}
-          >
+          <Item.Root variant="outline" class={guideItemSurface}>
             <Item.Media
               variant="icon"
               class="size-9 rounded-lg border bg-muted text-accent"
@@ -233,10 +228,7 @@
 
       <div class="grid gap-3">
         {#each audienceNotes as audienceNote (audienceNote.title)}
-          <Item.Root
-            variant="outline"
-            class={`bg-background/70 ${interactiveItem}`}
-          >
+          <Item.Root variant="outline" class={guideItemSurface}>
             <Item.Media
               variant="icon"
               class="size-9 rounded-lg border bg-muted text-accent"
@@ -261,7 +253,7 @@
     >
       <div class="grid gap-3">
         {#each featuredRoutes as route (route.slug)}
-          <Item.Root variant="outline" class={interactiveItem}>
+          <Item.Root variant="outline" class={guideItemSurface}>
             <Item.Media
               variant="icon"
               class="size-9 rounded-lg border bg-background text-accent"
@@ -277,7 +269,7 @@
             <Item.Actions>
               <Button
                 href={route.path}
-                size="icon-sm"
+                size="icon"
                 variant="ghost"
                 aria-label={`Open ${route.label}`}
               >
@@ -316,6 +308,46 @@
 
     <section class={`guide-enter-delay-2 ${sectionGrid} ${guideEnterUp}`}>
       <div class={sectionIntro}>
+        <Badge variant="outline" class="mb-4">More pages</Badge>
+        <h2 class={sectionTitle}>Focused guides for FPS and alternatives</h2>
+        <p class="mt-4 max-w-136 text-base leading-7 text-muted-foreground">
+          These pages cover the common search paths around eye trainer warmups
+          and browser-based alternatives.
+        </p>
+      </div>
+
+      <div class="grid gap-3">
+        {#each supportPages as page (page.slug)}
+          <Item.Root variant="outline" class={guideItemSurface}>
+            <Item.Media
+              variant="icon"
+              class="size-9 rounded-lg border bg-background text-accent"
+            >
+              <BookOpenIcon class="size-4" />
+            </Item.Media>
+            <Item.Content>
+              <Item.Title class="line-clamp-none">{page.heading}</Item.Title>
+              <Item.Description class="line-clamp-none leading-6">
+                {page.description}
+              </Item.Description>
+            </Item.Content>
+            <Item.Actions>
+              <Button
+                href={page.path}
+                size="icon"
+                variant="ghost"
+                aria-label={`Open ${page.heading}`}
+              >
+                <ExternalLinkIcon class="size-4" />
+              </Button>
+            </Item.Actions>
+          </Item.Root>
+        {/each}
+      </div>
+    </section>
+
+    <section class={`guide-enter-delay-2 ${sectionGrid} ${guideEnterUp}`}>
+      <div class={sectionIntro}>
         <Badge variant="outline" class="mb-4">Controls</Badge>
         <h2 class={sectionTitle}>Adjust the settings without guesswork</h2>
       </div>
@@ -323,7 +355,7 @@
       <div class="grid gap-3">
         <Item.Root
           variant="muted"
-          class={`border border-border/70 ${interactiveItem}`}
+          class={`border border-border/70 ${guideItemSurface}`}
         >
           <Item.Media
             variant="icon"
@@ -342,7 +374,7 @@
         </Item.Root>
         <Item.Root
           variant="muted"
-          class={`border border-border/70 ${interactiveItem}`}
+          class={`border border-border/70 ${guideItemSurface}`}
         >
           <Item.Media
             variant="icon"
@@ -373,10 +405,7 @@
 
       <div class="grid gap-3">
         {#each guideFaqItems as faqItem (faqItem.question)}
-          <Item.Root
-            variant="outline"
-            class={`bg-background/70 ${interactiveItem}`}
-          >
+          <Item.Root variant="outline" class={guideItemSurface}>
             <Item.Content>
               <Item.Title class="line-clamp-none">
                 {faqItem.question}
@@ -398,10 +427,7 @@
 
       <div class="grid gap-3">
         {#each referenceLinks as referenceLink (referenceLink.url)}
-          <Item.Root
-            variant="outline"
-            class={`bg-background/70 ${interactiveItem}`}
-          >
+          <Item.Root variant="outline" class={guideItemSurface}>
             <Item.Content>
               <Item.Title class="line-clamp-none">
                 {referenceLink.label}

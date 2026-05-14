@@ -1,18 +1,24 @@
 export const siteMetadata = {
   name: "FoveaFlow",
   alternateName: "Fovea Flow",
-  title: "FoveaFlow: Free Online Visual Tracking Drills",
+  title: "FoveaFlow - Free Online Eye Trainer & FPS Warmup",
   description:
-    "Free online eye training for smooth pursuit, quick refocus, distractor tracking, and peripheral awareness. No account, no install, adjustable settings.",
+    "Free online eye trainer for visual tracking, quick refocus, peripheral awareness, and focus under distraction. Browser-based with no account or install.",
   shortDescription:
-    "Train visual tracking, quick refocus, and peripheral awareness in your browser. Free to use with no account or install.",
+    "Free online eye trainer for visual tracking, quick refocus, peripheral awareness, and focus under distraction.",
   imagePath: "/metadata/og.jpg",
   repositoryUrl: "https://github.com/Jesper-N/foveaflow",
   licenseUrl: "https://github.com/Jesper-N/foveaflow/blob/main/LICENSE",
-  lastUpdated: "2026-05-09",
+  lastUpdated: "2026-05-14",
   entityDescription:
-    "FoveaFlow is a free browser app for visual tracking drills, quick refocus practice, distractor tracking, and peripheral awareness. It is built for gamers, developers, sysadmins, support teams, and other people who spend long days on screens.",
+    "FoveaFlow is a free online eye trainer for visual tracking, quick refocus, distractor tracking, and peripheral awareness. It is built for gamers, developers, sysadmins, support teams, and other people who spend long days on screens.",
   keywords: [
+    "eye trainer",
+    "free eye trainer",
+    "online eye trainer",
+    "free online eye trainer",
+    "eye trainer app",
+    "FPS eye trainer",
     "free eye tracking trainer",
     "free online eye training",
     "eye training exercises",

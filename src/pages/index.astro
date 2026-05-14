@@ -2,13 +2,7 @@
 import "../styles/global.css";
 import SeoHead from "../lib/components/SeoHead.astro";
 import TrainerApp from "../lib/components/TrainerApp.svelte";
-import { faqItems } from "../lib/content/page-copy";
 import { siteMetadata } from "../lib/content/site";
-import {
-  referenceLinks,
-  safetyNote,
-  trainingModeNotes,
-} from "../lib/content/training";
 import { buildStructuredData, getSiteOrigin } from "../lib/seo";
 
 const siteOrigin = getSiteOrigin(Astro.site);
@@ -21,6 +15,8 @@ const structuredData = buildStructuredData(siteOrigin);
       title={siteMetadata.title}
       description={siteMetadata.description}
       canonicalPath="/"
+      ogDescription="A free browser-based eye trainer with Smooth Pursuit, Reaction Jumps, Multiple Distractions, and Lilac Chaser. No account or install."
+      twitterDescription="Train visual tracking, quick refocus, peripheral awareness, and focus under distraction in your browser."
       {structuredData}
     />
   </head>
@@ -29,48 +25,15 @@ const structuredData = buildStructuredData(siteOrigin);
     <noscript>
       <main class="noscript-shell">
         <section class="noscript-panel">
-          <p class="noscript-kicker">Free browser tool</p>
-          <p class="noscript-title">{siteMetadata.title}</p>
+          <p class="noscript-kicker">Free online eye trainer</p>
+          <h2 class="noscript-title">{siteMetadata.title}</h2>
           <p>{siteMetadata.shortDescription}</p>
           <p>
-            FoveaFlow needs JavaScript to run the moving target canvas. With
-            JavaScript on, you can set the speed, target size, target shape,
-            color, trail, viewing distance, and screen scale.
+            FoveaFlow needs JavaScript to run the moving target drills. It is a
+            free browser-based eye trainer for visual tracking, quick refocus,
+            peripheral awareness, and focus under distraction.
           </p>
-          <h2>What you can practice</h2>
-          <ul>
-            {
-              trainingModeNotes.map((trainingModeNote) => (
-                <li>
-                  <strong>{trainingModeNote.title}:</strong>{" "}
-                  {trainingModeNote.body}
-                </li>
-              ))
-            }
-          </ul>
-          <h2>Safety</h2>
-          <p>{safetyNote}</p>
-          <section data-nosnippet>
-            <h2>Common questions</h2>
-            {
-              faqItems.map((faqItem) => (
-                <article>
-                  <h3>{faqItem.question}</h3>
-                  <p>{faqItem.answer}</p>
-                </article>
-              ))
-            }
-          </section>
-          <h2>Background reading</h2>
-          <ul>
-            {
-              referenceLinks.map((referenceLink) => (
-                <li>
-                  <a href={referenceLink.url}>{referenceLink.label}</a>
-                </li>
-              ))
-            }
-          </ul>
+          <p><a href="/guide/">Read the FoveaFlow guide</a></p>
         </section>
       </main>
     </noscript>

@@ -1,4 +1,4 @@
-# FoveaFlow
+# FoveaFlow - Free Online Eye Trainer
 
 [![Astro](https://img.shields.io/badge/Astro-6.3.1-ff5d01?logo=astro&logoColor=white)](https://astro.build/)
 [![Svelte](https://img.shields.io/badge/Svelte-5.55.5-ff3e00?logo=svelte&logoColor=white)](https://svelte.dev/)
@@ -7,7 +7,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.2.4-38bdf8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-[FoveaFlow](https://foveaflow.com/) is a free online eye training app for visual tracking, focus, reaction speed, and peripheral awareness. It includes Smooth Pursuit paths, Reaction Jumps, Lilac Chaser peripheral focus practice, random motion, and distractor tracking.
+[FoveaFlow](https://foveaflow.com/) is a free online eye trainer for visual tracking, quick refocus, peripheral awareness, and FPS warmups. It includes Smooth Pursuit paths, Reaction Jumps, Lilac Chaser peripheral focus practice, random motion, and distractor tracking.
 
 It runs without an account or install. The app keeps the canvas full screen, gives direct control over target motion, and stores settings locally in your browser.
 
