@@ -46,7 +46,7 @@
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-svelte": "^3.5.2",
     "shadcn-svelte": "^1.2.7",
-    "vite": "^8.0.13",
+    "vite": "^7.3.3",
     "wrangler": "^4.91.0"
   },
   "overrides": {
