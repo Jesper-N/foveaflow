@@ -38,7 +38,8 @@
     (route) => route.mode === "pursuit" && !route.indexable,
   );
 
-  const guideEnterTop = "guide-enter guide-enter-top";
+  const guideEnterTop = "guide-enter guide-enter-up";
+  const guideEnterHero = "guide-enter page-enter-delay-1 guide-enter-up";
   const guideEnterUp = "guide-enter guide-enter-up";
   const guideItemSurface =
     "bg-background/70 shadow-[0_16px_36px_-30px_rgba(20,24,22,0.4)]";
@@ -76,7 +77,7 @@
     </nav>
 
     <section
-      class={`grid items-center gap-10 pt-10 pb-10 md:grid-cols-[minmax(0,1.08fr)_minmax(20rem,0.92fr)] md:pt-20 md:pb-16 ${guideEnterUp}`}
+      class={`grid items-center gap-10 pt-10 pb-10 md:grid-cols-[minmax(0,1.08fr)_minmax(20rem,0.92fr)] md:pt-20 md:pb-16 ${guideEnterHero}`}
     >
       <div class="max-w-3xl">
         <Badge variant="secondary" class="mb-5 px-3 py-1">Guide</Badge>
@@ -154,7 +155,7 @@
       </div>
     </section>
 
-    <section class={`${sectionGrid} ${guideEnterUp}`}>
+    <section class={`page-enter-delay-2 ${sectionGrid} ${guideEnterUp}`}>
       <div class={sectionIntro}>
         <Badge variant="outline" class="mb-4">Drills</Badge>
         <h2 class={sectionTitle}>Choose a drill by the result you want</h2>
@@ -182,7 +183,7 @@
       </div>
     </section>
 
-    <section class={`guide-enter-delay-1 ${sectionGrid} ${guideEnterUp}`}>
+    <section class={`page-enter-delay-3 ${sectionGrid} ${guideEnterUp}`}>
       <div class={sectionIntro}>
         <Badge variant="outline" class="mb-4">Mode guide</Badge>
         <h2 class={sectionTitle}>How each drill works</h2>
@@ -214,7 +215,7 @@
       </div>
     </section>
 
-    <section class={`guide-enter-delay-1 ${sectionGrid} ${guideEnterUp}`}>
+    <section class={`page-enter-delay-3 ${sectionGrid} ${guideEnterUp}`}>
       <div class={sectionIntro}>
         <Badge variant="outline" class="mb-4">Best fit</Badge>
         <h2 class={sectionTitle}>
@@ -249,7 +250,7 @@
     </section>
 
     <section
-      class={`guide-enter-delay-1 grid gap-6 border-t border-border/60 pt-10 md:grid-cols-[1.18fr_0.82fr] md:gap-10 ${guideEnterUp}`}
+      class={`page-enter-delay-3 grid gap-6 border-t border-border/60 pt-10 md:grid-cols-[1.18fr_0.82fr] md:gap-10 ${guideEnterUp}`}
     >
       <div class="grid gap-3">
         {#each featuredRoutes as route (route.slug)}
@@ -306,7 +307,7 @@
       </nav>
     </section>
 
-    <section class={`guide-enter-delay-2 ${sectionGrid} ${guideEnterUp}`}>
+    <section class={`page-enter-delay-4 ${sectionGrid} ${guideEnterUp}`}>
       <div class={sectionIntro}>
         <Badge variant="outline" class="mb-4">More pages</Badge>
         <h2 class={sectionTitle}>Focused guides for FPS and alternatives</h2>
@@ -346,7 +347,7 @@
       </div>
     </section>
 
-    <section class={`guide-enter-delay-2 ${sectionGrid} ${guideEnterUp}`}>
+    <section class={`page-enter-delay-4 ${sectionGrid} ${guideEnterUp}`}>
       <div class={sectionIntro}>
         <Badge variant="outline" class="mb-4">Controls</Badge>
         <h2 class={sectionTitle}>Adjust the settings without guesswork</h2>
@@ -396,7 +397,7 @@
     <section
       id="faq"
       data-nosnippet
-      class={`guide-enter-delay-3 ${sectionGrid} ${guideEnterUp}`}
+      class={`page-enter-delay-3 ${sectionGrid} ${guideEnterUp}`}
     >
       <div class={sectionIntro}>
         <Badge variant="outline" class="mb-4">FAQ</Badge>
@@ -419,7 +420,7 @@
       </div>
     </section>
 
-    <section class={`guide-enter-delay-4 ${sectionGrid} ${guideEnterUp}`}>
+    <section class={`page-enter-delay-4 ${sectionGrid} ${guideEnterUp}`}>
       <div class={sectionIntro}>
         <Badge variant="outline" class="mb-4">References</Badge>
         <h2 class={sectionTitle}>Research and background reading</h2>
@@ -450,7 +451,7 @@
     </section>
 
     <footer
-      class={`guide-enter-delay-4 flex flex-col gap-3 border-t border-border/60 pt-6 pb-10 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between ${guideEnterUp}`}
+      class={`page-enter-delay-4 flex flex-col gap-3 border-t border-border/60 pt-6 pb-10 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between ${guideEnterUp}`}
     >
       <span>{siteMetadata.name} is free. No account, no paid plan.</span>
       <div class="flex flex-wrap gap-2">

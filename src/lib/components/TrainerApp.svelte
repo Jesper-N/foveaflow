@@ -20,7 +20,6 @@
   import ModePathPreview from "$lib/components/ModePathPreview.svelte";
   import PatternPathPreview from "$lib/components/PatternPathPreview.svelte";
   import { Button, buttonVariants } from "$lib/components/ui/button/index.js";
-  import * as Drawer from "$lib/components/ui/drawer/index.js";
   import * as Field from "$lib/components/ui/field/index.js";
   import { Input } from "$lib/components/ui/input/index.js";
   import * as Item from "$lib/components/ui/item/index.js";
@@ -94,13 +93,13 @@
     TargetShape,
   } from "$lib/engine/types";
 
-  const drawerUseCasesByMode: Record<TrainingMode, readonly string[]> = {
+  const guideUseCasesByMode: Record<TrainingMode, readonly string[]> = {
     pursuit: ["Visual tracking", "Gamer warm-up", "Screen-work reset"],
     reactionTime: ["Quick refocus", "Target acquisition", "Reaction warm-up"],
     mot: ["Selective attention", "Visual clutter", "Game awareness"],
     lilacChaser: ["Steady fixation", "Peripheral awareness", "Screen reset"],
   };
-  const homepageDrawerUseCases = [
+  const homepageGuideUseCases = [
     "FPS warmup",
     "Screen break",
     "Visual practice",
@@ -441,7 +440,7 @@
   );
   let currentRouteSlug = $state(untrack(() => routeSlug));
   let panelOpen = $state(false);
-  let guideOpen = $state(false);
+  let guidePopoverOpen = $state(false);
   let motionPaused = $state(false);
   let storageReady = $state(false);
   let hudAutoHideReady = $state(false);
@@ -460,12 +459,12 @@
   let safeBallColor = $derived(safeStimulusColor(settings.ballColor));
   let activeRoute = $derived(findTrainerRoute(currentRouteSlug));
   let pageSeoContent = $derived(activeRoute?.seoContent ?? homepageSeoContent);
-  let activeDrawerRoute = $derived(
+  let activeGuideRoute = $derived(
     getTrainerRoute(settings.presetId, settings.patternId),
   );
-  let drawerSeoContent = $derived(
+  let guideSeoContent = $derived(
     activeRoute
-      ? (activeDrawerRoute?.seoContent ?? pageSeoContent)
+      ? (activeGuideRoute?.seoContent ?? pageSeoContent)
       : pageSeoContent,
   );
   let distractorColor = $derived(
@@ -476,10 +475,10 @@
   let activeTrainingModeGuide = $derived(
     getTrainingModeGuide(settings.presetId),
   );
-  let drawerUseCases = $derived(
+  let guideUseCases = $derived(
     activeRoute
-      ? drawerUseCasesByMode[settings.presetId]
-      : homepageDrawerUseCases,
+      ? guideUseCasesByMode[settings.presetId]
+      : homepageGuideUseCases,
   );
   let isDarkMode = $derived(colorMode === "dark");
 
@@ -1182,10 +1181,15 @@
 
   const isHudInteractionOpen = () =>
     panelOpen ||
-    guideOpen ||
+    guidePopoverOpen ||
     headerPresetSelectOpen ||
     headerPatternSelectOpen ||
     headerLilacChaserColorSelectOpen;
+
+  const handleGuidePopoverToggle = (event: ToggleEvent) => {
+    guidePopoverOpen = event.newState === "open";
+    if (guidePopoverOpen) revealHud();
+  };
 
   const startHudAutoHideTimer = () => {
     clearHudAutoHideTimer();
@@ -1558,28 +1562,34 @@
       <div class="flex shrink-0 items-center gap-2">
         <svelte:element
           this={activeRoute ? "div" : "h1"}
-          class="m-0 flex shrink-0 items-center gap-2 text-base font-semibold tracking-tight text-foreground"
+          class="m-0 flex shrink-0 items-center text-base font-semibold tracking-tight text-foreground"
           aria-label={activeRoute
             ? undefined
             : "FoveaFlow, free online eye trainer"}
         >
-          <img
-            src="/metadata/favicon-96x96.png"
-            alt=""
-            aria-hidden="true"
-            width="28"
-            height="28"
-            class="size-7 object-contain dark:hidden"
-          />
-          <img
-            src="/metadata/favicon-light-96x96.png"
-            alt=""
-            aria-hidden="true"
-            width="28"
-            height="28"
-            class="hidden size-7 object-contain dark:block"
-          />
-          <span class="sr-only xl:not-sr-only">{siteMetadata.name}</span>
+          <a
+            href="/"
+            class="flex shrink-0 items-center gap-2 rounded-2xl outline-none transition-colors hover:text-foreground/85 focus-visible:ring-3 focus-visible:ring-ring/30"
+            aria-label={`${siteMetadata.name} home`}
+          >
+            <img
+              src="/metadata/favicon-96x96.png"
+              alt=""
+              aria-hidden="true"
+              width="28"
+              height="28"
+              class="size-7 object-contain dark:hidden"
+            />
+            <img
+              src="/metadata/favicon-light-96x96.png"
+              alt=""
+              aria-hidden="true"
+              width="28"
+              height="28"
+              class="hidden size-7 object-contain dark:block"
+            />
+            <span class="sr-only xl:not-sr-only">{siteMetadata.name}</span>
+          </a>
         </svelte:element>
       </div>
 
@@ -1762,227 +1772,19 @@
           </svg>
         </Button>
 
-        {#if activeRoute}
-          <Drawer.Root
-            bind:open={guideOpen}
-            shouldScaleBackground={false}
-            direction="bottom"
-          >
-            <Drawer.Trigger
-              class={`${buttonVariants({ variant: "outline", size: "icon" })} pressable-ui`}
-              aria-label={`Open ${drawerSeoContent.heading} guide`}
-              title="Open guide"
-              onclick={revealHud}
-            >
-              <BookOpenIcon />
-            </Drawer.Trigger>
-
-            <Drawer.Content
-              class="overflow-hidden p-0 data-[vaul-drawer-direction=bottom]:mt-3 data-[vaul-drawer-direction=bottom]:max-h-[96dvh]"
-            >
-              <div
-                class="mx-auto flex max-h-[calc(96dvh-0.5rem)] w-full max-w-6xl flex-col overflow-hidden px-6 sm:px-8 lg:px-10"
-              >
-                <Drawer.Header
-                  class="guide-enter guide-enter-top text-left! px-0 py-6"
-                >
-                  <div class="min-w-0 space-y-2">
-                    <p
-                      class="text-[0.7rem] leading-4 font-semibold tracking-wide text-accent uppercase"
-                    >
-                      {drawerSeoContent.kicker}
-                    </p>
-                    <Drawer.Title
-                      class="max-w-[28ch] text-2xl leading-[1.04] font-semibold tracking-tight text-balance sm:text-3xl lg:text-[2.125rem]"
-                    >
-                      {drawerSeoContent.heading}
-                    </Drawer.Title>
-                    <Drawer.Description
-                      class="max-w-[62ch] text-sm leading-6 text-muted-foreground text-pretty sm:text-base"
-                    >
-                      {drawerSeoContent.hero}
-                    </Drawer.Description>
-                  </div>
-                </Drawer.Header>
-
-                <div class="overflow-y-auto pb-6">
-                  <div
-                    class="grid items-start gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] xl:grid-cols-[minmax(0,0.88fr)_minmax(0,1.06fr)_minmax(16rem,0.82fr)]"
-                  >
-                    <section
-                      class="guide-enter guide-enter-delay-1 space-y-6 border-t border-border/40 pt-6"
-                      aria-label={`${drawerSeoContent.heading} overview`}
-                    >
-                      <div
-                        class="space-y-4 text-sm leading-6 text-muted-foreground text-pretty sm:text-[0.95rem] sm:leading-7"
-                      >
-                        {#each drawerSeoContent.body as paragraph (paragraph)}
-                          <p class="max-w-[58ch]">
-                            {paragraph}
-                          </p>
-                        {/each}
-                      </div>
-
-                      <div
-                        class="flex flex-wrap gap-2"
-                        aria-label={`Best uses for ${activeTrainingModeGuide.title}`}
-                      >
-                        {#each drawerUseCases as useCase (useCase)}
-                          <span
-                            class="rounded-full border border-border/40 bg-muted/35 px-3 py-1 text-xs font-medium text-muted-foreground"
-                          >
-                            {useCase}
-                          </span>
-                        {/each}
-                      </div>
-
-                      <Button
-                        href="/guide/"
-                        size="xl"
-                        class="pressable-ui w-full"
-                      >
-                        <BookOpenIcon class="size-5" />
-                        <span class="pl-1">Read full guide</span>
-                      </Button>
-                    </section>
-
-                    <section
-                      class="guide-enter guide-enter-delay-2 border-t border-border/40 pt-6"
-                      aria-labelledby="trainer-guide-steps"
-                    >
-                      <h2
-                        id="trainer-guide-steps"
-                        class="text-base font-semibold text-foreground text-balance"
-                      >
-                        How to use {activeTrainingModeGuide.title}
-                      </h2>
-
-                      <ol class="mt-6 grid gap-5">
-                        {#each activeTrainingModeGuide.steps as step, index (step)}
-                          <li class="grid grid-cols-[2.25rem_1fr] gap-4">
-                            <span
-                              class="flex size-8 items-center justify-center rounded-full bg-accent/12 text-xs font-semibold tabular-nums text-accent shadow-[inset_0_0_0_1px_rgba(118,217,0,0.14)]"
-                              aria-hidden="true"
-                            >
-                              {index + 1}
-                            </span>
-                            <span
-                              class="pt-1 leading-6 text-muted-foreground text-pretty"
-                            >
-                              {step}
-                            </span>
-                          </li>
-                        {/each}
-                      </ol>
-
-                      <p
-                        class="mt-6 border-t border-border/40 pt-6 text-sm leading-6 text-muted-foreground text-pretty"
-                      >
-                        <span class="font-semibold text-foreground">
-                          What it trains:
-                        </span>
-                        {activeTrainingModeGuide.benefits}
-                      </p>
-                    </section>
-
-                    <aside
-                      class="guide-enter guide-enter-delay-3 border-t border-border/40 pt-6 lg:col-span-2 xl:col-span-1"
-                      aria-labelledby="trainer-guide-faq"
-                    >
-                      <h2
-                        id="trainer-guide-faq"
-                        class="text-base font-semibold text-foreground text-balance"
-                      >
-                        Quick answers
-                      </h2>
-
-                      <div class="mt-6 divide-y divide-border/40">
-                        {#each drawerSeoContent.faq.slice(0, 3) as faqItem (faqItem.question)}
-                          <details class="group py-4 first:pt-0 last:pb-0">
-                            <summary
-                              class="flex min-h-10 cursor-pointer list-none items-center justify-between gap-3 text-sm font-semibold text-foreground outline-none transition-colors duration-150 ease-out hover:text-foreground/90 focus-visible:ring-3 focus-visible:ring-ring/30 [&::-webkit-details-marker]:hidden"
-                            >
-                              <span>{faqItem.question}</span>
-                              <span
-                                class="flex size-6 shrink-0 items-center justify-center rounded-full text-base leading-none text-muted-foreground transition-transform duration-200 ease-out group-open:rotate-45"
-                                aria-hidden="true"
-                              >
-                                +
-                              </span>
-                            </summary>
-                            <p
-                              class="pb-1 text-sm leading-6 text-muted-foreground text-pretty"
-                            >
-                              {faqItem.answer}
-                            </p>
-                          </details>
-                        {/each}
-                      </div>
-
-                      <p
-                        class="mt-6 text-xs leading-5 text-muted-foreground/85"
-                      >
-                        {drawerSeoContent.trustNote}
-                      </p>
-                    </aside>
-                  </div>
-                </div>
-
-                <Drawer.Footer
-                  class="guide-enter guide-enter-delay-4 mt-0 flex-col gap-4 border-t border-border/40 px-0 pt-4 pb-6 sm:flex-row sm:items-center sm:justify-between"
-                >
-                  <p
-                    class="min-w-0 text-xs leading-5 text-muted-foreground lg:whitespace-nowrap"
-                  >
-                    {siteMetadata.name} is free to use, requires no account or install,
-                    and stores settings locally in your browser.
-                  </p>
-
-                  <div class="flex shrink-0 flex-wrap gap-2 sm:justify-end">
-                    <Button
-                      href={siteMetadata.repositoryUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      variant="ghost"
-                      size="xs"
-                    >
-                      <ExternalLinkIcon class="size-3" />
-                      <span class="pl-1">Source</span>
-                    </Button>
-                    <Button
-                      href={legalPageLinks.privacy.path}
-                      variant="ghost"
-                      size="xs"
-                    >
-                      <ShieldCheckIcon class="size-3" />
-                      <span class="pl-1">{legalPageLinks.privacy.label}</span>
-                    </Button>
-                    <Button
-                      href={legalPageLinks.terms.path}
-                      variant="ghost"
-                      size="xs"
-                    >
-                      <FileTextIcon class="size-3" />
-                      <span class="pl-1">{legalPageLinks.terms.label}</span>
-                    </Button>
-                  </div>
-                </Drawer.Footer>
-              </div>
-            </Drawer.Content>
-          </Drawer.Root>
-        {:else}
-          <Button
-            class="pressable-ui"
-            variant="outline"
-            size="icon"
-            aria-label="About FoveaFlow eye trainer"
-            title="About FoveaFlow"
-            popovertarget="about-foveaflow"
-            onclick={revealHud}
-          >
-            <BookOpenIcon />
-          </Button>
-        {/if}
+        <Button
+          class="pressable-ui"
+          variant="outline"
+          size="icon"
+          aria-label={activeRoute
+            ? `Open ${guideSeoContent.heading} guide`
+            : "About FoveaFlow eye trainer"}
+          title={activeRoute ? "Open guide" : "About FoveaFlow"}
+          popovertarget="trainer-guide-popover"
+          onclick={revealHud}
+        >
+          <BookOpenIcon />
+        </Button>
 
         <Button
           class="pressable-ui"
@@ -2000,78 +1802,326 @@
     </header>
   </div>
 
-  {#if !activeRoute}
-    <section
-      id="about-foveaflow"
-      popover="auto"
-      class="native-dialog-popover relative rounded-4xl bg-popover p-6 text-sm text-popover-foreground shadow-xl ring-1 ring-foreground/5 outline-none duration-100 dark:ring-foreground/10"
-      aria-labelledby="about-foveaflow-title"
-    >
-      <div class="flex items-start gap-4">
-        <div class="min-w-0 space-y-1.5 pr-12">
+  <section
+    id="trainer-guide-popover"
+    popover="auto"
+    class="native-dialog-popover native-guide-popover relative rounded-4xl bg-popover p-6 text-sm text-popover-foreground shadow-xl ring-1 ring-foreground/5 outline-none duration-100 dark:ring-foreground/10 sm:p-8"
+    aria-labelledby="trainer-guide-popover-title"
+    ontoggle={handleGuidePopoverToggle}
+  >
+    {#if activeRoute}
+      <div class="guide-enter guide-enter-top min-w-0 space-y-2 pr-12">
+        <p
+          class="text-[0.7rem] leading-4 font-semibold tracking-wide text-accent uppercase"
+        >
+          {guideSeoContent.kicker}
+        </p>
+        <h2
+          id="trainer-guide-popover-title"
+          class="max-w-[28ch] text-2xl leading-[1.04] font-semibold tracking-tight text-balance sm:text-3xl lg:text-[2.125rem]"
+        >
+          {guideSeoContent.heading}
+        </h2>
+        <p
+          class="max-w-[62ch] text-sm leading-6 text-muted-foreground text-pretty sm:text-base"
+        >
+          {guideSeoContent.hero}
+        </p>
+      </div>
+
+      <Button
+        variant="ghost"
+        class="absolute top-4 right-4 bg-secondary"
+        size="icon-sm"
+        aria-label="Close"
+        popovertarget="trainer-guide-popover"
+        popovertargetaction="hide"
+      >
+        <XIcon />
+        <span class="sr-only">Close</span>
+      </Button>
+
+      <div
+        class="mt-6 grid items-start gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] xl:grid-cols-[minmax(0,0.88fr)_minmax(0,1.06fr)_minmax(16rem,0.82fr)]"
+      >
+        <section
+          class="guide-enter guide-enter-delay-1 space-y-6 border-t border-border/40 pt-6"
+          aria-label={`${guideSeoContent.heading} overview`}
+        >
+          <h3 class="text-base font-semibold text-foreground">Overview</h3>
+
+          <div
+            class="mt-6 space-y-4 text-sm leading-6 text-muted-foreground text-pretty sm:text-[0.95rem] sm:leading-7"
+          >
+            {#each guideSeoContent.body as paragraph (paragraph)}
+              <p class="max-w-[58ch]">
+                {paragraph}
+              </p>
+            {/each}
+          </div>
+
+          <Button href="/guide/" size="xl" class="pressable-ui w-full">
+            <BookOpenIcon class="size-5" />
+            <span class="pl-1">Read full guide</span>
+          </Button>
+        </section>
+
+        <section
+          class="guide-enter guide-enter-delay-2 border-t border-border/40 pt-6"
+          aria-labelledby="trainer-guide-steps"
+        >
+          <h3
+            id="trainer-guide-steps"
+            class="text-base font-semibold text-foreground text-balance"
+          >
+            How to use {activeTrainingModeGuide.title}
+          </h3>
+
+          <ol class="mt-6 grid gap-5">
+            {#each activeTrainingModeGuide.steps as step, index (step)}
+              <li class="grid grid-cols-[2.25rem_1fr] gap-4">
+                <span
+                  class="flex size-8 items-center justify-center rounded-full bg-accent/12 text-xs font-semibold tabular-nums text-accent shadow-[inset_0_0_0_1px_rgba(118,217,0,0.14)]"
+                  aria-hidden="true"
+                >
+                  {index + 1}
+                </span>
+                <span class="pt-1 leading-6 text-muted-foreground text-pretty">
+                  {step}
+                </span>
+              </li>
+            {/each}
+          </ol>
+
+          <p
+            class="mt-6 border-t border-border/40 pt-6 text-sm leading-6 text-muted-foreground text-pretty"
+          >
+            <span class="font-semibold text-foreground">What it trains:</span>
+            {activeTrainingModeGuide.benefits}
+          </p>
+        </section>
+
+        <aside
+          class="guide-enter guide-enter-delay-3 border-t border-border/40 pt-6 lg:col-span-2 xl:col-span-1"
+          aria-labelledby="trainer-guide-faq"
+        >
+          <h3
+            id="trainer-guide-faq"
+            class="text-base font-semibold text-foreground text-balance"
+          >
+            Quick answers
+          </h3>
+
+          <div class="mt-6 divide-y divide-border/40">
+            {#each guideSeoContent.faq.slice(0, 3) as faqItem (faqItem.question)}
+              <details class="group py-4 first:pt-0 last:pb-0">
+                <summary
+                  class="flex min-h-10 cursor-pointer list-none items-center justify-between gap-3 text-sm font-semibold text-foreground outline-none transition-colors duration-150 ease-out hover:text-foreground/90 focus-visible:ring-3 focus-visible:ring-ring/30 [&::-webkit-details-marker]:hidden"
+                >
+                  <span>{faqItem.question}</span>
+                  <span
+                    class="flex size-6 shrink-0 items-center justify-center rounded-full text-base leading-none text-muted-foreground transition-transform duration-200 ease-out group-open:rotate-45"
+                    aria-hidden="true"
+                  >
+                    +
+                  </span>
+                </summary>
+                <p
+                  class="pb-1 text-sm leading-6 text-muted-foreground text-pretty"
+                >
+                  {faqItem.answer}
+                </p>
+              </details>
+            {/each}
+          </div>
+
+          <div
+            class="mt-6 flex flex-wrap gap-2"
+            aria-label={`Best uses for ${activeTrainingModeGuide.title}`}
+          >
+            {#each guideUseCases as useCase (useCase)}
+              <span
+                class="rounded-full border border-border/40 bg-muted/35 px-3 py-1 text-xs font-medium text-muted-foreground"
+              >
+                {useCase}
+              </span>
+            {/each}
+          </div>
+
+          <p class="mt-6 text-xs leading-5 text-muted-foreground/85">
+            {guideSeoContent.trustNote}
+          </p>
+        </aside>
+      </div>
+
+      <footer
+        class="guide-enter guide-enter-delay-4 mt-8 flex flex-col gap-4 border-t border-border/40 pt-4 sm:flex-row sm:items-center sm:justify-between"
+      >
+        <p class="min-w-0 text-xs leading-5 text-muted-foreground">
+          {siteMetadata.name} is free to use, requires no account or install, and
+          stores settings locally in your browser.
+        </p>
+
+        <div class="flex shrink-0 flex-wrap gap-2 sm:justify-end">
+          <Button
+            href={siteMetadata.repositoryUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="ghost"
+            size="xs"
+          >
+            <ExternalLinkIcon class="size-3" />
+            <span class="pl-1">Source</span>
+          </Button>
+          <Button href={legalPageLinks.privacy.path} variant="ghost" size="xs">
+            <ShieldCheckIcon class="size-3" />
+            <span class="pl-1">{legalPageLinks.privacy.label}</span>
+          </Button>
+          <Button href={legalPageLinks.terms.path} variant="ghost" size="xs">
+            <FileTextIcon class="size-3" />
+            <span class="pl-1">{legalPageLinks.terms.label}</span>
+          </Button>
+        </div>
+      </footer>
+    {:else}
+      <div class="guide-enter guide-enter-top flex items-start gap-4">
+        <div class="min-w-0 space-y-2 pr-12">
           <p
             class="text-[0.7rem] leading-4 font-semibold tracking-wide text-accent uppercase"
           >
             {homepageSeoContent.kicker}
           </p>
           <h2
-            id="about-foveaflow-title"
+            id="trainer-guide-popover-title"
             class="text-2xl leading-tight font-semibold text-balance"
           >
             {homepageSeoContent.heading}
           </h2>
         </div>
-        <Button
-          variant="ghost"
-          class="absolute top-4 right-4 bg-secondary"
-          size="icon-sm"
-          aria-label="Close"
-          popovertarget="about-foveaflow"
-          popovertargetaction="hide"
-        >
-          <XIcon />
-          <span class="sr-only">Close</span>
-        </Button>
       </div>
+
+      <Button
+        variant="ghost"
+        class="absolute top-4 right-4 bg-secondary"
+        size="icon-sm"
+        aria-label="Close"
+        popovertarget="trainer-guide-popover"
+        popovertargetaction="hide"
+      >
+        <XIcon />
+        <span class="sr-only">Close</span>
+      </Button>
 
       <div
-        class="mt-6 space-y-3 text-sm leading-6 text-muted-foreground text-pretty sm:text-base sm:leading-7"
+        class="mt-6 grid items-start gap-8 lg:grid-cols-[minmax(0,0.96fr)_minmax(0,1.18fr)_minmax(16rem,0.82fr)]"
       >
-        {#each homepageSeoContent.body as paragraph (paragraph)}
-          <p>{paragraph}</p>
-        {/each}
+        <section
+          class="guide-enter guide-enter-delay-1 space-y-5 border-t border-border/40 pt-6"
+          aria-label="FoveaFlow overview"
+        >
+          <h3 class="text-base font-semibold text-foreground">Overview</h3>
+
+          <div
+            class="mt-6 space-y-4 text-sm leading-6 text-muted-foreground text-pretty sm:text-[0.95rem] sm:leading-7"
+          >
+            {#each homepageSeoContent.body as paragraph (paragraph)}
+              <p class="max-w-[58ch]">{paragraph}</p>
+            {/each}
+          </div>
+        </section>
+
+        <section
+          class="guide-enter guide-enter-delay-2 border-t border-border/40 pt-6"
+          aria-labelledby="homepage-guide-drills"
+        >
+          <h3
+            id="homepage-guide-drills"
+            class="text-base font-semibold text-foreground"
+          >
+            Drills
+          </h3>
+          <ul class="mt-6 grid gap-5">
+            {#each trainingModeNotes as trainingModeNote (trainingModeNote.title)}
+              <li class="grid grid-cols-[2.25rem_1fr] gap-4">
+                <span
+                  class="flex size-8 items-center justify-center rounded-full bg-accent/12 text-accent shadow-[inset_0_0_0_1px_rgba(118,217,0,0.14)]"
+                  aria-hidden="true"
+                >
+                  <TargetIcon class="size-4" />
+                </span>
+                <span class="pt-1 leading-6 text-muted-foreground text-pretty">
+                  <span class="font-semibold text-foreground">
+                    {trainingModeNote.title}:
+                  </span>
+                  {trainingModeNote.body}
+                </span>
+              </li>
+            {/each}
+          </ul>
+        </section>
+
+        <aside
+          class="guide-enter guide-enter-delay-3 border-t border-border/40 pt-6"
+        >
+          <h3 class="text-base font-semibold text-foreground">Safety</h3>
+          <p class="mt-6 text-sm leading-6 text-muted-foreground text-pretty">
+            {homepageSeoContent.trustNote}
+          </p>
+
+          <div
+            class="mt-6 flex flex-wrap gap-2"
+            aria-label={`Best uses for ${siteMetadata.name}`}
+          >
+            {#each guideUseCases as useCase (useCase)}
+              <span
+                class="rounded-full border border-border/40 bg-muted/35 px-3 py-1 text-xs font-medium text-muted-foreground"
+              >
+                {useCase}
+              </span>
+            {/each}
+          </div>
+
+          <a
+            href="/guide/"
+            class={`${buttonVariants({ variant: "default", size: "lg" })} pressable-ui guide-enter guide-enter-delay-4 mt-6 w-full`}
+          >
+            <BookOpenIcon class="size-4" />
+            <span>Read the full guide</span>
+          </a>
+        </aside>
       </div>
 
-      <section class="mt-6 border-t border-border/50 pt-4">
-        <h3 class="text-base font-semibold text-foreground">Drills</h3>
-        <ul class="mt-3 grid gap-2">
-          {#each trainingModeNotes as trainingModeNote (trainingModeNote.title)}
-            <li class="leading-6 text-muted-foreground">
-              <span class="font-semibold text-foreground">
-                {trainingModeNote.title}:
-              </span>
-              {trainingModeNote.body}
-            </li>
-          {/each}
-        </ul>
-      </section>
-
-      <section class="mt-6 border-t border-border/50 pt-4">
-        <h3 class="text-base font-semibold text-foreground">Safety</h3>
-        <p class="mt-2 text-sm leading-6 text-muted-foreground text-pretty">
-          {homepageSeoContent.trustNote}
-        </p>
-      </section>
-
-      <a
-        href="/guide/"
-        class={`${buttonVariants({ variant: "default", size: "lg" })} pressable-ui mt-6 w-full`}
+      <footer
+        class="guide-enter guide-enter-delay-4 mt-8 flex flex-col gap-4 border-t border-border/40 pt-4 sm:flex-row sm:items-center sm:justify-between"
       >
-        <BookOpenIcon class="size-4" />
-        <span>Read the full guide</span>
-      </a>
-    </section>
-  {/if}
+        <p class="min-w-0 text-xs leading-5 text-muted-foreground">
+          {siteMetadata.name} is free to use, requires no account or install, and
+          stores settings locally in your browser.
+        </p>
+
+        <div class="flex shrink-0 flex-wrap gap-2 sm:justify-end">
+          <Button
+            href={siteMetadata.repositoryUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="ghost"
+            size="xs"
+          >
+            <ExternalLinkIcon class="size-3" />
+            <span class="pl-1">Source</span>
+          </Button>
+          <Button href={legalPageLinks.privacy.path} variant="ghost" size="xs">
+            <ShieldCheckIcon class="size-3" />
+            <span class="pl-1">{legalPageLinks.privacy.label}</span>
+          </Button>
+          <Button href={legalPageLinks.terms.path} variant="ghost" size="xs">
+            <FileTextIcon class="size-3" />
+            <span class="pl-1">{legalPageLinks.terms.label}</span>
+          </Button>
+        </div>
+      </footer>
+    {/if}
+  </section>
 
   <Sheet bind:open={panelOpen}>
     <SheetContent class="min-w-0 overflow-x-hidden overflow-y-auto">

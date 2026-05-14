@@ -12,7 +12,8 @@
 
   let { page }: { page: LegalPageContent } = $props();
 
-  const guideEnterTop = "guide-enter guide-enter-top";
+  const guideEnterTop = "guide-enter guide-enter-up";
+  const guideEnterHero = "guide-enter page-enter-delay-1 guide-enter-up";
   const guideEnterUp = "guide-enter guide-enter-up";
   const articleCard =
     "bg-card/70 shadow-[0_16px_36px_-30px_rgba(20,24,22,0.4)] backdrop-blur";
@@ -53,7 +54,7 @@
     </header>
 
     <section
-      class={`grid gap-8 pt-10 pb-10 md:grid-cols-[minmax(0,1fr)_18rem] md:items-end md:pt-20 md:pb-14 ${guideEnterUp}`}
+      class={`grid gap-8 pt-10 pb-10 md:grid-cols-[minmax(0,1fr)_18rem] md:items-end md:pt-20 md:pb-14 ${guideEnterHero}`}
     >
       <div>
         <Badge variant="secondary" class="mb-5 px-3 py-1">
@@ -97,7 +98,7 @@
     </section>
 
     <section
-      class={`grid gap-6 border-t border-border/60 pt-10 md:grid-cols-[15rem_minmax(0,1fr)] md:gap-10 ${guideEnterUp}`}
+      class={`page-enter-delay-2 grid gap-6 border-t border-border/60 pt-10 md:grid-cols-[15rem_minmax(0,1fr)] md:gap-10 ${guideEnterUp}`}
     >
       <div class="md:sticky md:top-6 md:self-start">
         <Item.Root variant="muted" class="border border-border/70">
@@ -163,7 +164,7 @@
     </section>
 
     <footer
-      class={`guide-enter-delay-1 flex flex-col gap-3 border-t border-border/60 pt-6 pb-10 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between ${guideEnterUp}`}
+      class={`page-enter-delay-3 flex flex-col gap-3 border-t border-border/60 pt-6 pb-10 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between ${guideEnterUp}`}
     >
       <span>{siteMetadata.name} is free. No account, no paid plan.</span>
       <div class="flex flex-wrap gap-2">

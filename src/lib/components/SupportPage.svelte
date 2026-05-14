@@ -18,7 +18,8 @@
 
   let { page }: { page: SupportPage } = $props();
 
-  const guideEnterTop = "guide-enter guide-enter-top";
+  const guideEnterTop = "guide-enter guide-enter-up";
+  const guideEnterHero = "guide-enter page-enter-delay-1 guide-enter-up";
   const guideEnterUp = "guide-enter guide-enter-up";
   const supportItemSurface =
     "bg-background/70 shadow-[0_16px_36px_-30px_rgba(20,24,22,0.4)]";
@@ -29,7 +30,7 @@
     "max-w-[18rem] text-2xl leading-tight font-semibold tracking-tight";
 
   const delayClass = (index: number) =>
-    index === 0 ? "guide-enter-delay-1" : "guide-enter-delay-2";
+    index === 0 ? "page-enter-delay-2" : "page-enter-delay-3";
 </script>
 
 <main
@@ -59,7 +60,7 @@
     </nav>
 
     <section
-      class={`grid items-center gap-10 pt-10 pb-10 md:grid-cols-[minmax(0,1.08fr)_minmax(20rem,0.92fr)] md:pt-20 md:pb-16 ${guideEnterUp}`}
+      class={`grid items-center gap-10 pt-10 pb-10 md:grid-cols-[minmax(0,1.08fr)_minmax(20rem,0.92fr)] md:pt-20 md:pb-16 ${guideEnterHero}`}
     >
       <div class="max-w-3xl">
         <Badge variant="secondary" class="mb-5 px-3 py-1">
@@ -205,7 +206,7 @@
 
       {#if page.comparisonRows && page.comparisonLabel}
         <section
-          class={`guide-enter-delay-3 ${sectionGrid} ${guideEnterUp}`}
+          class={`page-enter-delay-4 ${sectionGrid} ${guideEnterUp}`}
           aria-labelledby="feature-comparison"
         >
           <div class={sectionIntro}>
@@ -243,7 +244,7 @@
       {/if}
 
       <footer
-        class={`guide-enter-delay-4 flex flex-col gap-3 border-t border-border/60 pt-8 pb-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between ${guideEnterUp}`}
+        class={`page-enter-delay-4 flex flex-col gap-3 border-t border-border/60 pt-8 pb-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between ${guideEnterUp}`}
       >
         <span>{siteMetadata.name} is free. No account, no install.</span>
         <div class="flex flex-wrap gap-2">

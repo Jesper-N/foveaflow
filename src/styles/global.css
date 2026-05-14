@@ -343,6 +343,22 @@ canvas {
     animation-delay: 130ms;
   }
 
+  .page-enter-delay-1 {
+    animation-delay: 80ms;
+  }
+
+  .page-enter-delay-2 {
+    animation-delay: 145ms;
+  }
+
+  .page-enter-delay-3 {
+    animation-delay: 210ms;
+  }
+
+  .page-enter-delay-4 {
+    animation-delay: 275ms;
+  }
+
   .ui-enter {
     animation: ui-enter 180ms cubic-bezier(0.215, 0.61, 0.355, 1) both;
   }
@@ -361,6 +377,10 @@ canvas {
     margin: 0;
     overflow: auto;
     transform: translate3d(-50%, -50%, 0);
+  }
+
+  .native-guide-popover {
+    width: min(calc(100dvw - 2rem), 76rem);
   }
 
   .native-dialog-popover:popover-open {
