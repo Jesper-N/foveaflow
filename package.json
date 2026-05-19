@@ -17,6 +17,7 @@
     "test:smoke": "playwright test",
     "audit": "bun audit",
     "verify": "bun run check && bun run test && bun run test:smoke && bun run audit",
+    "prepush": "bun run verify",
     "tailwind:diagnostics": "bun scripts/tailwind-canonical-classes.ts",
     "tailwind:fix": "bun scripts/tailwind-canonical-classes.ts --write",
     "format": "prettier --write .",
