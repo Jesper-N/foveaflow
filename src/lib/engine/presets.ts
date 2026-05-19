@@ -33,6 +33,7 @@ export type TrainerSettings = {
   distractorBrightness: number;
   targetOpacity: number;
   targetShape: TargetShape;
+  motionDirection: 1 | -1;
   letterEnabled: boolean;
   letterColor: string;
   letterWeight: LetterWeight;
@@ -148,6 +149,7 @@ export const settingsFromPreset = (
   distractorBrightness: 0.7,
   targetOpacity: 1,
   targetShape: "circle",
+  motionDirection: 1,
   letterEnabled: true,
   letterColor: "#000000",
   letterWeight: 600,

@@ -10,6 +10,10 @@ import type { Rng } from "./random";
 const TAU = Math.PI * 2;
 const DEFAULT_TARGET_COLOR = "#76d900";
 const DEFAULT_SECONDARY_COLOR = "#3ddbd9";
+const HARD_TURN_RANDOM_OFFSET = 40_000;
+const HARD_TURN_RANDOM_STRIDE = 60;
+const HARD_TURN_CANDIDATE_COUNT = 24;
+const HARD_TURN_MIN_DISTANCE_RATIO = 0.55;
 const clamp = (value: number, min: number, max: number) =>
   Math.min(max, Math.max(min, value));
 
@@ -20,11 +24,6 @@ const pingPong = (value: number, length: number) => {
   if (length <= 0) return 0;
   const wrapped = positiveModulo(value, length * 2);
   return wrapped <= length ? wrapped : length * 2 - wrapped;
-};
-
-const smoothStep = (value: number) => {
-  const progress = clamp(value, 0, 1);
-  return progress * progress * (3 - 2 * progress);
 };
 
 const pointOnSegment = (
@@ -62,19 +61,6 @@ const pointOnSegment = (
 
   return points[0];
 };
-
-const waypoint = (
-  rng: Rng,
-  index: number,
-  left: number,
-  top: number,
-  right: number,
-  bottom: number,
-) =>
-  [
-    rng.rangeAt(index * 2 + 40_000, left, right),
-    rng.rangeAt(index * 2 + 40_001, top, bottom),
-  ] satisfies [number, number];
 
 const curveCacheKey = (
   id: PatternId,
@@ -167,6 +153,15 @@ type RandomWalkState = {
 
 let randomWalkState: RandomWalkState | null = null;
 
+type HardTurnWaypointCache = {
+  seed: number;
+  key: string;
+  points: Array<[number, number]>;
+  distances: number[];
+};
+
+let hardTurnWaypointCache: HardTurnWaypointCache | null = null;
+
 type MotObjectParams = {
   speedScaleX: number;
   speedScaleY: number;
@@ -191,6 +186,13 @@ export const withIsolatedPatternSampling = <Result>(
   const previousRandomWalkState = randomWalkState
     ? { ...randomWalkState }
     : null;
+  const previousHardTurnWaypointCache = hardTurnWaypointCache
+    ? {
+        ...hardTurnWaypointCache,
+        points: [...hardTurnWaypointCache.points],
+        distances: [...hardTurnWaypointCache.distances],
+      }
+    : null;
   const previousMotParamsCache = motParamsCache;
 
   try {
@@ -198,12 +200,162 @@ export const withIsolatedPatternSampling = <Result>(
   } finally {
     cachedCurve = previousCachedCurve;
     randomWalkState = previousRandomWalkState;
+    hardTurnWaypointCache = previousHardTurnWaypointCache;
     motParamsCache = previousMotParamsCache;
   }
 };
 
 const shortestAngleDelta = (from: number, to: number) => {
   return Math.atan2(Math.sin(to - from), Math.cos(to - from));
+};
+
+const reflectCoordinate = (value: number, min: number, max: number) => {
+  if (max <= min) return { value: min, reflected: false };
+
+  let reflectedValue = value;
+  let reflected = false;
+  while (reflectedValue < min || reflectedValue > max) {
+    if (reflectedValue < min) {
+      reflectedValue = min + (min - reflectedValue);
+      reflected = !reflected;
+    } else {
+      reflectedValue = max - (reflectedValue - max);
+      reflected = !reflected;
+    }
+  }
+
+  return { value: reflectedValue, reflected };
+};
+
+const getHardTurnWaypoint = (
+  rng: Rng,
+  key: string,
+  index: number,
+  left: number,
+  top: number,
+  right: number,
+  bottom: number,
+) => {
+  if (
+    !hardTurnWaypointCache ||
+    hardTurnWaypointCache.seed !== rng.seed ||
+    hardTurnWaypointCache.key !== key
+  ) {
+    hardTurnWaypointCache = {
+      seed: rng.seed,
+      key,
+      points: [],
+      distances: [],
+    };
+  }
+
+  const points = hardTurnWaypointCache.points;
+  const distances = hardTurnWaypointCache.distances;
+  const width = Math.max(1, right - left);
+  const height = Math.max(1, bottom - top);
+  const minDistance = Math.min(width, height) * HARD_TURN_MIN_DISTANCE_RATIO;
+
+  for (let pointIndex = points.length; pointIndex <= index; pointIndex += 1) {
+    if (pointIndex === 0) {
+      points.push([
+        rng.rangeAt(HARD_TURN_RANDOM_OFFSET, left, right),
+        rng.rangeAt(HARD_TURN_RANDOM_OFFSET + 1, top, bottom),
+      ]);
+      distances.push(0);
+      continue;
+    }
+
+    const previous = points[pointIndex - 1];
+    let best: [number, number] | null = null;
+    let bestDistance = -1;
+
+    for (
+      let candidateIndex = 0;
+      candidateIndex < HARD_TURN_CANDIDATE_COUNT;
+      candidateIndex += 1
+    ) {
+      const randomIndex =
+        HARD_TURN_RANDOM_OFFSET +
+        pointIndex * HARD_TURN_RANDOM_STRIDE +
+        candidateIndex * 2;
+      const candidate = [
+        rng.rangeAt(randomIndex, left, right),
+        rng.rangeAt(randomIndex + 1, top, bottom),
+      ] satisfies [number, number];
+      const distance = Math.hypot(
+        candidate[0] - previous[0],
+        candidate[1] - previous[1],
+      );
+
+      if (distance >= minDistance) {
+        best = candidate;
+        break;
+      }
+
+      if (distance > bestDistance) {
+        best = candidate;
+        bestDistance = distance;
+      }
+    }
+
+    const next = best ?? previous;
+    const length = Math.hypot(next[0] - previous[0], next[1] - previous[1]);
+    points.push(next);
+    distances.push(distances[pointIndex - 1] + length);
+  }
+
+  return points[index];
+};
+
+const sampleHardTurnPath = (
+  rng: Rng,
+  key: string,
+  travelPx: number,
+  left: number,
+  top: number,
+  right: number,
+  bottom: number,
+) => {
+  const distancePx = Math.max(0, travelPx);
+  const firstPoint = getHardTurnWaypoint(rng, key, 0, left, top, right, bottom);
+  if (distancePx <= 0) return firstPoint;
+
+  const cache = hardTurnWaypointCache;
+  if (!cache) return firstPoint;
+
+  while (cache.distances[cache.distances.length - 1] < distancePx) {
+    getHardTurnWaypoint(
+      rng,
+      key,
+      cache.points.length,
+      left,
+      top,
+      right,
+      bottom,
+    );
+  }
+
+  let low = 1;
+  let high = cache.distances.length - 1;
+  while (low < high) {
+    const middle = Math.floor((low + high) / 2);
+    if (cache.distances[middle] < distancePx) low = middle + 1;
+    else high = middle;
+  }
+
+  const endIndex = low;
+  const start = cache.points[endIndex - 1];
+  const end = cache.points[endIndex];
+  const startDistance = cache.distances[endIndex - 1];
+  const segmentLength = cache.distances[endIndex] - startDistance;
+
+  if (segmentLength <= 0) return start;
+
+  const progress = (distancePx - startDistance) / segmentLength;
+  return [
+    start[0] + (end[0] - start[0]) * progress,
+    start[1] + (end[1] - start[1]) * progress,
+  ] satisfies [number, number];
 };
 
 const initializeRandomWalk = (
@@ -252,10 +404,20 @@ const advanceRandomWalk = (
       const wander =
         Math.sin((travelPx + rng.seed * 0.17) / 180) * 0.28 +
         Math.sin((travelPx + rng.seed * 0.31) / 310) * 0.18;
-      state.targetHeading =
+      const randomHeading =
         state.heading +
         wander +
         rng.rangeAt(91_000 + state.turnIndex, -1.85, 1.85);
+      const centerX = (left + right) / 2;
+      const centerY = (top + bottom) / 2;
+      const offsetX = (state.x - centerX) / Math.max(1, (right - left) / 2);
+      const offsetY = (state.y - centerY) / Math.max(1, (bottom - top) / 2);
+      const centerBias =
+        clamp((Math.hypot(offsetX, offsetY) - 0.35) / 0.65, 0, 1) * 0.75;
+      const centerHeading = Math.atan2(centerY - state.y, centerX - state.x);
+      state.targetHeading =
+        randomHeading +
+        shortestAngleDelta(randomHeading, centerHeading) * centerBias;
       state.nextTurnTravel =
         travelPx + rng.rangeAt(92_000 + state.turnIndex, 160, 360);
     }
@@ -270,13 +432,16 @@ const advanceRandomWalk = (
     state.x += Math.cos(state.heading) * stepPx;
     state.y += Math.sin(state.heading) * stepPx;
 
-    if (state.x < left || state.x > right) {
-      state.x = clamp(state.x, left, right);
+    const nextX = reflectCoordinate(state.x, left, right);
+    const nextY = reflectCoordinate(state.y, top, bottom);
+    state.x = nextX.value;
+    state.y = nextY.value;
+
+    if (nextX.reflected) {
       state.heading = Math.PI - state.heading;
       state.targetHeading = state.heading;
     }
-    if (state.y < top || state.y > bottom) {
-      state.y = clamp(state.y, top, bottom);
+    if (nextY.reflected) {
       state.heading = -state.heading;
       state.targetHeading = state.heading;
     }
@@ -412,31 +577,32 @@ export const samplePatternInto = (
   }
 
   if (id === "ellipse") {
-    const arcScale = Math.max(1, (rx + ry) / 2);
-    const angle = travelPx / arcScale;
-    return writeTarget(
-      frames,
-      0,
-      cx + Math.cos(angle) * rx,
-      cy + Math.sin(angle) * ry,
-      params,
-      radiusPx,
-      primaryColor,
+    const [x, y] = sampleClosedCurve(
+      curveCacheKey(id, left, top, right, bottom, 160),
+      travelPx,
+      160,
+      (phase) => {
+        const angle = phase * TAU;
+        return [cx + Math.cos(angle) * rx, cy + Math.sin(angle) * ry];
+      },
     );
+    return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
   }
 
   if (id === "figureEight") {
-    const arcScale = Math.max(1, (rx + ry) / 2);
-    const angle = travelPx / arcScale;
-    return writeTarget(
-      frames,
-      0,
-      cx + Math.sin(angle) * rx,
-      cy + Math.sin(angle * 2) * ry * 0.72,
-      params,
-      radiusPx,
-      primaryColor,
+    const [x, y] = sampleClosedCurve(
+      curveCacheKey(id, left, top, right, bottom, 180),
+      travelPx,
+      180,
+      (phase) => {
+        const angle = phase * TAU;
+        return [
+          cx + Math.sin(angle) * rx,
+          cy + Math.sin(angle * 2) * ry * 0.72,
+        ];
+      },
     );
+    return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
   }
 
   if (id === "wave") {
@@ -512,21 +678,18 @@ export const samplePatternInto = (
   }
 
   if (id === "directionChange") {
-    const segmentPx = Math.max(420, Math.min(arena.width, arena.height) * 0.62);
-    const segment = Math.floor(travelPx / segmentPx);
-    const partial = smoothStep((travelPx - segment * segmentPx) / segmentPx);
-    const [x1, y1] = waypoint(rng, segment, left, top, right, bottom);
-    const [x2, y2] = waypoint(rng, segment + 1, left, top, right, bottom);
-
-    return writeTarget(
-      frames,
-      0,
-      x1 + (x2 - x1) * partial,
-      y1 + (y2 - y1) * partial,
-      params,
-      radiusPx,
-      primaryColor,
+    const waypointKey = `${Math.round(left)}:${Math.round(top)}:${Math.round(right)}:${Math.round(bottom)}`;
+    const [x, y] = sampleHardTurnPath(
+      rng,
+      waypointKey,
+      travelPx,
+      left,
+      top,
+      right,
+      bottom,
     );
+
+    return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
   }
 
   if (id === "teleport") {
@@ -647,26 +810,16 @@ export const samplePatternInto = (
   if (id === "stairStep") {
     const rows = 4;
     const columns = 5;
-    const rowHeight = height / Math.max(1, rows - 1);
-    const columnWidth = width / Math.max(1, columns - 1);
-    const stepDistance = Math.max(1, (rowHeight + columnWidth) * 0.75);
-    const step = Math.floor((travelPx * 0.72) / stepDistance);
-    const phase = smoothStep(
-      (travelPx * 0.72 - step * stepDistance) / stepDistance,
-    );
-    const row = step % rows;
-    const column = Math.floor(step / rows) % columns;
-    const nextRow = (row + 1) % rows;
-    const nextColumn = nextRow === 0 ? (column + 1) % columns : column;
-    return writeTarget(
-      frames,
-      0,
-      left + (column + (nextColumn - column) * phase) * columnWidth,
-      top + (row + (nextRow - row) * phase) * rowHeight,
-      params,
-      radiusPx,
-      primaryColor,
-    );
+    const points = Array.from({ length: rows * columns }, (_, index) => {
+      const row = index % rows;
+      const column = Math.floor(index / rows) % columns;
+      return [
+        left + (column * width) / Math.max(1, columns - 1),
+        top + (row * height) / Math.max(1, rows - 1),
+      ] satisfies [number, number];
+    });
+    const [x, y] = pointOnSegment(points, travelPx * 0.72, true);
+    return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
   }
 
   if (id === "lissajous") {
@@ -701,18 +854,20 @@ export const samplePatternInto = (
   }
 
   if (id === "orbitShift") {
-    const scale = Math.max(1, (rx + ry) / 2);
-    const angle = travelPx / Math.max(1, scale * 0.76);
-    const drift = Math.sin(angle * 0.5) * rx * 0.38;
-    return writeTarget(
-      frames,
-      0,
-      cx + drift + Math.cos(angle) * rx * 0.42,
-      cy + Math.sin(angle) * ry * 0.82,
-      params,
-      radiusPx,
-      primaryColor,
+    const [x, y] = sampleClosedCurve(
+      curveCacheKey(id, left, top, right, bottom, 180),
+      travelPx,
+      180,
+      (phase) => {
+        const angle = phase * TAU;
+        const drift = Math.sin(angle * 0.5) * rx * 0.38;
+        return [
+          cx + drift + Math.cos(angle) * rx * 0.42,
+          cy + Math.sin(angle) * ry * 0.82,
+        ];
+      },
     );
+    return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
   }
 
   if (id === "cornerTour") {

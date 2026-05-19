@@ -2,6 +2,7 @@
   import { onMount, untrack } from "svelte";
   import type { Attachment } from "svelte/attachments";
   import ActivityIcon from "@lucide/svelte/icons/activity";
+  import ArrowLeftRightIcon from "@lucide/svelte/icons/arrow-left-right";
   import BookOpenIcon from "@lucide/svelte/icons/book-open";
   import EyeIcon from "@lucide/svelte/icons/eye";
   import ExternalLinkIcon from "@lucide/svelte/icons/external-link";
@@ -108,6 +109,8 @@
   const getRouteSlugFromPath = (path: string) =>
     path.split("?")[0]?.split("/").filter(Boolean)[0] ?? "";
 
+  const createSessionSeed = () => Math.floor(Math.random() * 2_147_483_646) + 1;
+
   const getCanvasTheme = () => {
     const isDark = document.documentElement.classList.contains("dark");
     return isDark
@@ -182,6 +185,17 @@
     (option) => option.id !== "multipleObjectTracking",
   );
   const unpredictivePatternIds: PatternId[] = ["randomWalk", "directionChange"];
+  const directionTogglePatternIds: PatternId[] = [
+    "circle",
+    "ellipse",
+    "figureEight",
+    "wave",
+    "spiralBloom",
+    "clover",
+    "lissajous",
+    "hourglass",
+    "orbitShift",
+  ];
   const unpredictivePatternOptions = pursuitPatternOptions.filter((option) =>
     unpredictivePatternIds.includes(option.id),
   );
@@ -356,7 +370,7 @@
   let travelPx = 0;
   let currentSpeedPxPerSec = 0;
   let baseSpeedPxPerSec = 0;
-  let seed = 4321;
+  let seed = createSessionSeed();
   let rng = createRng(seed);
   let canvasTheme: ReturnType<typeof getCanvasTheme> | null = null;
   let gridPath: Path2D | null = null;
@@ -401,6 +415,7 @@
     distractorBrightness: currentSettings.distractorBrightness,
     targetOpacity: currentSettings.targetOpacity,
     targetShape: currentSettings.targetShape,
+    motionDirection: currentSettings.motionDirection,
     letterEnabled: currentSettings.letterEnabled,
     letterColor: currentSettings.letterColor,
     letterWeight: currentSettings.letterWeight,
@@ -466,6 +481,17 @@
     activeRoute
       ? (activeGuideRoute?.seoContent ?? pageSeoContent)
       : pageSeoContent,
+  );
+  let canToggleDirection = $derived(
+    directionTogglePatternIds.includes(settings.patternId),
+  );
+  let motionDirectionLabel = $derived(
+    settings.motionDirection === 1 ? "forward" : "reverse",
+  );
+  let motionDirectionToggleLabel = $derived(
+    settings.motionDirection === 1
+      ? "Reverse motion direction"
+      : "Use forward motion direction",
   );
   let distractorColor = $derived(
     darkenHexColor(safeBallColor, settings.distractorBrightness),
@@ -566,12 +592,14 @@
       savedSettings ? mergeSettings(savedSettings) : settings,
       browserRouteSlug,
     );
+    resetDirectionForFixedPatterns(settings.patternId);
     refreshBaseSpeed();
 
     const handlePopState = () => {
       const nextRouteSlug = getBrowserRouteSlug();
       currentRouteSlug = nextRouteSlug;
       settings = applyRouteToSettings(settings, nextRouteSlug);
+      resetDirectionForFixedPatterns(settings.patternId);
       refreshBaseSpeed();
       drawFrame();
     };
@@ -653,6 +681,7 @@
         isTargetShape(saved.targetShape)
           ? saved.targetShape
           : "circle",
+      motionDirection: saved.motionDirection === -1 ? -1 : 1,
       letterEnabled: saved.letterEnabled !== false,
       letterColor: isHexColor(saved.letterColor)
         ? saved.letterColor
@@ -823,7 +852,10 @@
     lastTimestamp = timestamp;
     const deltaSec = deltaMs / 1000;
     currentSpeedPxPerSec = getSpeedPxPerSec(elapsedSec);
-    travelPx += currentSpeedPxPerSec * deltaSec;
+    travelPx +=
+      currentSpeedPxPerSec *
+      deltaSec *
+      (canToggleDirection ? settings.motionDirection : 1);
     elapsedSec += deltaSec;
     if (shouldDrawTickFrame()) drawFrame();
     animationFrame = requestAnimationFrame(tick);
@@ -841,6 +873,18 @@
 
   const toggleMotionPaused = () => {
     setMotionPaused(!motionPaused);
+  };
+
+  const resetDirectionForFixedPatterns = (patternId: PatternId) => {
+    if (directionTogglePatternIds.includes(patternId)) return;
+    settings.motionDirection = 1;
+    if (travelPx < 0) travelPx = Math.abs(travelPx);
+  };
+
+  const toggleMotionDirection = () => {
+    if (!canToggleDirection) return;
+    settings.motionDirection = settings.motionDirection === 1 ? -1 : 1;
+    drawFrame();
   };
 
   const getSpeedPxPerSec = (timeSec: number) => {
@@ -1107,6 +1151,7 @@
       distractorBrightness: settings.distractorBrightness,
       targetOpacity: settings.targetOpacity,
       targetShape: settings.targetShape,
+      motionDirection: settings.motionDirection,
       letterEnabled: settings.letterEnabled,
       letterColor: settings.letterColor,
       letterWeight: settings.letterWeight,
@@ -1114,6 +1159,7 @@
       lilacChaserScale: settings.lilacChaserScale,
       lilacChaserBallColor: settings.lilacChaserBallColor,
     });
+    resetDirectionForFixedPatterns(settings.patternId);
     refreshBaseSpeed();
     invalidateLilacChaserFrame();
     drawFrame();
@@ -1141,7 +1187,7 @@
     settings = settingsFromPreset(preset, DEFAULT_CALIBRATION, {
       patternId,
     });
-    seed = 4321;
+    seed = createSessionSeed();
     rng = createRng(seed);
     elapsedSec = 0;
     travelPx = 0;
@@ -1238,6 +1284,7 @@
 
   const setPattern = (patternId: PatternId) => {
     settings.patternId = patternId;
+    resetDirectionForFixedPatterns(patternId);
   };
 
   const setSpeedUnit = (unit: SpeedUnit) => {
@@ -1514,7 +1561,7 @@
     motion to stop target movement before changing controls.
   </p>
   <p id="trainer-motion-status" class="sr-only" aria-live="polite">
-    Motion {motionPaused ? "paused" : "playing"}.
+    Motion {motionPaused ? "paused" : "playing"}. Direction {motionDirectionLabel}.
   </p>
 
   <canvas
@@ -1754,6 +1801,19 @@
           {:else}
             <PauseIcon />
           {/if}
+        </Button>
+
+        <Button
+          class="pressable-ui hidden sm:inline-flex"
+          variant="outline"
+          size="icon"
+          aria-label={motionDirectionToggleLabel}
+          aria-pressed={settings.motionDirection === -1}
+          aria-describedby="trainer-motion-status"
+          disabled={!canToggleDirection}
+          onclick={toggleMotionDirection}
+        >
+          <ArrowLeftRightIcon />
         </Button>
 
         <Button
