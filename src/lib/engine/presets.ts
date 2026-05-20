@@ -150,7 +150,7 @@ export const settingsFromPreset = (
   targetOpacity: 1,
   targetShape: "circle",
   motionDirection: 1,
-  letterEnabled: true,
+  letterEnabled: false,
   letterColor: "#000000",
   letterWeight: 600,
   letterScale: DEFAULT_LETTER_SCALE,

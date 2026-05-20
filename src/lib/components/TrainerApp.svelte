@@ -111,17 +111,24 @@
 
   const createSessionSeed = () => Math.floor(Math.random() * 2_147_483_646) + 1;
 
-  const getCanvasTheme = () => {
+  const withAlpha = (color: string, alpha: number) => {
+    if (!color.startsWith("rgb(")) return color;
+    return color.replace("rgb(", "rgba(").replace(")", `, ${alpha})`);
+  };
+
+  const getCanvasTheme = (node: HTMLCanvasElement) => {
     const isDark = document.documentElement.classList.contains("dark");
+    const background = getComputedStyle(node).backgroundColor;
+
     return isDark
       ? {
-          background: "#101113",
-          trail: "rgba(16, 17, 19, 0.35)",
+          background,
+          trail: withAlpha(background, 0.35),
           grid: "rgba(255, 255, 255, 0.045)",
         }
       : {
-          background: "#eff1f3",
-          trail: "rgba(239, 241, 243, 0.38)",
+          background,
+          trail: withAlpha(background, 0.38),
           grid: "rgba(16, 18, 22, 0.075)",
         };
   };
@@ -564,22 +571,13 @@
 
     const resizeObserver = new ResizeObserver(resizeCanvas);
     resizeObserver.observe(node);
-    const themeObserver = new MutationObserver(() => {
-      canvasTheme = getCanvasTheme();
-      drawFrame();
-    });
-    themeObserver.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
 
-    canvasTheme = getCanvasTheme();
+    canvasTheme = getCanvasTheme(node);
     resizeCanvas();
     if (shouldAnimateMotion()) startLoop();
 
     return () => {
       cancelAnimationFrame(animationFrame);
-      themeObserver.disconnect();
       resizeObserver.disconnect();
     };
   };
@@ -682,7 +680,7 @@
           ? saved.targetShape
           : "circle",
       motionDirection: saved.motionDirection === -1 ? -1 : 1,
-      letterEnabled: saved.letterEnabled !== false,
+      letterEnabled: saved.letterEnabled === true,
       letterColor: isHexColor(saved.letterColor)
         ? saved.letterColor
         : "#000000",
@@ -930,7 +928,7 @@
       return;
     }
 
-    const theme = canvasTheme ?? getCanvasTheme();
+    const theme = canvasTheme ?? getCanvasTheme(canvas);
     ctx.fillStyle = settings.showTrail ? theme.trail : theme.background;
     ctx.fillRect(0, 0, arena.width, arena.height);
     drawGuides(ctx, theme);
@@ -1452,8 +1450,11 @@
     const nextMode = mode.current;
     if (nextMode !== "light" && nextMode !== "dark") return;
     colorMode = nextMode;
-    canvasTheme = getCanvasTheme();
-    drawFrame();
+    if (!canvas) return;
+    requestAnimationFrame(() => {
+      canvasTheme = getCanvasTheme(canvas);
+      drawFrame();
+    });
   });
 </script>
 
@@ -1566,7 +1567,7 @@
 
   <canvas
     {@attach attachCanvas}
-    class="absolute inset-0 h-full w-full touch-none"
+    class="absolute inset-0 h-full w-full touch-none bg-background"
     data-testid="trainer-canvas"
     aria-label="FoveaFlow eye trainer animation for visual tracking practice"
     aria-describedby="trainer-canvas-description trainer-motion-status"
