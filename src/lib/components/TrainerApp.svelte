@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount, untrack } from "svelte";
   import type { Attachment } from "svelte/attachments";
+  import type { TransitionConfig } from "svelte/transition";
   import ActivityIcon from "@lucide/svelte/icons/activity";
   import ArrowLeftRightIcon from "@lucide/svelte/icons/arrow-left-right";
   import BookOpenIcon from "@lucide/svelte/icons/book-open";
@@ -21,17 +22,11 @@
   import ModePathPreview from "$lib/components/ModePathPreview.svelte";
   import PatternPathPreview from "$lib/components/PatternPathPreview.svelte";
   import { Button, buttonVariants } from "$lib/components/ui/button/index.js";
+  import * as Dialog from "$lib/components/ui/dialog/index.js";
   import * as Field from "$lib/components/ui/field/index.js";
   import { Input } from "$lib/components/ui/input/index.js";
-  import * as Item from "$lib/components/ui/item/index.js";
   import * as Select from "$lib/components/ui/select/index.js";
-  import {
-    Sheet,
-    SheetContent,
-    SheetDescription,
-    SheetHeader,
-    SheetTitle,
-  } from "$lib/components/ui/sheet/index.js";
+  import * as Sidebar from "$lib/components/ui/sidebar/index.js";
   import { Slider } from "$lib/components/ui/slider/index.js";
   import { Switch } from "$lib/components/ui/switch/index.js";
   import {
@@ -142,6 +137,26 @@
     | "alternatingPattern"
     | "climbPattern"
     | "sizePulse";
+  type ControlIconId =
+    | "target"
+    | "motion"
+    | "eye"
+    | "calibration"
+    | "theme"
+    | "reset";
+  type ControlSectionId =
+    | "session"
+    | "drill"
+    | "targets"
+    | "motion"
+    | "screen"
+    | "defaults";
+  type ControlSection = {
+    id: ControlSectionId;
+    label: string;
+    icon: ControlIconId;
+    hideForLilac?: boolean;
+  };
 
   const behaviorOptions: Array<{ id: BehaviorId; name: string }> = [
     { id: "constant", name: "Steady speed" },
@@ -150,6 +165,41 @@
     { id: "alternatingPattern", name: "Alternating pace" },
     { id: "climbPattern", name: "Build and reset" },
     { id: "sizePulse", name: "Size pulse" },
+  ];
+  const controlSections: ControlSection[] = [
+    {
+      id: "session",
+      label: "Session",
+      icon: "theme",
+    },
+    {
+      id: "drill",
+      label: "Drill",
+      icon: "target",
+    },
+    {
+      id: "targets",
+      label: "Targets",
+      icon: "eye",
+      hideForLilac: true,
+    },
+    {
+      id: "motion",
+      label: "Motion",
+      icon: "motion",
+      hideForLilac: true,
+    },
+    {
+      id: "screen",
+      label: "Screen",
+      icon: "calibration",
+      hideForLilac: true,
+    },
+    {
+      id: "defaults",
+      label: "Defaults",
+      icon: "reset",
+    },
   ];
 
   const shapeOptions: Array<{ id: TargetShape; name: string }> = [
@@ -462,7 +512,10 @@
   );
   let currentRouteSlug = $state(untrack(() => routeSlug));
   let panelOpen = $state(false);
+  let activeControlSection = $state<ControlSectionId>("drill");
   let guidePopoverOpen = $state(false);
+  let openGuideFaqQuestion = $state<string | null>(null);
+  let hudContentWidth = $state<number | null>(null);
   let motionPaused = $state(false);
   let storageReady = $state(false);
   let hudAutoHideReady = $state(false);
@@ -505,6 +558,24 @@
   );
   let isMotMode = $derived(settings.presetId === "mot");
   let isLilacChaserMode = $derived(settings.presetId === "lilacChaser");
+  let availableControlSections = $derived(
+    controlSections.filter(
+      (section) => !section.hideForLilac || !isLilacChaserMode,
+    ),
+  );
+  let currentControlSection: ControlSectionId = $derived.by(() => {
+    const fallback = availableControlSections[0]?.id ?? "session";
+    return availableControlSections.some(
+      (section) => section.id === activeControlSection,
+    )
+      ? activeControlSection
+      : fallback;
+  });
+  let currentControlSectionLabel = $derived(
+    availableControlSections.find(
+      (section) => section.id === currentControlSection,
+    )?.label ?? "Controls",
+  );
   let activeTrainingModeGuide = $derived(
     getTrainingModeGuide(settings.presetId),
   );
@@ -707,6 +778,43 @@
   };
 
   const speedSliderValue = () => [settings.speed.value];
+
+  const hudControlEase = (t: number) => 1 - Math.pow(1 - t, 3);
+
+  const hudControlTransition = (
+    _node: Element,
+    { y = 2, duration = 100 }: { y?: number; duration?: number } = {},
+  ): TransitionConfig => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return { duration: 0 };
+    }
+
+    return {
+      duration,
+      easing: hudControlEase,
+      css: (t, u) => `
+        opacity: ${t};
+        transform: translate3d(0, ${y * u}px, 0) scale(${0.985 + t * 0.015});
+        transform-origin: center;
+      `,
+    };
+  };
+
+  const attachHudContentSizer: Attachment<HTMLDivElement> = (node) => {
+    const updateWidth = () => {
+      hudContentWidth = Math.ceil(node.getBoundingClientRect().width);
+    };
+
+    const resizeObserver = new ResizeObserver(updateWidth);
+    const animationFrame = requestAnimationFrame(updateWidth);
+
+    resizeObserver.observe(node);
+
+    return () => {
+      cancelAnimationFrame(animationFrame);
+      resizeObserver.disconnect();
+    };
+  };
 
   const setSpeedSliderValue = (value: number[] | undefined) => {
     const next = readSliderNumber(value);
@@ -1228,6 +1336,10 @@
     if (guidePopoverOpen) revealHud();
   };
 
+  const toggleGuideFaq = (question: string) => {
+    openGuideFaqQuestion = openGuideFaqQuestion === question ? null : question;
+  };
+
   const startHudAutoHideTimer = () => {
     clearHudAutoHideTimer();
     hudAutoHideReady = false;
@@ -1395,6 +1507,12 @@
     setMode(checked ? "dark" : "light");
   };
 
+  const openControlsPanel = () => {
+    revealHud();
+    activeControlSection = "targets";
+    panelOpen = true;
+  };
+
   const handlePresetChange = (value: string) => {
     applyPreset(value);
     syncBrowserPath();
@@ -1458,10 +1576,7 @@
   });
 </script>
 
-{#snippet settingHeader(
-  icon: "target" | "motion" | "eye" | "calibration" | "theme",
-  label: string,
-)}
+{#snippet settingHeader(icon: ControlIconId, label: string)}
   <div
     class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground"
   >
@@ -1477,6 +1592,8 @@
       {:else}
         <SunIcon class="size-4 text-accent" />
       {/if}
+    {:else if icon === "reset"}
+      <RotateCcwIcon class="size-4 text-accent" />
     {:else}
       <SettingsIcon class="size-4 text-accent" />
     {/if}
@@ -1545,6 +1662,516 @@
   </span>
 {/snippet}
 
+{#snippet controlSectionIcon(icon: ControlIconId)}
+  {#if icon === "target"}
+    <TargetIcon />
+  {:else if icon === "motion"}
+    <ActivityIcon />
+  {:else if icon === "eye"}
+    <EyeIcon />
+  {:else if icon === "theme"}
+    {#if colorMode === "dark"}
+      <MoonIcon />
+    {:else}
+      <SunIcon />
+    {/if}
+  {:else if icon === "reset"}
+    <RotateCcwIcon />
+  {:else}
+    <SettingsIcon />
+  {/if}
+{/snippet}
+
+{#snippet sessionControls()}
+  <section class="settings-section space-y-6">
+    {@render settingHeader("theme", "Session")}
+    <div class="grid gap-5">
+      <div class="flex min-h-12 items-center justify-between gap-4">
+        <div class="flex min-w-0 items-center gap-3">
+          {#if motionPaused}
+            <PlayIcon class="size-5 shrink-0 text-accent" />
+          {:else}
+            <PauseIcon class="size-5 shrink-0 text-accent" />
+          {/if}
+          <span class="truncate text-base font-medium">Motion</span>
+        </div>
+        <Button
+          class="pressable-ui"
+          variant="outline"
+          size="sm"
+          aria-pressed={motionPaused}
+          aria-describedby="trainer-motion-status"
+          onclick={toggleMotionPaused}
+        >
+          {motionPaused ? "Resume" : "Pause"}
+        </Button>
+      </div>
+
+      <div class="flex min-h-12 items-center justify-between gap-4">
+        <div class="flex min-w-0 items-center gap-3">
+          <ArrowLeftRightIcon class="size-5 shrink-0 text-accent" />
+          <span class="truncate text-base font-medium">Direction</span>
+        </div>
+        <Button
+          class="pressable-ui"
+          variant="outline"
+          size="sm"
+          aria-pressed={settings.motionDirection === -1}
+          aria-describedby="trainer-motion-status"
+          disabled={!canToggleDirection}
+          onclick={toggleMotionDirection}
+        >
+          {motionDirectionLabel}
+        </Button>
+      </div>
+
+      <div class="flex min-h-12 items-center justify-between gap-4">
+        <div class="flex min-w-0 items-center gap-3">
+          {#if isDarkMode}
+            <MoonIcon class="size-5 shrink-0 text-accent" />
+          {:else}
+            <SunIcon class="size-5 shrink-0 text-accent" />
+          {/if}
+          <span class="truncate text-base font-medium">Dark mode</span>
+        </div>
+        <Switch
+          checked={isDarkMode}
+          onCheckedChange={handleThemeCheckedChange}
+          aria-label="Use dark theme"
+        />
+      </div>
+    </div>
+  </section>
+{/snippet}
+
+{#snippet drillControls()}
+  <section class="settings-section space-y-6">
+    {@render settingHeader("target", "Drill")}
+    <Field.Field>
+      <Field.Label for="trainer-mode">Drill</Field.Label>
+      <Select.Root
+        type="single"
+        value={settings.presetId}
+        onValueChange={handlePresetChange}
+      >
+        <Select.Trigger id="trainer-mode" class="w-full" aria-label="Drill">
+          {getPresetName(settings.presetId)}
+        </Select.Trigger>
+        <Select.Content>
+          <Select.Group>
+            {#each exercisePresets as preset (preset.id)}
+              <Select.Item value={preset.id}>
+                {@render modeSelectLabel(preset.id, preset.name)}
+              </Select.Item>
+            {/each}
+          </Select.Group>
+        </Select.Content>
+      </Select.Root>
+    </Field.Field>
+
+    {#if settings.presetId === "pursuit"}
+      <Field.Field>
+        <Field.Label for="trainer-pattern">Motion path</Field.Label>
+        <Select.Root
+          type="single"
+          value={settings.patternId}
+          onValueChange={handlePatternChange}
+        >
+          <Select.Trigger
+            id="trainer-pattern"
+            class="w-full"
+            aria-label="Motion path"
+          >
+            {getPatternName(settings.patternId)}
+          </Select.Trigger>
+          <Select.Content class={patternSelectContentClass}>
+            {@render patternSelectGroups()}
+          </Select.Content>
+        </Select.Root>
+      </Field.Field>
+    {/if}
+
+    {#if !isLilacChaserMode}
+      <Field.Field>
+        <Field.Label for="trainer-behavior">Motion feel</Field.Label>
+        <Select.Root
+          type="single"
+          value={behaviorValue}
+          onValueChange={handleBehaviorChange}
+        >
+          <Select.Trigger
+            id="trainer-behavior"
+            class="w-full"
+            aria-label="Motion feel"
+          >
+            {getBehaviorName(behaviorValue)}
+          </Select.Trigger>
+          <Select.Content>
+            <Select.Group>
+              {#each behaviorOptions as option (option.id)}
+                <Select.Item value={option.id}>{option.name}</Select.Item>
+              {/each}
+            </Select.Group>
+          </Select.Content>
+        </Select.Root>
+      </Field.Field>
+    {:else}
+      <Field.Field>
+        <Field.Label for="lilac-chaser-color">Ball color</Field.Label>
+        <Select.Root
+          type="single"
+          value={settings.lilacChaserBallColor}
+          onValueChange={handleLilacChaserColorChange}
+        >
+          <Select.Trigger
+            id="lilac-chaser-color"
+            class="w-full"
+            aria-label="Lilac Chaser ball color"
+          >
+            {@render colorSelectLabel(
+              settings.lilacChaserBallColor,
+              getLilacChaserColorName(settings.lilacChaserBallColor),
+            )}
+          </Select.Trigger>
+          <Select.Content>
+            <Select.Group>
+              {#each lilacChaserColorOptions as option (option.id)}
+                <Select.Item value={option.id}>
+                  {@render colorSelectLabel(option.id, option.name)}
+                </Select.Item>
+              {/each}
+            </Select.Group>
+          </Select.Content>
+        </Select.Root>
+      </Field.Field>
+      <Field.Field>
+        {@render sliderRow("Scale", `${settings.lilacChaserScale.toFixed(2)}x`)}
+        <Slider
+          bind:value={
+            lilacChaserScaleSliderValue, setLilacChaserScaleSliderValue
+          }
+          min={0.75}
+          max={1.5}
+          step={0.05}
+          aria-label="Lilac Chaser scale"
+        />
+      </Field.Field>
+    {/if}
+  </section>
+{/snippet}
+
+{#snippet targetControls()}
+  <section class="settings-section space-y-6">
+    {@render settingHeader("eye", "Targets")}
+    {#if isMotMode}
+      <div class="space-y-4">
+        <Field.Field>
+          {@render sliderRow("Targets", String(settings.targetCount))}
+          <Slider
+            bind:value={targetCountSliderValue, setTargetCountSliderValue}
+            min={1}
+            max={6}
+            step={1}
+            aria-label="Targets"
+          />
+        </Field.Field>
+        <Field.Field>
+          {@render sliderRow("Distractors", String(settings.distractorCount))}
+          <Slider
+            bind:value={
+              distractorCountSliderValue, setDistractorCountSliderValue
+            }
+            min={0}
+            max={10}
+            step={1}
+            aria-label="Distractors"
+          />
+        </Field.Field>
+      </div>
+    {/if}
+
+    <Field.Field>
+      <label
+        class="flex h-11 min-w-0 cursor-pointer items-center gap-3 rounded-full border bg-input/50 px-3 transition-[color,box-shadow,background-color] hover:ring-4 hover:ring-ring/30"
+        for="trainer-color"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          class="size-6 shrink-0 rounded-full border shadow-sm"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="12" r="12" fill={settings.ballColor} />
+        </svg>
+        <span
+          class="min-w-0 truncate font-sans text-sm uppercase text-foreground"
+        >
+          {settings.ballColor}
+        </span>
+        <Input
+          id="trainer-color"
+          class="sr-only"
+          type="color"
+          value={settings.ballColor}
+          oninput={handleColorInput}
+          aria-label="Ball color"
+        />
+      </label>
+    </Field.Field>
+
+    {#if isMotMode}
+      <Field.Field>
+        {@render sliderRow(
+          "Distractor color",
+          `${Math.round(settings.distractorBrightness * 100)}%`,
+        )}
+        <Slider
+          bind:value={
+            distractorBrightnessSliderValue, setDistractorBrightnessSliderValue
+          }
+          min={0.35}
+          max={1}
+          step={0.01}
+          aria-label="Distractor color brightness"
+        />
+      </Field.Field>
+    {/if}
+
+    <Field.Field>
+      {@render sliderRow(
+        "Opacity",
+        `${Math.round(settings.targetOpacity * 100)}%`,
+      )}
+      <Slider
+        bind:value={opacitySliderValue, setOpacitySliderValue}
+        min={0}
+        max={1}
+        step={0.01}
+        aria-label="Target opacity"
+      />
+    </Field.Field>
+
+    <Field.Field>
+      <Field.Label for="trainer-shape">Shape</Field.Label>
+      <Select.Root
+        type="single"
+        value={settings.targetShape}
+        onValueChange={handleShapeChange}
+      >
+        <Select.Trigger id="trainer-shape" class="w-full" aria-label="Shape">
+          {getShapeName(settings.targetShape)}
+        </Select.Trigger>
+        <Select.Content>
+          <Select.Group>
+            {#each shapeOptions as option (option.id)}
+              <Select.Item value={option.id}>{option.name}</Select.Item>
+            {/each}
+          </Select.Group>
+        </Select.Content>
+      </Select.Root>
+    </Field.Field>
+
+    <Field.Field>
+      {@render sliderRow("Size", `${Math.round(settings.baseRadiusPx)} px`)}
+      <Slider
+        bind:value={sizeSliderValue, setSizeSliderValue}
+        min={4}
+        max={100}
+        step={1}
+        aria-label="Target size"
+      />
+    </Field.Field>
+
+    <div class="flex min-h-12 items-center justify-between gap-4">
+      <span class="text-base font-medium">Letter</span>
+      <Switch
+        bind:checked={settings.letterEnabled}
+        aria-label="Show target letters"
+      />
+    </div>
+
+    {#if settings.letterEnabled}
+      <Field.Field>
+        <Field.Label for="trainer-letter-color">Letter color</Field.Label>
+        <label
+          class="flex h-11 min-w-0 cursor-pointer items-center gap-3 rounded-full border bg-input/50 px-3 transition-[color,box-shadow,background-color] hover:ring-4 hover:ring-ring/30"
+          for="trainer-letter-color"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            class="size-6 shrink-0 rounded-full border bg-background shadow-sm"
+            aria-hidden="true"
+          >
+            <text
+              x="12"
+              y="12"
+              dominant-baseline="middle"
+              text-anchor="middle"
+              fill={settings.letterColor}
+              font-size="15"
+              font-weight={settings.letterWeight}
+              font-family="Geist, Arial, sans-serif"
+            >
+              A
+            </text>
+          </svg>
+          <span
+            class="min-w-0 truncate font-sans text-sm uppercase text-foreground"
+          >
+            {settings.letterColor}
+          </span>
+          <Input
+            id="trainer-letter-color"
+            class="sr-only"
+            type="color"
+            value={settings.letterColor}
+            oninput={handleLetterColorInput}
+            aria-label="Letter color"
+          />
+        </label>
+      </Field.Field>
+
+      <Field.Field>
+        <Field.Label for="trainer-letter-weight">Weight</Field.Label>
+        <Select.Root
+          type="single"
+          value={String(settings.letterWeight)}
+          onValueChange={handleLetterWeightChange}
+        >
+          <Select.Trigger
+            id="trainer-letter-weight"
+            class="w-full"
+            aria-label="Letter weight"
+          >
+            {getLetterWeightName(settings.letterWeight)}
+          </Select.Trigger>
+          <Select.Content>
+            <Select.Group>
+              {#each letterWeightOptions as option (option.id)}
+                <Select.Item value={String(option.id)}
+                  >{option.name}</Select.Item
+                >
+              {/each}
+            </Select.Group>
+          </Select.Content>
+        </Select.Root>
+      </Field.Field>
+
+      <Field.Field>
+        {@render sliderRow(
+          "Text size",
+          `${Math.round(settings.letterScale * 100)}%`,
+        )}
+        <Slider
+          bind:value={letterScaleSliderValue, setLetterScaleSliderValue}
+          min={0.45}
+          max={1.2}
+          step={0.01}
+          aria-label="Letter text size"
+        />
+      </Field.Field>
+    {/if}
+  </section>
+{/snippet}
+
+{#snippet motionControls()}
+  <section class="settings-section space-y-6">
+    {@render settingHeader("motion", "Motion")}
+    <Field.Field>
+      {@render sliderRow(
+        "Speed",
+        `${settings.speed.value.toFixed(1)} ${settings.speed.unit}`,
+      )}
+      <Slider
+        bind:value={speedSliderValue, setSpeedSliderValue}
+        min={0.5}
+        max={maxSpeedByUnit[settings.speed.unit]}
+        step={speedStepByUnit[settings.speed.unit]}
+        aria-label="Speed"
+      />
+    </Field.Field>
+
+    <Field.Field>
+      <Field.Label for="trainer-speed-unit">Unit</Field.Label>
+      <Select.Root
+        type="single"
+        value={settings.speed.unit}
+        onValueChange={handleSpeedUnitChange}
+      >
+        <Select.Trigger
+          id="trainer-speed-unit"
+          class="w-full"
+          aria-label="Speed unit"
+        >
+          {settings.speed.unit}
+        </Select.Trigger>
+        <Select.Content>
+          <Select.Group>
+            <Select.Item value="deg/s">deg/s</Select.Item>
+            <Select.Item value="cm/s">cm/s</Select.Item>
+            <Select.Item value="screen/s">screen/s</Select.Item>
+          </Select.Group>
+        </Select.Content>
+      </Select.Root>
+    </Field.Field>
+  </section>
+{/snippet}
+
+{#snippet screenControls()}
+  <section class="settings-section space-y-6">
+    {@render settingHeader("calibration", "Screen scale")}
+    <div class="grid gap-3 sm:grid-cols-2">
+      <Field.Field>
+        <Field.Label for="trainer-distance">Viewing distance</Field.Label>
+        <Input
+          id="trainer-distance"
+          class=""
+          type="number"
+          min="20"
+          max="120"
+          value={settings.calibration.viewingDistanceCm}
+          oninput={(event) =>
+            handleCalibrationInput(event, "viewingDistanceCm")}
+        />
+      </Field.Field>
+      <Field.Field>
+        <Field.Label for="trainer-css-px-cm">CSS pixels/cm</Field.Label>
+        <Input
+          id="trainer-css-px-cm"
+          class=""
+          type="number"
+          min="10"
+          max="120"
+          step="0.1"
+          value={settings.calibration.cssPxPerCm}
+          oninput={(event) => handleCalibrationInput(event, "cssPxPerCm")}
+        />
+      </Field.Field>
+    </div>
+    <div class="flex min-h-12 items-center justify-between gap-4">
+      <span class="text-base font-medium">Show trail</span>
+      <Switch bind:checked={settings.showTrail} aria-label="Show trail" />
+    </div>
+  </section>
+{/snippet}
+
+{#snippet defaultsControls()}
+  <section class="settings-section space-y-6">
+    {@render settingHeader("reset", "Defaults")}
+    <p class="text-sm leading-6 text-muted-foreground">
+      Restore the selected drill to its default behavior, visuals, calibration,
+      and saved local settings.
+    </p>
+    <Button
+      class="pressable-ui w-full justify-start"
+      variant="outline"
+      onclick={resetSettings}
+    >
+      <RotateCcwIcon class="size-4" />
+      <span class="pl-1">Reset to defaults</span>
+    </Button>
+  </section>
+{/snippet}
+
 <ModeWatcher track={false} defaultMode="system" />
 <svelte:window onpointermove={handleWindowPointerMove} />
 <svelte:document onvisibilitychange={handleVisibilityChange} />
@@ -1604,270 +2231,270 @@
     data-nosnippet
   >
     <header
-      class="trainer-hud flex min-h-12 max-w-full items-center gap-2 rounded-[2rem] border bg-popover/90 px-3 py-2 text-popover-foreground shadow-[0_18px_44px_-34px_rgba(20,24,22,0.42)] backdrop-blur-md sm:px-3.5 2xl:px-4 2xl:py-2.5"
+      class="trainer-hud min-h-12 max-w-full overflow-hidden rounded-[2rem] border bg-popover/90 px-4 py-2 text-popover-foreground shadow-[0_18px_44px_-34px_rgba(20,24,22,0.42)] backdrop-blur-md 2xl:py-2.5"
+      style:width={hudContentWidth === null
+        ? undefined
+        : `calc(${hudContentWidth}px + 2rem + 2px)`}
       aria-hidden={hudHidden}
       inert={hudHidden}
     >
-      <div class="flex shrink-0 items-center gap-2">
-        <svelte:element
-          this={activeRoute ? "div" : "h1"}
-          class="m-0 flex shrink-0 items-center text-base font-semibold tracking-tight text-foreground"
-          aria-label={activeRoute
-            ? undefined
-            : "FoveaFlow, free online eye trainer"}
-        >
-          <a
-            href="/"
-            class="flex shrink-0 items-center gap-2 rounded-2xl outline-none transition-colors hover:text-foreground/85 focus-visible:ring-3 focus-visible:ring-ring/30"
-            aria-label={`${siteMetadata.name} home`}
-          >
-            <img
-              src="/metadata/favicon-96x96.png"
-              alt=""
-              aria-hidden="true"
-              width="28"
-              height="28"
-              class="size-7 object-contain dark:hidden"
-            />
-            <img
-              src="/metadata/favicon-light-96x96.png"
-              alt=""
-              aria-hidden="true"
-              width="28"
-              height="28"
-              class="hidden size-7 object-contain dark:block"
-            />
-            <span class="sr-only xl:not-sr-only">{siteMetadata.name}</span>
-          </a>
-        </svelte:element>
-      </div>
-
       <div
-        class="hidden h-8 w-px shrink-0 bg-border/80 md:block"
-        aria-hidden="true"
-      ></div>
-
-      <div class="hidden min-w-0 items-center gap-2 md:flex">
-        <Select.Root
-          type="single"
-          value={settings.presetId}
-          onValueChange={handlePresetChange}
-          onOpenChange={handleHeaderPresetOpenChange}
-        >
-          <Select.Trigger
-            class={[
-              "overflow-hidden",
-              settings.presetId === "pursuit"
-                ? "w-36 lg:w-40 2xl:w-44"
-                : "w-52 lg:w-56 2xl:w-60",
-            ]}
-            aria-label="Drill"
+        {@attach attachHudContentSizer}
+        class="flex w-max items-center gap-2"
+      >
+        <div class="flex shrink-0 items-center gap-2">
+          <svelte:element
+            this={activeRoute ? "div" : "h1"}
+            class="m-0 flex shrink-0 items-center text-base font-semibold tracking-tight text-foreground"
+            aria-label={activeRoute
+              ? undefined
+              : "FoveaFlow, free online eye trainer"}
           >
-            {@render triggerLabel(getPresetName(settings.presetId))}
-          </Select.Trigger>
-          <Select.Content>
-            <Select.Group>
-              {#each exercisePresets as preset (preset.id)}
-                <Select.Item value={preset.id}>
-                  {@render modeSelectLabel(preset.id, preset.name)}
-                </Select.Item>
-              {/each}
-            </Select.Group>
-          </Select.Content>
-        </Select.Root>
-
-        {#if settings.presetId === "pursuit"}
-          <Select.Root
-            type="single"
-            value={settings.patternId}
-            onValueChange={handlePatternChange}
-            onOpenChange={handleHeaderPatternOpenChange}
-          >
-            <Select.Trigger
-              class="w-36 overflow-hidden lg:w-40 2xl:w-44"
-              aria-label="Motion path"
+            <a
+              href="/"
+              class="flex shrink-0 items-center gap-2 rounded-2xl outline-none transition-colors hover:text-foreground/85 focus-visible:ring-3 focus-visible:ring-ring/30"
+              aria-label={`${siteMetadata.name} home`}
             >
-              {@render triggerLabel(getPatternName(settings.patternId))}
-            </Select.Trigger>
-            <Select.Content class={patternSelectContentClass}>
-              {@render patternSelectGroups()}
-            </Select.Content>
-          </Select.Root>
-        {/if}
-      </div>
-
-      {#if !isLilacChaserMode}
-        <div class="hidden min-w-0 items-center gap-2 xl:flex">
-          <div
-            class="flex h-9 w-44 items-center gap-3 rounded-full border bg-muted/60 px-3 2xl:w-48"
-          >
-            <span class="w-8 text-xs font-medium text-muted-foreground 2xl:w-9">
-              Size
-            </span>
-            <Slider
-              bind:value={sizeSliderValue, setSizeSliderValue}
-              min={4}
-              max={100}
-              step={1}
-              aria-label="Header target size"
-            />
-            <span class="w-10 text-right text-xs font-semibold tabular-nums">
-              {Math.round(settings.baseRadiusPx)}
-            </span>
-          </div>
-
-          <div
-            class="flex h-9 w-44 items-center gap-3 rounded-full border bg-muted/60 px-3 2xl:w-48"
-          >
-            <span class="w-8 text-xs font-medium text-muted-foreground 2xl:w-9">
-              Speed
-            </span>
-            <Slider
-              bind:value={speedSliderValue, setSpeedSliderValue}
-              min={0.5}
-              max={maxSpeedByUnit[settings.speed.unit]}
-              step={speedStepByUnit[settings.speed.unit]}
-              aria-label="Header target speed"
-            />
-            <span class="w-12 text-right text-xs font-semibold tabular-nums">
-              {settings.speed.value.toFixed(1)}
-            </span>
-          </div>
+              <img
+                src="/metadata/favicon-96x96.png"
+                alt=""
+                aria-hidden="true"
+                width="28"
+                height="28"
+                class="size-7 object-contain dark:hidden"
+              />
+              <img
+                src="/metadata/favicon-light-96x96.png"
+                alt=""
+                aria-hidden="true"
+                width="28"
+                height="28"
+                class="hidden size-7 object-contain dark:block"
+              />
+              <span class="sr-only xl:not-sr-only">{siteMetadata.name}</span>
+            </a>
+          </svelte:element>
         </div>
-      {:else}
-        <div class="hidden min-w-0 items-center gap-2 xl:flex">
+
+        <div
+          class="hidden h-8 w-px shrink-0 bg-border/80 md:block"
+          aria-hidden="true"
+        ></div>
+
+        <div class="hidden shrink-0 items-center gap-2 md:flex">
           <Select.Root
             type="single"
-            value={settings.lilacChaserBallColor}
-            onValueChange={handleLilacChaserColorChange}
-            onOpenChange={handleHeaderLilacChaserColorOpenChange}
+            value={settings.presetId}
+            onValueChange={handlePresetChange}
+            onOpenChange={handleHeaderPresetOpenChange}
           >
             <Select.Trigger
-              class="w-36 overflow-hidden lg:w-40"
-              aria-label="Lilac Chaser ball color"
+              class={[
+                "overflow-hidden transition-[width] duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none",
+                settings.presetId === "pursuit"
+                  ? "w-36 lg:w-40 2xl:w-44"
+                  : "w-52 lg:w-56 2xl:w-60",
+              ]}
+              aria-label="Drill"
             >
-              {@render triggerLabel(
-                getLilacChaserColorName(settings.lilacChaserBallColor),
-              )}
+              {@render triggerLabel(getPresetName(settings.presetId))}
             </Select.Trigger>
             <Select.Content>
               <Select.Group>
-                {#each lilacChaserColorOptions as option (option.id)}
-                  <Select.Item value={option.id}>
-                    {@render colorSelectLabel(option.id, option.name)}
+                {#each exercisePresets as preset (preset.id)}
+                  <Select.Item value={preset.id}>
+                    {@render modeSelectLabel(preset.id, preset.name)}
                   </Select.Item>
                 {/each}
               </Select.Group>
             </Select.Content>
           </Select.Root>
-          <div
-            class="flex h-9 w-48 items-center gap-3 rounded-full border bg-muted/60 px-3 2xl:w-52"
-          >
-            <span class="w-9 text-xs font-medium text-muted-foreground">
-              Scale
-            </span>
-            <Slider
-              bind:value={
-                lilacChaserScaleSliderValue, setLilacChaserScaleSliderValue
-              }
-              min={0.75}
-              max={1.5}
-              step={0.05}
-              aria-label="Lilac Chaser scale"
-            />
-            <span class="w-12 text-right text-xs font-semibold tabular-nums">
-              {settings.lilacChaserScale.toFixed(2)}x
-            </span>
-          </div>
-        </div>
-      {/if}
 
-      <div
-        class="hidden h-8 w-px shrink-0 bg-border/80 md:block"
-        aria-hidden="true"
-      ></div>
-
-      <nav class="flex shrink-0 items-center gap-2" aria-label="App actions">
-        <Button
-          class="pressable-ui hidden sm:inline-flex"
-          variant="outline"
-          size="icon"
-          aria-label={motionPaused ? "Resume motion" : "Pause motion"}
-          aria-pressed={motionPaused}
-          aria-describedby="trainer-motion-status"
-          onclick={toggleMotionPaused}
-        >
-          {#if motionPaused}
-            <PlayIcon />
-          {:else}
-            <PauseIcon />
+          {#if settings.presetId === "pursuit"}
+            <div class="flex shrink-0" in:hudControlTransition>
+              <Select.Root
+                type="single"
+                value={settings.patternId}
+                onValueChange={handlePatternChange}
+                onOpenChange={handleHeaderPatternOpenChange}
+              >
+                <Select.Trigger
+                  class="w-36 overflow-hidden lg:w-40 2xl:w-44"
+                  aria-label="Motion path"
+                >
+                  {@render triggerLabel(getPatternName(settings.patternId))}
+                </Select.Trigger>
+                <Select.Content class={patternSelectContentClass}>
+                  {@render patternSelectGroups()}
+                </Select.Content>
+              </Select.Root>
+            </div>
           {/if}
-        </Button>
+        </div>
 
-        <Button
-          class="pressable-ui hidden sm:inline-flex"
-          variant="outline"
-          size="icon"
-          aria-label={motionDirectionToggleLabel}
-          aria-pressed={settings.motionDirection === -1}
-          aria-describedby="trainer-motion-status"
-          disabled={!canToggleDirection}
-          onclick={toggleMotionDirection}
-        >
-          <ArrowLeftRightIcon />
-        </Button>
+        {#if !isLilacChaserMode}
+          <div
+            class="hidden shrink-0 items-center gap-2 overflow-hidden xl:flex"
+            in:hudControlTransition
+          >
+            <div
+              class="flex h-9 w-44 items-center gap-3 rounded-full border bg-muted/60 px-3 2xl:w-48"
+            >
+              <span
+                class="w-8 text-xs font-medium text-muted-foreground 2xl:w-9"
+              >
+                Size
+              </span>
+              <Slider
+                bind:value={sizeSliderValue, setSizeSliderValue}
+                min={4}
+                max={100}
+                step={1}
+                aria-label="Header target size"
+              />
+              <span class="w-10 text-right text-xs font-semibold tabular-nums">
+                {Math.round(settings.baseRadiusPx)}
+              </span>
+            </div>
 
-        <Button
-          class="pressable-ui"
-          variant="outline"
-          size="icon"
-          href={siteMetadata.repositoryUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Open GitHub repository"
-        >
-          <svg viewBox="0 0 24 24" class="size-4" aria-hidden="true">
-            <path
-              fill="currentColor"
-              d="M12 2C6.48 2 2 6.58 2 12.24c0 4.52 2.87 8.35 6.84 9.7.5.1.68-.22.68-.5v-1.74c-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 5.94c.85 0 1.7.12 2.5.34 1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.8-4.57 5.06.36.32.68.94.68 1.9v2.8c0 .28.18.6.69.5A10.16 10.16 0 0 0 22 12.24C22 6.58 17.52 2 12 2Z"
-            />
-          </svg>
-        </Button>
+            <div
+              class="flex h-9 w-44 items-center gap-3 rounded-full border bg-muted/60 px-3 2xl:w-48"
+            >
+              <span
+                class="w-8 text-xs font-medium text-muted-foreground 2xl:w-9"
+              >
+                Speed
+              </span>
+              <Slider
+                bind:value={speedSliderValue, setSpeedSliderValue}
+                min={0.5}
+                max={maxSpeedByUnit[settings.speed.unit]}
+                step={speedStepByUnit[settings.speed.unit]}
+                aria-label="Header target speed"
+              />
+              <span class="w-12 text-right text-xs font-semibold tabular-nums">
+                {settings.speed.value.toFixed(1)}
+              </span>
+            </div>
+          </div>
+        {:else}
+          <div
+            class="hidden shrink-0 items-center gap-2 overflow-hidden xl:flex"
+            in:hudControlTransition
+          >
+            <Select.Root
+              type="single"
+              value={settings.lilacChaserBallColor}
+              onValueChange={handleLilacChaserColorChange}
+              onOpenChange={handleHeaderLilacChaserColorOpenChange}
+            >
+              <Select.Trigger
+                class="w-36 overflow-hidden lg:w-40"
+                aria-label="Lilac Chaser ball color"
+              >
+                {@render triggerLabel(
+                  getLilacChaserColorName(settings.lilacChaserBallColor),
+                )}
+              </Select.Trigger>
+              <Select.Content>
+                <Select.Group>
+                  {#each lilacChaserColorOptions as option (option.id)}
+                    <Select.Item value={option.id}>
+                      {@render colorSelectLabel(option.id, option.name)}
+                    </Select.Item>
+                  {/each}
+                </Select.Group>
+              </Select.Content>
+            </Select.Root>
+            <div
+              class="flex h-9 w-48 items-center gap-3 rounded-full border bg-muted/60 px-3 2xl:w-52"
+            >
+              <span class="w-9 text-xs font-medium text-muted-foreground">
+                Scale
+              </span>
+              <Slider
+                bind:value={
+                  lilacChaserScaleSliderValue, setLilacChaserScaleSliderValue
+                }
+                min={0.75}
+                max={1.5}
+                step={0.05}
+                aria-label="Lilac Chaser scale"
+              />
+              <span class="w-12 text-right text-xs font-semibold tabular-nums">
+                {settings.lilacChaserScale.toFixed(2)}x
+              </span>
+            </div>
+          </div>
+        {/if}
 
-        <Button
-          class="pressable-ui"
-          variant="outline"
-          size="icon"
-          aria-label={activeRoute
-            ? `Open ${guideSeoContent.heading} guide`
-            : "About FoveaFlow eye trainer"}
-          title={activeRoute ? "Open guide" : "About FoveaFlow"}
-          popovertarget="trainer-guide-popover"
-          onclick={revealHud}
-        >
-          <BookOpenIcon />
-        </Button>
+        <div
+          class="hidden h-8 w-px shrink-0 bg-border/80 md:block"
+          aria-hidden="true"
+        ></div>
 
-        <Button
-          class="pressable-ui"
-          variant="outline"
-          size="icon"
-          aria-label="Open controls"
-          onclick={() => {
-            revealHud();
-            panelOpen = true;
-          }}
-        >
-          <SettingsIcon />
-        </Button>
-      </nav>
+        <nav class="flex shrink-0 items-center gap-2" aria-label="App actions">
+          <Button
+            class="pressable-ui hidden sm:inline-flex"
+            variant="outline"
+            size="icon"
+            aria-label={motionPaused ? "Resume motion" : "Pause motion"}
+            aria-pressed={motionPaused}
+            aria-describedby="trainer-motion-status"
+            onclick={toggleMotionPaused}
+          >
+            {#if motionPaused}
+              <PlayIcon />
+            {:else}
+              <PauseIcon />
+            {/if}
+          </Button>
+
+          <Button
+            class="pressable-ui hidden sm:inline-flex"
+            variant="outline"
+            size="icon"
+            aria-label={motionDirectionToggleLabel}
+            aria-pressed={settings.motionDirection === -1}
+            aria-describedby="trainer-motion-status"
+            disabled={!canToggleDirection}
+            onclick={toggleMotionDirection}
+          >
+            <ArrowLeftRightIcon />
+          </Button>
+
+          <Button
+            class="pressable-ui"
+            variant="outline"
+            size="icon"
+            aria-label={activeRoute
+              ? `Open ${guideSeoContent.heading} guide`
+              : "About FoveaFlow eye trainer"}
+            title={activeRoute ? "Open guide" : "About FoveaFlow"}
+            popovertarget="trainer-guide-popover"
+            onclick={revealHud}
+          >
+            <BookOpenIcon />
+          </Button>
+
+          <Button
+            class="pressable-ui"
+            variant="outline"
+            size="icon"
+            aria-label="Open controls"
+            onclick={openControlsPanel}
+          >
+            <SettingsIcon />
+          </Button>
+        </nav>
+      </div>
     </header>
   </div>
 
   <section
     id="trainer-guide-popover"
     popover="auto"
-    class="native-dialog-popover native-guide-popover relative rounded-4xl bg-popover p-6 text-sm text-popover-foreground shadow-xl ring-1 ring-foreground/5 outline-none duration-100 dark:ring-foreground/10 sm:p-8"
+    class="native-dialog-popover t-resize native-guide-popover relative rounded-4xl bg-popover p-6 text-sm text-popover-foreground shadow-xl ring-1 ring-foreground/5 outline-none [animation-duration:100ms] dark:ring-foreground/10 sm:p-8"
     aria-labelledby="trainer-guide-popover-title"
     ontoggle={handleGuidePopoverToggle}
   >
@@ -1975,25 +2602,46 @@
           </h3>
 
           <div class="mt-6 divide-y divide-border/40">
-            {#each guideSeoContent.faq.slice(0, 3) as faqItem (faqItem.question)}
-              <details class="group py-4 first:pt-0 last:pb-0">
-                <summary
-                  class="flex min-h-10 cursor-pointer list-none items-center justify-between gap-3 text-sm font-semibold text-foreground outline-none transition-colors duration-150 ease-out hover:text-foreground/90 focus-visible:ring-3 focus-visible:ring-ring/30 [&::-webkit-details-marker]:hidden"
+            {#each guideSeoContent.faq.slice(0, 3) as faqItem, index (faqItem.question)}
+              {@const faqOpen = openGuideFaqQuestion === faqItem.question}
+              <div class="py-4 first:pt-0 last:pb-0">
+                <button
+                  type="button"
+                  class="flex min-h-10 w-full cursor-pointer items-center justify-between gap-3 text-left text-sm font-semibold text-foreground outline-none transition-colors duration-150 ease-out hover:text-foreground/90 focus-visible:ring-3 focus-visible:ring-ring/30"
+                  aria-expanded={faqOpen}
+                  aria-controls={`trainer-guide-faq-answer-${index}`}
+                  onclick={() => toggleGuideFaq(faqItem.question)}
                 >
                   <span>{faqItem.question}</span>
                   <span
-                    class="flex size-6 shrink-0 items-center justify-center rounded-full text-base leading-none text-muted-foreground transition-transform duration-200 ease-out group-open:rotate-45"
+                    class={[
+                      "flex size-6 shrink-0 items-center justify-center rounded-full text-base leading-none text-muted-foreground transition-transform duration-200 ease-out",
+                      faqOpen && "rotate-45",
+                    ]}
                     aria-hidden="true"
                   >
                     +
                   </span>
-                </summary>
-                <p
-                  class="pb-1 text-sm leading-6 text-muted-foreground text-pretty"
+                </button>
+                <div
+                  id={`trainer-guide-faq-answer-${index}`}
+                  class={[
+                    "grid overflow-hidden transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none",
+                    faqOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+                  ]}
                 >
-                  {faqItem.answer}
-                </p>
-              </details>
+                  <div class="min-h-0 overflow-hidden">
+                    <p
+                      class={[
+                        "pb-1 text-sm leading-6 text-muted-foreground text-pretty transition-opacity duration-200 ease-out motion-reduce:transition-none",
+                        faqOpen ? "opacity-100" : "opacity-0",
+                      ]}
+                    >
+                      {faqItem.answer}
+                    </p>
+                  </div>
+                </div>
+              </div>
             {/each}
           </div>
 
@@ -2185,533 +2833,72 @@
     {/if}
   </section>
 
-  <Sheet bind:open={panelOpen}>
-    <SheetContent class="min-w-0 overflow-x-hidden overflow-y-auto">
-      <SheetHeader>
-        <SheetTitle>Controls</SheetTitle>
-        <SheetDescription>Change your saved settings.</SheetDescription>
-      </SheetHeader>
-
-      <div class="grid min-w-0 gap-7 px-4 pb-12 text-sm">
-        <section class="settings-section space-y-4">
-          {@render settingHeader("theme", "Theme")}
-          <Item.Root variant="outline" size="sm" class="min-h-11 sm:hidden">
-            <Item.Media
-              variant="icon"
-              class="size-9 rounded-lg border bg-muted text-accent"
-            >
-              {#if motionPaused}
-                <PlayIcon class="size-4" />
-              {:else}
-                <PauseIcon class="size-4" />
-              {/if}
-            </Item.Media>
-            <Item.Content>
-              <Item.Title>Motion</Item.Title>
-            </Item.Content>
-            <Item.Actions>
-              <Button
-                class="pressable-ui"
-                variant="outline"
-                size="sm"
-                aria-pressed={motionPaused}
-                aria-describedby="trainer-motion-status"
-                onclick={toggleMotionPaused}
-              >
-                {motionPaused ? "Resume" : "Pause"}
-              </Button>
-            </Item.Actions>
-          </Item.Root>
-
-          <Item.Root variant="outline" size="sm" class="min-h-11">
-            <Item.Media
-              variant="icon"
-              class="size-9 rounded-lg border bg-muted text-accent"
-            >
-              {#if isDarkMode}
-                <MoonIcon class="size-4" />
-              {:else}
-                <SunIcon class="size-4" />
-              {/if}
-            </Item.Media>
-            <Item.Content>
-              <Item.Title>Dark mode</Item.Title>
-            </Item.Content>
-            <Item.Actions>
-              <Switch
-                checked={isDarkMode}
-                onCheckedChange={handleThemeCheckedChange}
-                aria-label="Use dark theme"
-              />
-            </Item.Actions>
-          </Item.Root>
-        </section>
-
-        <section
-          class="settings-section space-y-4 border-t border-border/60 pt-7"
-        >
-          {@render settingHeader("target", "Drill")}
-          <Field.Field>
-            <Field.Label for="trainer-mode">Drill</Field.Label>
-            <Select.Root
-              type="single"
-              value={settings.presetId}
-              onValueChange={handlePresetChange}
-            >
-              <Select.Trigger
-                id="trainer-mode"
-                class="w-full"
-                aria-label="Drill"
-              >
-                {getPresetName(settings.presetId)}
-              </Select.Trigger>
-              <Select.Content>
-                <Select.Group>
-                  {#each exercisePresets as preset (preset.id)}
-                    <Select.Item value={preset.id}>
-                      {@render modeSelectLabel(preset.id, preset.name)}
-                    </Select.Item>
+  <Dialog.Root bind:open={panelOpen}>
+    <Dialog.Content
+      class="overflow-hidden p-0 md:max-h-[500px] md:max-w-[700px] lg:max-w-[800px]"
+      trapFocus={false}
+    >
+      <Dialog.Title class="sr-only">Controls</Dialog.Title>
+      <Dialog.Description class="sr-only">
+        Change your saved FoveaFlow settings.
+      </Dialog.Description>
+      <Sidebar.Provider class="items-start">
+        <Sidebar.Root collapsible="none" class="hidden md:flex">
+          <Sidebar.Content>
+            <Sidebar.Group>
+              <Sidebar.GroupContent>
+                <Sidebar.Menu>
+                  {#each availableControlSections as section (section.id)}
+                    <Sidebar.MenuItem>
+                      <Sidebar.MenuButton
+                        isActive={currentControlSection === section.id}
+                        onclick={() => (activeControlSection = section.id)}
+                      >
+                        {@render controlSectionIcon(section.icon)}
+                        <span>{section.label}</span>
+                      </Sidebar.MenuButton>
+                    </Sidebar.MenuItem>
                   {/each}
-                </Select.Group>
-              </Select.Content>
-            </Select.Root>
-          </Field.Field>
+                </Sidebar.Menu>
+              </Sidebar.GroupContent>
+            </Sidebar.Group>
+          </Sidebar.Content>
+        </Sidebar.Root>
 
-          {#if settings.presetId === "pursuit"}
-            <Field.Field>
-              <Field.Label for="trainer-pattern">Motion path</Field.Label>
-              <Select.Root
-                type="single"
-                value={settings.patternId}
-                onValueChange={handlePatternChange}
+        <main class="flex h-[480px] flex-1 flex-col overflow-hidden">
+          <header
+            class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12"
+          >
+            <div class="flex min-w-0 items-center gap-2 px-4 text-base">
+              <span class="shrink-0 text-muted-foreground"> Controls </span>
+              <span class="shrink-0 text-muted-foreground" aria-hidden="true"
+                >›</span
               >
-                <Select.Trigger
-                  id="trainer-pattern"
-                  class="w-full"
-                  aria-label="Motion path"
-                >
-                  {getPatternName(settings.patternId)}
-                </Select.Trigger>
-                <Select.Content class={patternSelectContentClass}>
-                  {@render patternSelectGroups()}
-                </Select.Content>
-              </Select.Root>
-            </Field.Field>
-          {/if}
-
-          {#if !isLilacChaserMode}
-            <Field.Field>
-              <Field.Label for="trainer-behavior">Motion feel</Field.Label>
-              <Select.Root
-                type="single"
-                value={behaviorValue}
-                onValueChange={handleBehaviorChange}
-              >
-                <Select.Trigger
-                  id="trainer-behavior"
-                  class="w-full"
-                  aria-label="Motion feel"
-                >
-                  {getBehaviorName(behaviorValue)}
-                </Select.Trigger>
-                <Select.Content>
-                  <Select.Group>
-                    {#each behaviorOptions as option (option.id)}
-                      <Select.Item value={option.id}>
-                        {option.name}
-                      </Select.Item>
-                    {/each}
-                  </Select.Group>
-                </Select.Content>
-              </Select.Root>
-            </Field.Field>
-          {:else}
-            <Field.Field>
-              <Field.Label for="lilac-chaser-color">Ball color</Field.Label>
-              <Select.Root
-                type="single"
-                value={settings.lilacChaserBallColor}
-                onValueChange={handleLilacChaserColorChange}
-              >
-                <Select.Trigger
-                  id="lilac-chaser-color"
-                  class="w-full"
-                  aria-label="Lilac Chaser ball color"
-                >
-                  {@render colorSelectLabel(
-                    settings.lilacChaserBallColor,
-                    getLilacChaserColorName(settings.lilacChaserBallColor),
-                  )}
-                </Select.Trigger>
-                <Select.Content>
-                  <Select.Group>
-                    {#each lilacChaserColorOptions as option (option.id)}
-                      <Select.Item value={option.id}>
-                        {@render colorSelectLabel(option.id, option.name)}
-                      </Select.Item>
-                    {/each}
-                  </Select.Group>
-                </Select.Content>
-              </Select.Root>
-            </Field.Field>
-            <Field.Field>
-              {@render sliderRow(
-                "Scale",
-                `${settings.lilacChaserScale.toFixed(2)}x`,
-              )}
-              <Slider
-                bind:value={
-                  lilacChaserScaleSliderValue, setLilacChaserScaleSliderValue
-                }
-                min={0.75}
-                max={1.5}
-                step={0.05}
-                aria-label="Lilac Chaser scale"
-              />
-            </Field.Field>
-          {/if}
-
-          {#if isMotMode}
-            <div class="space-y-5 pt-1">
-              {@render settingHeader("eye", "Objects")}
-              <Field.Field>
-                {@render sliderRow("Targets", String(settings.targetCount))}
-                <Slider
-                  bind:value={targetCountSliderValue, setTargetCountSliderValue}
-                  min={1}
-                  max={6}
-                  step={1}
-                  aria-label="Targets"
-                />
-              </Field.Field>
-              <Field.Field>
-                {@render sliderRow(
-                  "Distractors",
-                  String(settings.distractorCount),
-                )}
-                <Slider
-                  bind:value={
-                    distractorCountSliderValue, setDistractorCountSliderValue
-                  }
-                  min={0}
-                  max={10}
-                  step={1}
-                  aria-label="Distractors"
-                />
-              </Field.Field>
+              <h2 class="truncate font-medium">
+                {currentControlSectionLabel}
+              </h2>
             </div>
-          {/if}
-        </section>
+          </header>
 
-        {#if !isLilacChaserMode}
-          <section
-            class="settings-section space-y-4 border-t border-border/60 pt-7"
-          >
-            {@render settingHeader("eye", "Color")}
-            <Field.Field>
-              <label
-                class="flex h-11 min-w-0 cursor-pointer items-center gap-3 rounded-full border bg-input/50 px-3 transition-[color,box-shadow,background-color] hover:ring-4 hover:ring-ring/30"
-                for="trainer-color"
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  class="size-6 shrink-0 rounded-full border shadow-sm"
-                  aria-hidden="true"
-                >
-                  <circle cx="12" cy="12" r="12" fill={settings.ballColor} />
-                </svg>
-                <span
-                  class="min-w-0 truncate font-sans text-sm uppercase text-foreground"
-                >
-                  {settings.ballColor}
-                </span>
-                <Input
-                  id="trainer-color"
-                  class="sr-only"
-                  type="color"
-                  value={settings.ballColor}
-                  oninput={handleColorInput}
-                  aria-label="Ball color"
-                />
-              </label>
-            </Field.Field>
-
-            {#if isMotMode}
-              <Field.Field>
-                {@render sliderRow(
-                  "Distractor color",
-                  `${Math.round(settings.distractorBrightness * 100)}%`,
-                )}
-                <Slider
-                  bind:value={
-                    distractorBrightnessSliderValue,
-                    setDistractorBrightnessSliderValue
-                  }
-                  min={0.35}
-                  max={1}
-                  step={0.01}
-                  aria-label="Distractor color brightness"
-                />
-              </Field.Field>
-            {/if}
-
-            <Field.Field>
-              {@render sliderRow(
-                "Opacity",
-                `${Math.round(settings.targetOpacity * 100)}%`,
-              )}
-              <Slider
-                bind:value={opacitySliderValue, setOpacitySliderValue}
-                min={0}
-                max={1}
-                step={0.01}
-                aria-label="Target opacity"
-              />
-            </Field.Field>
-          </section>
-
-          <section
-            class="settings-section space-y-4 border-t border-border/60 pt-7"
-          >
-            {@render settingHeader("eye", "Shape")}
-            <Field.Field>
-              <Field.Label for="trainer-shape">Shape</Field.Label>
-              <Select.Root
-                type="single"
-                value={settings.targetShape}
-                onValueChange={handleShapeChange}
-              >
-                <Select.Trigger
-                  id="trainer-shape"
-                  class="w-full"
-                  aria-label="Shape"
-                >
-                  {getShapeName(settings.targetShape)}
-                </Select.Trigger>
-                <Select.Content>
-                  <Select.Group>
-                    {#each shapeOptions as option (option.id)}
-                      <Select.Item value={option.id}>
-                        {option.name}
-                      </Select.Item>
-                    {/each}
-                  </Select.Group>
-                </Select.Content>
-              </Select.Root>
-            </Field.Field>
-
-            <Field.Field>
-              {@render sliderRow(
-                "Size",
-                `${Math.round(settings.baseRadiusPx)} px`,
-              )}
-              <Slider
-                bind:value={sizeSliderValue, setSizeSliderValue}
-                min={4}
-                max={100}
-                step={1}
-                aria-label="Target size"
-              />
-            </Field.Field>
-
-            <Item.Root variant="outline" size="sm" class="min-h-11">
-              <Item.Content>
-                <Item.Title>Letter</Item.Title>
-              </Item.Content>
-              <Item.Actions>
-                <Switch
-                  bind:checked={settings.letterEnabled}
-                  aria-label="Show target letters"
-                />
-              </Item.Actions>
-            </Item.Root>
-
-            {#if settings.letterEnabled}
-              <Field.Field>
-                <Field.Label for="trainer-letter-color"
-                  >Letter color</Field.Label
-                >
-                <label
-                  class="flex h-11 min-w-0 cursor-pointer items-center gap-3 rounded-full border bg-input/50 px-3 transition-[color,box-shadow,background-color] hover:ring-4 hover:ring-ring/30"
-                  for="trainer-letter-color"
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    class="size-6 shrink-0 rounded-full border bg-background shadow-sm"
-                    aria-hidden="true"
-                  >
-                    <text
-                      x="12"
-                      y="12"
-                      dominant-baseline="middle"
-                      text-anchor="middle"
-                      fill={settings.letterColor}
-                      font-size="15"
-                      font-weight={settings.letterWeight}
-                      font-family="Geist, Arial, sans-serif"
-                    >
-                      A
-                    </text>
-                  </svg>
-                  <span
-                    class="min-w-0 truncate font-sans text-sm uppercase text-foreground"
-                  >
-                    {settings.letterColor}
-                  </span>
-                  <Input
-                    id="trainer-letter-color"
-                    class="sr-only"
-                    type="color"
-                    value={settings.letterColor}
-                    oninput={handleLetterColorInput}
-                    aria-label="Letter color"
-                  />
-                </label>
-              </Field.Field>
-
-              <Field.Field>
-                <Field.Label for="trainer-letter-weight">Weight</Field.Label>
-                <Select.Root
-                  type="single"
-                  value={String(settings.letterWeight)}
-                  onValueChange={handleLetterWeightChange}
-                >
-                  <Select.Trigger
-                    id="trainer-letter-weight"
-                    class="w-full"
-                    aria-label="Letter weight"
-                  >
-                    {getLetterWeightName(settings.letterWeight)}
-                  </Select.Trigger>
-                  <Select.Content>
-                    <Select.Group>
-                      {#each letterWeightOptions as option (option.id)}
-                        <Select.Item value={String(option.id)}>
-                          {option.name}
-                        </Select.Item>
-                      {/each}
-                    </Select.Group>
-                  </Select.Content>
-                </Select.Root>
-              </Field.Field>
-
-              <Field.Field>
-                {@render sliderRow(
-                  "Text size",
-                  `${Math.round(settings.letterScale * 100)}%`,
-                )}
-                <Slider
-                  bind:value={letterScaleSliderValue, setLetterScaleSliderValue}
-                  min={0.45}
-                  max={1.2}
-                  step={0.01}
-                  aria-label="Letter text size"
-                />
-              </Field.Field>
-            {/if}
-          </section>
-
-          <section
-            class="settings-section space-y-4 border-t border-border/60 pt-7"
-          >
-            {@render settingHeader("motion", "Motion")}
-            <Field.Field>
-              {@render sliderRow(
-                "Speed",
-                `${settings.speed.value.toFixed(1)} ${settings.speed.unit}`,
-              )}
-              <Slider
-                bind:value={speedSliderValue, setSpeedSliderValue}
-                min={0.5}
-                max={maxSpeedByUnit[settings.speed.unit]}
-                step={speedStepByUnit[settings.speed.unit]}
-                aria-label="Speed"
-              />
-            </Field.Field>
-
-            <Field.Field>
-              <Field.Label for="trainer-speed-unit">Unit</Field.Label>
-              <Select.Root
-                type="single"
-                value={settings.speed.unit}
-                onValueChange={handleSpeedUnitChange}
-              >
-                <Select.Trigger
-                  id="trainer-speed-unit"
-                  class="w-full"
-                  aria-label="Speed unit"
-                >
-                  {settings.speed.unit}
-                </Select.Trigger>
-                <Select.Content>
-                  <Select.Group>
-                    <Select.Item value="deg/s">deg/s</Select.Item>
-                    <Select.Item value="cm/s">cm/s</Select.Item>
-                    <Select.Item value="screen/s">screen/s</Select.Item>
-                  </Select.Group>
-                </Select.Content>
-              </Select.Root>
-            </Field.Field>
-          </section>
-
-          <section
-            class="settings-section space-y-4 border-t border-border/60 pt-7"
-          >
-            {@render settingHeader("calibration", "Screen scale")}
-            <div class="grid grid-cols-2 gap-2">
-              <Field.Field>
-                <Field.Label for="trainer-distance"
-                  >Viewing distance</Field.Label
-                >
-                <Input
-                  id="trainer-distance"
-                  type="number"
-                  min="20"
-                  max="120"
-                  value={settings.calibration.viewingDistanceCm}
-                  oninput={(event) =>
-                    handleCalibrationInput(event, "viewingDistanceCm")}
-                />
-              </Field.Field>
-              <Field.Field>
-                <Field.Label for="trainer-css-px-cm">CSS pixels/cm</Field.Label>
-                <Input
-                  id="trainer-css-px-cm"
-                  type="number"
-                  min="10"
-                  max="120"
-                  step="0.1"
-                  value={settings.calibration.cssPxPerCm}
-                  oninput={(event) =>
-                    handleCalibrationInput(event, "cssPxPerCm")}
-                />
-              </Field.Field>
+          <div class="flex flex-1 flex-col gap-4 overflow-y-auto p-4 pt-0">
+            <div class="max-w-3xl rounded-xl bg-muted/50 p-4">
+              {#if currentControlSection === "session"}
+                {@render sessionControls()}
+              {:else if currentControlSection === "drill"}
+                {@render drillControls()}
+              {:else if currentControlSection === "targets"}
+                {@render targetControls()}
+              {:else if currentControlSection === "motion"}
+                {@render motionControls()}
+              {:else if currentControlSection === "screen"}
+                {@render screenControls()}
+              {:else}
+                {@render defaultsControls()}
+              {/if}
             </div>
-            <Item.Root variant="outline" size="sm" class="min-h-11">
-              <Item.Content>
-                <Item.Title>Show trail</Item.Title>
-              </Item.Content>
-              <Item.Actions>
-                <Switch
-                  bind:checked={settings.showTrail}
-                  aria-label="Show trail"
-                />
-              </Item.Actions>
-            </Item.Root>
-          </section>
-        {/if}
-
-        <section class="settings-section border-t border-border/60 pt-7">
-          <Button
-            class="pressable-ui w-full justify-start"
-            variant="outline"
-            onclick={resetSettings}
-          >
-            <RotateCcwIcon class="size-4" />
-            <span class="pl-1">Reset to defaults</span>
-          </Button>
-        </section>
-      </div>
-    </SheetContent>
-  </Sheet>
+          </div>
+        </main>
+      </Sidebar.Provider>
+    </Dialog.Content>
+  </Dialog.Root>
 </main>

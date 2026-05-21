@@ -18,6 +18,10 @@
   font-display: swap;
 }
 
+* {
+  letter-spacing: -0.02em !important;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme {
@@ -194,14 +198,14 @@ canvas {
   --chart-4: oklch(0.532 0.157 131.589);
   --chart-5: oklch(0.453 0.124 130.933);
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.648 0.2 131.684);
-  --sidebar-primary-foreground: oklch(0.986 0.031 120.757);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.709 0 0);
+  --sidebar: var(--popover);
+  --sidebar-foreground: var(--popover-foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--muted);
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
 }
 
 .dark {
@@ -229,14 +233,14 @@ canvas {
   --chart-3: oklch(0.648 0.2 131.684);
   --chart-4: oklch(0.532 0.157 131.589);
   --chart-5: oklch(0.453 0.124 130.933);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.768 0.233 130.85);
-  --sidebar-primary-foreground: oklch(0.274 0.072 132.109);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  --sidebar: var(--popover);
+  --sidebar-foreground: var(--popover-foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--muted);
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
 }
 
 @layer base {
@@ -370,6 +374,13 @@ canvas {
     animation-duration: 220ms;
   }
 
+  .t-resize {
+    transition-property: width, height;
+    transition-duration: 300ms;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: width, height;
+  }
+
   .native-dialog-popover {
     display: none;
     inset: auto;
@@ -418,9 +429,10 @@ canvas {
     opacity: 1;
     animation: trainer-hud-enter 360ms cubic-bezier(0.32, 0.72, 0, 1) backwards;
     transition:
+      width 300ms cubic-bezier(0.22, 1, 0.36, 1),
       transform 300ms cubic-bezier(0.32, 0.72, 0, 1),
       opacity 180ms ease;
-    will-change: transform, opacity;
+    will-change: width, transform, opacity;
   }
 
   .trainer-hud-shell[data-hidden="true"] .trainer-hud {
@@ -465,7 +477,8 @@ canvas {
     .native-dialog-popover:popover-open,
     .native-dialog-popover::backdrop,
     .trainer-hud,
-    .trainer-hud-peek {
+    .trainer-hud-peek,
+    .t-resize {
       animation: none;
       transition: none;
       will-change: auto;
