@@ -68,6 +68,8 @@ export const trainingModeGuides = [
   },
 ] as const;
 
+export type TrainingModeGuide = (typeof trainingModeGuides)[number];
+
 export const trainingModeNotes = trainingModeGuides.map((guide) => ({
   title: guide.title,
   body: guide.summary,

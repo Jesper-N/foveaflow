@@ -11,7 +11,11 @@ export const normalizeSeed = (seed: number) => {
   return normalized === 0 ? 1 : normalized;
 };
 
-export const seededRandom = (seed: number, index: number) => {
+export const createSessionSeed = (random = Math.random) => {
+  return Math.floor(random() * 2_147_483_646) + 1;
+};
+
+const seededRandom = (seed: number, index: number) => {
   let value = normalizeSeed(seed + index * 374_761_393);
   value = (value ^ (value >>> 13)) * 1_274_126_177;
   value = (value ^ (value >>> 16)) >>> 0;
@@ -35,13 +39,4 @@ export const createRng = (seed: number): Rng => {
     randomAt,
     rangeAt: (index, min, max) => min + (max - min) * randomAt(index),
   };
-};
-
-export const seededRange = (
-  seed: number,
-  index: number,
-  min: number,
-  max: number,
-) => {
-  return min + (max - min) * seededRandom(seed, index);
 };

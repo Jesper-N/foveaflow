@@ -14,6 +14,7 @@ const HARD_TURN_RANDOM_OFFSET = 40_000;
 const HARD_TURN_RANDOM_STRIDE = 60;
 const HARD_TURN_CANDIDATE_COUNT = 24;
 const HARD_TURN_MIN_DISTANCE_RATIO = 0.55;
+const HARD_TURN_RETAINED_SEGMENTS = 2;
 const clamp = (value: number, min: number, max: number) =>
   Math.min(max, Math.max(min, value));
 
@@ -156,6 +157,7 @@ let randomWalkState: RandomWalkState | null = null;
 type HardTurnWaypointCache = {
   seed: number;
   key: string;
+  startIndex: number;
   points: Array<[number, number]>;
   distances: number[];
 };
@@ -178,6 +180,35 @@ type MotParamsCache = {
 };
 
 let motParamsCache: MotParamsCache | null = null;
+
+const resolvePatternBounds = (
+  arena: Arena,
+  radiusPx: number,
+  pathMarginPx = 16,
+) => {
+  const requestedMargin = Math.max(pathMarginPx, radiusPx + 8);
+  const maxMargin = Math.max(1, Math.min(arena.width, arena.height) / 2);
+  const margin = Math.min(requestedMargin, maxMargin);
+  const left = margin;
+  const top = margin;
+  const right = Math.max(left, arena.width - margin);
+  const bottom = Math.max(top, arena.height - margin);
+  const width = Math.max(1, right - left);
+  const height = Math.max(1, bottom - top);
+
+  return {
+    left,
+    top,
+    right,
+    bottom,
+    width,
+    height,
+    centerX: arena.width / 2,
+    centerY: arena.height / 2,
+    radiusX: Math.max(1, width / 2),
+    radiusY: Math.max(1, height / 2),
+  };
+};
 
 export const withIsolatedPatternSampling = <Result>(
   samplePreview: () => Result,
@@ -244,18 +275,30 @@ const getHardTurnWaypoint = (
     hardTurnWaypointCache = {
       seed: rng.seed,
       key,
+      startIndex: 0,
       points: [],
       distances: [],
     };
   }
 
-  const points = hardTurnWaypointCache.points;
-  const distances = hardTurnWaypointCache.distances;
+  const cache = hardTurnWaypointCache;
+  if (index < cache.startIndex) {
+    cache.startIndex = 0;
+    cache.points = [];
+    cache.distances = [];
+  }
+
+  const points = cache.points;
+  const distances = cache.distances;
   const width = Math.max(1, right - left);
   const height = Math.max(1, bottom - top);
   const minDistance = Math.min(width, height) * HARD_TURN_MIN_DISTANCE_RATIO;
 
-  for (let pointIndex = points.length; pointIndex <= index; pointIndex += 1) {
+  for (
+    let pointIndex = cache.startIndex + points.length;
+    pointIndex <= index;
+    pointIndex += 1
+  ) {
     if (pointIndex === 0) {
       points.push([
         rng.rangeAt(HARD_TURN_RANDOM_OFFSET, left, right),
@@ -265,7 +308,8 @@ const getHardTurnWaypoint = (
       continue;
     }
 
-    const previous = points[pointIndex - 1];
+    const previous = points[pointIndex - cache.startIndex - 1];
+    const previousDistance = distances[pointIndex - cache.startIndex - 1];
     let best: [number, number] | null = null;
     let bestDistance = -1;
 
@@ -301,10 +345,26 @@ const getHardTurnWaypoint = (
     const next = best ?? previous;
     const length = Math.hypot(next[0] - previous[0], next[1] - previous[1]);
     points.push(next);
-    distances.push(distances[pointIndex - 1] + length);
+    distances.push(previousDistance + length);
   }
 
-  return points[index];
+  return points[index - cache.startIndex];
+};
+
+const trimHardTurnWaypointCache = (segmentStartIndex: number) => {
+  const cache = hardTurnWaypointCache;
+  if (!cache) return;
+
+  const retainedStartIndex = Math.max(
+    0,
+    segmentStartIndex - HARD_TURN_RETAINED_SEGMENTS,
+  );
+  const trimCount = retainedStartIndex - cache.startIndex;
+  if (trimCount <= 0) return;
+
+  cache.points.splice(0, trimCount);
+  cache.distances.splice(0, trimCount);
+  cache.startIndex = retainedStartIndex;
 };
 
 const sampleHardTurnPath = (
@@ -323,11 +383,16 @@ const sampleHardTurnPath = (
   const cache = hardTurnWaypointCache;
   if (!cache) return firstPoint;
 
+  if (cache.distances[0] > distancePx) {
+    hardTurnWaypointCache = null;
+    return sampleHardTurnPath(rng, key, travelPx, left, top, right, bottom);
+  }
+
   while (cache.distances[cache.distances.length - 1] < distancePx) {
     getHardTurnWaypoint(
       rng,
       key,
-      cache.points.length,
+      cache.startIndex + cache.points.length,
       left,
       top,
       right,
@@ -335,23 +400,26 @@ const sampleHardTurnPath = (
     );
   }
 
-  let low = 1;
-  let high = cache.distances.length - 1;
+  let low = cache.startIndex + 1;
+  let high = cache.startIndex + cache.distances.length - 1;
   while (low < high) {
     const middle = Math.floor((low + high) / 2);
-    if (cache.distances[middle] < distancePx) low = middle + 1;
-    else high = middle;
+    if (cache.distances[middle - cache.startIndex] < distancePx) {
+      low = middle + 1;
+    } else high = middle;
   }
 
   const endIndex = low;
-  const start = cache.points[endIndex - 1];
-  const end = cache.points[endIndex];
-  const startDistance = cache.distances[endIndex - 1];
-  const segmentLength = cache.distances[endIndex] - startDistance;
+  const cacheEndIndex = endIndex - cache.startIndex;
+  const start = cache.points[cacheEndIndex - 1];
+  const end = cache.points[cacheEndIndex];
+  const startDistance = cache.distances[cacheEndIndex - 1];
+  const segmentLength = cache.distances[cacheEndIndex] - startDistance;
 
   if (segmentLength <= 0) return start;
 
   const progress = (distancePx - startDistance) / segmentLength;
+  trimHardTurnWaypointCache(endIndex - 1);
   return [
     start[0] + (end[0] - start[0]) * progress,
     start[1] + (end[1] - start[1]) * progress,
@@ -527,11 +595,7 @@ export const getTeleportJumpDistancePx = (
   radiusPx: number,
   pathMarginPx = 16,
 ) => {
-  const requestedMargin = Math.max(pathMarginPx, radiusPx + 8);
-  const maxMargin = Math.max(1, Math.min(arena.width, arena.height) / 2);
-  const margin = Math.min(requestedMargin, maxMargin);
-  const width = Math.max(1, arena.width - margin * 2);
-  const height = Math.max(1, arena.height - margin * 2);
+  const { width, height } = resolvePatternBounds(arena, radiusPx, pathMarginPx);
   return clamp(Math.min(width, height) * 0.55, 420, 820);
 };
 
@@ -544,19 +608,18 @@ export const samplePatternInto = (
   rng: Rng,
 ): number => {
   const radiusPx = Math.max(1, params.radiusPx);
-  const requestedMargin = Math.max(params.pathMarginPx ?? 16, radiusPx + 8);
-  const maxMargin = Math.max(1, Math.min(arena.width, arena.height) / 2);
-  const margin = Math.min(requestedMargin, maxMargin);
-  const left = margin;
-  const top = margin;
-  const right = Math.max(left, arena.width - margin);
-  const bottom = Math.max(top, arena.height - margin);
-  const width = Math.max(1, right - left);
-  const height = Math.max(1, bottom - top);
-  const cx = arena.width / 2;
-  const cy = arena.height / 2;
-  const rx = Math.max(1, width / 2);
-  const ry = Math.max(1, height / 2);
+  const {
+    left,
+    top,
+    right,
+    bottom,
+    width,
+    height,
+    centerX: cx,
+    centerY: cy,
+    radiusX: rx,
+    radiusY: ry,
+  } = resolvePatternBounds(arena, radiusPx, params.pathMarginPx);
   const speedPxPerSec = Math.max(1, params.speedPxPerSec);
   const travelPx = params.travelPx || elapsedSec * speedPxPerSec;
   const primaryColor = params.colorA ?? DEFAULT_TARGET_COLOR;
@@ -803,7 +866,7 @@ export const samplePatternInto = (
       const y = top + (height * index) / (lanes - 1);
       return [x, y] satisfies [number, number];
     });
-    const [x, y] = pointOnSegment(points, travelPx * 1.08, true);
+    const [x, y] = pointOnSegment(points, travelPx * 1.08);
     return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
   }
 
@@ -818,7 +881,7 @@ export const samplePatternInto = (
         top + (row * height) / Math.max(1, rows - 1),
       ] satisfies [number, number];
     });
-    const [x, y] = pointOnSegment(points, travelPx * 0.72, true);
+    const [x, y] = pointOnSegment(points, travelPx * 0.72);
     return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
   }
 
@@ -928,5 +991,6 @@ export const samplePattern = (
 ) => {
   const frames: TargetFrame[] = [];
   const count = samplePatternInto(frames, id, elapsedSec, arena, params, rng);
-  return frames.slice(0, count);
+  frames.length = count;
+  return frames;
 };

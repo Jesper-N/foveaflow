@@ -1,6 +1,6 @@
 const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-export const LETTER_INTERVAL_SEC = 2;
-export const DEFAULT_REACTION_JUMP_DISTANCE_PX = 420;
+const LETTER_INTERVAL_SEC = 2;
+const DEFAULT_REACTION_JUMP_DISTANCE_PX = 420;
 
 export const getLetterForBucket = (
   seed: number,

@@ -1,4 +1,3 @@
-import { patternOptions } from "./presets";
 import { samplePatternInto, withIsolatedPatternSampling } from "./patterns";
 import { createRng } from "./random";
 import type { Arena, PatternId, PatternParams, TargetFrame } from "./types";
@@ -8,7 +7,7 @@ const previewArena: Arena = {
   height: 32,
 };
 
-const previewParams: PatternParams = {
+const defaultPreviewParams: PatternParams = {
   radiusPx: 2,
   pathMarginPx: 4,
   speedPxPerSec: 1,
@@ -55,32 +54,23 @@ const buildPreviewPath = (patternId: PatternId) => {
     const frames: TargetFrame[] = [];
     const rng = createRng(previewSeed);
     const travelPx = getPreviewTravelPx(patternId);
+    const previewParams = { ...defaultPreviewParams };
+    const points: Array<[number, number]> = [];
 
-    const points = Array.from({ length: previewSampleCount }, (_, index) => {
+    for (let index = 0; index < previewSampleCount; index += 1) {
       const progress = index / Math.max(1, previewSampleCount - 1);
+      previewParams.travelPx = progress * travelPx;
 
-      samplePatternInto(
-        frames,
-        patternId,
-        0,
-        previewArena,
-        {
-          ...previewParams,
-          travelPx: progress * travelPx,
-        },
-        rng,
-      );
+      samplePatternInto(frames, patternId, 0, previewArena, previewParams, rng);
 
       const frame = frames.find((targetFrame) => targetFrame.role === "target");
-      return frame ? [frame.x, frame.y] : null;
-    }).filter((point): point is [number, number] => Boolean(point));
-
-    if (points.length === 0) return "";
+      if (frame) points.push([frame.x, frame.y]);
+    }
 
     return points
-      .map((point, index) => {
+      .map(([x, y], index) => {
         const command = index === 0 ? "M" : "L";
-        return `${command}${formatPoint(point[0])} ${formatPoint(point[1])}`;
+        return `${command}${formatPoint(x)} ${formatPoint(y)}`;
       })
       .join(" ");
   });
@@ -94,7 +84,3 @@ export const getPatternPreviewPath = (patternId: PatternId) => {
   previewCache.set(patternId, previewPath);
   return previewPath;
 };
-
-export const previewablePatternIds = patternOptions
-  .filter((patternOption) => patternOption.id !== "multipleObjectTracking")
-  .map((patternOption) => patternOption.id);

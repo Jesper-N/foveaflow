@@ -216,7 +216,7 @@
             </h2>
           </div>
 
-          <Table.Root class="min-w-[46rem]">
+          <Table.Root class="min-w-184">
             <Table.Header>
               <Table.Row class="hover:bg-transparent">
                 <Table.Head class="w-[28%]">Question</Table.Head>

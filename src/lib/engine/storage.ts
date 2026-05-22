@@ -2,12 +2,9 @@ import type { TrainerSettings } from "./presets";
 
 const SETTINGS_KEY = "foveaflow.settings.v2";
 
-export type StoredSettings = Partial<TrainerSettings>;
+export type StoredSettings = Record<string, unknown>;
 
-type TimerApi<TimerId> = {
-  setTimeout: (callback: () => void, delayMs: number) => TimerId;
-  clearTimeout: (timerId: TimerId) => void;
-};
+type TimerId = ReturnType<typeof setTimeout>;
 
 const hasBrowserStorage = () =>
   typeof window !== "undefined" && "localStorage" in window;
@@ -20,7 +17,7 @@ const parseJson = (value: string | null): StoredSettings | null => {
   if (!value) return null;
   try {
     const parsed: unknown = JSON.parse(value);
-    return isRecord(parsed) ? (parsed as StoredSettings) : null;
+    return isRecord(parsed) ? parsed : null;
   } catch {
     return null;
   }
@@ -40,29 +37,20 @@ export const saveSettings = (settings: TrainerSettings) => {
   try {
     window.localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
   } catch {
-    // Storage can be unavailable or full. Training must keep running.
+    return;
   }
 };
 
-const defaultTimers: TimerApi<ReturnType<typeof setTimeout>> = {
-  setTimeout: (callback, timeoutDelayMs) =>
-    globalThis.setTimeout(callback, timeoutDelayMs),
-  clearTimeout: (timerId) => globalThis.clearTimeout(timerId),
-};
-
-export const createDebouncedSettingsSaver = <
-  TimerId = ReturnType<typeof setTimeout>,
->(
+export const createDebouncedSettingsSaver = (
   persist: (settings: TrainerSettings) => void = saveSettings,
   delayMs = 250,
-  timers: TimerApi<TimerId> = defaultTimers as unknown as TimerApi<TimerId>,
 ) => {
   let timeout: TimerId | undefined;
   let latestSettings: TrainerSettings | undefined;
 
   const clearPendingTimeout = () => {
     if (timeout === undefined) return;
-    timers.clearTimeout(timeout);
+    globalThis.clearTimeout(timeout);
     timeout = undefined;
   };
 
@@ -79,7 +67,7 @@ export const createDebouncedSettingsSaver = <
     schedule(settings: TrainerSettings) {
       latestSettings = settings;
       clearPendingTimeout();
-      timeout = timers.setTimeout(flush, delayMs);
+      timeout = globalThis.setTimeout(flush, delayMs);
     },
     flush,
     cancel() {

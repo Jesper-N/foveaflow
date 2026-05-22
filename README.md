@@ -1,10 +1,10 @@
 # FoveaFlow - Free Online Eye Trainer
 
-[![Astro](https://img.shields.io/badge/Astro-6.3.1-ff5d01?logo=astro&logoColor=white)](https://astro.build/)
-[![Svelte](https://img.shields.io/badge/Svelte-5.55.5-ff3e00?logo=svelte&logoColor=white)](https://svelte.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Astro](https://img.shields.io/badge/Astro-6.3.3-ff5d01?logo=astro&logoColor=white)](https://astro.build/)
+[![Svelte](https://img.shields.io/badge/Svelte-5.55.7-ff3e00?logo=svelte&logoColor=white)](https://svelte.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.0.3-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Bun](https://img.shields.io/badge/Bun-ready-000000?logo=bun&logoColor=white)](https://bun.sh/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.2.4-38bdf8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.3.0-38bdf8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 [FoveaFlow](https://foveaflow.com/) is a free online eye trainer for visual tracking, quick refocus, peripheral awareness, and FPS warmups. It includes Smooth Pursuit paths, Reaction Jumps, Lilac Chaser peripheral focus practice, random motion, and distractor tracking.
@@ -80,7 +80,8 @@ http://127.0.0.1:4321
 ```text
 src/pages/                 Astro routes
 src/lib/components/        Svelte app and UI components
-src/lib/engine/            Training patterns, profiles, metrics, safety, storage
+src/lib/trainer/           Trainer UI state, rendering, and settings helpers
+src/lib/engine/            Training patterns, profiles, safety, storage
 src/styles/                Global styles and Tailwind setup
 public/metadata/           Generated icons and social images
 ```
@@ -90,9 +91,8 @@ public/metadata/           Generated icons and social images
 Run the same checks before shipping changes:
 
 ```bash
-bun run lint
-bun run format
-bun run check
+bun run format:svelte
+bun run verify
 ```
 
 Use `bun run format:svelte` when you only need to format source files after Svelte, Astro, TypeScript, or CSS edits.

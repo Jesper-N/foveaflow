@@ -410,6 +410,9 @@ export const findTrainerRoute = (slug: string | undefined) => {
   return trainerRoutes.find((route) => route.slug === slug) ?? null;
 };
 
+export const getRouteSlugFromPath = (path: string) =>
+  path.split("?")[0]?.split("/").filter(Boolean)[0] ?? "";
+
 export const getTrainerRoute = (mode: TrainingMode, patternId: PatternId) => {
   if (mode === "reactionTime") return findTrainerRoute("reaction-jumps");
   if (mode === "mot") return findTrainerRoute("multiple-distractions");

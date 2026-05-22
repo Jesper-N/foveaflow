@@ -64,9 +64,3 @@ export type PatternParams = {
   colorA?: string;
   colorB?: string;
 };
-
-export type FpsStats = {
-  average: number;
-  p95FrameMs: number;
-  droppedFrames: number;
-};

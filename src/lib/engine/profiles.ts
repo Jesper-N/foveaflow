@@ -31,6 +31,7 @@ export type SizeProfile =
 
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
 const clampSize = (value: number) => Math.min(100, Math.max(1, value));
+const FULL_CIRCLE_RADIANS = Math.PI * 2;
 
 const phase = (elapsedSec: number, periodSec: number) => {
   if (periodSec <= 0) return 0;
@@ -40,6 +41,20 @@ const phase = (elapsedSec: number, periodSec: number) => {
 const smoothStep = (value: number) => {
   const progress = clamp01(value);
   return progress * progress * (3 - 2 * progress);
+};
+
+const sineWave = (elapsedSec: number, periodSec: number) => {
+  return (
+    (Math.sin(
+      (phase(elapsedSec, periodSec) / periodSec) * FULL_CIRCLE_RADIANS,
+    ) +
+      1) /
+    2
+  );
+};
+
+const interpolate = (from: number, to: number, progress: number) => {
+  return from + (to - from) * progress;
 };
 
 export const sampleSpeedProfile = (
@@ -53,18 +68,13 @@ export const sampleSpeedProfile = (
 
     case "sine": {
       if (profile.periodSec <= 0) return basePxPerSec * profile.minMultiplier;
-      const wave =
-        (Math.sin(
-          (phase(elapsedSec, profile.periodSec) / profile.periodSec) *
-            Math.PI *
-            2,
-        ) +
-          1) /
-        2;
       return (
         basePxPerSec *
-        (profile.minMultiplier +
-          (profile.maxMultiplier - profile.minMultiplier) * wave)
+        interpolate(
+          profile.minMultiplier,
+          profile.maxMultiplier,
+          sineWave(elapsedSec, profile.periodSec),
+        )
       );
     }
 
@@ -88,7 +98,7 @@ export const sampleSpeedProfile = (
       const localSec = phase(elapsedSec, intervalSec);
       const transitionStart = intervalSec - transitionSec;
       const blend = smoothStep((localSec - transitionStart) / transitionSec);
-      return basePxPerSec * (current + (next - current) * blend);
+      return basePxPerSec * interpolate(current, next, blend);
     }
 
     case "loopRamp": {
@@ -101,8 +111,7 @@ export const sampleSpeedProfile = (
         const blend = smoothStep(cycleSec / rampSec);
         return (
           basePxPerSec *
-          (profile.fromMultiplier +
-            (profile.toMultiplier - profile.fromMultiplier) * blend)
+          interpolate(profile.fromMultiplier, profile.toMultiplier, blend)
         );
       }
 
@@ -111,8 +120,7 @@ export const sampleSpeedProfile = (
       const blend = smoothStep((cycleSec - rampSec) / resetSec);
       return (
         basePxPerSec *
-        (profile.toMultiplier +
-          (profile.fromMultiplier - profile.toMultiplier) * blend)
+        interpolate(profile.toMultiplier, profile.fromMultiplier, blend)
       );
     }
   }
@@ -129,18 +137,13 @@ export const sampleSizeProfile = (
 
     case "pulse": {
       if (profile.periodSec <= 0) return clampSize(baseRadiusPx);
-      const wave =
-        (Math.sin(
-          (phase(elapsedSec, profile.periodSec) / profile.periodSec) *
-            Math.PI *
-            2,
-        ) +
-          1) /
-        2;
       return clampSize(
         baseRadiusPx *
-          (profile.minMultiplier +
-            (profile.maxMultiplier - profile.minMultiplier) * wave),
+          interpolate(
+            profile.minMultiplier,
+            profile.maxMultiplier,
+            sineWave(elapsedSec, profile.periodSec),
+          ),
       );
     }
   }

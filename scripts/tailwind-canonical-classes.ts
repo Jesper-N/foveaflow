@@ -1,11 +1,10 @@
 import { createRequire } from "node:module";
-import { readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { dirname, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { __unstable__loadDesignSystem } from "tailwindcss";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
-const write = process.argv.includes("--write");
 const require = createRequire(import.meta.url);
 const sourceExtensions = new Set([
   ".astro",
@@ -17,6 +16,7 @@ const sourceExtensions = new Set([
   ".ts",
   ".tsx",
 ]);
+const ignoredSourceDirs = new Set(["src/lib/components/ui"]);
 
 type Edit = {
   file: string;
@@ -136,6 +136,9 @@ function tokens(value: string) {
 function listSourceFiles(dir: string): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const path = resolve(dir, entry.name);
+    const relativePath = relative(root, path).split(sep).join("/");
+
+    if (entry.isDirectory() && ignoredSourceDirs.has(relativePath)) return [];
 
     if (entry.isDirectory()) return listSourceFiles(path);
     if (!entry.isFile()) return [];
@@ -203,22 +206,4 @@ for (const edit of edits) {
   console.log(`${file} ${edit.from} -> ${edit.to}`);
 }
 
-if (!write) process.exit(1);
-
-for (const file of new Set(edits.map((edit) => edit.file))) {
-  const text = sources.find((source) => source.file === file)?.text ?? "";
-  const next = edits
-    .filter((edit) => edit.file === file)
-    .sort((a, b) => b.start - a.start)
-    .reduce(
-      (current, edit) =>
-        `${current.substring(0, edit.start)}${edit.to}${current.substring(
-          edit.end,
-        )}`,
-      text,
-    );
-
-  if (next !== text) writeFileSync(file, next);
-}
-
-console.log(`Applied ${edits.length} canonical class replacement(s).`);
+process.exit(1);
