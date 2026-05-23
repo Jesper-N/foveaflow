@@ -3,8 +3,6 @@
   import type { Attachment } from "svelte/attachments";
   import { ModeWatcher, mode, setMode } from "mode-watcher";
 
-  import TrainerControlsDialog from "$lib/components/trainer/TrainerControlsDialog.svelte";
-  import TrainerGuidePopover from "$lib/components/trainer/TrainerGuidePopover.svelte";
   import TrainerHud from "$lib/components/trainer/TrainerHud.svelte";
   import {
     DEFAULT_CALIBRATION,
@@ -97,6 +95,11 @@
   } from "$lib/trainer/rendering";
   import { createHudControlTransition } from "$lib/trainer/transitions";
 
+  type TrainerControlsDialogComponent =
+    (typeof import("$lib/components/trainer/TrainerControlsDialog.svelte"))["default"];
+  type TrainerGuidePopoverComponent =
+    (typeof import("$lib/components/trainer/TrainerGuidePopover.svelte"))["default"];
+
   let { routeSlug = "" }: { routeSlug?: string } = $props();
 
   let canvas!: HTMLCanvasElement;
@@ -157,6 +160,8 @@
   let headerPresetSelectOpen = $state(false);
   let headerPatternSelectOpen = $state(false);
   let headerLilacChaserColorSelectOpen = $state(false);
+  let ControlsDialog = $state<TrainerControlsDialogComponent | null>(null);
+  let GuidePopover = $state<TrainerGuidePopoverComponent | null>(null);
   let colorMode = $derived.by<CanvasColorMode>(() => {
     const nextMode = mode.current;
     if (nextMode === "light" || nextMode === "dark") return nextMode;
@@ -240,6 +245,8 @@
   let hudHideTimeout: number | undefined;
   let cursorHideTimeout: number | undefined;
   let cursorHideDeadline = 0;
+  let controlsDialogLoad: Promise<void> | null = null;
+  let guidePopoverLoad: Promise<void> | null = null;
   const settingsSaver = createDebouncedSettingsSaver();
 
   $effect(() => {
@@ -811,10 +818,41 @@
     setMode(checked ? "dark" : "light");
   };
 
+  const loadControlsDialog = () => {
+    if (ControlsDialog) return Promise.resolve();
+    controlsDialogLoad ??=
+      import("$lib/components/trainer/TrainerControlsDialog.svelte").then(
+        ({ default: component }) => {
+          ControlsDialog = component;
+        },
+      );
+    return controlsDialogLoad;
+  };
+
+  const loadGuidePopover = () => {
+    if (GuidePopover) return Promise.resolve();
+    guidePopoverLoad ??=
+      import("$lib/components/trainer/TrainerGuidePopover.svelte").then(
+        ({ default: component }) => {
+          GuidePopover = component;
+        },
+      );
+    return guidePopoverLoad;
+  };
+
+  const openGuidePopover = () => {
+    revealHud();
+    void loadGuidePopover().then(() => {
+      const guidePopover = document.getElementById("trainer-guide-popover");
+      if (guidePopover instanceof HTMLElement) guidePopover.showPopover();
+    });
+  };
+
   const openControlsPanel = () => {
     revealHud();
     activeControlSection = "targets";
     panelOpen = true;
+    void loadControlsDialog();
   };
 
   const handlePresetChange = (value: string) => {
@@ -949,64 +987,69 @@
     {toggleMotionPaused}
     {toggleMotionDirection}
     {revealHud}
+    {openGuidePopover}
     {openControlsPanel}
   />
 
-  <TrainerGuidePopover
-    {activeTrainingModeGuide}
-    {guideSeoContent}
-    {guideUseCases}
-    hasActiveRoute={Boolean(activeRoute)}
-    {openGuideFaqQuestion}
-    onGuidePopoverToggle={handleGuidePopoverToggle}
-    {toggleGuideFaq}
-  />
+  {#if GuidePopover}
+    <GuidePopover
+      {activeTrainingModeGuide}
+      {guideSeoContent}
+      {guideUseCases}
+      hasActiveRoute={Boolean(activeRoute)}
+      {openGuideFaqQuestion}
+      onGuidePopoverToggle={handleGuidePopoverToggle}
+      {toggleGuideFaq}
+    />
+  {/if}
 
-  <TrainerControlsDialog
-    bind:open={panelOpen}
-    bind:settings
-    {availableControlSections}
-    {currentControlSection}
-    {currentControlSectionLabel}
-    onControlSectionChange={setActiveControlSection}
-    {motionPaused}
-    {motionDirectionLabel}
-    {canToggleDirection}
-    {colorMode}
-    {isDarkMode}
-    {isMotMode}
-    {isLilacChaserMode}
-    {behaviorValue}
-    {patternSelectContentClass}
-    {handlePresetChange}
-    {handlePatternChange}
-    {handleBehaviorChange}
-    {handleLilacChaserColorChange}
-    {handleShapeChange}
-    {handleLetterWeightChange}
-    {handleThemeCheckedChange}
-    {handleSpeedUnitChange}
-    {handleColorInput}
-    {handleLetterColorInput}
-    {handleCalibrationInput}
-    {speedSliderValue}
-    {setSpeedSliderValue}
-    {sizeSliderValue}
-    {setSizeSliderValue}
-    {lilacChaserScaleSliderValue}
-    {setLilacChaserScaleSliderValue}
-    {opacitySliderValue}
-    {setOpacitySliderValue}
-    {targetCountSliderValue}
-    {setTargetCountSliderValue}
-    {distractorCountSliderValue}
-    {setDistractorCountSliderValue}
-    {distractorBrightnessSliderValue}
-    {setDistractorBrightnessSliderValue}
-    {letterScaleSliderValue}
-    {setLetterScaleSliderValue}
-    {toggleMotionPaused}
-    {toggleMotionDirection}
-    {resetSettings}
-  />
+  {#if ControlsDialog}
+    <ControlsDialog
+      bind:open={panelOpen}
+      bind:settings
+      {availableControlSections}
+      {currentControlSection}
+      {currentControlSectionLabel}
+      onControlSectionChange={setActiveControlSection}
+      {motionPaused}
+      {motionDirectionLabel}
+      {canToggleDirection}
+      {colorMode}
+      {isDarkMode}
+      {isMotMode}
+      {isLilacChaserMode}
+      {behaviorValue}
+      {patternSelectContentClass}
+      {handlePresetChange}
+      {handlePatternChange}
+      {handleBehaviorChange}
+      {handleLilacChaserColorChange}
+      {handleShapeChange}
+      {handleLetterWeightChange}
+      {handleThemeCheckedChange}
+      {handleSpeedUnitChange}
+      {handleColorInput}
+      {handleLetterColorInput}
+      {handleCalibrationInput}
+      {speedSliderValue}
+      {setSpeedSliderValue}
+      {sizeSliderValue}
+      {setSizeSliderValue}
+      {lilacChaserScaleSliderValue}
+      {setLilacChaserScaleSliderValue}
+      {opacitySliderValue}
+      {setOpacitySliderValue}
+      {targetCountSliderValue}
+      {setTargetCountSliderValue}
+      {distractorCountSliderValue}
+      {setDistractorCountSliderValue}
+      {distractorBrightnessSliderValue}
+      {setDistractorBrightnessSliderValue}
+      {letterScaleSliderValue}
+      {setLetterScaleSliderValue}
+      {toggleMotionPaused}
+      {toggleMotionDirection}
+      {resetSettings}
+    />
+  {/if}
 </main>

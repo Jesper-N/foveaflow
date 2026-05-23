@@ -27,42 +27,6 @@ const pingPong = (value: number, length: number) => {
   return wrapped <= length ? wrapped : length * 2 - wrapped;
 };
 
-const pointOnSegment = (
-  points: Array<[number, number]>,
-  distancePx: number,
-  closed = true,
-) => {
-  if (points.length === 0) return [0, 0] satisfies [number, number];
-  if (points.length === 1) return points[0];
-
-  let totalLength = 0;
-  const segmentCount = closed ? points.length : points.length - 1;
-  for (let index = 0; index < segmentCount; index += 1) {
-    const start = points[index];
-    const end = points[(index + 1) % points.length];
-    totalLength += Math.hypot(end[0] - start[0], end[1] - start[1]);
-  }
-
-  if (totalLength <= 0) return points[0];
-
-  let remaining = positiveModulo(distancePx, totalLength);
-  for (let index = 0; index < segmentCount; index += 1) {
-    const start = points[index];
-    const end = points[(index + 1) % points.length];
-    const length = Math.hypot(end[0] - start[0], end[1] - start[1]);
-    if (remaining <= length) {
-      const progress = length <= 0 ? 0 : remaining / length;
-      return [
-        start[0] + (end[0] - start[0]) * progress,
-        start[1] + (end[1] - start[1]) * progress,
-      ] satisfies [number, number];
-    }
-    remaining -= length;
-  }
-
-  return points[0];
-};
-
 const curveCacheKey = (
   id: PatternId,
   left: number,
@@ -86,6 +50,19 @@ const sampleClosedCurve = (
   return sampleCurvePath(cachedCurve, travelPx);
 };
 
+const sampleClosedPolyline = (
+  key: string,
+  travelPx: number,
+  pointCount: number,
+  pointAt: (index: number) => [number, number],
+) => {
+  if (cachedPolyline?.key !== key) {
+    cachedPolyline = buildClosedPolyline(key, pointCount, pointAt);
+  }
+
+  return sampleCurvePath(cachedPolyline, travelPx);
+};
+
 type CurvePath = {
   key: string;
   points: Array<[number, number]>;
@@ -94,6 +71,7 @@ type CurvePath = {
 };
 
 let cachedCurve: CurvePath | null = null;
+let cachedPolyline: CurvePath | null = null;
 
 const buildClosedCurve = (
   key: string,
@@ -109,6 +87,37 @@ const buildClosedCurve = (
   }
 
   for (let index = 0; index < samples; index += 1) {
+    const start = points[index];
+    const end = points[index + 1];
+    const length = Math.hypot(end[0] - start[0], end[1] - start[1]);
+    lengths.push(length);
+    totalLength += length;
+  }
+
+  return { key, points, lengths, totalLength };
+};
+
+const buildClosedPolyline = (
+  key: string,
+  pointCount: number,
+  pointAt: (index: number) => [number, number],
+): CurvePath => {
+  const points: Array<[number, number]> = [];
+  const lengths: number[] = [];
+  let totalLength = 0;
+
+  for (let index = 0; index < pointCount; index += 1) {
+    points.push(pointAt(index));
+  }
+
+  if (points.length === 0) {
+    points.push([0, 0]);
+    return { key, points, lengths, totalLength };
+  }
+
+  points.push(points[0]);
+
+  for (let index = 0; index < pointCount; index += 1) {
     const start = points[index];
     const end = points[index + 1];
     const length = Math.hypot(end[0] - start[0], end[1] - start[1]);
@@ -214,6 +223,7 @@ export const withIsolatedPatternSampling = <Result>(
   samplePreview: () => Result,
 ) => {
   const previousCachedCurve = cachedCurve;
+  const previousCachedPolyline = cachedPolyline;
   const previousRandomWalkState = randomWalkState
     ? { ...randomWalkState }
     : null;
@@ -230,6 +240,7 @@ export const withIsolatedPatternSampling = <Result>(
     return samplePreview();
   } finally {
     cachedCurve = previousCachedCurve;
+    cachedPolyline = previousCachedPolyline;
     randomWalkState = previousRandomWalkState;
     hardTurnWaypointCache = previousHardTurnWaypointCache;
     motParamsCache = previousMotParamsCache;
@@ -238,24 +249,6 @@ export const withIsolatedPatternSampling = <Result>(
 
 const shortestAngleDelta = (from: number, to: number) => {
   return Math.atan2(Math.sin(to - from), Math.cos(to - from));
-};
-
-const reflectCoordinate = (value: number, min: number, max: number) => {
-  if (max <= min) return { value: min, reflected: false };
-
-  let reflectedValue = value;
-  let reflected = false;
-  while (reflectedValue < min || reflectedValue > max) {
-    if (reflectedValue < min) {
-      reflectedValue = min + (min - reflectedValue);
-      reflected = !reflected;
-    } else {
-      reflectedValue = max - (reflectedValue - max);
-      reflected = !reflected;
-    }
-  }
-
-  return { value: reflectedValue, reflected };
 };
 
 const getHardTurnWaypoint = (
@@ -310,7 +303,8 @@ const getHardTurnWaypoint = (
 
     const previous = points[pointIndex - cache.startIndex - 1];
     const previousDistance = distances[pointIndex - cache.startIndex - 1];
-    let best: [number, number] | null = null;
+    let bestX = previous[0];
+    let bestY = previous[1];
     let bestDistance = -1;
 
     for (
@@ -322,27 +316,27 @@ const getHardTurnWaypoint = (
         HARD_TURN_RANDOM_OFFSET +
         pointIndex * HARD_TURN_RANDOM_STRIDE +
         candidateIndex * 2;
-      const candidate = [
-        rng.rangeAt(randomIndex, left, right),
-        rng.rangeAt(randomIndex + 1, top, bottom),
-      ] satisfies [number, number];
+      const candidateX = rng.rangeAt(randomIndex, left, right);
+      const candidateY = rng.rangeAt(randomIndex + 1, top, bottom);
       const distance = Math.hypot(
-        candidate[0] - previous[0],
-        candidate[1] - previous[1],
+        candidateX - previous[0],
+        candidateY - previous[1],
       );
 
       if (distance >= minDistance) {
-        best = candidate;
+        bestX = candidateX;
+        bestY = candidateY;
         break;
       }
 
       if (distance > bestDistance) {
-        best = candidate;
+        bestX = candidateX;
+        bestY = candidateY;
         bestDistance = distance;
       }
     }
 
-    const next = best ?? previous;
+    const next = [bestX, bestY] satisfies [number, number];
     const length = Math.hypot(next[0] - previous[0], next[1] - previous[1]);
     points.push(next);
     distances.push(previousDistance + length);
@@ -377,11 +371,22 @@ const sampleHardTurnPath = (
   bottom: number,
 ) => {
   const distancePx = Math.max(0, travelPx);
-  const firstPoint = getHardTurnWaypoint(rng, key, 0, left, top, right, bottom);
-  if (distancePx <= 0) return firstPoint;
+  if (
+    !hardTurnWaypointCache ||
+    hardTurnWaypointCache.seed !== rng.seed ||
+    hardTurnWaypointCache.key !== key
+  ) {
+    getHardTurnWaypoint(rng, key, 0, left, top, right, bottom);
+  }
+
+  if (distancePx <= 0) {
+    return getHardTurnWaypoint(rng, key, 0, left, top, right, bottom);
+  }
 
   const cache = hardTurnWaypointCache;
-  if (!cache) return firstPoint;
+  if (!cache) {
+    return getHardTurnWaypoint(rng, key, 0, left, top, right, bottom);
+  }
 
   if (cache.distances[0] > distancePx) {
     hardTurnWaypointCache = null;
@@ -500,16 +505,45 @@ const advanceRandomWalk = (
     state.x += Math.cos(state.heading) * stepPx;
     state.y += Math.sin(state.heading) * stepPx;
 
-    const nextX = reflectCoordinate(state.x, left, right);
-    const nextY = reflectCoordinate(state.y, top, bottom);
-    state.x = nextX.value;
-    state.y = nextY.value;
+    let nextX = state.x;
+    let nextY = state.y;
+    let reflectedX = false;
+    let reflectedY = false;
 
-    if (nextX.reflected) {
+    if (right <= left) {
+      nextX = left;
+    } else {
+      while (nextX < left || nextX > right) {
+        if (nextX < left) {
+          nextX = left + (left - nextX);
+        } else {
+          nextX = right - (nextX - right);
+        }
+        reflectedX = !reflectedX;
+      }
+    }
+
+    if (bottom <= top) {
+      nextY = top;
+    } else {
+      while (nextY < top || nextY > bottom) {
+        if (nextY < top) {
+          nextY = top + (top - nextY);
+        } else {
+          nextY = bottom - (nextY - bottom);
+        }
+        reflectedY = !reflectedY;
+      }
+    }
+
+    state.x = nextX;
+    state.y = nextY;
+
+    if (reflectedX) {
       state.heading = Math.PI - state.heading;
       state.targetHeading = state.heading;
     }
-    if (nextY.reflected) {
+    if (reflectedY) {
       state.heading = -state.heading;
       state.targetHeading = state.heading;
     }
@@ -800,27 +834,31 @@ export const samplePatternInto = (
   }
 
   if (id === "perimeterLoop") {
-    const [x, y] = pointOnSegment(
-      [
-        [left, top],
-        [right, top],
-        [right, bottom],
-        [left, bottom],
-      ],
+    const [x, y] = sampleClosedPolyline(
+      curveCacheKey(id, left, top, right, bottom, 4),
       travelPx * 0.62,
+      4,
+      (index) => {
+        if (index === 0) return [left, top];
+        if (index === 1) return [right, top];
+        if (index === 2) return [right, bottom];
+        return [left, bottom];
+      },
     );
     return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
   }
 
   if (id === "diamondLoop") {
-    const [x, y] = pointOnSegment(
-      [
-        [cx, top],
-        [right, cy],
-        [cx, bottom],
-        [left, cy],
-      ],
+    const [x, y] = sampleClosedPolyline(
+      curveCacheKey(id, left, top, right, bottom, 4),
       travelPx * 0.68,
+      4,
+      (index) => {
+        if (index === 0) return [cx, top];
+        if (index === 1) return [right, cy];
+        if (index === 2) return [cx, bottom];
+        return [left, cy];
+      },
     );
     return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
   }
@@ -861,27 +899,35 @@ export const samplePatternInto = (
 
   if (id === "zigZag") {
     const lanes = 5;
-    const points = Array.from({ length: lanes }, (_, index) => {
-      const x = index % 2 === 0 ? left : right;
-      const y = top + (height * index) / (lanes - 1);
-      return [x, y] satisfies [number, number];
-    });
-    const [x, y] = pointOnSegment(points, travelPx * 1.08);
+    const [x, y] = sampleClosedPolyline(
+      curveCacheKey(id, left, top, right, bottom, lanes),
+      travelPx * 1.08,
+      lanes,
+      (index) => [
+        index % 2 === 0 ? left : right,
+        top + (height * index) / (lanes - 1),
+      ],
+    );
     return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
   }
 
   if (id === "stairStep") {
     const rows = 4;
     const columns = 5;
-    const points = Array.from({ length: rows * columns }, (_, index) => {
-      const row = index % rows;
-      const column = Math.floor(index / rows) % columns;
-      return [
-        left + (column * width) / Math.max(1, columns - 1),
-        top + (row * height) / Math.max(1, rows - 1),
-      ] satisfies [number, number];
-    });
-    const [x, y] = pointOnSegment(points, travelPx * 0.72);
+    const pointCount = rows * columns;
+    const [x, y] = sampleClosedPolyline(
+      curveCacheKey(id, left, top, right, bottom, pointCount),
+      travelPx * 0.72,
+      pointCount,
+      (index) => {
+        const row = index % rows;
+        const column = Math.floor(index / rows) % columns;
+        return [
+          left + (column * width) / Math.max(1, columns - 1),
+          top + (row * height) / Math.max(1, rows - 1),
+        ];
+      },
+    );
     return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
   }
 
@@ -936,14 +982,16 @@ export const samplePatternInto = (
   if (id === "cornerTour") {
     const insetX = width * 0.18;
     const insetY = height * 0.18;
-    const [x, y] = pointOnSegment(
-      [
-        [left, top],
-        [right - insetX, top + insetY],
-        [right, bottom],
-        [left + insetX, bottom - insetY],
-      ],
+    const [x, y] = sampleClosedPolyline(
+      curveCacheKey(id, left, top, right, bottom, 4),
       travelPx * 0.64,
+      4,
+      (index) => {
+        if (index === 0) return [left, top];
+        if (index === 1) return [right - insetX, top + insetY];
+        if (index === 2) return [right, bottom];
+        return [left + insetX, bottom - insetY];
+      },
     );
     return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
   }
