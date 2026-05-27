@@ -57,7 +57,6 @@
     toggleMotionPaused: () => void;
     toggleMotionDirection: () => void;
     revealHud: () => void;
-    openGuidePopover: () => void;
     openControlsPanel: () => void;
   };
 
@@ -91,7 +90,6 @@
     toggleMotionPaused,
     toggleMotionDirection,
     revealHud,
-    openGuidePopover,
     openControlsPanel,
   }: Props = $props();
 </script>
@@ -366,7 +364,8 @@
           size="icon"
           aria-label={guideButtonLabel}
           title={guideButtonTitle}
-          onclick={openGuidePopover}
+          popovertarget="trainer-guide-popover"
+          onclick={revealHud}
         >
           <BookOpenIcon />
         </Button>
