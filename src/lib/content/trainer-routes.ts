@@ -1,15 +1,7 @@
-import { patternOptions } from "../engine/presets";
 import type { TrainingMode } from "../engine/presets";
 import type { PatternId } from "../engine/types";
 import type { PageSeoContent } from "./page-copy";
 import { siteMetadata } from "./site";
-
-const toSlug = (value: string) =>
-  value
-    .toLowerCase()
-    .replaceAll("&", "and")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
 
 const toTitleCase = (value: string) =>
   value
@@ -283,6 +275,47 @@ const patternSummaries: Partial<Record<PatternId, string>> = {
     "Corner Tour gives each corner of the display a deliberate role, making the route spacious and structured.",
 };
 
+type PublicPursuitPatternRoute = {
+  patternId: Exclude<PatternId, "multipleObjectTracking">;
+  slug: string;
+  label: string;
+};
+
+const publicPursuitPatternRoutes = [
+  { patternId: "randomWalk", slug: "random", label: "Random" },
+  { patternId: "circle", slug: "circle", label: "Circle" },
+  { patternId: "ellipse", slug: "ellipse", label: "Ellipse" },
+  { patternId: "figureEight", slug: "figure-eight", label: "Figure eight" },
+  { patternId: "wave", slug: "wave", label: "Wave" },
+  { patternId: "diagonal", slug: "diagonal", label: "Diagonal" },
+  { patternId: "bounce", slug: "bounce", label: "Bounce" },
+  { patternId: "directionChange", slug: "hard-turns", label: "Hard turns" },
+  {
+    patternId: "horizontalSweep",
+    slug: "horizontal-sweep",
+    label: "Horizontal sweep",
+  },
+  {
+    patternId: "verticalSweep",
+    slug: "vertical-sweep",
+    label: "Vertical sweep",
+  },
+  { patternId: "perimeterLoop", slug: "edge-loop", label: "Edge loop" },
+  { patternId: "diamondLoop", slug: "diamond-loop", label: "Diamond loop" },
+  {
+    patternId: "spiralBloom",
+    slug: "opening-spiral",
+    label: "Opening spiral",
+  },
+  { patternId: "clover", slug: "clover", label: "Clover" },
+  { patternId: "zigZag", slug: "zigzag", label: "Zigzag" },
+  { patternId: "stairStep", slug: "stair-steps", label: "Stair steps" },
+  { patternId: "lissajous", slug: "lissajous", label: "Lissajous" },
+  { patternId: "hourglass", slug: "hourglass", label: "Hourglass" },
+  { patternId: "orbitShift", slug: "shifting-orbit", label: "Shifting orbit" },
+  { patternId: "cornerTour", slug: "corner-tour", label: "Corner tour" },
+] satisfies readonly PublicPursuitPatternRoute[];
+
 const buildPatternSeoContent = (
   label: string,
   path: `/${string}/`,
@@ -345,24 +378,22 @@ export const trainerRoutes = [
     indexable: true,
     seoContent: smoothPursuitSeoContent,
   },
-  ...patternOptions
-    .filter((option) => option.id !== "multipleObjectTracking")
-    .map((option) => ({
-      slug: toSlug(option.name),
-      path: `/${toSlug(option.name)}/` as const,
-      mode: "pursuit" as const,
-      patternId: option.id,
-      label: option.name,
-      heading: `${toTitleCase(option.name)} Smooth Pursuit Eye Training`,
-      title: `${siteMetadata.name} - ${toTitleCase(option.name)} Smooth Pursuit Drill`,
-      description: `Practice the ${option.name} smooth pursuit pattern online. Adjust speed, target size, color, trail, and screen scale for short visual tracking sessions.`,
-      indexable: false,
-      seoContent: buildPatternSeoContent(
-        option.name,
-        `/${toSlug(option.name)}/`,
-        option.id,
-      ),
-    })),
+  ...publicPursuitPatternRoutes.map((patternRoute) => ({
+    slug: patternRoute.slug,
+    path: `/${patternRoute.slug}/` as const,
+    mode: "pursuit" as const,
+    patternId: patternRoute.patternId,
+    label: patternRoute.label,
+    heading: `${toTitleCase(patternRoute.label)} Smooth Pursuit Eye Training`,
+    title: `${siteMetadata.name} - ${toTitleCase(patternRoute.label)} Smooth Pursuit Drill`,
+    description: `Practice the ${patternRoute.label} smooth pursuit pattern online. Adjust speed, target size, color, trail, and screen scale for short visual tracking sessions.`,
+    indexable: false,
+    seoContent: buildPatternSeoContent(
+      patternRoute.label,
+      `/${patternRoute.slug}/`,
+      patternRoute.patternId,
+    ),
+  })),
   {
     slug: "reaction-jumps",
     path: "/reaction-jumps/",

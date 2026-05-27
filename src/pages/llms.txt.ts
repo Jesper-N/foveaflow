@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
-import { buildLlmsText, getSiteOrigin } from "../lib/seo";
+import { buildLlmsText } from "../lib/publication-outputs";
+import { getSiteOrigin } from "../lib/seo";
 
 export const prerender = true;
 

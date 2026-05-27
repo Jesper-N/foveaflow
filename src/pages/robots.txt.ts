@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
-import { buildRobotsText, getSiteOrigin } from "../lib/seo";
+import { buildRobotsText } from "../lib/publication-outputs";
+import { getSiteOrigin } from "../lib/seo";
 
 export const prerender = true;
 

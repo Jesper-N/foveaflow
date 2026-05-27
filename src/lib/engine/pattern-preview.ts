@@ -1,4 +1,4 @@
-import { samplePatternInto, withIsolatedPatternSampling } from "./patterns";
+import { createPatternSampler } from "./patterns";
 import { createRng } from "./random";
 import type { Arena, PatternId, PatternParams, TargetFrame } from "./types";
 
@@ -50,7 +50,8 @@ const getPreviewTravelPx = (patternId: PatternId) =>
   previewTravelPxByPattern[patternId] ?? defaultPreviewTravelPx;
 
 const buildPreviewPath = (patternId: PatternId) => {
-  return withIsolatedPatternSampling(() => {
+  const sampler = createPatternSampler();
+  return sampler.run(() => {
     const frames: TargetFrame[] = [];
     const rng = createRng(previewSeed);
     const travelPx = getPreviewTravelPx(patternId);
@@ -61,7 +62,14 @@ const buildPreviewPath = (patternId: PatternId) => {
       const progress = index / Math.max(1, previewSampleCount - 1);
       previewParams.travelPx = progress * travelPx;
 
-      samplePatternInto(frames, patternId, 0, previewArena, previewParams, rng);
+      sampler.sampleInto(
+        frames,
+        patternId,
+        0,
+        previewArena,
+        previewParams,
+        rng,
+      );
 
       const frame = frames.find((targetFrame) => targetFrame.role === "target");
       if (frame) points.push([frame.x, frame.y]);

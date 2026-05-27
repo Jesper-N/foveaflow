@@ -17,10 +17,7 @@
     ControlSection,
     ControlSectionId,
   } from "$lib/trainer/options";
-  import type {
-    CalibrationField,
-    TrainerSliderValue,
-  } from "$lib/trainer/settings";
+  import type { TrainerDialogActions } from "$lib/trainer/control-actions";
 
   let {
     open = $bindable(false),
@@ -28,7 +25,6 @@
     availableControlSections,
     currentControlSection,
     currentControlSectionLabel,
-    onControlSectionChange,
     motionPaused,
     motionDirectionLabel,
     canToggleDirection,
@@ -38,43 +34,13 @@
     isLilacChaserMode,
     behaviorValue,
     patternSelectContentClass,
-    handlePresetChange,
-    handlePatternChange,
-    handleBehaviorChange,
-    handleLilacChaserColorChange,
-    handleShapeChange,
-    handleLetterWeightChange,
-    handleThemeCheckedChange,
-    handleSpeedUnitChange,
-    handleColorInput,
-    handleLetterColorInput,
-    handleCalibrationInput,
-    speedSliderValue,
-    setSpeedSliderValue,
-    sizeSliderValue,
-    setSizeSliderValue,
-    lilacChaserScaleSliderValue,
-    setLilacChaserScaleSliderValue,
-    opacitySliderValue,
-    setOpacitySliderValue,
-    targetCountSliderValue,
-    setTargetCountSliderValue,
-    distractorCountSliderValue,
-    setDistractorCountSliderValue,
-    distractorBrightnessSliderValue,
-    setDistractorBrightnessSliderValue,
-    letterScaleSliderValue,
-    setLetterScaleSliderValue,
-    toggleMotionPaused,
-    toggleMotionDirection,
-    resetSettings,
+    actions,
   }: {
     open: boolean;
     settings: TrainerSettings;
     availableControlSections: readonly ControlSection[];
     currentControlSection: ControlSectionId;
     currentControlSectionLabel: string;
-    onControlSectionChange: (section: ControlSectionId) => void;
     motionPaused: boolean;
     motionDirectionLabel: string;
     canToggleDirection: boolean;
@@ -84,36 +50,7 @@
     isLilacChaserMode: boolean;
     behaviorValue: BehaviorId;
     patternSelectContentClass: string;
-    handlePresetChange: (value: string) => void;
-    handlePatternChange: (value: string) => void;
-    handleBehaviorChange: (value: string) => void;
-    handleLilacChaserColorChange: (value: string) => void;
-    handleShapeChange: (value: string) => void;
-    handleLetterWeightChange: (value: string) => void;
-    handleThemeCheckedChange: (checked: boolean) => void;
-    handleSpeedUnitChange: (value: string) => void;
-    handleColorInput: (event: Event) => void;
-    handleLetterColorInput: (event: Event) => void;
-    handleCalibrationInput: (event: Event, field: CalibrationField) => void;
-    speedSliderValue: () => number[];
-    setSpeedSliderValue: (value: TrainerSliderValue) => void;
-    sizeSliderValue: () => number[];
-    setSizeSliderValue: (value: TrainerSliderValue) => void;
-    lilacChaserScaleSliderValue: () => number[];
-    setLilacChaserScaleSliderValue: (value: TrainerSliderValue) => void;
-    opacitySliderValue: () => number[];
-    setOpacitySliderValue: (value: TrainerSliderValue) => void;
-    targetCountSliderValue: () => number[];
-    setTargetCountSliderValue: (value: TrainerSliderValue) => void;
-    distractorCountSliderValue: () => number[];
-    setDistractorCountSliderValue: (value: TrainerSliderValue) => void;
-    distractorBrightnessSliderValue: () => number[];
-    setDistractorBrightnessSliderValue: (value: TrainerSliderValue) => void;
-    letterScaleSliderValue: () => number[];
-    setLetterScaleSliderValue: (value: TrainerSliderValue) => void;
-    toggleMotionPaused: () => void;
-    toggleMotionDirection: () => void;
-    resetSettings: () => void;
+    actions: TrainerDialogActions;
   } = $props();
 </script>
 
@@ -147,7 +84,7 @@
                   <Sidebar.MenuItem>
                     <Sidebar.MenuButton
                       isActive={currentControlSection === section.id}
-                      onclick={() => onControlSectionChange(section.id)}
+                      onclick={() => actions.onControlSectionChange(section.id)}
                     >
                       <TrainerControlSectionIcon
                         icon={section.icon}
@@ -188,9 +125,9 @@
                   {motionDirectionLabel}
                   {canToggleDirection}
                   {isDarkMode}
-                  {toggleMotionPaused}
-                  {toggleMotionDirection}
-                  {handleThemeCheckedChange}
+                  toggleMotionPaused={actions.toggleMotionPaused}
+                  toggleMotionDirection={actions.toggleMotionDirection}
+                  handleThemeCheckedChange={actions.handleThemeCheckedChange}
                 />
               </TrainerSettingsSection>
             {:else if currentControlSection === "drill"}
@@ -200,12 +137,14 @@
                   {isLilacChaserMode}
                   {behaviorValue}
                   {patternSelectContentClass}
-                  {handlePresetChange}
-                  {handlePatternChange}
-                  {handleBehaviorChange}
-                  {handleLilacChaserColorChange}
-                  {lilacChaserScaleSliderValue}
-                  {setLilacChaserScaleSliderValue}
+                  handlePresetChange={actions.handlePresetChange}
+                  handlePatternChange={actions.handlePatternChange}
+                  handleBehaviorChange={actions.handleBehaviorChange}
+                  handleLilacChaserColorChange={actions.handleLilacChaserColorChange}
+                  lilacChaserScaleSliderValue={actions.lilacChaserScaleSlider
+                    .value}
+                  setLilacChaserScaleSliderValue={actions.lilacChaserScaleSlider
+                    .set}
                   {sliderRow}
                 />
               </TrainerSettingsSection>
@@ -214,22 +153,26 @@
                 <TrainerTargetControls
                   bind:settings
                   {isMotMode}
-                  {handleColorInput}
-                  {handleShapeChange}
-                  {handleLetterColorInput}
-                  {handleLetterWeightChange}
-                  {sizeSliderValue}
-                  {setSizeSliderValue}
-                  {opacitySliderValue}
-                  {setOpacitySliderValue}
-                  {targetCountSliderValue}
-                  {setTargetCountSliderValue}
-                  {distractorCountSliderValue}
-                  {setDistractorCountSliderValue}
-                  {distractorBrightnessSliderValue}
-                  {setDistractorBrightnessSliderValue}
-                  {letterScaleSliderValue}
-                  {setLetterScaleSliderValue}
+                  handleColorInput={actions.handleColorInput}
+                  handleShapeChange={actions.handleShapeChange}
+                  handleLetterColorInput={actions.handleLetterColorInput}
+                  handleLetterWeightChange={actions.handleLetterWeightChange}
+                  sizeSliderValue={actions.sizeSlider.value}
+                  setSizeSliderValue={actions.sizeSlider.set}
+                  opacitySliderValue={actions.opacitySlider.value}
+                  setOpacitySliderValue={actions.opacitySlider.set}
+                  targetCountSliderValue={actions.targetCountSlider.value}
+                  setTargetCountSliderValue={actions.targetCountSlider.set}
+                  distractorCountSliderValue={actions.distractorCountSlider
+                    .value}
+                  setDistractorCountSliderValue={actions.distractorCountSlider
+                    .set}
+                  distractorBrightnessSliderValue={actions
+                    .distractorBrightnessSlider.value}
+                  setDistractorBrightnessSliderValue={actions
+                    .distractorBrightnessSlider.set}
+                  letterScaleSliderValue={actions.letterScaleSlider.value}
+                  setLetterScaleSliderValue={actions.letterScaleSlider.set}
                   {sliderRow}
                 />
               </TrainerSettingsSection>
@@ -237,9 +180,9 @@
               <TrainerSettingsSection icon="motion" label="Motion" {colorMode}>
                 <TrainerMotionControls
                   {settings}
-                  {speedSliderValue}
-                  {setSpeedSliderValue}
-                  {handleSpeedUnitChange}
+                  speedSliderValue={actions.speedSlider.value}
+                  setSpeedSliderValue={actions.speedSlider.set}
+                  handleSpeedUnitChange={actions.handleSpeedUnitChange}
                   {sliderRow}
                 />
               </TrainerSettingsSection>
@@ -249,7 +192,10 @@
                 label="Screen scale"
                 {colorMode}
               >
-                <TrainerScreenControls bind:settings {handleCalibrationInput} />
+                <TrainerScreenControls
+                  bind:settings
+                  handleCalibrationInput={actions.handleCalibrationInput}
+                />
               </TrainerSettingsSection>
             {:else}
               <TrainerSettingsSection icon="reset" label="Defaults" {colorMode}>
@@ -260,7 +206,7 @@
                 <Button
                   class="pressable-ui w-full justify-start"
                   variant="outline"
-                  onclick={resetSettings}
+                  onclick={actions.resetSettings}
                 >
                   <RotateCcwIcon class="size-4" />
                   <span class="pl-1">Reset to defaults</span>

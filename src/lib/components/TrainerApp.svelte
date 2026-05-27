@@ -16,8 +16,7 @@
     settingsFromPreset,
     type TrainerSettings,
   } from "$lib/engine/presets";
-  import { samplePatternInto } from "$lib/engine/patterns";
-  import { sampleSizeProfile, sampleSpeedProfile } from "$lib/engine/profiles";
+  import { sampleSpeedProfile } from "$lib/engine/profiles";
   import { createRng, createSessionSeed } from "$lib/engine/random";
   import { darkenHexColor, safeStimulusColor } from "$lib/engine/safety";
   import { homepageSeoContent } from "$lib/content/page-copy";
@@ -33,13 +32,7 @@
     createDebouncedSettingsSaver,
     loadSettings,
   } from "$lib/engine/storage";
-  import type {
-    Arena,
-    PatternParams,
-    PatternId,
-    SpeedUnit,
-    TargetFrame,
-  } from "$lib/engine/types";
+  import type { Arena, PatternId, SpeedUnit } from "$lib/engine/types";
   import {
     canPatternToggleDirection,
     getAvailableControlSections,
@@ -57,6 +50,11 @@
     getHudPointerIntent,
     type HudBounds,
   } from "$lib/trainer/hud";
+  import { createTrainerFrameSampler } from "$lib/trainer/frame-sampler";
+  import type {
+    TrainerDialogActions,
+    TrainerHudActions,
+  } from "$lib/trainer/control-actions";
   import {
     advanceMotionTick,
     type MotionTickResult,
@@ -110,23 +108,11 @@
   let baseSpeedPxPerSec = 0;
   let seed = createSessionSeed();
   let rng = createRng(seed);
+  const frameSampler = createTrainerFrameSampler();
   let canvasTheme: CanvasTheme | null = null;
   let gridPath: Path2D | null = null;
   let canvasScale = 1;
   let lastLilacChaserHiddenIndex = -1;
-  const targetFrames: TargetFrame[] = [];
-  const patternParams: PatternParams = {
-    radiusPx: 1,
-    pathMarginPx: 16,
-    speedPxPerSec: 1,
-    travelPx: 0,
-  };
-  const letterContext = {
-    arena,
-    elapsedSec,
-    travelPx,
-    seed,
-  };
   const motionTickResult: MotionTickResult = {
     lastTimestamp,
     elapsedSec,
@@ -557,33 +543,6 @@
     );
   };
 
-  const sampleFrameCount = (timeSec: number) => {
-    const patternId = settings.patternId;
-    const speedPxPerSec = currentSpeedPxPerSec || getSpeedPxPerSec(timeSec);
-    const radiusPx = sampleSizeProfile(
-      settings.sizeProfile,
-      timeSec,
-      settings.baseRadiusPx,
-    );
-    patternParams.radiusPx = radiusPx;
-    patternParams.pathMarginPx = pathMarginPx;
-    patternParams.speedPxPerSec = speedPxPerSec;
-    patternParams.travelPx = travelPx;
-    patternParams.targetCount = settings.targetCount;
-    patternParams.distractorCount = settings.distractorCount;
-    patternParams.colorA = safeBallColor;
-    patternParams.colorB = distractorColor;
-
-    return samplePatternInto(
-      targetFrames,
-      patternId,
-      timeSec,
-      arena,
-      patternParams,
-      rng,
-    );
-  };
-
   const drawFrame = () => {
     if (!context) return;
     const ctx = context;
@@ -597,13 +556,27 @@
     ctx.fillRect(0, 0, arena.width, arena.height);
     drawGuides(ctx, gridPath, theme);
 
-    const frameCount = sampleFrameCount(elapsedSec);
-    letterContext.arena = arena;
-    letterContext.elapsedSec = elapsedSec;
-    letterContext.travelPx = travelPx;
-    letterContext.seed = seed;
-    for (let index = 0; index < frameCount; index += 1) {
-      drawTargetFrame(ctx, targetFrames[index], index, settings, letterContext);
+    const frameSample = frameSampler.sample({
+      settings,
+      arena,
+      elapsedSec,
+      travelPx,
+      currentSpeedPxPerSec,
+      baseSpeedPxPerSec,
+      safeBallColor,
+      distractorColor,
+      pathMarginPx,
+      rng,
+      seed,
+    });
+    for (let index = 0; index < frameSample.count; index += 1) {
+      drawTargetFrame(
+        ctx,
+        frameSample.frames[index],
+        index,
+        settings,
+        frameSample.letterContext,
+      );
     }
   };
 
@@ -657,6 +630,7 @@
     settings = resetSettingsToPresetDefaults(settings);
     seed = createSessionSeed();
     rng = createRng(seed);
+    frameSampler.reset();
     elapsedSec = 0;
     travelPx = 0;
     currentSpeedPxPerSec = 0;
@@ -873,6 +847,82 @@
     });
   };
 
+  const hudActions: TrainerHudActions = {
+    handlePresetChange,
+    handleHeaderPresetOpenChange,
+    handlePatternChange,
+    handleHeaderPatternOpenChange,
+    handleLilacChaserColorChange,
+    handleHeaderLilacChaserColorOpenChange,
+    sizeSlider: {
+      value: sizeSliderValue,
+      set: setSizeSliderValue,
+    },
+    speedSlider: {
+      value: speedSliderValue,
+      set: setSpeedSliderValue,
+    },
+    lilacChaserScaleSlider: {
+      value: lilacChaserScaleSliderValue,
+      set: setLilacChaserScaleSliderValue,
+    },
+    hudControlTransition,
+    toggleMotionPaused,
+    toggleMotionDirection,
+    revealHud,
+    openControlsPanel,
+  };
+
+  const dialogActions: TrainerDialogActions = {
+    onControlSectionChange: setActiveControlSection,
+    handlePresetChange,
+    handlePatternChange,
+    handleBehaviorChange,
+    handleLilacChaserColorChange,
+    handleShapeChange,
+    handleLetterWeightChange,
+    handleThemeCheckedChange,
+    handleSpeedUnitChange,
+    handleColorInput,
+    handleLetterColorInput,
+    handleCalibrationInput,
+    speedSlider: {
+      value: speedSliderValue,
+      set: setSpeedSliderValue,
+    },
+    sizeSlider: {
+      value: sizeSliderValue,
+      set: setSizeSliderValue,
+    },
+    lilacChaserScaleSlider: {
+      value: lilacChaserScaleSliderValue,
+      set: setLilacChaserScaleSliderValue,
+    },
+    opacitySlider: {
+      value: opacitySliderValue,
+      set: setOpacitySliderValue,
+    },
+    targetCountSlider: {
+      value: targetCountSliderValue,
+      set: setTargetCountSliderValue,
+    },
+    distractorCountSlider: {
+      value: distractorCountSliderValue,
+      set: setDistractorCountSliderValue,
+    },
+    distractorBrightnessSlider: {
+      value: distractorBrightnessSliderValue,
+      set: setDistractorBrightnessSliderValue,
+    },
+    letterScaleSlider: {
+      value: letterScaleSliderValue,
+      set: setLetterScaleSliderValue,
+    },
+    toggleMotionPaused,
+    toggleMotionDirection,
+    resetSettings,
+  };
+
   $effect(() => {
     redrawCanvasForTheme(colorMode);
   });
@@ -933,23 +983,7 @@
       : "About FoveaFlow eye trainer"}
     guideButtonTitle={activeRoute ? "Open guide" : "About FoveaFlow"}
     {patternSelectContentClass}
-    {handlePresetChange}
-    {handleHeaderPresetOpenChange}
-    {handlePatternChange}
-    {handleHeaderPatternOpenChange}
-    {handleLilacChaserColorChange}
-    {handleHeaderLilacChaserColorOpenChange}
-    {sizeSliderValue}
-    {setSizeSliderValue}
-    {speedSliderValue}
-    {setSpeedSliderValue}
-    {lilacChaserScaleSliderValue}
-    {setLilacChaserScaleSliderValue}
-    {hudControlTransition}
-    {toggleMotionPaused}
-    {toggleMotionDirection}
-    {revealHud}
-    {openControlsPanel}
+    actions={hudActions}
   />
 
   <TrainerGuidePopover
@@ -968,7 +1002,6 @@
     {availableControlSections}
     {currentControlSection}
     {currentControlSectionLabel}
-    onControlSectionChange={setActiveControlSection}
     {motionPaused}
     {motionDirectionLabel}
     {canToggleDirection}
@@ -978,35 +1011,6 @@
     {isLilacChaserMode}
     {behaviorValue}
     {patternSelectContentClass}
-    {handlePresetChange}
-    {handlePatternChange}
-    {handleBehaviorChange}
-    {handleLilacChaserColorChange}
-    {handleShapeChange}
-    {handleLetterWeightChange}
-    {handleThemeCheckedChange}
-    {handleSpeedUnitChange}
-    {handleColorInput}
-    {handleLetterColorInput}
-    {handleCalibrationInput}
-    {speedSliderValue}
-    {setSpeedSliderValue}
-    {sizeSliderValue}
-    {setSizeSliderValue}
-    {lilacChaserScaleSliderValue}
-    {setLilacChaserScaleSliderValue}
-    {opacitySliderValue}
-    {setOpacitySliderValue}
-    {targetCountSliderValue}
-    {setTargetCountSliderValue}
-    {distractorCountSliderValue}
-    {setDistractorCountSliderValue}
-    {distractorBrightnessSliderValue}
-    {setDistractorBrightnessSliderValue}
-    {letterScaleSliderValue}
-    {setLetterScaleSliderValue}
-    {toggleMotionPaused}
-    {toggleMotionDirection}
-    {resetSettings}
+    actions={dialogActions}
   />
 </main>

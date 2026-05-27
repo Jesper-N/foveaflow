@@ -21,11 +21,8 @@
     maxSpeedByUnit,
     speedStepByUnit,
   } from "$lib/trainer/options";
-  import {
-    trainerSettingBounds,
-    type TrainerSliderValue,
-  } from "$lib/trainer/settings";
-  import type { HudControlTransition } from "$lib/trainer/transitions";
+  import { trainerSettingBounds } from "$lib/trainer/settings";
+  import type { TrainerHudActions } from "$lib/trainer/control-actions";
 
   type Props = {
     attachHudShell: Attachment<HTMLDivElement>;
@@ -41,23 +38,7 @@
     guideButtonLabel: string;
     guideButtonTitle: string;
     patternSelectContentClass: string;
-    handlePresetChange: (value: string) => void;
-    handleHeaderPresetOpenChange: (open: boolean) => void;
-    handlePatternChange: (value: string) => void;
-    handleHeaderPatternOpenChange: (open: boolean) => void;
-    handleLilacChaserColorChange: (value: string) => void;
-    handleHeaderLilacChaserColorOpenChange: (open: boolean) => void;
-    sizeSliderValue: () => number[];
-    setSizeSliderValue: (value: TrainerSliderValue) => void;
-    speedSliderValue: () => number[];
-    setSpeedSliderValue: (value: TrainerSliderValue) => void;
-    lilacChaserScaleSliderValue: () => number[];
-    setLilacChaserScaleSliderValue: (value: TrainerSliderValue) => void;
-    hudControlTransition: HudControlTransition;
-    toggleMotionPaused: () => void;
-    toggleMotionDirection: () => void;
-    revealHud: () => void;
-    openControlsPanel: () => void;
+    actions: TrainerHudActions;
   };
 
   let {
@@ -74,24 +55,10 @@
     guideButtonLabel,
     guideButtonTitle,
     patternSelectContentClass,
-    handlePresetChange,
-    handleHeaderPresetOpenChange,
-    handlePatternChange,
-    handleHeaderPatternOpenChange,
-    handleLilacChaserColorChange,
-    handleHeaderLilacChaserColorOpenChange,
-    sizeSliderValue,
-    setSizeSliderValue,
-    speedSliderValue,
-    setSpeedSliderValue,
-    lilacChaserScaleSliderValue,
-    setLilacChaserScaleSliderValue,
-    hudControlTransition,
-    toggleMotionPaused,
-    toggleMotionDirection,
-    revealHud,
-    openControlsPanel,
+    actions,
   }: Props = $props();
+
+  let hudControlTransition = $derived(actions.hudControlTransition);
 </script>
 
 {#if hudHidden}
@@ -99,9 +66,9 @@
     type="button"
     class="trainer-hud-peek absolute left-1/2 top-0 z-30 flex h-10 w-32 items-start justify-center rounded-b-full pt-2 outline-hidden focus-visible:ring-3 focus-visible:ring-ring/30"
     aria-label="Reveal controls"
-    onpointerenter={revealHud}
-    onfocus={revealHud}
-    onclick={revealHud}
+    onpointerenter={actions.revealHud}
+    onfocus={actions.revealHud}
+    onclick={actions.revealHud}
   >
     <span
       class="h-1 w-16 rounded-full bg-accent/70 shadow-[0_0_16px_rgba(118,217,0,0.22)]"
@@ -168,8 +135,8 @@
         <Select.Root
           type="single"
           value={settings.presetId}
-          onValueChange={handlePresetChange}
-          onOpenChange={handleHeaderPresetOpenChange}
+          onValueChange={actions.handlePresetChange}
+          onOpenChange={actions.handleHeaderPresetOpenChange}
         >
           <Select.Trigger
             class={[
@@ -203,8 +170,8 @@
             <Select.Root
               type="single"
               value={settings.patternId}
-              onValueChange={handlePatternChange}
-              onOpenChange={handleHeaderPatternOpenChange}
+              onValueChange={actions.handlePatternChange}
+              onOpenChange={actions.handleHeaderPatternOpenChange}
             >
               <Select.Trigger
                 class="w-36 overflow-hidden lg:w-40 2xl:w-44"
@@ -234,7 +201,7 @@
               Size
             </span>
             <Slider
-              bind:value={sizeSliderValue, setSizeSliderValue}
+              bind:value={actions.sizeSlider.value, actions.sizeSlider.set}
               min={trainerSettingBounds.baseRadiusPx.min}
               max={trainerSettingBounds.baseRadiusPx.max}
               step={1}
@@ -252,7 +219,7 @@
               Speed
             </span>
             <Slider
-              bind:value={speedSliderValue, setSpeedSliderValue}
+              bind:value={actions.speedSlider.value, actions.speedSlider.set}
               min={trainerSettingBounds.speedValue.min}
               max={maxSpeedByUnit[settings.speed.unit]}
               step={speedStepByUnit[settings.speed.unit]}
@@ -271,8 +238,8 @@
           <Select.Root
             type="single"
             value={settings.lilacChaserBallColor}
-            onValueChange={handleLilacChaserColorChange}
-            onOpenChange={handleHeaderLilacChaserColorOpenChange}
+            onValueChange={actions.handleLilacChaserColorChange}
+            onOpenChange={actions.handleHeaderLilacChaserColorOpenChange}
           >
             <Select.Trigger
               class="w-36 overflow-hidden lg:w-40"
@@ -309,7 +276,8 @@
             </span>
             <Slider
               bind:value={
-                lilacChaserScaleSliderValue, setLilacChaserScaleSliderValue
+                actions.lilacChaserScaleSlider.value,
+                actions.lilacChaserScaleSlider.set
               }
               min={trainerSettingBounds.lilacChaserScale.min}
               max={trainerSettingBounds.lilacChaserScale.max}
@@ -336,7 +304,7 @@
           aria-label={motionPaused ? "Resume motion" : "Pause motion"}
           aria-pressed={motionPaused}
           aria-describedby="trainer-motion-status"
-          onclick={toggleMotionPaused}
+          onclick={actions.toggleMotionPaused}
         >
           {#if motionPaused}
             <PlayIcon />
@@ -353,7 +321,7 @@
           aria-pressed={settings.motionDirection === -1}
           aria-describedby="trainer-motion-status"
           disabled={!canToggleDirection}
-          onclick={toggleMotionDirection}
+          onclick={actions.toggleMotionDirection}
         >
           <ArrowLeftRightIcon />
         </Button>
@@ -365,7 +333,7 @@
           aria-label={guideButtonLabel}
           title={guideButtonTitle}
           popovertarget="trainer-guide-popover"
-          onclick={revealHud}
+          onclick={actions.revealHud}
         >
           <BookOpenIcon />
         </Button>
@@ -375,7 +343,7 @@
           variant="outline"
           size="icon"
           aria-label="Open controls"
-          onclick={openControlsPanel}
+          onclick={actions.openControlsPanel}
         >
           <SettingsIcon />
         </Button>

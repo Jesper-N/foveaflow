@@ -43,11 +43,11 @@ const sampleClosedCurve = (
   samples: number,
   pointAt: (phase: number) => [number, number],
 ) => {
-  if (cachedCurve?.key !== key) {
-    cachedCurve = buildClosedCurve(key, samples, pointAt);
+  if (activeSamplerState.cachedCurve?.key !== key) {
+    activeSamplerState.cachedCurve = buildClosedCurve(key, samples, pointAt);
   }
 
-  return sampleCurvePath(cachedCurve, travelPx);
+  return sampleCurvePath(activeSamplerState.cachedCurve, travelPx);
 };
 
 const sampleClosedPolyline = (
@@ -56,11 +56,15 @@ const sampleClosedPolyline = (
   pointCount: number,
   pointAt: (index: number) => [number, number],
 ) => {
-  if (cachedPolyline?.key !== key) {
-    cachedPolyline = buildClosedPolyline(key, pointCount, pointAt);
+  if (activeSamplerState.cachedPolyline?.key !== key) {
+    activeSamplerState.cachedPolyline = buildClosedPolyline(
+      key,
+      pointCount,
+      pointAt,
+    );
   }
 
-  return sampleCurvePath(cachedPolyline, travelPx);
+  return sampleCurvePath(activeSamplerState.cachedPolyline, travelPx);
 };
 
 type CurvePath = {
@@ -70,8 +74,43 @@ type CurvePath = {
   totalLength: number;
 };
 
-let cachedCurve: CurvePath | null = null;
-let cachedPolyline: CurvePath | null = null;
+type PatternSamplerState = {
+  cachedCurve: CurvePath | null;
+  cachedPolyline: CurvePath | null;
+  randomWalkState: RandomWalkState | null;
+  hardTurnWaypointCache: HardTurnWaypointCache | null;
+  motParamsCache: MotParamsCache | null;
+};
+
+const createPatternSamplerState = (): PatternSamplerState => ({
+  cachedCurve: null,
+  cachedPolyline: null,
+  randomWalkState: null,
+  hardTurnWaypointCache: null,
+  motParamsCache: null,
+});
+
+let activeSamplerState = createPatternSamplerState();
+
+const withSamplerState = <Result>(
+  state: PatternSamplerState,
+  sample: () => Result,
+) => {
+  const previousState = activeSamplerState;
+  activeSamplerState = state;
+  try {
+    return sample();
+  } finally {
+    activeSamplerState = previousState;
+  }
+};
+
+export type PatternSampler = {
+  sampleInto: typeof samplePatternInto;
+  sample: typeof samplePattern;
+  run: <Result>(sample: () => Result) => Result;
+  reset: () => void;
+};
 
 const buildClosedCurve = (
   key: string,
@@ -161,8 +200,6 @@ type RandomWalkState = {
   lastTravelPx: number;
 };
 
-let randomWalkState: RandomWalkState | null = null;
-
 type HardTurnWaypointCache = {
   seed: number;
   key: string;
@@ -170,8 +207,6 @@ type HardTurnWaypointCache = {
   points: Array<[number, number]>;
   distances: number[];
 };
-
-let hardTurnWaypointCache: HardTurnWaypointCache | null = null;
 
 type MotObjectParams = {
   speedScaleX: number;
@@ -187,8 +222,6 @@ type MotParamsCache = {
   height: number;
   objects: MotObjectParams[];
 };
-
-let motParamsCache: MotParamsCache | null = null;
 
 const resolvePatternBounds = (
   arena: Arena,
@@ -222,29 +255,7 @@ const resolvePatternBounds = (
 export const withIsolatedPatternSampling = <Result>(
   samplePreview: () => Result,
 ) => {
-  const previousCachedCurve = cachedCurve;
-  const previousCachedPolyline = cachedPolyline;
-  const previousRandomWalkState = randomWalkState
-    ? { ...randomWalkState }
-    : null;
-  const previousHardTurnWaypointCache = hardTurnWaypointCache
-    ? {
-        ...hardTurnWaypointCache,
-        points: [...hardTurnWaypointCache.points],
-        distances: [...hardTurnWaypointCache.distances],
-      }
-    : null;
-  const previousMotParamsCache = motParamsCache;
-
-  try {
-    return samplePreview();
-  } finally {
-    cachedCurve = previousCachedCurve;
-    cachedPolyline = previousCachedPolyline;
-    randomWalkState = previousRandomWalkState;
-    hardTurnWaypointCache = previousHardTurnWaypointCache;
-    motParamsCache = previousMotParamsCache;
-  }
+  return withSamplerState(createPatternSamplerState(), samplePreview);
 };
 
 const shortestAngleDelta = (from: number, to: number) => {
@@ -261,11 +272,11 @@ const getHardTurnWaypoint = (
   bottom: number,
 ) => {
   if (
-    !hardTurnWaypointCache ||
-    hardTurnWaypointCache.seed !== rng.seed ||
-    hardTurnWaypointCache.key !== key
+    !activeSamplerState.hardTurnWaypointCache ||
+    activeSamplerState.hardTurnWaypointCache.seed !== rng.seed ||
+    activeSamplerState.hardTurnWaypointCache.key !== key
   ) {
-    hardTurnWaypointCache = {
+    activeSamplerState.hardTurnWaypointCache = {
       seed: rng.seed,
       key,
       startIndex: 0,
@@ -274,7 +285,7 @@ const getHardTurnWaypoint = (
     };
   }
 
-  const cache = hardTurnWaypointCache;
+  const cache = activeSamplerState.hardTurnWaypointCache;
   if (index < cache.startIndex) {
     cache.startIndex = 0;
     cache.points = [];
@@ -346,7 +357,7 @@ const getHardTurnWaypoint = (
 };
 
 const trimHardTurnWaypointCache = (segmentStartIndex: number) => {
-  const cache = hardTurnWaypointCache;
+  const cache = activeSamplerState.hardTurnWaypointCache;
   if (!cache) return;
 
   const retainedStartIndex = Math.max(
@@ -372,9 +383,9 @@ const sampleHardTurnPath = (
 ) => {
   const distancePx = Math.max(0, travelPx);
   if (
-    !hardTurnWaypointCache ||
-    hardTurnWaypointCache.seed !== rng.seed ||
-    hardTurnWaypointCache.key !== key
+    !activeSamplerState.hardTurnWaypointCache ||
+    activeSamplerState.hardTurnWaypointCache.seed !== rng.seed ||
+    activeSamplerState.hardTurnWaypointCache.key !== key
   ) {
     getHardTurnWaypoint(rng, key, 0, left, top, right, bottom);
   }
@@ -383,13 +394,13 @@ const sampleHardTurnPath = (
     return getHardTurnWaypoint(rng, key, 0, left, top, right, bottom);
   }
 
-  const cache = hardTurnWaypointCache;
+  const cache = activeSamplerState.hardTurnWaypointCache;
   if (!cache) {
     return getHardTurnWaypoint(rng, key, 0, left, top, right, bottom);
   }
 
   if (cache.distances[0] > distancePx) {
-    hardTurnWaypointCache = null;
+    activeSamplerState.hardTurnWaypointCache = null;
     return sampleHardTurnPath(rng, key, travelPx, left, top, right, bottom);
   }
 
@@ -452,7 +463,7 @@ const initializeRandomWalk = (
     nextTurnTravel: travelPx + rng.rangeAt(90_004, 150, 340),
     lastTravelPx: travelPx,
   };
-  randomWalkState = state;
+  activeSamplerState.randomWalkState = state;
   return state;
 };
 
@@ -594,13 +605,13 @@ const getMotObjectParams = (
   height: number,
 ) => {
   if (
-    motParamsCache &&
-    motParamsCache.seed === rng.seed &&
-    motParamsCache.total === total &&
-    motParamsCache.width === width &&
-    motParamsCache.height === height
+    activeSamplerState.motParamsCache &&
+    activeSamplerState.motParamsCache.seed === rng.seed &&
+    activeSamplerState.motParamsCache.total === total &&
+    activeSamplerState.motParamsCache.width === width &&
+    activeSamplerState.motParamsCache.height === height
   ) {
-    return motParamsCache.objects;
+    return activeSamplerState.motParamsCache.objects;
   }
 
   const objects: MotObjectParams[] = [];
@@ -614,7 +625,7 @@ const getMotObjectParams = (
     });
   }
 
-  motParamsCache = {
+  activeSamplerState.motParamsCache = {
     seed: rng.seed,
     total,
     width,
@@ -744,7 +755,7 @@ export const samplePatternInto = (
 
   if (id === "randomWalk") {
     const stateKey = `${Math.round(arena.width)}:${Math.round(arena.height)}`;
-    let state = randomWalkState;
+    let state = activeSamplerState.randomWalkState;
     if (
       !state ||
       state.seed !== rng.seed ||
@@ -1041,4 +1052,18 @@ export const samplePattern = (
   const count = samplePatternInto(frames, id, elapsedSec, arena, params, rng);
   frames.length = count;
   return frames;
+};
+
+export const createPatternSampler = (): PatternSampler => {
+  let state = createPatternSamplerState();
+
+  return {
+    sampleInto: (...args) =>
+      withSamplerState(state, () => samplePatternInto(...args)),
+    sample: (...args) => withSamplerState(state, () => samplePattern(...args)),
+    run: (sample) => withSamplerState(state, sample),
+    reset: () => {
+      state = createPatternSamplerState();
+    },
+  };
 };
