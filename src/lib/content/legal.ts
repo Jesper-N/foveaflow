@@ -15,7 +15,7 @@ export const legalPageLinks = {
 export const legalPages = {
   privacy: {
     ...legalPageLinks.privacy,
-    metaTitle: "Privacy Policy | FoveaFlow",
+    metaTitle: "FoveaFlow - Privacy Policy",
     title: "Privacy Policy",
     description:
       "How FoveaFlow handles locally stored browser settings, Cloudflare hosting, and basic analytics.",
@@ -108,7 +108,7 @@ export const legalPages = {
   },
   terms: {
     ...legalPageLinks.terms,
-    metaTitle: "Terms of Use | FoveaFlow",
+    metaTitle: "FoveaFlow - Terms of Use",
     title: "Terms of Use",
     description:
       "The terms for using FoveaFlow, including safety limits, medical disclaimers, free access, and acceptable use.",

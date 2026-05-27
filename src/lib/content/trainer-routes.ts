@@ -354,7 +354,7 @@ export const trainerRoutes = [
       patternId: option.id,
       label: option.name,
       heading: `${toTitleCase(option.name)} Smooth Pursuit Eye Training`,
-      title: `${toTitleCase(option.name)} Smooth Pursuit Drill | ${siteMetadata.name}`,
+      title: `${siteMetadata.name} - ${toTitleCase(option.name)} Smooth Pursuit Drill`,
       description: `Practice the ${option.name} smooth pursuit pattern online. Adjust speed, target size, color, trail, and screen scale for short visual tracking sessions.`,
       indexable: false,
       seoContent: buildPatternSeoContent(
