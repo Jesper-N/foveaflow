@@ -9,7 +9,7 @@ export const siteMetadata = {
   imagePath: "/metadata/og.jpg",
   repositoryUrl: "https://github.com/Jesper-N/foveaflow",
   licenseUrl: "https://github.com/Jesper-N/foveaflow/blob/main/LICENSE",
-  lastUpdated: "2026-05-14",
+  lastUpdated: "2026-05-28",
   entityDescription:
     "FoveaFlow is a free online eye trainer for visual tracking, quick refocus, distractor tracking, and peripheral awareness. It is built for gamers, developers, sysadmins, support teams, and other people who spend long days on screens.",
   keywords: [
@@ -90,7 +90,47 @@ export const aiCrawlerAccess = [
     purpose: "Google token for Gemini training and grounding",
   },
   {
-    userAgent: "Bingbot",
+    userAgent: "Google-CloudVertexBot",
+    purpose: "Google crawler for Vertex AI and Gemini grounding",
+  },
+  {
+    userAgent: "bingbot",
     purpose: "Microsoft Bing crawler for Bing and Copilot",
+  },
+  {
+    userAgent: "Bytespider",
+    purpose: "ByteDance crawler for AI search and model training",
+  },
+  {
+    userAgent: "CCBot",
+    purpose: "Common Crawl crawler used by AI labs and search systems",
+  },
+  {
+    userAgent: "Meta-ExternalAgent",
+    purpose: "Meta crawler for AI model training",
+  },
+  {
+    userAgent: "Meta-ExternalFetcher",
+    purpose: "Meta agent for user-requested page visits",
+  },
+  {
+    userAgent: "FacebookBot",
+    purpose: "Meta crawler for AI and link preview systems",
+  },
+  {
+    userAgent: "Applebot",
+    purpose: "Apple crawler for search and Apple Intelligence features",
+  },
+  {
+    userAgent: "Amazonbot",
+    purpose: "Amazon crawler for AI and Alexa systems",
+  },
+  {
+    userAgent: "DuckAssistBot",
+    purpose: "DuckDuckGo crawler for DuckAssist AI answers",
+  },
+  {
+    userAgent: "MistralAI-User",
+    purpose: "Mistral agent for user-requested page visits",
   },
 ] as const;
