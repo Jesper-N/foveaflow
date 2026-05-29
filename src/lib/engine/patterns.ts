@@ -699,7 +699,9 @@ export const samplePatternInto = (
     radiusY: ry,
   } = resolvePatternBounds(arena, radiusPx, params.pathMarginPx);
   const speedPxPerSec = Math.max(1, params.speedPxPerSec);
-  const travelPx = params.travelPx || elapsedSec * speedPxPerSec;
+  const travelPx = Number.isFinite(params.travelPx)
+    ? params.travelPx
+    : elapsedSec * speedPxPerSec;
   const primaryColor = params.colorA ?? DEFAULT_TARGET_COLOR;
   const secondaryColor = params.colorB ?? DEFAULT_SECONDARY_COLOR;
 
