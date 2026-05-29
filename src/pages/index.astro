@@ -21,6 +21,100 @@ const structuredData = buildStructuredData(siteOrigin);
     />
   </head>
   <body>
+    <script is:inline>
+      (() => {
+        const modelContext = navigator.modelContext;
+
+        if (!modelContext || typeof modelContext.registerTool !== "function") {
+          return;
+        }
+
+        const drillRoutes = {
+          "smooth-pursuit": "/smooth-pursuit/",
+          "reaction-jumps": "/reaction-jumps/",
+          "multiple-distractions": "/multiple-distractions/",
+          "lilac-chaser": "/lilac-chaser/",
+          guide: "/guide/",
+        };
+
+        const registerTool = (tool) => {
+          try {
+            modelContext.registerTool(tool);
+          } catch (error) {
+            if (
+              error instanceof DOMException &&
+              error.name === "InvalidStateError"
+            ) {
+              return;
+            }
+
+            throw error;
+          }
+        };
+
+        registerTool({
+          name: "open_foveaflow_route",
+          title: "Open FoveaFlow Route",
+          description:
+            "Open a FoveaFlow drill or guide route in the current browser tab.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              route: {
+                type: "string",
+                enum: Object.keys(drillRoutes),
+                description: "The FoveaFlow route to open.",
+              },
+            },
+            required: ["route"],
+            additionalProperties: false,
+          },
+          execute: ({ route }) => {
+            const path = drillRoutes[route] ?? "/";
+            const url = new URL(path, window.location.origin).toString();
+            window.location.assign(url);
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Opening ${url}`,
+                },
+              ],
+            };
+          },
+        });
+
+        registerTool({
+          name: "get_foveaflow_resources",
+          title: "Get FoveaFlow Resources",
+          description:
+            "Return public FoveaFlow discovery, documentation, and safety resources.",
+          inputSchema: {
+            type: "object",
+            properties: {},
+            additionalProperties: false,
+          },
+          execute: () => ({
+            content: [
+              {
+                type: "json",
+                json: {
+                  app: new URL("/", window.location.origin).toString(),
+                  guide: new URL("/guide/", window.location.origin).toString(),
+                  llms: new URL("/llms.txt", window.location.origin).toString(),
+                  apiCatalog: new URL(
+                    "/.well-known/api-catalog",
+                    window.location.origin,
+                  ).toString(),
+                  note: "FoveaFlow is practice software, not medical advice, diagnosis, treatment, vision therapy, or a medical device.",
+                },
+              },
+            ],
+          }),
+        });
+      })();
+    </script>
     <TrainerApp client:load />
     <noscript>
       <main class="noscript-shell">

@@ -67,11 +67,13 @@ export const buildRobotsText = (site: URL) => {
     "# FoveaFlow allows search engines and AI tools to crawl public pages.",
     "User-agent: *",
     "Allow: /",
+    "Content-Signal: ai-train=yes, search=yes, ai-input=yes",
     "",
     ...aiCrawlerAccess.flatMap((crawler) => [
       `# ${crawler.purpose}`,
       `User-agent: ${crawler.userAgent}`,
       "Allow: /",
+      "Content-Signal: ai-train=yes, search=yes, ai-input=yes",
       "",
     ]),
     `Sitemap: ${absoluteUrl("/sitemap.xml", site)}`,
