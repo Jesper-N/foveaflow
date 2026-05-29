@@ -110,7 +110,7 @@
               {#each page.sections as section (section.id)}
                 <a
                   href={`#${section.id}`}
-                  class="rounded-md px-2 py-1.5 text-sm leading-5 text-muted-foreground transition-[background-color,color,transform] duration-150 hover:bg-background hover:text-foreground active:scale-[0.98]"
+                  class="rounded-md px-2 py-1.5 text-sm leading-5 text-muted-foreground transition-[background-color,color] duration-150 hover:bg-background hover:text-foreground"
                 >
                   {section.heading}
                 </a>

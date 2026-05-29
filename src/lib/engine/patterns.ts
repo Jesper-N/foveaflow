@@ -5,7 +5,7 @@ import type {
   TargetFrame,
   TargetRole,
 } from "./types";
-import type { Rng } from "./random";
+import { createRng, type Rng } from "./random";
 
 const TAU = Math.PI * 2;
 const DEFAULT_TARGET_COLOR = "#76d900";
@@ -15,6 +15,12 @@ const HARD_TURN_RANDOM_STRIDE = 60;
 const HARD_TURN_CANDIDATE_COUNT = 24;
 const HARD_TURN_MIN_DISTANCE_RATIO = 0.55;
 const HARD_TURN_RETAINED_SEGMENTS = 2;
+const DIAGONAL_X_RATE = 0.72;
+const DIAGONAL_Y_RATE = 1;
+const DIAGONAL_SPEED_SCALE = 1 / Math.hypot(DIAGONAL_X_RATE, DIAGONAL_Y_RATE);
+const BOUNCE_X_RATE = 0.93;
+const BOUNCE_Y_RATE = 0.67;
+const BOUNCE_SPEED_SCALE = 1 / Math.hypot(BOUNCE_X_RATE, BOUNCE_Y_RATE);
 const clamp = (value: number, min: number, max: number) =>
   Math.min(max, Math.max(min, value));
 
@@ -79,7 +85,7 @@ type PatternSamplerState = {
   cachedPolyline: CurvePath | null;
   randomWalkState: RandomWalkState | null;
   hardTurnWaypointCache: HardTurnWaypointCache | null;
-  motParamsCache: MotParamsCache | null;
+  motRandomWalkCache: MotRandomWalkCache | null;
 };
 
 const createPatternSamplerState = (): PatternSamplerState => ({
@@ -87,7 +93,7 @@ const createPatternSamplerState = (): PatternSamplerState => ({
   cachedPolyline: null,
   randomWalkState: null,
   hardTurnWaypointCache: null,
-  motParamsCache: null,
+  motRandomWalkCache: null,
 });
 
 let activeSamplerState = createPatternSamplerState();
@@ -208,19 +214,16 @@ type HardTurnWaypointCache = {
   distances: number[];
 };
 
-type MotObjectParams = {
-  speedScaleX: number;
-  speedScaleY: number;
-  phaseX: number;
-  phaseY: number;
+type MotRandomWalkObject = {
+  rng: Rng;
+  state: RandomWalkState;
 };
 
-type MotParamsCache = {
+type MotRandomWalkCache = {
   seed: number;
+  key: string;
   total: number;
-  width: number;
-  height: number;
-  objects: MotObjectParams[];
+  objects: MotRandomWalkObject[];
 };
 
 const resolvePatternBounds = (
@@ -442,7 +445,7 @@ const sampleHardTurnPath = (
   ] satisfies [number, number];
 };
 
-const initializeRandomWalk = (
+const createRandomWalkState = (
   rng: Rng,
   key: string,
   travelPx: number,
@@ -452,7 +455,7 @@ const initializeRandomWalk = (
   bottom: number,
 ) => {
   const heading = rng.rangeAt(90_001, 0, TAU);
-  const state: RandomWalkState = {
+  return {
     seed: rng.seed,
     key,
     x: rng.rangeAt(90_002, left, right),
@@ -462,7 +465,27 @@ const initializeRandomWalk = (
     turnIndex: 0,
     nextTurnTravel: travelPx + rng.rangeAt(90_004, 150, 340),
     lastTravelPx: travelPx,
-  };
+  } satisfies RandomWalkState;
+};
+
+const initializeRandomWalk = (
+  rng: Rng,
+  key: string,
+  travelPx: number,
+  left: number,
+  top: number,
+  right: number,
+  bottom: number,
+) => {
+  const state = createRandomWalkState(
+    rng,
+    key,
+    travelPx,
+    left,
+    top,
+    right,
+    bottom,
+  );
   activeSamplerState.randomWalkState = state;
   return state;
 };
@@ -598,38 +621,48 @@ const writeTarget = (
   return index + 1;
 };
 
-const getMotObjectParams = (
+const getMotRandomWalkObjects = (
   rng: Rng,
   total: number,
-  width: number,
-  height: number,
+  travelPx: number,
+  left: number,
+  top: number,
+  right: number,
+  bottom: number,
 ) => {
+  const key = `${Math.round(left)}:${Math.round(top)}:${Math.round(right)}:${Math.round(bottom)}`;
+  const cache = activeSamplerState.motRandomWalkCache;
   if (
-    activeSamplerState.motParamsCache &&
-    activeSamplerState.motParamsCache.seed === rng.seed &&
-    activeSamplerState.motParamsCache.total === total &&
-    activeSamplerState.motParamsCache.width === width &&
-    activeSamplerState.motParamsCache.height === height
+    cache &&
+    cache.seed === rng.seed &&
+    cache.key === key &&
+    cache.total === total &&
+    cache.objects.every((object) => travelPx >= object.state.lastTravelPx)
   ) {
-    return activeSamplerState.motParamsCache.objects;
+    return cache.objects;
   }
 
-  const objects: MotObjectParams[] = [];
+  const objects: MotRandomWalkObject[] = [];
   for (let index = 0; index < total; index += 1) {
-    const base = index * 10;
+    const objectRng = createRng(rng.seed + 120_000 + index * 9_973);
     objects.push({
-      speedScaleX: rng.rangeAt(base, 0.52, 1.26),
-      speedScaleY: rng.rangeAt(base + 1, 0.48, 1.18),
-      phaseX: rng.rangeAt(base + 2, 0, width * 2),
-      phaseY: rng.rangeAt(base + 3, 0, height * 2),
+      rng: objectRng,
+      state: createRandomWalkState(
+        objectRng,
+        `${key}:${index}`,
+        travelPx,
+        left,
+        top,
+        right,
+        bottom,
+      ),
     });
   }
 
-  activeSamplerState.motParamsCache = {
+  activeSamplerState.motRandomWalkCache = {
     seed: rng.seed,
+    key,
     total,
-    width,
-    height,
     objects,
   };
   return objects;
@@ -733,8 +766,8 @@ export const samplePatternInto = (
     return writeTarget(
       frames,
       0,
-      left + pingPong(travelPx * 0.72, width),
-      top + pingPong(travelPx, height),
+      left + pingPong(travelPx * DIAGONAL_X_RATE * DIAGONAL_SPEED_SCALE, width),
+      top + pingPong(travelPx * DIAGONAL_Y_RATE * DIAGONAL_SPEED_SCALE, height),
       params,
       radiusPx,
       primaryColor,
@@ -745,8 +778,16 @@ export const samplePatternInto = (
     return writeTarget(
       frames,
       0,
-      left + pingPong(travelPx * 0.93 + width * 0.18, width),
-      top + pingPong(travelPx * 0.67 + height * 0.41, height),
+      left +
+        pingPong(
+          travelPx * BOUNCE_X_RATE * BOUNCE_SPEED_SCALE + width * 0.18,
+          width,
+        ),
+      top +
+        pingPong(
+          travelPx * BOUNCE_Y_RATE * BOUNCE_SPEED_SCALE + height * 0.41,
+          height,
+        ),
       params,
       radiusPx,
       primaryColor,
@@ -824,7 +865,7 @@ export const samplePatternInto = (
     return writeTarget(
       frames,
       0,
-      left + pingPong(travelPx * 0.72, width),
+      left + pingPong(travelPx, width),
       cy,
       params,
       radiusPx,
@@ -837,7 +878,35 @@ export const samplePatternInto = (
       frames,
       0,
       cx,
-      top + pingPong(travelPx * 0.72, height),
+      top + pingPong(travelPx, height),
+      params,
+      radiusPx,
+      primaryColor,
+    );
+  }
+
+  if (id === "downRightSweep") {
+    const diagonalLength = Math.max(1, Math.hypot(width, height));
+    const progress = pingPong(travelPx, diagonalLength) / diagonalLength;
+    return writeTarget(
+      frames,
+      0,
+      left + width * progress,
+      top + height * progress,
+      params,
+      radiusPx,
+      primaryColor,
+    );
+  }
+
+  if (id === "downLeftSweep") {
+    const diagonalLength = Math.max(1, Math.hypot(width, height));
+    const progress = pingPong(travelPx, diagonalLength) / diagonalLength;
+    return writeTarget(
+      frames,
+      0,
+      right - width * progress,
+      top + height * progress,
       params,
       radiusPx,
       primaryColor,
@@ -847,7 +916,7 @@ export const samplePatternInto = (
   if (id === "perimeterLoop") {
     const [x, y] = sampleClosedPolyline(
       curveCacheKey(id, left, top, right, bottom, 4),
-      travelPx * 0.62,
+      travelPx,
       4,
       (index) => {
         if (index === 0) return [left, top];
@@ -862,30 +931,13 @@ export const samplePatternInto = (
   if (id === "diamondLoop") {
     const [x, y] = sampleClosedPolyline(
       curveCacheKey(id, left, top, right, bottom, 4),
-      travelPx * 0.68,
+      travelPx,
       4,
       (index) => {
         if (index === 0) return [cx, top];
         if (index === 1) return [right, cy];
         if (index === 2) return [cx, bottom];
         return [left, cy];
-      },
-    );
-    return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
-  }
-
-  if (id === "spiralBloom") {
-    const [x, y] = sampleClosedCurve(
-      curveCacheKey(id, left, top, right, bottom, 140),
-      travelPx,
-      140,
-      (phase) => {
-        const angle = phase * TAU;
-        const bloom = 0.42 + 0.5 * ((1 - Math.cos(angle)) / 2);
-        return [
-          cx + Math.cos(angle) * rx * bloom,
-          cy + Math.sin(angle) * ry * bloom,
-        ];
       },
     );
     return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
@@ -912,7 +964,7 @@ export const samplePatternInto = (
     const lanes = 5;
     const [x, y] = sampleClosedPolyline(
       curveCacheKey(id, left, top, right, bottom, lanes),
-      travelPx * 1.08,
+      travelPx,
       lanes,
       (index) => [
         index % 2 === 0 ? left : right,
@@ -928,7 +980,7 @@ export const samplePatternInto = (
     const pointCount = rows * columns;
     const [x, y] = sampleClosedPolyline(
       curveCacheKey(id, left, top, right, bottom, pointCount),
-      travelPx * 0.72,
+      travelPx,
       pointCount,
       (index) => {
         const row = index % rows;
@@ -945,7 +997,7 @@ export const samplePatternInto = (
   if (id === "lissajous") {
     const [x, y] = sampleClosedCurve(
       curveCacheKey(id, left, top, right, bottom, 180),
-      travelPx * 0.82,
+      travelPx,
       180,
       (phase) => {
         const angle = phase * TAU;
@@ -961,7 +1013,7 @@ export const samplePatternInto = (
   if (id === "hourglass") {
     const [x, y] = sampleClosedCurve(
       curveCacheKey(id, left, top, right, bottom, 160),
-      travelPx * 0.82,
+      travelPx,
       160,
       (phase) => {
         const angle = phase * TAU;
@@ -973,29 +1025,12 @@ export const samplePatternInto = (
     return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
   }
 
-  if (id === "orbitShift") {
-    const [x, y] = sampleClosedCurve(
-      curveCacheKey(id, left, top, right, bottom, 180),
-      travelPx,
-      180,
-      (phase) => {
-        const angle = phase * TAU;
-        const drift = Math.sin(angle * 0.5) * rx * 0.38;
-        return [
-          cx + drift + Math.cos(angle) * rx * 0.42,
-          cy + Math.sin(angle) * ry * 0.82,
-        ];
-      },
-    );
-    return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
-  }
-
   if (id === "cornerTour") {
     const insetX = width * 0.18;
     const insetY = height * 0.18;
     const [x, y] = sampleClosedPolyline(
       curveCacheKey(id, left, top, right, bottom, 4),
-      travelPx * 0.64,
+      travelPx,
       4,
       (index) => {
         if (index === 0) return [left, top];
@@ -1015,17 +1050,34 @@ export const samplePatternInto = (
       20,
     );
     const total = targetCount + distractorCount;
-    const objects = getMotObjectParams(rng, total, width, height);
+    const objects = getMotRandomWalkObjects(
+      rng,
+      total,
+      travelPx,
+      left,
+      top,
+      right,
+      bottom,
+    );
     let count = 0;
 
     for (let index = 0; index < total; index += 1) {
       const object = objects[index];
       const role: TargetRole = index < targetCount ? "target" : "distractor";
+      advanceRandomWalk(
+        object.state,
+        object.rng,
+        travelPx,
+        left,
+        top,
+        right,
+        bottom,
+      );
       count = writeTarget(
         frames,
         count,
-        left + pingPong(travelPx * object.speedScaleX + object.phaseX, width),
-        top + pingPong(travelPx * object.speedScaleY + object.phaseY, height),
+        object.state.x,
+        object.state.y,
         params,
         radiusPx,
         role === "target" ? primaryColor : secondaryColor,

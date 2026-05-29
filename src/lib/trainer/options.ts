@@ -185,30 +185,33 @@ const unpredictivePatternIds = [
   "directionChange",
 ] as const satisfies readonly PatternId[];
 
-const directionTogglePatternIds = [
-  "circle",
-  "ellipse",
-  "figureEight",
-  "wave",
-  "spiralBloom",
-  "clover",
-  "lissajous",
-  "hourglass",
-  "orbitShift",
+const fixedDirectionPatternIds = [
+  "randomWalk",
+  "directionChange",
+  "diagonal",
+  "bounce",
+  "horizontalSweep",
+  "verticalSweep",
+  "downRightSweep",
+  "downLeftSweep",
 ] as const satisfies readonly PatternId[];
 
 const unpredictivePatternIdSet: ReadonlySet<PatternId> = new Set(
   unpredictivePatternIds,
 );
-const directionTogglePatternIdSet: ReadonlySet<PatternId> = new Set(
-  directionTogglePatternIds,
+const pursuitPatternIdSet: ReadonlySet<PatternId> = new Set(
+  pursuitPatternOptions.map((option) => option.id),
+);
+const fixedDirectionPatternIdSet: ReadonlySet<PatternId> = new Set(
+  fixedDirectionPatternIds,
 );
 
 const isUnpredictivePattern = (patternId: PatternId) =>
   unpredictivePatternIdSet.has(patternId);
 
 export const canPatternToggleDirection = (patternId: PatternId) =>
-  directionTogglePatternIdSet.has(patternId);
+  pursuitPatternIdSet.has(patternId) &&
+  !fixedDirectionPatternIdSet.has(patternId);
 
 export const unpredictivePatternOptions = pursuitPatternOptions.filter(
   (option) => isUnpredictivePattern(option.id),

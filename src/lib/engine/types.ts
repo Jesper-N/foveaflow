@@ -42,15 +42,15 @@ export type PatternId =
   | "teleport"
   | "horizontalSweep"
   | "verticalSweep"
+  | "downRightSweep"
+  | "downLeftSweep"
   | "perimeterLoop"
   | "diamondLoop"
-  | "spiralBloom"
   | "clover"
   | "zigZag"
   | "stairStep"
   | "lissajous"
   | "hourglass"
-  | "orbitShift"
   | "cornerTour"
   | "multipleObjectTracking";
 

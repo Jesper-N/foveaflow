@@ -11,6 +11,7 @@
   import { Button } from "$lib/components/ui/button/index.js";
   import * as Dialog from "$lib/components/ui/dialog/index.js";
   import * as Sidebar from "$lib/components/ui/sidebar/index.js";
+  import * as Tabs from "$lib/components/ui/tabs/index.js";
   import type { TrainerSettings } from "$lib/engine/presets";
   import type {
     BehaviorId,
@@ -52,6 +53,12 @@
     patternSelectContentClass: string;
     actions: TrainerDialogActions;
   } = $props();
+
+  const handleControlSectionValueChange = (sectionId: string) => {
+    if (availableControlSections.some((section) => section.id === sectionId)) {
+      actions.onControlSectionChange(sectionId as ControlSectionId);
+    }
+  };
 </script>
 
 {#snippet sliderRow(label: string, valueLabel: string)}
@@ -67,14 +74,16 @@
 
 <Dialog.Root bind:open>
   <Dialog.Content
-    class="overflow-hidden p-0 md:max-h-125 md:max-w-175 lg:max-w-200"
+    class="h-[calc(100dvh-1rem)] max-h-none max-w-[calc(100dvw-1rem)] overflow-hidden p-0 md:h-auto md:max-h-125 md:max-w-175 lg:max-w-200"
     trapFocus={false}
   >
     <Dialog.Title class="sr-only">Controls</Dialog.Title>
     <Dialog.Description class="sr-only">
       Change your saved FoveaFlow settings.
     </Dialog.Description>
-    <Sidebar.Provider class="items-start">
+    <Sidebar.Provider
+      class="h-full min-h-0 min-w-0 items-start overflow-hidden"
+    >
       <Sidebar.Root collapsible="none" class="hidden md:flex">
         <Sidebar.Content>
           <Sidebar.Group>
@@ -100,11 +109,15 @@
         </Sidebar.Content>
       </Sidebar.Root>
 
-      <div class="flex h-120 flex-1 flex-col overflow-hidden">
+      <Tabs.Root
+        value={currentControlSection}
+        onValueChange={handleControlSectionValueChange}
+        class="flex h-full min-h-0 min-w-0 flex-1 flex-col gap-0 overflow-hidden md:h-120"
+      >
         <header
-          class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12"
+          class="flex h-16 shrink-0 items-center gap-2 px-4 pr-16 transition-[width,height] ease-linear md:px-4 md:pr-4 group-has-data-[collapsible=icon]/sidebar-wrapper:h-12"
         >
-          <div class="flex min-w-0 items-center gap-2 px-4 text-base">
+          <div class="flex min-w-0 items-center gap-2 text-base">
             <span class="shrink-0 text-muted-foreground"> Controls </span>
             <span class="shrink-0 text-muted-foreground" aria-hidden="true">
               ›
@@ -115,8 +128,26 @@
           </div>
         </header>
 
-        <div class="flex flex-1 flex-col gap-4 overflow-y-auto p-4 pt-0">
-          <div class="max-w-3xl rounded-xl bg-muted/50 p-4">
+        <nav class="px-3 py-2 md:hidden" aria-label="Control sections">
+          <Tabs.List class="no-scrollbar w-full justify-start overflow-x-auto">
+            {#each availableControlSections as section (section.id)}
+              <Tabs.Trigger
+                value={section.id}
+                class="pressable-ui shrink-0 grow-0 basis-auto"
+              >
+                <TrainerControlSectionIcon icon={section.icon} {colorMode} />
+                <span>{section.label}</span>
+              </Tabs.Trigger>
+            {/each}
+          </Tabs.List>
+        </nav>
+
+        <div
+          class="flex min-h-0 min-w-0 flex-1 flex-col gap-4 overflow-y-auto p-3 md:p-4 md:pt-0"
+        >
+          <div
+            class="min-h-full w-full max-w-3xl rounded-3xl border border-border/60 bg-muted/55 p-4 shadow-[0_18px_50px_-42px_rgba(0,0,0,0.85)] md:min-h-0 md:rounded-xl md:border-0 md:bg-muted/50 md:shadow-none"
+          >
             {#if currentControlSection === "session"}
               <TrainerSettingsSection icon="theme" label="Session" {colorMode}>
                 <TrainerSessionControls
@@ -215,7 +246,7 @@
             {/if}
           </div>
         </div>
-      </div>
+      </Tabs.Root>
     </Sidebar.Provider>
   </Dialog.Content>
 </Dialog.Root>

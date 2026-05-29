@@ -253,12 +253,14 @@ const patternSummaries: Partial<Record<PatternId, string>> = {
     "Horizontal Sweep keeps the motion simple and broad for left-right tracking across a larger visual range.",
   verticalSweep:
     "Vertical Sweep mirrors the simplicity of Horizontal Sweep but changes the direction of travel for straightforward up-down tracking.",
+  downRightSweep:
+    "Down-right Sweep moves from the top-left corner toward the bottom-right corner on a simple diagonal line.",
+  downLeftSweep:
+    "Down-left Sweep moves from the top-right corner toward the bottom-left corner on a simple diagonal line.",
   perimeterLoop:
     "Edge Loop pushes the target around the perimeter, making the drill more spacious and edge-focused than center-heavy loops.",
   diamondLoop:
     "Diamond Loop combines a simple repeating route with clear corner transitions and sharper shifts than Circle.",
-  spiralBloom:
-    "Opening Spiral changes the range of movement as the path expands, so the session feels more dynamic than a fixed-size loop.",
   clover:
     "Clover creates repeated looping lobes for continuous motion with more shape variation than Circle.",
   zigZag:
@@ -269,8 +271,6 @@ const patternSummaries: Partial<Record<PatternId, string>> = {
     "Lissajous is one of the more complex flowing patterns because the target moves through a looping path that changes its relationship to the center over time.",
   hourglass:
     "Hourglass narrows through the middle and opens back out, creating repeated crossing behavior with a constrained shape.",
-  orbitShift:
-    "Shifting Orbit adds drift to the sense of rotation, so the target is not just looping in place.",
   cornerTour:
     "Corner Tour gives each corner of the display a deliberate role, making the route spacious and structured.",
 };
@@ -300,19 +300,23 @@ const publicPursuitPatternRoutes = [
     slug: "vertical-sweep",
     label: "Vertical sweep",
   },
+  {
+    patternId: "downRightSweep",
+    slug: "down-right-sweep",
+    label: "Down-right sweep",
+  },
+  {
+    patternId: "downLeftSweep",
+    slug: "down-left-sweep",
+    label: "Down-left sweep",
+  },
   { patternId: "perimeterLoop", slug: "edge-loop", label: "Edge loop" },
   { patternId: "diamondLoop", slug: "diamond-loop", label: "Diamond loop" },
-  {
-    patternId: "spiralBloom",
-    slug: "opening-spiral",
-    label: "Opening spiral",
-  },
   { patternId: "clover", slug: "clover", label: "Clover" },
   { patternId: "zigZag", slug: "zigzag", label: "Zigzag" },
   { patternId: "stairStep", slug: "stair-steps", label: "Stair steps" },
   { patternId: "lissajous", slug: "lissajous", label: "Lissajous" },
   { patternId: "hourglass", slug: "hourglass", label: "Hourglass" },
-  { patternId: "orbitShift", slug: "shifting-orbit", label: "Shifting orbit" },
   { patternId: "cornerTour", slug: "corner-tour", label: "Corner tour" },
 ] satisfies readonly PublicPursuitPatternRoute[];
 

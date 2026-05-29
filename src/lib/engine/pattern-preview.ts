@@ -29,15 +29,15 @@ const previewTravelPxByPattern: Partial<Record<PatternId, number>> = {
   directionChange: 900,
   horizontalSweep: 112,
   verticalSweep: 68,
+  downRightSweep: 118,
+  downLeftSweep: 118,
   perimeterLoop: 206,
   diamondLoop: 138,
-  spiralBloom: 124,
   clover: 146,
   zigZag: 170,
   stairStep: 300,
   lissajous: 148,
   hourglass: 138,
-  orbitShift: 120,
   cornerTour: 164,
 };
 

@@ -28,18 +28,10 @@
     />
     <circle cx="32" cy="12" r="2.6" fill="currentColor" />
   {:else if mode === "reactionTime"}
-    <path
-      d="M10 22 L24 10 L38 20"
-      stroke="currentColor"
-      stroke-width="1.7"
-      stroke-linecap="round"
-      stroke-dasharray="2.5 3"
-      opacity="0.55"
-      vector-effect="non-scaling-stroke"
-    />
-    <circle cx="10" cy="22" r="2.2" fill="currentColor" opacity="0.45" />
-    <circle cx="24" cy="10" r="2.2" fill="currentColor" opacity="0.65" />
-    <circle cx="38" cy="20" r="3" fill="currentColor" />
+    <circle cx="10.5" cy="23.5" r="3.6" fill="currentColor" />
+    <circle cx="19.5" cy="11.5" r="3.6" fill="currentColor" />
+    <circle cx="28.5" cy="20.5" r="3.6" fill="currentColor" />
+    <circle cx="37.5" cy="14.5" r="3.6" fill="currentColor" />
   {:else if mode === "mot"}
     <circle cx="14" cy="10" r="2.5" fill="currentColor" opacity="0.42" />
     <circle cx="34" cy="11" r="2.4" fill="currentColor" opacity="0.42" />

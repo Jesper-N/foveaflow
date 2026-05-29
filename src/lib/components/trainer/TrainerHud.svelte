@@ -7,6 +7,7 @@
   import SettingsIcon from "@lucide/svelte/icons/settings-2";
 
   import ModePathPreview from "$lib/components/ModePathPreview.svelte";
+  import PatternPathPreview from "$lib/components/PatternPathPreview.svelte";
   import TrainerPatternSelectGroups from "$lib/components/trainer/TrainerPatternSelectGroups.svelte";
   import { Button } from "$lib/components/ui/button/index.js";
   import * as Select from "$lib/components/ui/select/index.js";
@@ -60,6 +61,38 @@
 
   let hudControlTransition = $derived(actions.hudControlTransition);
 </script>
+
+{#snippet presetSelectOptions()}
+  <Select.Group>
+    {#each exercisePresets as preset (preset.id)}
+      <Select.Item value={preset.id}>
+        <span class="flex min-w-0 items-center gap-2">
+          <ModePathPreview mode={preset.id} compact />
+          <span class="truncate">{preset.name}</span>
+        </span>
+      </Select.Item>
+    {/each}
+  </Select.Group>
+{/snippet}
+
+{#snippet lilacChaserColorSelectOptions()}
+  <Select.Group>
+    {#each lilacChaserColorOptions as option (option.id)}
+      <Select.Item value={option.id}>
+        <span class="flex min-w-0 items-center gap-2">
+          <svg
+            viewBox="0 0 12 12"
+            class="size-3 shrink-0 rounded-full border border-border/60"
+            aria-hidden="true"
+          >
+            <circle cx="6" cy="6" r="6" fill={option.id} />
+          </svg>
+          <span class="truncate">{option.name}</span>
+        </span>
+      </Select.Item>
+    {/each}
+  </Select.Group>
+{/snippet}
 
 {#if hudHidden}
   <button
@@ -126,6 +159,86 @@
         </svelte:element>
       </div>
 
+      <div class="flex shrink-0 items-center gap-2 md:hidden">
+        <Select.Root
+          type="single"
+          value={settings.presetId}
+          onValueChange={actions.handlePresetChange}
+          onOpenChange={actions.handleHeaderPresetOpenChange}
+        >
+          <Select.Trigger
+            class="pressable-ui size-9 justify-center rounded-full p-0 [&>svg:last-child]:hidden"
+            aria-label={`Drill: ${getPresetName(settings.presetId)}`}
+            title={`Drill: ${getPresetName(settings.presetId)}`}
+          >
+            <ModePathPreview mode={settings.presetId} compact />
+            <span class="sr-only">{getPresetName(settings.presetId)}</span>
+          </Select.Trigger>
+          <Select.Content>
+            {@render presetSelectOptions()}
+          </Select.Content>
+        </Select.Root>
+
+        {#if settings.presetId === "pursuit"}
+          <div class="flex shrink-0" in:hudControlTransition>
+            <Select.Root
+              type="single"
+              value={settings.patternId}
+              onValueChange={actions.handlePatternChange}
+              onOpenChange={actions.handleHeaderPatternOpenChange}
+            >
+              <Select.Trigger
+                class="pressable-ui size-9 justify-center rounded-full p-0 [&>svg:last-child]:hidden"
+                aria-label={`Motion path: ${getPatternName(settings.patternId)}`}
+                title={`Motion path: ${getPatternName(settings.patternId)}`}
+              >
+                <PatternPathPreview patternId={settings.patternId} compact />
+                <span class="sr-only">
+                  {getPatternName(settings.patternId)}
+                </span>
+              </Select.Trigger>
+              <Select.Content class={patternSelectContentClass}>
+                <TrainerPatternSelectGroups />
+              </Select.Content>
+            </Select.Root>
+          </div>
+        {:else if isLilacChaserMode}
+          <div class="flex shrink-0" in:hudControlTransition>
+            <Select.Root
+              type="single"
+              value={settings.lilacChaserBallColor}
+              onValueChange={actions.handleLilacChaserColorChange}
+              onOpenChange={actions.handleHeaderLilacChaserColorOpenChange}
+            >
+              <Select.Trigger
+                class="pressable-ui size-9 justify-center rounded-full p-0 [&>svg:last-child]:hidden"
+                aria-label={`Lilac Chaser ball color: ${getLilacChaserColorName(settings.lilacChaserBallColor)}`}
+                title={`Lilac Chaser ball color: ${getLilacChaserColorName(settings.lilacChaserBallColor)}`}
+              >
+                <svg
+                  viewBox="0 0 12 12"
+                  class="size-4 shrink-0 rounded-full border border-border/60"
+                  aria-hidden="true"
+                >
+                  <circle
+                    cx="6"
+                    cy="6"
+                    r="6"
+                    fill={settings.lilacChaserBallColor}
+                  />
+                </svg>
+                <span class="sr-only">
+                  {getLilacChaserColorName(settings.lilacChaserBallColor)}
+                </span>
+              </Select.Trigger>
+              <Select.Content>
+                {@render lilacChaserColorSelectOptions()}
+              </Select.Content>
+            </Select.Root>
+          </div>
+        {/if}
+      </div>
+
       <div
         class="hidden h-8 w-px shrink-0 bg-border/80 md:block"
         aria-hidden="true"
@@ -152,16 +265,7 @@
             </span>
           </Select.Trigger>
           <Select.Content>
-            <Select.Group>
-              {#each exercisePresets as preset (preset.id)}
-                <Select.Item value={preset.id}>
-                  <span class="flex min-w-0 items-center gap-2">
-                    <ModePathPreview mode={preset.id} compact />
-                    <span class="truncate">{preset.name}</span>
-                  </span>
-                </Select.Item>
-              {/each}
-            </Select.Group>
+            {@render presetSelectOptions()}
           </Select.Content>
         </Select.Root>
 
@@ -250,22 +354,7 @@
               </span>
             </Select.Trigger>
             <Select.Content>
-              <Select.Group>
-                {#each lilacChaserColorOptions as option (option.id)}
-                  <Select.Item value={option.id}>
-                    <span class="flex min-w-0 items-center gap-2">
-                      <svg
-                        viewBox="0 0 12 12"
-                        class="size-3 shrink-0 rounded-full border border-border/60"
-                        aria-hidden="true"
-                      >
-                        <circle cx="6" cy="6" r="6" fill={option.id} />
-                      </svg>
-                      <span class="truncate">{option.name}</span>
-                    </span>
-                  </Select.Item>
-                {/each}
-              </Select.Group>
+              {@render lilacChaserColorSelectOptions()}
             </Select.Content>
           </Select.Root>
           <div
