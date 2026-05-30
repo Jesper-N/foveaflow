@@ -33,6 +33,7 @@ export type CanvasTheme = {
   background: string;
   trail: string;
   grid: string;
+  trailGrid: string;
 };
 
 export type CanvasColorMode = "light" | "dark";
@@ -46,9 +47,11 @@ type LetterContext = {
   seed: number;
 };
 
-const withAlpha = (color: string, alpha: number) => {
-  if (!color.startsWith("rgb(")) return color;
-  return color.replace("rgb(", "rgba(").replace(")", `, ${alpha})`);
+export const withOklchAlpha = (color: string, alpha: number) => {
+  const alphaValue = Math.min(1, Math.max(0, alpha));
+  return color.startsWith("oklch(")
+    ? color.replace(/\s*(?:\/[^)]*)?\)$/, ` / ${alphaValue})`)
+    : color;
 };
 
 export const getCanvasTheme = (
@@ -60,13 +63,15 @@ export const getCanvasTheme = (
   return colorMode === "dark"
     ? {
         background,
-        trail: withAlpha(background, 0.35),
+        trail: withOklchAlpha(background, 0.35),
         grid: "rgba(255, 255, 255, 0.045)",
+        trailGrid: "rgba(255, 255, 255, 0.026)",
       }
     : {
         background,
-        trail: withAlpha(background, 0.38),
+        trail: withOklchAlpha(background, 0.38),
         grid: "rgba(16, 18, 22, 0.075)",
+        trailGrid: "rgba(16, 18, 22, 0.048)",
       };
 };
 
@@ -74,10 +79,13 @@ export const drawGuides = (
   ctx: CanvasRenderingContext2D,
   gridPath: Path2D | null,
   theme: CanvasTheme,
+  gridColor = theme.grid,
 ) => {
-  ctx.strokeStyle = theme.grid;
+  if (!gridPath) return;
+
+  ctx.strokeStyle = gridColor;
   ctx.lineWidth = 1;
-  if (gridPath) ctx.stroke(gridPath);
+  ctx.stroke(gridPath);
 };
 
 export function createGuideGridPath(arena: Arena): Path2D;

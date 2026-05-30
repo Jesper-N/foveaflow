@@ -146,7 +146,7 @@
           class="flex min-h-0 min-w-0 flex-1 flex-col gap-4 overflow-y-auto p-3 md:p-4 md:pt-0"
         >
           <div
-            class="min-h-full w-full max-w-3xl rounded-3xl border border-border/60 bg-muted/55 p-4 shadow-[0_18px_50px_-42px_rgba(0,0,0,0.85)] md:min-h-0 md:rounded-xl md:border-0 md:bg-muted/50 md:shadow-none"
+            class="t-resize w-full max-w-3xl rounded-3xl border border-border/60 bg-muted/55 p-4 shadow-[0_18px_50px_-42px_rgba(0,0,0,0.85)] md:rounded-xl md:border-0 md:bg-muted/50 md:shadow-none"
           >
             {#if currentControlSection === "session"}
               <TrainerSettingsSection icon="theme" label="Session" {colorMode}>
@@ -225,6 +225,7 @@
               >
                 <TrainerScreenControls
                   bind:settings
+                  {canToggleDirection}
                   handleCalibrationInput={actions.handleCalibrationInput}
                 />
               </TrainerSettingsSection>

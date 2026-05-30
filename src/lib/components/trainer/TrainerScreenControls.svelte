@@ -10,11 +10,18 @@
 
   let {
     settings = $bindable(),
+    canToggleDirection,
     handleCalibrationInput,
   }: {
     settings: TrainerSettings;
+    canToggleDirection: boolean;
     handleCalibrationInput: (event: Event, field: CalibrationField) => void;
   } = $props();
+
+  const handleShowTrailChange = (checked: boolean) => {
+    if (!canToggleDirection) return;
+    settings.showTrail = checked;
+  };
 </script>
 
 <div class="grid gap-3 sm:grid-cols-2">
@@ -44,5 +51,10 @@
 </div>
 <div class="flex min-h-12 items-center justify-between gap-4">
   <span class="text-base font-medium">Show trail</span>
-  <Switch bind:checked={settings.showTrail} aria-label="Show trail" />
+  <Switch
+    checked={settings.showTrail && canToggleDirection}
+    onCheckedChange={handleShowTrailChange}
+    disabled={!canToggleDirection}
+    aria-label="Show trail"
+  />
 </div>

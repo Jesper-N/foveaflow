@@ -260,7 +260,7 @@
 
   const handlePopState = () => {
     syncSettingsFromBrowserRoute();
-    drawFrame();
+    drawFrame({ clearTrail: true });
   };
 
   const flushSettings = () => {
@@ -543,7 +543,7 @@
     );
   };
 
-  const drawFrame = () => {
+  const drawFrame = ({ clearTrail = false } = {}) => {
     if (!context) return;
     const ctx = context;
     if (isLilacChaserMode) {
@@ -552,9 +552,16 @@
     }
 
     const theme = canvasTheme ?? getCanvasTheme(canvas, colorMode);
-    ctx.fillStyle = settings.showTrail ? theme.trail : theme.background;
+    const showTrail =
+      settings.showTrail && canPatternToggleDirection(settings.patternId);
+    ctx.fillStyle = showTrail && !clearTrail ? theme.trail : theme.background;
     ctx.fillRect(0, 0, arena.width, arena.height);
-    drawGuides(ctx, gridPath, theme);
+    drawGuides(
+      ctx,
+      gridPath,
+      theme,
+      showTrail && !clearTrail ? theme.trailGrid : theme.grid,
+    );
 
     const frameSample = frameSampler.sample({
       settings,
@@ -607,7 +614,7 @@
     resetDirectionForFixedPatterns(settings.patternId);
     refreshBaseSpeed();
     invalidateLilacChaserFrame();
-    drawFrame();
+    drawFrame({ clearTrail: true });
   };
 
   const getBrowserRouteSlug = () => {
@@ -636,7 +643,7 @@
     currentSpeedPxPerSec = 0;
     refreshBaseSpeed();
     invalidateLilacChaserFrame();
-    drawFrame();
+    drawFrame({ clearTrail: true });
     syncBrowserPath();
   };
 
@@ -742,6 +749,7 @@
   const setPattern = (patternId: PatternId) => {
     settings.patternId = patternId;
     resetDirectionForFixedPatterns(patternId);
+    drawFrame({ clearTrail: true });
   };
 
   const setSpeedUnit = (unit: SpeedUnit) => {
