@@ -17,7 +17,7 @@
     "test": "bun test --pass-with-no-tests",
     "test:smoke": "playwright test --pass-with-no-tests",
     "audit": "bun audit",
-    "verify": "bun run format:check && bun run check && bun run check:tools && bun run tailwind:diagnostics && bun run test && bun run test:smoke && bun run audit",
+    "verify": "bun run format && bun run format:check && bun run check && bun run check:tools && bun run tailwind:diagnostics && bun run test && bun run test:smoke && bun run audit",
     "prepush": "bun run verify",
     "tailwind:diagnostics": "bun scripts/tailwind-canonical-classes.ts",
     "format": "prettier --write .",
