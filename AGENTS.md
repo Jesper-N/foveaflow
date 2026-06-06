@@ -1,4 +1,5 @@
 # FoveaFlow
+
 Browser app for vision training: visual tracking, focus, reaction speed, and peripheral awareness. No account or install; settings stay in the browser.
 
 ## Project workflow
