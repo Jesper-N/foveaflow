@@ -180,7 +180,7 @@ export const drawLetterGlyph = (
   );
   ctx.save();
   ctx.fillStyle = settings.letterColor;
-  ctx.font = `${settings.letterWeight} ${fontSize}px Geist, Arial, sans-serif`;
+  ctx.font = `${settings.letterWeight} ${fontSize}px Inter, Arial, sans-serif`;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.translate(frame.x, frame.y + fontSize * 0.04);

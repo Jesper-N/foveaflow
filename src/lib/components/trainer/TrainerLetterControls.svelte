@@ -61,7 +61,7 @@
           fill={settings.letterColor}
           font-size="15"
           font-weight={settings.letterWeight}
-          font-family="Geist, Arial, sans-serif"
+          font-family="Inter, Arial, sans-serif"
         >
           A
         </text>
