@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, untrack } from "svelte";
+  import { onMount, tick as flushSvelte, untrack } from "svelte";
   import type { Attachment } from "svelte/attachments";
   import { ModeWatcher, mode, setMode } from "mode-watcher";
 
@@ -59,6 +59,11 @@
     advanceMotionTick,
     type MotionTickResult,
   } from "$lib/trainer/motion";
+  import {
+    getTrainerShortcutAction,
+    isTrainerShortcutCapturedByTarget,
+    type TrainerShortcutAction,
+  } from "$lib/trainer/keyboard";
   import {
     applyPresetToSettings,
     applyRouteToSettings,
@@ -121,6 +126,9 @@
   const pathMarginPx = 16;
   const hudAutoHideDelayMs = 5000;
   const cursorHideDelayMs = 2000;
+  const shortcutPrioritySurfaceSelector =
+    "[data-slot='dialog-content'], [data-slot='select-content'], [popover]:popover-open";
+  const desktopHeaderQuery = "(min-width: 48rem)";
 
   let settings = $state<TrainerSettings>(
     applyRouteToSettings(
@@ -140,9 +148,21 @@
   let hudAutoHideReady = $state(false);
   let hudVisible = $state(true);
   let cursorHidden = $state(false);
-  let headerPresetSelectOpen = $state(false);
-  let headerPatternSelectOpen = $state(false);
-  let headerLilacChaserColorSelectOpen = $state(false);
+  let mobilePresetSelectOpen = $state(false);
+  let mobilePatternSelectOpen = $state(false);
+  let mobileLilacChaserColorSelectOpen = $state(false);
+  let desktopPresetSelectOpen = $state(false);
+  let desktopPatternSelectOpen = $state(false);
+  let desktopLilacChaserColorSelectOpen = $state(false);
+  let headerPresetSelectOpen = $derived(
+    mobilePresetSelectOpen || desktopPresetSelectOpen,
+  );
+  let headerPatternSelectOpen = $derived(
+    mobilePatternSelectOpen || desktopPatternSelectOpen,
+  );
+  let headerLilacChaserColorSelectOpen = $derived(
+    mobileLilacChaserColorSelectOpen || desktopLilacChaserColorSelectOpen,
+  );
   let colorMode = $derived.by<CanvasColorMode>(() => {
     const nextMode = mode.current;
     if (nextMode === "light" || nextMode === "dark") return nextMode;
@@ -587,6 +607,14 @@
     }
   };
 
+  const adjustTargetSize = (deltaPx: number) => {
+    setSizeSliderValue([settings.baseRadiusPx + deltaPx]);
+  };
+
+  const adjustSpeed = (delta: number) => {
+    setSpeedSliderValue([settings.speed.value + delta]);
+  };
+
   const invalidateLilacChaserFrame = () => {
     lastLilacChaserHiddenIndex = -1;
   };
@@ -712,17 +740,14 @@
   };
 
   const handleHeaderPresetOpenChange = (open: boolean) => {
-    headerPresetSelectOpen = open;
     if (open) revealHud();
   };
 
   const handleHeaderPatternOpenChange = (open: boolean) => {
-    headerPatternSelectOpen = open;
     if (open) revealHud();
   };
 
   const handleHeaderLilacChaserColorOpenChange = (open: boolean) => {
-    headerLilacChaserColorSelectOpen = open;
     if (open) revealHud();
   };
 
@@ -797,6 +822,120 @@
     revealHud();
     activeControlSection = "targets";
     panelOpen = true;
+  };
+
+  const openHeaderSelectFromShortcut = (select: "mode" | "pattern") => {
+    const useDesktopSelect = window.matchMedia(desktopHeaderQuery).matches;
+    revealHud();
+
+    mobilePresetSelectOpen = select === "mode" && !useDesktopSelect;
+    desktopPresetSelectOpen = select === "mode" && useDesktopSelect;
+    mobilePatternSelectOpen = select === "pattern" && !useDesktopSelect;
+    desktopPatternSelectOpen = select === "pattern" && useDesktopSelect;
+    mobileLilacChaserColorSelectOpen = false;
+    desktopLilacChaserColorSelectOpen = false;
+
+    void focusHeaderSelectTriggerFromShortcut(select, useDesktopSelect);
+  };
+
+  const focusHeaderSelectTriggerFromShortcut = async (
+    select: "mode" | "pattern",
+    useDesktopSelect: boolean,
+  ) => {
+    await flushSvelte();
+
+    const viewport = useDesktopSelect ? "desktop" : "mobile";
+    const trigger = document.querySelector<HTMLButtonElement>(
+      `[data-trainer-shortcut-select="${viewport}-${select}"]`,
+    );
+    trigger?.focus({ preventScroll: true });
+  };
+
+  const openGuideDialog = () => {
+    const guidePopover = document.getElementById("trainer-guide-popover");
+    if (!(guidePopover instanceof HTMLElement)) return false;
+
+    revealHud();
+    if (guidePopover.matches(":popover-open")) return true;
+
+    if (typeof guidePopover.showPopover === "function") {
+      guidePopover.showPopover();
+      return true;
+    }
+
+    return false;
+  };
+
+  const hasPriorityKeyboardSurface = () => {
+    return (
+      panelOpen ||
+      guidePopoverOpen ||
+      headerPresetSelectOpen ||
+      headerPatternSelectOpen ||
+      headerLilacChaserColorSelectOpen ||
+      Boolean(document.querySelector(shortcutPrioritySurfaceSelector))
+    );
+  };
+
+  const runTrainerShortcut = (action: TrainerShortcutAction) => {
+    if (hasPriorityKeyboardSurface()) return false;
+
+    if (action === "toggleMotion") {
+      toggleMotionPaused();
+      return true;
+    }
+
+    if (action === "increaseTargetSize") {
+      adjustTargetSize(1);
+      return true;
+    }
+
+    if (action === "decreaseTargetSize") {
+      adjustTargetSize(-1);
+      return true;
+    }
+
+    if (action === "decreaseSpeed") {
+      adjustSpeed(-1);
+      return true;
+    }
+
+    if (action === "increaseSpeed") {
+      adjustSpeed(1);
+      return true;
+    }
+
+    if (action === "toggleTheme") {
+      setMode(isDarkMode ? "light" : "dark");
+      return true;
+    }
+
+    if (action === "openPatternSelect") {
+      if (settings.presetId !== "pursuit") return false;
+      openHeaderSelectFromShortcut("pattern");
+      return true;
+    }
+
+    if (action === "openModeSelect") {
+      openHeaderSelectFromShortcut("mode");
+      return true;
+    }
+
+    if (action === "openSettingsDialog") {
+      openControlsPanel();
+      return true;
+    }
+
+    return openGuideDialog();
+  };
+
+  const handleWindowKeydown = (event: KeyboardEvent) => {
+    const action = getTrainerShortcutAction(event);
+    if (!action) return;
+    if (isTrainerShortcutCapturedByTarget(event.target, action)) return;
+    if (!runTrainerShortcut(action)) return;
+
+    event.preventDefault();
   };
 
   const handlePresetChange = (value: string) => {
@@ -938,6 +1077,7 @@
 
 <ModeWatcher track={false} defaultMode="system" />
 <svelte:window
+  onkeydown={handleWindowKeydown}
   onpagehide={flushSettings}
   onpointermove={handleWindowPointerMove}
   onpopstate={handlePopState}
@@ -986,6 +1126,12 @@
     {motionPaused}
     {motionDirectionToggleLabel}
     {canToggleDirection}
+    bind:mobilePresetSelectOpen
+    bind:mobilePatternSelectOpen
+    bind:mobileLilacChaserColorSelectOpen
+    bind:desktopPresetSelectOpen
+    bind:desktopPatternSelectOpen
+    bind:desktopLilacChaserColorSelectOpen
     guideButtonLabel={activeRoute
       ? `Open ${guideSeoContent.heading} guide`
       : "About FoveaFlow eye trainer"}

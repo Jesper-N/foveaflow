@@ -36,6 +36,12 @@
     motionPaused: boolean;
     motionDirectionToggleLabel: string;
     canToggleDirection: boolean;
+    mobilePresetSelectOpen: boolean;
+    mobilePatternSelectOpen: boolean;
+    mobileLilacChaserColorSelectOpen: boolean;
+    desktopPresetSelectOpen: boolean;
+    desktopPatternSelectOpen: boolean;
+    desktopLilacChaserColorSelectOpen: boolean;
     guideButtonLabel: string;
     guideButtonTitle: string;
     patternSelectContentClass: string;
@@ -53,6 +59,12 @@
     motionPaused,
     motionDirectionToggleLabel,
     canToggleDirection,
+    mobilePresetSelectOpen = $bindable(),
+    mobilePatternSelectOpen = $bindable(),
+    mobileLilacChaserColorSelectOpen = $bindable(),
+    desktopPresetSelectOpen = $bindable(),
+    desktopPatternSelectOpen = $bindable(),
+    desktopLilacChaserColorSelectOpen = $bindable(),
     guideButtonLabel,
     guideButtonTitle,
     patternSelectContentClass,
@@ -161,12 +173,14 @@
 
       <div class="flex shrink-0 items-center gap-2 md:hidden">
         <Select.Root
+          bind:open={mobilePresetSelectOpen}
           type="single"
           value={settings.presetId}
           onValueChange={actions.handlePresetChange}
           onOpenChange={actions.handleHeaderPresetOpenChange}
         >
           <Select.Trigger
+            data-trainer-shortcut-select="mobile-mode"
             class="pressable-ui size-9 justify-center rounded-full p-0 [&>svg:last-child]:hidden"
             aria-label={`Drill: ${getPresetName(settings.presetId)}`}
             title={`Drill: ${getPresetName(settings.presetId)}`}
@@ -182,12 +196,14 @@
         {#if settings.presetId === "pursuit"}
           <div class="flex shrink-0" in:hudControlTransition>
             <Select.Root
+              bind:open={mobilePatternSelectOpen}
               type="single"
               value={settings.patternId}
               onValueChange={actions.handlePatternChange}
               onOpenChange={actions.handleHeaderPatternOpenChange}
             >
               <Select.Trigger
+                data-trainer-shortcut-select="mobile-pattern"
                 class="pressable-ui size-9 justify-center rounded-full p-0 [&>svg:last-child]:hidden"
                 aria-label={`Motion path: ${getPatternName(settings.patternId)}`}
                 title={`Motion path: ${getPatternName(settings.patternId)}`}
@@ -205,6 +221,7 @@
         {:else if isLilacChaserMode}
           <div class="flex shrink-0" in:hudControlTransition>
             <Select.Root
+              bind:open={mobileLilacChaserColorSelectOpen}
               type="single"
               value={settings.lilacChaserBallColor}
               onValueChange={actions.handleLilacChaserColorChange}
@@ -246,12 +263,14 @@
 
       <div class="hidden shrink-0 items-center gap-2 md:flex">
         <Select.Root
+          bind:open={desktopPresetSelectOpen}
           type="single"
           value={settings.presetId}
           onValueChange={actions.handlePresetChange}
           onOpenChange={actions.handleHeaderPresetOpenChange}
         >
           <Select.Trigger
+            data-trainer-shortcut-select="desktop-mode"
             class={[
               "overflow-hidden transition-[width] duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none",
               settings.presetId === "pursuit"
@@ -272,12 +291,14 @@
         {#if settings.presetId === "pursuit"}
           <div class="flex shrink-0" in:hudControlTransition>
             <Select.Root
+              bind:open={desktopPatternSelectOpen}
               type="single"
               value={settings.patternId}
               onValueChange={actions.handlePatternChange}
               onOpenChange={actions.handleHeaderPatternOpenChange}
             >
               <Select.Trigger
+                data-trainer-shortcut-select="desktop-pattern"
                 class="w-36 overflow-hidden lg:w-40 2xl:w-44"
                 aria-label="Motion path"
               >
@@ -340,6 +361,7 @@
           in:hudControlTransition
         >
           <Select.Root
+            bind:open={desktopLilacChaserColorSelectOpen}
             type="single"
             value={settings.lilacChaserBallColor}
             onValueChange={actions.handleLilacChaserColorChange}
