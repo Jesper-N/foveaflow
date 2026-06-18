@@ -13,11 +13,8 @@
   import * as Sidebar from "$lib/components/ui/sidebar/index.js";
   import * as Tabs from "$lib/components/ui/tabs/index.js";
   import type { TrainerSettings } from "$lib/engine/presets";
-  import type {
-    BehaviorId,
-    ControlSection,
-    ControlSectionId,
-  } from "$lib/trainer/options";
+  import type { BehaviorId } from "$lib/trainer/behavior";
+  import type { ControlSection, ControlSectionId } from "$lib/trainer/options";
   import type { TrainerDialogActions } from "$lib/trainer/control-actions";
 
   let {

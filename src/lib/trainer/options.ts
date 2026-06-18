@@ -1,14 +1,7 @@
 import type { LetterWeight, TrainingMode } from "$lib/engine/presets";
 import { getPreset, patternOptions } from "$lib/engine/presets";
 import type { PatternId, SpeedUnit, TargetShape } from "$lib/engine/types";
-
-export type BehaviorId =
-  | "constant"
-  | "wavePattern"
-  | "surgePattern"
-  | "alternatingPattern"
-  | "climbPattern"
-  | "sizePulse";
+import { behaviorOptions, type BehaviorId } from "$lib/trainer/behavior";
 
 export type ControlIconId =
   | "target"
@@ -45,15 +38,6 @@ export const homepageGuideUseCases = [
   "Screen break",
   "Visual practice",
 ] as const;
-
-export const behaviorOptions = [
-  { id: "constant", name: "Steady speed" },
-  { id: "wavePattern", name: "Speed wave" },
-  { id: "surgePattern", name: "Short bursts" },
-  { id: "alternatingPattern", name: "Alternating pace" },
-  { id: "climbPattern", name: "Build and reset" },
-  { id: "sizePulse", name: "Size pulse" },
-] as const satisfies ReadonlyArray<{ id: BehaviorId; name: string }>;
 
 const controlSections = [
   {

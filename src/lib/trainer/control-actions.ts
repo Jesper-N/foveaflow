@@ -1,7 +1,8 @@
 import type { HudControlTransition } from "$lib/trainer/transitions";
 import type { TrainerSettings } from "$lib/engine/presets";
 import type { CanvasColorMode } from "$lib/trainer/rendering";
-import type { BehaviorId, ControlSectionId } from "$lib/trainer/options";
+import type { BehaviorId } from "$lib/trainer/behavior";
+import type { ControlSectionId } from "$lib/trainer/options";
 import type {
   CalibrationField,
   TrainerSliderValue,

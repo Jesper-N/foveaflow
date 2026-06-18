@@ -7,14 +7,13 @@
   import * as Select from "$lib/components/ui/select/index.js";
   import { Slider } from "$lib/components/ui/slider/index.js";
   import { exercisePresets, type TrainerSettings } from "$lib/engine/presets";
+  import { behaviorOptions, type BehaviorId } from "$lib/trainer/behavior";
   import {
-    behaviorOptions,
     getBehaviorName,
     getLilacChaserColorName,
     getPatternName,
     getPresetName,
     lilacChaserColorOptions,
-    type BehaviorId,
   } from "$lib/trainer/options";
   import {
     trainerSettingBounds,

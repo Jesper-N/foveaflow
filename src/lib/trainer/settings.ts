@@ -17,13 +17,11 @@ import { safeStimulusColor } from "$lib/engine/safety";
 import { findTrainerRoute } from "$lib/content/trainer-routes";
 
 import {
-  behaviorOptions,
   canPatternToggleDirection,
   letterWeightOptions,
   lilacChaserColorOptions,
   maxSpeedByUnit,
   shapeOptions,
-  type BehaviorId,
 } from "./options";
 
 export type CalibrationField = "viewingDistanceCm" | "cssPxPerCm";
@@ -76,9 +74,6 @@ const isRecord = (value: unknown): value is Record<string, unknown> => {
 const patternIdSet: ReadonlySet<string> = new Set(
   patternOptions.map((option) => option.id),
 );
-const behaviorIdSet: ReadonlySet<string> = new Set(
-  behaviorOptions.map((option) => option.id),
-);
 const targetShapeSet: ReadonlySet<string> = new Set(
   shapeOptions.map((option) => option.id),
 );
@@ -99,10 +94,6 @@ export const isSpeedUnit = (value: string): value is SpeedUnit => {
 
 export const isPatternId = (value: string): value is PatternId => {
   return patternIdSet.has(value);
-};
-
-export const isBehaviorId = (value: string): value is BehaviorId => {
-  return behaviorIdSet.has(value);
 };
 
 export const isTargetShape = (value: string): value is TargetShape => {
@@ -499,96 +490,4 @@ export const resolveStoredSettings = (saved: StoredSettings) => {
       ? saved.lilacChaserBallColor
       : storedSettingDefaults.lilacChaserBallColor,
   });
-};
-
-export const getBehaviorId = (
-  speedProfile: SpeedProfile,
-  sizeProfile: SizeProfile,
-): BehaviorId => {
-  if (sizeProfile.kind === "pulse") return "sizePulse";
-  if (speedProfile.kind === "loopRamp") return "climbPattern";
-  if (speedProfile.kind === "steps") {
-    return speedProfile.intervalSec <= 0.7
-      ? "surgePattern"
-      : "alternatingPattern";
-  }
-  if (speedProfile.kind === "sine") return "wavePattern";
-  return "constant";
-};
-
-type BehaviorProfiles = Pick<TrainerSettings, "speedProfile" | "sizeProfile">;
-
-const behaviorProfilesById = {
-  constant: {
-    speedProfile: { kind: "constant" },
-    sizeProfile: { kind: "constant" },
-  },
-  wavePattern: {
-    speedProfile: {
-      kind: "sine",
-      minMultiplier: 0.45,
-      maxMultiplier: 1.55,
-      periodSec: 5.2,
-    },
-    sizeProfile: { kind: "constant" },
-  },
-  surgePattern: {
-    speedProfile: {
-      kind: "steps",
-      multipliers: [0.45, 1.65, 0.55, 1.5, 0.8],
-      intervalSec: 0.65,
-      transitionSec: 0.18,
-    },
-    sizeProfile: { kind: "constant" },
-  },
-  alternatingPattern: {
-    speedProfile: {
-      kind: "steps",
-      multipliers: [0.5, 1.5, 0.65, 1.35],
-      intervalSec: 1.25,
-      transitionSec: 0.28,
-    },
-    sizeProfile: { kind: "constant" },
-  },
-  climbPattern: {
-    speedProfile: {
-      kind: "loopRamp",
-      fromMultiplier: 0.45,
-      toMultiplier: 1.65,
-      periodSec: 5.8,
-      resetSec: 1.2,
-    },
-    sizeProfile: { kind: "constant" },
-  },
-  sizePulse: {
-    speedProfile: { kind: "constant" },
-    sizeProfile: {
-      kind: "pulse",
-      minMultiplier: 0.7,
-      maxMultiplier: 1.4,
-      periodSec: 3.2,
-    },
-  },
-} satisfies Record<BehaviorId, BehaviorProfiles>;
-
-const cloneSpeedProfile = (profile: SpeedProfile): SpeedProfile => {
-  if (profile.kind === "steps") {
-    return { ...profile, multipliers: [...profile.multipliers] };
-  }
-
-  return { ...profile };
-};
-
-const cloneSizeProfile = (profile: SizeProfile): SizeProfile => ({
-  ...profile,
-});
-
-export const createBehaviorProfiles = (
-  behavior: BehaviorId,
-): BehaviorProfiles => {
-  const profiles = behaviorProfilesById[behavior];
-  return {
-    speedProfile: cloneSpeedProfile(profiles.speedProfile),
-    sizeProfile: cloneSizeProfile(profiles.sizeProfile),
-  };
 };

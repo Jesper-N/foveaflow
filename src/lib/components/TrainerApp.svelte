@@ -40,9 +40,14 @@
     guideUseCasesByMode,
     homepageGuideUseCases,
     resolveControlSection,
-    type BehaviorId,
     type ControlSectionId,
   } from "$lib/trainer/options";
+  import {
+    createBehaviorProfiles,
+    getBehaviorId,
+    isBehaviorId,
+    type BehaviorId,
+  } from "$lib/trainer/behavior";
   import {
     canAutoHideHud,
     getHudHidden,
@@ -65,11 +70,20 @@
     type TrainerShortcutAction,
   } from "$lib/trainer/keyboard";
   import {
+    createCursorAutoHideTimer,
+    createHudAutoHideTimer,
+  } from "$lib/trainer/auto-hide";
+  import {
+    desktopHeaderQuery,
+    focusHeaderSelectTriggerFromShortcut,
+    getHeaderSelectOpenState,
+    runTrainerShortcutAction,
+    shortcutPrioritySurfaceSelector,
+    type HeaderShortcutSelect,
+  } from "$lib/trainer/shortcut-runner";
+  import {
     applyPresetToSettings,
     applyRouteToSettings,
-    createBehaviorProfiles,
-    getBehaviorId,
-    isBehaviorId,
     isHexColor,
     isLetterWeight,
     isLilacChaserBallColor,
@@ -126,9 +140,6 @@
   const pathMarginPx = 16;
   const hudAutoHideDelayMs = 5000;
   const cursorHideDelayMs = 2000;
-  const shortcutPrioritySurfaceSelector =
-    "[data-slot='dialog-content'], [data-slot='select-content'], [popover]:popover-open";
-  const desktopHeaderQuery = "(min-width: 48rem)";
 
   let settings = $state<TrainerSettings>(
     applyRouteToSettings(
@@ -242,10 +253,23 @@
   let hudHidden = $derived(
     getHudHidden(hudAutoHideReady, hudVisible, hudInteractionOpen),
   );
+  const hudAutoHideTimer = createHudAutoHideTimer({
+    delayMs: hudAutoHideDelayMs,
+    setReady: (ready) => {
+      hudAutoHideReady = ready;
+    },
+    setVisible: (visible) => {
+      hudVisible = visible;
+    },
+    isInteractionOpen: () => hudInteractionOpen,
+  });
+  const cursorAutoHideTimer = createCursorAutoHideTimer({
+    delayMs: cursorHideDelayMs,
+    setHidden: (hidden) => {
+      cursorHidden = hidden;
+    },
+  });
   let hudShell: HTMLDivElement | undefined;
-  let hudHideTimeout: number | undefined;
-  let cursorHideTimeout: number | undefined;
-  let cursorHideDeadline = 0;
   const settingsSaver = createDebouncedSettingsSaver();
 
   $effect(() => {
@@ -294,8 +318,8 @@
     );
 
     storageReady = true;
-    startHudAutoHideTimer();
-    startCursorHideTimer();
+    hudAutoHideTimer.start();
+    cursorAutoHideTimer.start();
 
     const reduceMotionQuery = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -308,8 +332,8 @@
 
     return () => {
       settingsSaver.flush();
-      clearHudAutoHideTimer();
-      clearCursorHideTimer();
+      hudAutoHideTimer.clear();
+      cursorAutoHideTimer.clear();
       reduceMotionQuery.removeEventListener("change", handleReduceMotionChange);
     };
   });
@@ -675,38 +699,6 @@
     syncBrowserPath();
   };
 
-  const clearHudAutoHideTimer = () => {
-    if (hudHideTimeout === undefined) return;
-    window.clearTimeout(hudHideTimeout);
-    hudHideTimeout = undefined;
-  };
-
-  const clearCursorHideTimer = () => {
-    if (cursorHideTimeout === undefined) return;
-    window.clearTimeout(cursorHideTimeout);
-    cursorHideTimeout = undefined;
-    cursorHideDeadline = 0;
-  };
-
-  const startCursorHideTimer = () => {
-    cursorHidden = false;
-    cursorHideDeadline = performance.now() + cursorHideDelayMs;
-    if (cursorHideTimeout !== undefined) return;
-
-    const hideAfterIdle = () => {
-      const remainingDelayMs = cursorHideDeadline - performance.now();
-      if (remainingDelayMs > 0) {
-        cursorHideTimeout = window.setTimeout(hideAfterIdle, remainingDelayMs);
-        return;
-      }
-
-      cursorHideTimeout = undefined;
-      cursorHidden = true;
-    };
-
-    cursorHideTimeout = window.setTimeout(hideAfterIdle, cursorHideDelayMs);
-  };
-
   const handleGuidePopoverToggle = (event: ToggleEvent) => {
     guidePopoverOpen = event.newState === "open";
     if (guidePopoverOpen) revealHud();
@@ -718,16 +710,6 @@
 
   const toggleGuideFaq = (question: string) => {
     openGuideFaqQuestion = openGuideFaqQuestion === question ? null : question;
-  };
-
-  const startHudAutoHideTimer = () => {
-    clearHudAutoHideTimer();
-    hudAutoHideReady = false;
-    hudVisible = true;
-    hudHideTimeout = window.setTimeout(() => {
-      hudAutoHideReady = true;
-      if (!hudInteractionOpen) hudVisible = false;
-    }, hudAutoHideDelayMs);
   };
 
   const revealHud = () => {
@@ -752,7 +734,7 @@
   };
 
   const handleWindowPointerMove = (event: PointerEvent) => {
-    if (event.pointerType !== "touch") startCursorHideTimer();
+    if (event.pointerType !== "touch") cursorAutoHideTimer.start();
     if (!hudAutoHideReady || event.pointerType === "touch") return;
 
     const pointerIntent = getHudPointerIntent(
@@ -824,31 +806,25 @@
     panelOpen = true;
   };
 
-  const openHeaderSelectFromShortcut = (select: "mode" | "pattern") => {
+  const openHeaderSelectFromShortcut = (select: HeaderShortcutSelect) => {
     const useDesktopSelect = window.matchMedia(desktopHeaderQuery).matches;
+    const openState = getHeaderSelectOpenState(select, useDesktopSelect);
     revealHud();
 
-    mobilePresetSelectOpen = select === "mode" && !useDesktopSelect;
-    desktopPresetSelectOpen = select === "mode" && useDesktopSelect;
-    mobilePatternSelectOpen = select === "pattern" && !useDesktopSelect;
-    desktopPatternSelectOpen = select === "pattern" && useDesktopSelect;
-    mobileLilacChaserColorSelectOpen = false;
-    desktopLilacChaserColorSelectOpen = false;
+    mobilePresetSelectOpen = openState.mobilePresetSelectOpen;
+    desktopPresetSelectOpen = openState.desktopPresetSelectOpen;
+    mobilePatternSelectOpen = openState.mobilePatternSelectOpen;
+    desktopPatternSelectOpen = openState.desktopPatternSelectOpen;
+    mobileLilacChaserColorSelectOpen =
+      openState.mobileLilacChaserColorSelectOpen;
+    desktopLilacChaserColorSelectOpen =
+      openState.desktopLilacChaserColorSelectOpen;
 
-    void focusHeaderSelectTriggerFromShortcut(select, useDesktopSelect);
-  };
-
-  const focusHeaderSelectTriggerFromShortcut = async (
-    select: "mode" | "pattern",
-    useDesktopSelect: boolean,
-  ) => {
-    await flushSvelte();
-
-    const viewport = useDesktopSelect ? "desktop" : "mobile";
-    const trigger = document.querySelector<HTMLButtonElement>(
-      `[data-trainer-shortcut-select="${viewport}-${select}"]`,
-    );
-    trigger?.focus({ preventScroll: true });
+    void focusHeaderSelectTriggerFromShortcut({
+      select,
+      useDesktopSelect,
+      flushSvelte,
+    });
   };
 
   const openGuideDialog = () => {
@@ -878,55 +854,17 @@
   };
 
   const runTrainerShortcut = (action: TrainerShortcutAction) => {
-    if (hasPriorityKeyboardSurface()) return false;
-
-    if (action === "toggleMotion") {
-      toggleMotionPaused();
-      return true;
-    }
-
-    if (action === "increaseTargetSize") {
-      adjustTargetSize(1);
-      return true;
-    }
-
-    if (action === "decreaseTargetSize") {
-      adjustTargetSize(-1);
-      return true;
-    }
-
-    if (action === "decreaseSpeed") {
-      adjustSpeed(-1);
-      return true;
-    }
-
-    if (action === "increaseSpeed") {
-      adjustSpeed(1);
-      return true;
-    }
-
-    if (action === "toggleTheme") {
-      setMode(isDarkMode ? "light" : "dark");
-      return true;
-    }
-
-    if (action === "openPatternSelect") {
-      if (settings.presetId !== "pursuit") return false;
-      openHeaderSelectFromShortcut("pattern");
-      return true;
-    }
-
-    if (action === "openModeSelect") {
-      openHeaderSelectFromShortcut("mode");
-      return true;
-    }
-
-    if (action === "openSettingsDialog") {
-      openControlsPanel();
-      return true;
-    }
-
-    return openGuideDialog();
+    return runTrainerShortcutAction(action, {
+      hasPriorityKeyboardSurface,
+      toggleMotionPaused,
+      adjustTargetSize,
+      adjustSpeed,
+      toggleTheme: () => setMode(isDarkMode ? "light" : "dark"),
+      canOpenPatternSelect: () => settings.presetId === "pursuit",
+      openHeaderSelect: openHeaderSelectFromShortcut,
+      openControlsPanel,
+      openGuideDialog,
+    });
   };
 
   const handleWindowKeydown = (event: KeyboardEvent) => {

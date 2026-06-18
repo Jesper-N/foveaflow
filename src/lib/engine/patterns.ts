@@ -6,8 +6,18 @@ import type {
   TargetRole,
 } from "./types";
 import { createRng, type Rng } from "./random";
+import {
+  TAU,
+  clamp,
+  createPatternPathCacheState,
+  curveCacheKey,
+  pingPong,
+  resolvePatternBounds,
+  sampleClosedCurve,
+  sampleClosedPolyline,
+  type PatternPathCacheState,
+} from "./pattern-paths";
 
-const TAU = Math.PI * 2;
 const DEFAULT_TARGET_COLOR = "#76d900";
 const DEFAULT_SECONDARY_COLOR = "#3ddbd9";
 const HARD_TURN_RANDOM_OFFSET = 40_000;
@@ -21,76 +31,15 @@ const DIAGONAL_SPEED_SCALE = 1 / Math.hypot(DIAGONAL_X_RATE, DIAGONAL_Y_RATE);
 const BOUNCE_X_RATE = 0.93;
 const BOUNCE_Y_RATE = 0.67;
 const BOUNCE_SPEED_SCALE = 1 / Math.hypot(BOUNCE_X_RATE, BOUNCE_Y_RATE);
-const clamp = (value: number, min: number, max: number) =>
-  Math.min(max, Math.max(min, value));
 
-const positiveModulo = (value: number, divisor: number) =>
-  ((value % divisor) + divisor) % divisor;
-
-const pingPong = (value: number, length: number) => {
-  if (length <= 0) return 0;
-  const wrapped = positiveModulo(value, length * 2);
-  return wrapped <= length ? wrapped : length * 2 - wrapped;
-};
-
-const curveCacheKey = (
-  id: PatternId,
-  left: number,
-  top: number,
-  right: number,
-  bottom: number,
-  samples: number,
-) =>
-  `${id}:${Math.round(left)}:${Math.round(top)}:${Math.round(right)}:${Math.round(bottom)}:${samples}`;
-
-const sampleClosedCurve = (
-  key: string,
-  travelPx: number,
-  samples: number,
-  pointAt: (phase: number) => [number, number],
-) => {
-  if (activeSamplerState.cachedCurve?.key !== key) {
-    activeSamplerState.cachedCurve = buildClosedCurve(key, samples, pointAt);
-  }
-
-  return sampleCurvePath(activeSamplerState.cachedCurve, travelPx);
-};
-
-const sampleClosedPolyline = (
-  key: string,
-  travelPx: number,
-  pointCount: number,
-  pointAt: (index: number) => [number, number],
-) => {
-  if (activeSamplerState.cachedPolyline?.key !== key) {
-    activeSamplerState.cachedPolyline = buildClosedPolyline(
-      key,
-      pointCount,
-      pointAt,
-    );
-  }
-
-  return sampleCurvePath(activeSamplerState.cachedPolyline, travelPx);
-};
-
-type CurvePath = {
-  key: string;
-  points: Array<[number, number]>;
-  lengths: number[];
-  totalLength: number;
-};
-
-type PatternSamplerState = {
-  cachedCurve: CurvePath | null;
-  cachedPolyline: CurvePath | null;
+type PatternSamplerState = PatternPathCacheState & {
   randomWalkState: RandomWalkState | null;
   hardTurnWaypointCache: HardTurnWaypointCache | null;
   motRandomWalkCache: MotRandomWalkCache | null;
 };
 
 const createPatternSamplerState = (): PatternSamplerState => ({
-  cachedCurve: null,
-  cachedPolyline: null,
+  ...createPatternPathCacheState(),
   randomWalkState: null,
   hardTurnWaypointCache: null,
   motRandomWalkCache: null,
@@ -116,82 +65,6 @@ export type PatternSampler = {
   sample: typeof samplePattern;
   run: <Result>(sample: () => Result) => Result;
   reset: () => void;
-};
-
-const buildClosedCurve = (
-  key: string,
-  samples: number,
-  pointAt: (phase: number) => [number, number],
-): CurvePath => {
-  const points: Array<[number, number]> = [];
-  const lengths: number[] = [];
-  let totalLength = 0;
-
-  for (let index = 0; index <= samples; index += 1) {
-    points.push(pointAt(index / samples));
-  }
-
-  for (let index = 0; index < samples; index += 1) {
-    const start = points[index];
-    const end = points[index + 1];
-    const length = Math.hypot(end[0] - start[0], end[1] - start[1]);
-    lengths.push(length);
-    totalLength += length;
-  }
-
-  return { key, points, lengths, totalLength };
-};
-
-const buildClosedPolyline = (
-  key: string,
-  pointCount: number,
-  pointAt: (index: number) => [number, number],
-): CurvePath => {
-  const points: Array<[number, number]> = [];
-  const lengths: number[] = [];
-  let totalLength = 0;
-
-  for (let index = 0; index < pointCount; index += 1) {
-    points.push(pointAt(index));
-  }
-
-  if (points.length === 0) {
-    points.push([0, 0]);
-    return { key, points, lengths, totalLength };
-  }
-
-  points.push(points[0]);
-
-  for (let index = 0; index < pointCount; index += 1) {
-    const start = points[index];
-    const end = points[index + 1];
-    const length = Math.hypot(end[0] - start[0], end[1] - start[1]);
-    lengths.push(length);
-    totalLength += length;
-  }
-
-  return { key, points, lengths, totalLength };
-};
-
-const sampleCurvePath = (path: CurvePath, travelPx: number) => {
-  if (path.totalLength <= 0) return path.points[0];
-
-  let remaining = positiveModulo(travelPx, path.totalLength);
-  for (let index = 0; index < path.lengths.length; index += 1) {
-    const length = path.lengths[index];
-    if (remaining <= length) {
-      const start = path.points[index];
-      const end = path.points[index + 1];
-      const progress = length <= 0 ? 0 : remaining / length;
-      return [
-        start[0] + (end[0] - start[0]) * progress,
-        start[1] + (end[1] - start[1]) * progress,
-      ] satisfies [number, number];
-    }
-    remaining -= length;
-  }
-
-  return path.points[0];
 };
 
 type RandomWalkState = {
@@ -224,35 +97,6 @@ type MotRandomWalkCache = {
   key: string;
   total: number;
   objects: MotRandomWalkObject[];
-};
-
-const resolvePatternBounds = (
-  arena: Arena,
-  radiusPx: number,
-  pathMarginPx = 16,
-) => {
-  const requestedMargin = Math.max(pathMarginPx, radiusPx + 8);
-  const maxMargin = Math.max(1, Math.min(arena.width, arena.height) / 2);
-  const margin = Math.min(requestedMargin, maxMargin);
-  const left = margin;
-  const top = margin;
-  const right = Math.max(left, arena.width - margin);
-  const bottom = Math.max(top, arena.height - margin);
-  const width = Math.max(1, right - left);
-  const height = Math.max(1, bottom - top);
-
-  return {
-    left,
-    top,
-    right,
-    bottom,
-    width,
-    height,
-    centerX: arena.width / 2,
-    centerY: arena.height / 2,
-    radiusX: Math.max(1, width / 2),
-    radiusY: Math.max(1, height / 2),
-  };
 };
 
 export const withIsolatedPatternSampling = <Result>(
@@ -721,6 +565,7 @@ export const samplePatternInto = (
 
   if (id === "ellipse") {
     const [x, y] = sampleClosedCurve(
+      activeSamplerState,
       curveCacheKey(id, left, top, right, bottom, 160),
       travelPx,
       160,
@@ -734,6 +579,7 @@ export const samplePatternInto = (
 
   if (id === "figureEight") {
     const [x, y] = sampleClosedCurve(
+      activeSamplerState,
       curveCacheKey(id, left, top, right, bottom, 180),
       travelPx,
       180,
@@ -750,6 +596,7 @@ export const samplePatternInto = (
 
   if (id === "wave") {
     const [x, y] = sampleClosedCurve(
+      activeSamplerState,
       curveCacheKey(id, left, top, right, bottom, 120),
       travelPx,
       120,
@@ -917,6 +764,7 @@ export const samplePatternInto = (
 
   if (id === "perimeterLoop") {
     const [x, y] = sampleClosedPolyline(
+      activeSamplerState,
       curveCacheKey(id, left, top, right, bottom, 4),
       travelPx,
       4,
@@ -932,6 +780,7 @@ export const samplePatternInto = (
 
   if (id === "diamondLoop") {
     const [x, y] = sampleClosedPolyline(
+      activeSamplerState,
       curveCacheKey(id, left, top, right, bottom, 4),
       travelPx,
       4,
@@ -947,6 +796,7 @@ export const samplePatternInto = (
 
   if (id === "clover") {
     const [x, y] = sampleClosedCurve(
+      activeSamplerState,
       curveCacheKey(id, left, top, right, bottom, 160),
       travelPx,
       160,
@@ -965,6 +815,7 @@ export const samplePatternInto = (
   if (id === "zigZag") {
     const lanes = 5;
     const [x, y] = sampleClosedPolyline(
+      activeSamplerState,
       curveCacheKey(id, left, top, right, bottom, lanes),
       travelPx,
       lanes,
@@ -981,6 +832,7 @@ export const samplePatternInto = (
     const columns = 5;
     const pointCount = rows * columns;
     const [x, y] = sampleClosedPolyline(
+      activeSamplerState,
       curveCacheKey(id, left, top, right, bottom, pointCount),
       travelPx,
       pointCount,
@@ -998,6 +850,7 @@ export const samplePatternInto = (
 
   if (id === "lissajous") {
     const [x, y] = sampleClosedCurve(
+      activeSamplerState,
       curveCacheKey(id, left, top, right, bottom, 180),
       travelPx,
       180,
@@ -1014,6 +867,7 @@ export const samplePatternInto = (
 
   if (id === "hourglass") {
     const [x, y] = sampleClosedCurve(
+      activeSamplerState,
       curveCacheKey(id, left, top, right, bottom, 160),
       travelPx,
       160,
@@ -1031,6 +885,7 @@ export const samplePatternInto = (
     const insetX = width * 0.18;
     const insetY = height * 0.18;
     const [x, y] = sampleClosedPolyline(
+      activeSamplerState,
       curveCacheKey(id, left, top, right, bottom, 4),
       travelPx,
       4,
