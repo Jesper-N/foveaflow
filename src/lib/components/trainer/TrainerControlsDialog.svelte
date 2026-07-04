@@ -13,6 +13,8 @@
   import * as Sidebar from "$lib/components/ui/sidebar/index.js";
   import * as Tabs from "$lib/components/ui/tabs/index.js";
   import type { TrainerSettings } from "$lib/engine/presets";
+  import { languageState } from "$lib/i18n/state.svelte";
+  import { t } from "$lib/i18n/translate";
   import type { BehaviorId } from "$lib/trainer/behavior";
   import type { ControlSection, ControlSectionId } from "$lib/trainer/options";
   import type { TrainerDialogActions } from "$lib/trainer/control-actions";
@@ -56,6 +58,8 @@
       actions.onControlSectionChange(sectionId as ControlSectionId);
     }
   };
+
+  let locale = $derived(languageState.locale);
 </script>
 
 {#snippet sliderRow(label: string, valueLabel: string)}
@@ -74,9 +78,9 @@
     class="h-[calc(100dvh-1rem)] max-h-none max-w-[calc(100dvw-1rem)] overflow-hidden p-0 md:h-auto md:max-h-125 md:max-w-175 lg:max-w-200"
     trapFocus={false}
   >
-    <Dialog.Title class="sr-only">Controls</Dialog.Title>
+    <Dialog.Title class="sr-only">{t(locale, "Controls")}</Dialog.Title>
     <Dialog.Description class="sr-only">
-      Change your saved FoveaFlow settings.
+      {t(locale, "Change your saved FoveaFlow settings.")}
     </Dialog.Description>
     <Sidebar.Provider
       class="h-full min-h-0 min-w-0 items-start overflow-hidden"
@@ -115,7 +119,9 @@
           class="flex h-16 shrink-0 items-center gap-2 px-4 pr-16 transition-[width,height] ease-linear md:px-4 md:pr-4 group-has-data-[collapsible=icon]/sidebar-wrapper:h-12"
         >
           <div class="flex min-w-0 items-center gap-2 text-base">
-            <span class="shrink-0 text-muted-foreground"> Controls </span>
+            <span class="shrink-0 text-muted-foreground">
+              {t(locale, "Controls")}
+            </span>
             <span class="shrink-0 text-muted-foreground" aria-hidden="true">
               ›
             </span>
@@ -125,7 +131,10 @@
           </div>
         </header>
 
-        <nav class="px-3 py-2 md:hidden" aria-label="Control sections">
+        <nav
+          class="px-3 py-2 md:hidden"
+          aria-label={t(locale, "Control sections")}
+        >
           <Tabs.List class="no-scrollbar w-full justify-start overflow-x-auto">
             {#each availableControlSections as section (section.id)}
               <Tabs.Trigger
@@ -146,7 +155,11 @@
             class="t-resize w-full max-w-3xl rounded-3xl border border-border/60 bg-muted/55 p-4 shadow-[0_18px_50px_-42px_rgba(0,0,0,0.85)] md:rounded-xl md:border-0 md:bg-muted/50 md:shadow-none"
           >
             {#if currentControlSection === "session"}
-              <TrainerSettingsSection icon="theme" label="Session" {colorMode}>
+              <TrainerSettingsSection
+                icon="theme"
+                label={t(locale, "Session")}
+                {colorMode}
+              >
                 <TrainerSessionControls
                   {settings}
                   {motionPaused}
@@ -159,7 +172,11 @@
                 />
               </TrainerSettingsSection>
             {:else if currentControlSection === "drill"}
-              <TrainerSettingsSection icon="target" label="Drill" {colorMode}>
+              <TrainerSettingsSection
+                icon="target"
+                label={t(locale, "Drill")}
+                {colorMode}
+              >
                 <TrainerDrillControls
                   {settings}
                   {isLilacChaserMode}
@@ -177,7 +194,11 @@
                 />
               </TrainerSettingsSection>
             {:else if currentControlSection === "targets"}
-              <TrainerSettingsSection icon="eye" label="Targets" {colorMode}>
+              <TrainerSettingsSection
+                icon="eye"
+                label={t(locale, "Targets")}
+                {colorMode}
+              >
                 <TrainerTargetControls
                   bind:settings
                   {isMotMode}
@@ -205,7 +226,11 @@
                 />
               </TrainerSettingsSection>
             {:else if currentControlSection === "motion"}
-              <TrainerSettingsSection icon="motion" label="Motion" {colorMode}>
+              <TrainerSettingsSection
+                icon="motion"
+                label={t(locale, "Motion")}
+                {colorMode}
+              >
                 <TrainerMotionControls
                   {settings}
                   speedSliderValue={actions.speedSlider.value}
@@ -217,7 +242,7 @@
             {:else if currentControlSection === "screen"}
               <TrainerSettingsSection
                 icon="calibration"
-                label="Screen scale"
+                label={t(locale, "Screen scale")}
                 {colorMode}
               >
                 <TrainerScreenControls
@@ -227,10 +252,16 @@
                 />
               </TrainerSettingsSection>
             {:else}
-              <TrainerSettingsSection icon="reset" label="Defaults" {colorMode}>
+              <TrainerSettingsSection
+                icon="reset"
+                label={t(locale, "Defaults")}
+                {colorMode}
+              >
                 <p class="text-sm leading-6 text-muted-foreground">
-                  Restore the selected drill to its default behavior, visuals,
-                  calibration, and saved local settings.
+                  {t(
+                    locale,
+                    "Restore the selected drill to its default behavior, visuals, calibration, and saved local settings.",
+                  )}
                 </p>
                 <Button
                   class="pressable-ui w-full justify-start"
@@ -238,7 +269,7 @@
                   onclick={actions.resetSettings}
                 >
                   <RotateCcwIcon class="size-4" />
-                  <span class="pl-1">Reset to defaults</span>
+                  <span class="pl-1">{t(locale, "Reset to defaults")}</span>
                 </Button>
               </TrainerSettingsSection>
             {/if}

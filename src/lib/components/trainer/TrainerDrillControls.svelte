@@ -7,6 +7,8 @@
   import * as Select from "$lib/components/ui/select/index.js";
   import { Slider } from "$lib/components/ui/slider/index.js";
   import { exercisePresets, type TrainerSettings } from "$lib/engine/presets";
+  import { languageState } from "$lib/i18n/state.svelte";
+  import { t } from "$lib/i18n/translate";
   import { behaviorOptions, type BehaviorId } from "$lib/trainer/behavior";
   import {
     getBehaviorName,
@@ -45,17 +47,31 @@
     setLilacChaserScaleSliderValue: (value: TrainerSliderValue) => void;
     sliderRow: Snippet<[string, string]>;
   } = $props();
+
+  let locale = $derived(languageState.locale);
+  let currentPresetName = $derived(t(locale, getPresetName(settings.presetId)));
+  let currentPatternName = $derived(
+    t(locale, getPatternName(settings.patternId)),
+  );
+  let currentBehaviorName = $derived(t(locale, getBehaviorName(behaviorValue)));
+  let currentLilacChaserColorName = $derived(
+    t(locale, getLilacChaserColorName(settings.lilacChaserBallColor)),
+  );
 </script>
 
 <Field.Field>
-  <Field.Label for="trainer-mode">Drill</Field.Label>
+  <Field.Label for="trainer-mode">{t(locale, "Drill")}</Field.Label>
   <Select.Root
     type="single"
     value={settings.presetId}
     onValueChange={handlePresetChange}
   >
-    <Select.Trigger id="trainer-mode" class="w-full" aria-label="Drill">
-      {getPresetName(settings.presetId)}
+    <Select.Trigger
+      id="trainer-mode"
+      class="w-full"
+      aria-label={t(locale, "Drill")}
+    >
+      {currentPresetName}
     </Select.Trigger>
     <Select.Content>
       <Select.Group>
@@ -63,7 +79,7 @@
           <Select.Item value={preset.id}>
             <span class="flex min-w-0 items-center gap-2">
               <ModePathPreview mode={preset.id} compact />
-              <span class="truncate">{preset.name}</span>
+              <span class="truncate">{t(locale, preset.name)}</span>
             </span>
           </Select.Item>
         {/each}
@@ -74,7 +90,7 @@
 
 {#if settings.presetId === "pursuit"}
   <Field.Field>
-    <Field.Label for="trainer-pattern">Motion path</Field.Label>
+    <Field.Label for="trainer-pattern">{t(locale, "Motion path")}</Field.Label>
     <Select.Root
       type="single"
       value={settings.patternId}
@@ -83,9 +99,9 @@
       <Select.Trigger
         id="trainer-pattern"
         class="w-full"
-        aria-label="Motion path"
+        aria-label={t(locale, "Motion path")}
       >
-        {getPatternName(settings.patternId)}
+        {currentPatternName}
       </Select.Trigger>
       <Select.Content class={patternSelectContentClass}>
         <TrainerPatternSelectGroups />
@@ -96,7 +112,7 @@
 
 {#if !isLilacChaserMode}
   <Field.Field>
-    <Field.Label for="trainer-behavior">Motion feel</Field.Label>
+    <Field.Label for="trainer-behavior">{t(locale, "Motion feel")}</Field.Label>
     <Select.Root
       type="single"
       value={behaviorValue}
@@ -105,14 +121,15 @@
       <Select.Trigger
         id="trainer-behavior"
         class="w-full"
-        aria-label="Motion feel"
+        aria-label={t(locale, "Motion feel")}
       >
-        {getBehaviorName(behaviorValue)}
+        {currentBehaviorName}
       </Select.Trigger>
       <Select.Content>
         <Select.Group>
           {#each behaviorOptions as option (option.id)}
-            <Select.Item value={option.id}>{option.name}</Select.Item>
+            <Select.Item value={option.id}>{t(locale, option.name)}</Select.Item
+            >
           {/each}
         </Select.Group>
       </Select.Content>
@@ -120,7 +137,8 @@
   </Field.Field>
 {:else}
   <Field.Field>
-    <Field.Label for="lilac-chaser-color">Ball color</Field.Label>
+    <Field.Label for="lilac-chaser-color">{t(locale, "Ball color")}</Field.Label
+    >
     <Select.Root
       type="single"
       value={settings.lilacChaserBallColor}
@@ -129,7 +147,7 @@
       <Select.Trigger
         id="lilac-chaser-color"
         class="w-full"
-        aria-label="Lilac Chaser ball color"
+        aria-label={t(locale, "Lilac Chaser ball color")}
       >
         <span class="flex min-w-0 items-center gap-2">
           <svg
@@ -140,7 +158,7 @@
             <circle cx="6" cy="6" r="6" fill={settings.lilacChaserBallColor} />
           </svg>
           <span class="truncate">
-            {getLilacChaserColorName(settings.lilacChaserBallColor)}
+            {currentLilacChaserColorName}
           </span>
         </span>
       </Select.Trigger>
@@ -156,7 +174,7 @@
                 >
                   <circle cx="6" cy="6" r="6" fill={option.id} />
                 </svg>
-                <span class="truncate">{option.name}</span>
+                <span class="truncate">{t(locale, option.name)}</span>
               </span>
             </Select.Item>
           {/each}
@@ -165,13 +183,16 @@
     </Select.Root>
   </Field.Field>
   <Field.Field>
-    {@render sliderRow("Scale", `${settings.lilacChaserScale.toFixed(2)}x`)}
+    {@render sliderRow(
+      t(locale, "Scale"),
+      `${settings.lilacChaserScale.toFixed(2)}x`,
+    )}
     <Slider
       bind:value={lilacChaserScaleSliderValue, setLilacChaserScaleSliderValue}
       min={trainerSettingBounds.lilacChaserScale.min}
       max={trainerSettingBounds.lilacChaserScale.max}
       step={0.05}
-      aria-label="Lilac Chaser scale"
+      aria-label={t(locale, "Lilac Chaser scale")}
     />
   </Field.Field>
 {/if}

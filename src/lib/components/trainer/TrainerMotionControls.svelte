@@ -5,6 +5,8 @@
   import * as Select from "$lib/components/ui/select/index.js";
   import { Slider } from "$lib/components/ui/slider/index.js";
   import type { TrainerSettings } from "$lib/engine/presets";
+  import { languageState } from "$lib/i18n/state.svelte";
+  import { t } from "$lib/i18n/translate";
   import { maxSpeedByUnit, speedStepByUnit } from "$lib/trainer/options";
   import {
     trainerSettingBounds,
@@ -24,11 +26,13 @@
     handleSpeedUnitChange: (value: string) => void;
     sliderRow: Snippet<[string, string]>;
   } = $props();
+
+  let locale = $derived(languageState.locale);
 </script>
 
 <Field.Field>
   {@render sliderRow(
-    "Speed",
+    t(locale, "Speed"),
     `${settings.speed.value.toFixed(1)} ${settings.speed.unit}`,
   )}
   <Slider
@@ -36,12 +40,12 @@
     min={trainerSettingBounds.speedValue.min}
     max={maxSpeedByUnit[settings.speed.unit]}
     step={speedStepByUnit[settings.speed.unit]}
-    aria-label="Speed"
+    aria-label={t(locale, "Speed")}
   />
 </Field.Field>
 
 <Field.Field>
-  <Field.Label for="trainer-speed-unit">Unit</Field.Label>
+  <Field.Label for="trainer-speed-unit">{t(locale, "Unit")}</Field.Label>
   <Select.Root
     type="single"
     value={settings.speed.unit}
@@ -50,7 +54,7 @@
     <Select.Trigger
       id="trainer-speed-unit"
       class="w-full"
-      aria-label="Speed unit"
+      aria-label={t(locale, "Speed unit")}
     >
       {settings.speed.unit}
     </Select.Trigger>

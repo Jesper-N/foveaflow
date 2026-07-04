@@ -11,13 +11,15 @@ export const getHudInteractionOpen = (
   headerPresetSelectOpen: boolean,
   headerPatternSelectOpen: boolean,
   headerLilacChaserColorSelectOpen: boolean,
+  headerLanguageSelectOpen: boolean,
 ) => {
   return (
     panelOpen ||
     guidePopoverOpen ||
     headerPresetSelectOpen ||
     headerPatternSelectOpen ||
-    headerLilacChaserColorSelectOpen
+    headerLilacChaserColorSelectOpen ||
+    headerLanguageSelectOpen
   );
 };
 

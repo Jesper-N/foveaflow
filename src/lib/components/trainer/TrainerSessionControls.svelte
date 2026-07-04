@@ -1,13 +1,17 @@
 <script lang="ts">
   import ArrowLeftRightIcon from "@lucide/svelte/icons/arrow-left-right";
+  import LanguagesIcon from "@lucide/svelte/icons/languages";
   import MoonIcon from "@lucide/svelte/icons/moon";
   import PauseIcon from "@lucide/svelte/icons/pause";
   import PlayIcon from "@lucide/svelte/icons/play";
   import SunIcon from "@lucide/svelte/icons/sun";
 
+  import LanguageSelect from "$lib/components/LanguageSelect.svelte";
   import { Button } from "$lib/components/ui/button/index.js";
   import { Switch } from "$lib/components/ui/switch/index.js";
   import type { TrainerSettings } from "$lib/engine/presets";
+  import { languageState } from "$lib/i18n/state.svelte";
+  import { t } from "$lib/i18n/translate";
 
   let {
     settings,
@@ -28,6 +32,8 @@
     toggleMotionDirection: () => void;
     handleThemeCheckedChange: (checked: boolean) => void;
   } = $props();
+
+  let locale = $derived(languageState.locale);
 </script>
 
 <div class="grid gap-5">
@@ -38,7 +44,7 @@
       {:else}
         <PauseIcon class="size-5 shrink-0 text-accent" />
       {/if}
-      <span class="truncate text-base font-medium">Motion</span>
+      <span class="truncate text-base font-medium">{t(locale, "Motion")}</span>
     </div>
     <Button
       class="pressable-ui"
@@ -48,14 +54,16 @@
       aria-describedby="trainer-motion-status"
       onclick={toggleMotionPaused}
     >
-      {motionPaused ? "Resume" : "Pause"}
+      {motionPaused ? t(locale, "Resume") : t(locale, "Pause")}
     </Button>
   </div>
 
   <div class="flex min-h-12 items-center justify-between gap-4">
     <div class="flex min-w-0 items-center gap-3">
       <ArrowLeftRightIcon class="size-5 shrink-0 text-accent" />
-      <span class="truncate text-base font-medium">Direction</span>
+      <span class="truncate text-base font-medium">
+        {t(locale, "Direction")}
+      </span>
     </div>
     <Button
       class="pressable-ui"
@@ -77,12 +85,24 @@
       {:else}
         <SunIcon class="size-5 shrink-0 text-accent" />
       {/if}
-      <span class="truncate text-base font-medium">Dark mode</span>
+      <span class="truncate text-base font-medium">
+        {t(locale, "Dark mode")}
+      </span>
     </div>
     <Switch
       checked={isDarkMode}
       onCheckedChange={handleThemeCheckedChange}
-      aria-label="Use dark theme"
+      aria-label={t(locale, "Use dark theme")}
     />
+  </div>
+
+  <div class="flex min-h-12 items-center justify-between gap-4">
+    <div class="flex min-w-0 items-center gap-3">
+      <LanguagesIcon class="size-5 shrink-0 text-accent" />
+      <span class="truncate text-base font-medium">
+        {t(locale, "Language")}
+      </span>
+    </div>
+    <LanguageSelect showSelectedName size="sm" triggerClass="max-w-44" />
   </div>
 </div>
