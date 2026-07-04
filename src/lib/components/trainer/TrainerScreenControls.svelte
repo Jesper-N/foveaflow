@@ -3,6 +3,8 @@
   import { Input } from "$lib/components/ui/input/index.js";
   import { Switch } from "$lib/components/ui/switch/index.js";
   import type { TrainerSettings } from "$lib/engine/presets";
+  import { languageState } from "$lib/i18n/state.svelte";
+  import { t } from "$lib/i18n/translate";
   import {
     trainerSettingBounds,
     type CalibrationField,
@@ -22,11 +24,15 @@
     if (!canToggleDirection) return;
     settings.showTrail = checked;
   };
+
+  let locale = $derived(languageState.locale);
 </script>
 
 <div class="grid gap-3 sm:grid-cols-2">
   <Field.Field>
-    <Field.Label for="trainer-distance">Viewing distance</Field.Label>
+    <Field.Label for="trainer-distance">
+      {t(locale, "Viewing distance")}
+    </Field.Label>
     <Input
       id="trainer-distance"
       type="number"
@@ -37,7 +43,9 @@
     />
   </Field.Field>
   <Field.Field>
-    <Field.Label for="trainer-css-px-cm">CSS pixels/cm</Field.Label>
+    <Field.Label for="trainer-css-px-cm">
+      {t(locale, "CSS pixels/cm")}
+    </Field.Label>
     <Input
       id="trainer-css-px-cm"
       type="number"
@@ -50,11 +58,11 @@
   </Field.Field>
 </div>
 <div class="flex min-h-12 items-center justify-between gap-4">
-  <span class="text-base font-medium">Show trail</span>
+  <span class="text-base font-medium">{t(locale, "Show trail")}</span>
   <Switch
     checked={settings.showTrail && canToggleDirection}
     onCheckedChange={handleShowTrailChange}
     disabled={!canToggleDirection}
-    aria-label="Show trail"
+    aria-label={t(locale, "Show trail")}
   />
 </div>

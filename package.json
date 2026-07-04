@@ -29,6 +29,7 @@
   "dependencies": {
     "@astrojs/check": "^0.9.9",
     "@astrojs/svelte": "^8.1.2",
+    "@inlang/paraglide-js": "^2.20.2",
     "@lucide/svelte": "^1.18.0",
     "@tailwindcss/vite": "4.3.0",
     "astro": "^6.4.6",

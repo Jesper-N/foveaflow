@@ -8,6 +8,7 @@
   import ShieldCheckIcon from "@lucide/svelte/icons/shield-check";
   import SlidersHorizontalIcon from "@lucide/svelte/icons/sliders-horizontal";
 
+  import LanguageSelect from "$lib/components/LanguageSelect.svelte";
   import { Badge } from "$lib/components/ui/badge/index.js";
   import { Button } from "$lib/components/ui/button/index.js";
   import * as Item from "$lib/components/ui/item/index.js";
@@ -15,6 +16,8 @@
   import { legalPageLinks } from "$lib/content/legal";
   import { siteMetadata } from "$lib/content/site";
   import type { SupportPage } from "$lib/content/support-pages";
+  import { languageState } from "$lib/i18n/state.svelte";
+  import { t } from "$lib/i18n/translate";
 
   let { page }: { page: SupportPage } = $props();
 
@@ -31,6 +34,7 @@
 
   const delayClass = (index: number) =>
     index === 0 ? "page-enter-delay-2" : "page-enter-delay-3";
+  let locale = $derived(languageState.locale);
 </script>
 
 <main
@@ -39,24 +43,33 @@
   <div class="mx-auto grid w-full max-w-7xl gap-10 px-4 py-5 sm:px-6 lg:px-8">
     <nav
       class={`flex items-center justify-between gap-4 ${guideEnterTop}`}
-      aria-label="Page navigation"
+      aria-label={t(locale, "Page navigation")}
     >
       <Button
         href="/"
         variant="outline"
         class="pressable-ui"
-        aria-label={`Open ${siteMetadata.name}`}
+        aria-label={`${t(locale, "Open")} ${siteMetadata.name}`}
       >
         <ArrowLeftIcon class="size-4" />
-        <span class="pl-1">Open {siteMetadata.name}</span>
+        <span class="pl-1">{t(locale, "Open")} {siteMetadata.name}</span>
       </Button>
 
-      <Badge
-        variant="outline"
-        class="hidden border-border/80 bg-background/80 px-3 py-1 text-muted-foreground sm:inline-flex"
-      >
-        Updated May 14, 2026
-      </Badge>
+      <div class="flex items-center gap-2">
+        <Badge
+          variant="outline"
+          class="hidden h-8 border-border/80 bg-background/80 px-3 py-0 text-sm text-muted-foreground sm:inline-flex"
+        >
+          {t(locale, "Updated May 14, 2026")}
+        </Badge>
+        <LanguageSelect
+          showSelectedName
+          collapseNameOnSmall
+          size="sm"
+          variant="outline"
+          triggerClass="max-w-56"
+        />
+      </div>
     </nav>
 
     <section
@@ -64,22 +77,22 @@
     >
       <div class="max-w-3xl">
         <Badge variant="secondary" class="mb-5 px-3 py-1">
-          {page.kicker}
+          {t(locale, page.kicker)}
         </Badge>
         <h1
           class="max-w-[14ch] text-4xl leading-none font-semibold tracking-tight text-foreground md:text-6xl"
         >
-          {page.heading}
+          {t(locale, page.heading)}
         </h1>
         <p
           class="mt-6 max-w-160 text-base leading-7 text-muted-foreground md:text-lg md:leading-8"
         >
-          {page.summary}
+          {t(locale, page.summary)}
         </p>
         <div class="mt-8 flex flex-wrap gap-3">
           <Button href={page.primaryCta.href} class="pressable-ui">
             <CrosshairIcon class="size-4" />
-            <span class="pl-1">{page.primaryCta.label}</span>
+            <span class="pl-1">{t(locale, page.primaryCta.label)}</span>
           </Button>
           {#if page.secondaryCta}
             <Button
@@ -88,7 +101,7 @@
               class="pressable-ui"
             >
               <BookOpenIcon class="size-4" />
-              <span class="pl-1">{page.secondaryCta.label}</span>
+              <span class="pl-1">{t(locale, page.secondaryCta.label)}</span>
             </Button>
           {/if}
         </div>
@@ -107,11 +120,13 @@
           </Item.Media>
           <Item.Content>
             <Item.Title class="line-clamp-none text-base">
-              Tune the session before you start
+              {t(locale, "Tune the session before you start")}
             </Item.Title>
             <Item.Description class="line-clamp-none leading-6">
-              FoveaFlow saves local controls for speed, size, shape, color,
-              opacity, trails, paths, distractors, letters, and display scale.
+              {t(
+                locale,
+                "FoveaFlow saves local controls for speed, size, shape, color, opacity, trails, paths, distractors, letters, and display scale.",
+              )}
             </Item.Description>
           </Item.Content>
         </Item.Root>
@@ -128,11 +143,13 @@
           </Item.Media>
           <Item.Content>
             <Item.Title class="line-clamp-none text-base">
-              Browser only, no account
+              {t(locale, "Browser only, no account")}
             </Item.Title>
             <Item.Description class="line-clamp-none leading-6">
-              Use it for short practice sessions. Stop if you feel eye strain,
-              dizziness, headache, nausea, or discomfort.
+              {t(
+                locale,
+                "Use it for short practice sessions. Stop if you feel eye strain, dizziness, headache, nausea, or discomfort.",
+              )}
             </Item.Description>
           </Item.Content>
         </Item.Root>
@@ -143,14 +160,16 @@
       {#each page.sections as section, index (section.heading)}
         <section class={`${sectionGrid} ${guideEnterUp} ${delayClass(index)}`}>
           <div class={sectionIntro}>
-            <Badge variant="outline" class="mb-4">Details</Badge>
-            <h2 class={sectionTitle}>{section.heading}</h2>
+            <Badge variant="outline" class="mb-4">
+              {t(locale, "Details")}
+            </Badge>
+            <h2 class={sectionTitle}>{t(locale, section.heading)}</h2>
           </div>
 
           <div class="grid gap-4 text-base leading-7 text-muted-foreground">
             {#if section.body}
               {#each section.body as paragraph (paragraph)}
-                <p>{paragraph}</p>
+                <p>{t(locale, paragraph)}</p>
               {/each}
             {/if}
 
@@ -170,7 +189,7 @@
                     </Item.Media>
                     <Item.Content>
                       <Item.Description class="line-clamp-none leading-6">
-                        {item}
+                        {t(locale, item)}
                       </Item.Description>
                     </Item.Content>
                   </Item.Root>
@@ -193,7 +212,7 @@
                     </Item.Media>
                     <Item.Content>
                       <Item.Description class="line-clamp-none leading-6">
-                        {item}
+                        {t(locale, item)}
                       </Item.Description>
                     </Item.Content>
                   </Item.Root>
@@ -210,16 +229,18 @@
           aria-labelledby="feature-comparison"
         >
           <div class={sectionIntro}>
-            <Badge variant="outline" class="mb-4">Comparison</Badge>
+            <Badge variant="outline" class="mb-4">
+              {t(locale, "Comparison")}
+            </Badge>
             <h2 id="feature-comparison" class={sectionTitle}>
-              Feature comparison
+              {t(locale, "Feature comparison")}
             </h2>
           </div>
 
           <Table.Root class="min-w-184">
             <Table.Header>
               <Table.Row class="hover:bg-transparent">
-                <Table.Head class="w-[28%]">Question</Table.Head>
+                <Table.Head class="w-[28%]">{t(locale, "Question")}</Table.Head>
                 <Table.Head>FoveaFlow</Table.Head>
                 <Table.Head>{page.comparisonLabel}</Table.Head>
               </Table.Row>
@@ -228,13 +249,13 @@
               {#each page.comparisonRows as row (row.feature)}
                 <Table.Row>
                   <Table.Cell class="font-medium text-foreground">
-                    {row.feature}
+                    {t(locale, row.feature)}
                   </Table.Cell>
                   <Table.Cell class="leading-6 text-muted-foreground">
-                    {row.foveaflow}
+                    {t(locale, row.foveaflow)}
                   </Table.Cell>
                   <Table.Cell class="leading-6 text-muted-foreground">
-                    {row.alternative}
+                    {t(locale, row.alternative)}
                   </Table.Cell>
                 </Table.Row>
               {/each}
@@ -246,19 +267,19 @@
       <footer
         class={`page-enter-delay-4 flex flex-col gap-3 border-t border-border/60 pt-8 pb-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between ${guideEnterUp}`}
       >
-        <span>{siteMetadata.name} is free. No account, no install.</span>
+        <span>{t(locale, "FoveaFlow is free. No account, no install.")}</span>
         <div class="flex flex-wrap gap-2">
           <Button href="/guide/" variant="ghost" size="sm">
             <BookOpenIcon class="size-4" />
-            <span class="pl-1">Guide</span>
+            <span class="pl-1">{t(locale, "Guide")}</span>
           </Button>
           <Button href={legalPageLinks.privacy.path} variant="ghost" size="sm">
             <ShieldCheckIcon class="size-4" />
-            <span class="pl-1">{legalPageLinks.privacy.label}</span>
+            <span class="pl-1">{t(locale, legalPageLinks.privacy.label)}</span>
           </Button>
           <Button href={legalPageLinks.terms.path} variant="ghost" size="sm">
             <FileTextIcon class="size-4" />
-            <span class="pl-1">{legalPageLinks.terms.label}</span>
+            <span class="pl-1">{t(locale, legalPageLinks.terms.label)}</span>
           </Button>
           {#if page.sourceLink}
             <Button
@@ -269,7 +290,7 @@
               size="sm"
             >
               <ExternalLinkIcon class="size-4" />
-              <span class="pl-1">{page.sourceLink.label}</span>
+              <span class="pl-1">{t(locale, page.sourceLink.label)}</span>
             </Button>
           {/if}
         </div>

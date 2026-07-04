@@ -7,6 +7,8 @@
   import * as Select from "$lib/components/ui/select/index.js";
   import { Slider } from "$lib/components/ui/slider/index.js";
   import type { TrainerSettings } from "$lib/engine/presets";
+  import { languageState } from "$lib/i18n/state.svelte";
+  import { t } from "$lib/i18n/translate";
   import { getShapeName, shapeOptions } from "$lib/trainer/options";
   import {
     trainerSettingBounds,
@@ -56,28 +58,36 @@
     setLetterScaleSliderValue,
     sliderRow,
   }: Props = $props();
+
+  let locale = $derived(languageState.locale);
+  let currentShapeName = $derived(
+    t(locale, getShapeName(settings.targetShape)),
+  );
 </script>
 
 {#if isMotMode}
-  <div class="space-y-4">
+  <div class="grid gap-4">
     <Field.Field>
-      {@render sliderRow("Targets", String(settings.targetCount))}
+      {@render sliderRow(t(locale, "Targets"), String(settings.targetCount))}
       <Slider
         bind:value={targetCountSliderValue, setTargetCountSliderValue}
         min={trainerSettingBounds.targetCount.min}
         max={trainerSettingBounds.targetCount.max}
         step={1}
-        aria-label="Targets"
+        aria-label={t(locale, "Targets")}
       />
     </Field.Field>
     <Field.Field>
-      {@render sliderRow("Distractors", String(settings.distractorCount))}
+      {@render sliderRow(
+        t(locale, "Distractors"),
+        String(settings.distractorCount),
+      )}
       <Slider
         bind:value={distractorCountSliderValue, setDistractorCountSliderValue}
         min={trainerSettingBounds.distractorCount.min}
         max={trainerSettingBounds.distractorCount.max}
         step={1}
-        aria-label="Distractors"
+        aria-label={t(locale, "Distractors")}
       />
     </Field.Field>
   </div>
@@ -104,7 +114,7 @@
       type="color"
       value={settings.ballColor}
       oninput={handleColorInput}
-      aria-label="Ball color"
+      aria-label={t(locale, "Ball color")}
     />
   </label>
 </Field.Field>
@@ -112,7 +122,7 @@
 {#if isMotMode}
   <Field.Field>
     {@render sliderRow(
-      "Distractor color",
+      t(locale, "Distractor color"),
       `${Math.round(settings.distractorBrightness * 100)}%`,
     )}
     <Slider
@@ -122,36 +132,43 @@
       min={trainerSettingBounds.distractorBrightness.min}
       max={trainerSettingBounds.distractorBrightness.max}
       step={0.01}
-      aria-label="Distractor color brightness"
+      aria-label={t(locale, "Distractor color brightness")}
     />
   </Field.Field>
 {/if}
 
 <Field.Field>
-  {@render sliderRow("Opacity", `${Math.round(settings.targetOpacity * 100)}%`)}
+  {@render sliderRow(
+    t(locale, "Opacity"),
+    `${Math.round(settings.targetOpacity * 100)}%`,
+  )}
   <Slider
     bind:value={opacitySliderValue, setOpacitySliderValue}
     min={trainerSettingBounds.targetOpacity.min}
     max={trainerSettingBounds.targetOpacity.max}
     step={0.01}
-    aria-label="Target opacity"
+    aria-label={t(locale, "Target opacity")}
   />
 </Field.Field>
 
 <Field.Field>
-  <Field.Label for="trainer-shape">Shape</Field.Label>
+  <Field.Label for="trainer-shape">{t(locale, "Shape")}</Field.Label>
   <Select.Root
     type="single"
     value={settings.targetShape}
     onValueChange={handleShapeChange}
   >
-    <Select.Trigger id="trainer-shape" class="w-full" aria-label="Shape">
-      {getShapeName(settings.targetShape)}
+    <Select.Trigger
+      id="trainer-shape"
+      class="w-full"
+      aria-label={t(locale, "Shape")}
+    >
+      {currentShapeName}
     </Select.Trigger>
     <Select.Content>
       <Select.Group>
         {#each shapeOptions as option (option.id)}
-          <Select.Item value={option.id}>{option.name}</Select.Item>
+          <Select.Item value={option.id}>{t(locale, option.name)}</Select.Item>
         {/each}
       </Select.Group>
     </Select.Content>
@@ -159,13 +176,16 @@
 </Field.Field>
 
 <Field.Field>
-  {@render sliderRow("Size", `${Math.round(settings.baseRadiusPx)} px`)}
+  {@render sliderRow(
+    t(locale, "Size"),
+    `${Math.round(settings.baseRadiusPx)} px`,
+  )}
   <Slider
     bind:value={sizeSliderValue, setSizeSliderValue}
     min={trainerSettingBounds.baseRadiusPx.min}
     max={trainerSettingBounds.baseRadiusPx.max}
     step={1}
-    aria-label="Target size"
+    aria-label={t(locale, "Target size")}
   />
 </Field.Field>
 

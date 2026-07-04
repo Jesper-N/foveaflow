@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 
+import { paraglideVitePlugin } from "@inlang/paraglide-js";
 import svelte from "@astrojs/svelte";
 import tailwindcss from "@tailwindcss/vite";
 
@@ -29,6 +30,14 @@ export default defineConfig({
   integrations: [svelte()],
 
   vite: {
-    plugins: [devWatcherListenerLimit(), tailwindcss()],
+    plugins: [
+      devWatcherListenerLimit(),
+      paraglideVitePlugin({
+        project: "./project.inlang",
+        outdir: "./src/paraglide",
+        strategy: ["cookie", "localStorage", "preferredLanguage", "baseLocale"],
+      }),
+      tailwindcss(),
+    ],
   },
 });

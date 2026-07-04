@@ -17,7 +17,7 @@
   } = $props();
 </script>
 
-<section class="settings-section space-y-6">
+<section class="settings-section grid gap-6">
   <div
     class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground"
   >

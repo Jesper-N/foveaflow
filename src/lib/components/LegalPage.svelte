@@ -4,11 +4,14 @@
   import FileTextIcon from "@lucide/svelte/icons/file-text";
   import ShieldCheckIcon from "@lucide/svelte/icons/shield-check";
 
+  import LanguageSelect from "$lib/components/LanguageSelect.svelte";
   import { Badge } from "$lib/components/ui/badge/index.js";
   import { Button } from "$lib/components/ui/button/index.js";
   import * as Item from "$lib/components/ui/item/index.js";
   import { siteMetadata } from "$lib/content/site";
   import type { LegalPageContent } from "$lib/content/legal";
+  import { languageState } from "$lib/i18n/state.svelte";
+  import { t } from "$lib/i18n/translate";
 
   let { page }: { page: LegalPageContent } = $props();
 
@@ -22,6 +25,7 @@
     { href: "/privacy/", label: "Privacy" },
     { href: "/terms/", label: "Terms" },
   ];
+  let locale = $derived(languageState.locale);
 </script>
 
 <main
@@ -33,24 +37,36 @@
         href="/"
         variant="outline"
         class="pressable-ui"
-        aria-label={`Open ${siteMetadata.name}`}
+        aria-label={`${t(locale, "Open")} ${siteMetadata.name}`}
       >
         <ArrowLeftIcon class="size-4" />
-        <span class="pl-1">Open {siteMetadata.name}</span>
+        <span class="pl-1">{t(locale, "Open")} {siteMetadata.name}</span>
       </Button>
 
-      <nav class="hidden items-center gap-1 sm:flex" aria-label="Legal pages">
-        {#each navLinks as navLink (navLink.href)}
-          <Button
-            href={navLink.href}
-            variant={page.path === navLink.href ? "outline" : "ghost"}
-            size="sm"
-            class="pressable-ui"
-          >
-            {navLink.label}
-          </Button>
-        {/each}
-      </nav>
+      <div class="flex items-center gap-2">
+        <nav
+          class="hidden items-center gap-1 sm:flex"
+          aria-label={t(locale, "Legal pages")}
+        >
+          {#each navLinks as navLink (navLink.href)}
+            <Button
+              href={navLink.href}
+              variant={page.path === navLink.href ? "outline" : "ghost"}
+              size="sm"
+              class="pressable-ui"
+            >
+              {t(locale, navLink.label)}
+            </Button>
+          {/each}
+        </nav>
+        <LanguageSelect
+          showSelectedName
+          collapseNameOnSmall
+          size="sm"
+          variant="outline"
+          triggerClass="max-w-56"
+        />
+      </div>
     </header>
 
     <section
@@ -58,17 +74,17 @@
     >
       <div>
         <Badge variant="secondary" class="mb-5 px-3 py-1">
-          {page.label}
+          {t(locale, page.label)}
         </Badge>
         <h1
           class="max-w-[12ch] text-4xl leading-none font-semibold tracking-tight text-foreground md:text-6xl"
         >
-          {page.title}
+          {t(locale, page.title)}
         </h1>
         <p
           class="mt-6 max-w-164 text-base leading-7 text-muted-foreground md:text-lg md:leading-8"
         >
-          {page.summary}
+          {t(locale, page.summary)}
         </p>
       </div>
 
@@ -88,10 +104,10 @@
         </Item.Media>
         <Item.Content>
           <Item.Title class="line-clamp-none text-base">
-            Updated April 28, 2026
+            {t(locale, "Updated April 28, 2026")}
           </Item.Title>
           <Item.Description class="line-clamp-none leading-6">
-            This page is specific to this free browser tool.
+            {t(locale, "This page is specific to this free browser tool.")}
           </Item.Description>
         </Item.Content>
       </Item.Root>
@@ -104,15 +120,15 @@
         <Item.Root variant="muted" class="border border-border/70">
           <Item.Content>
             <Item.Title class="line-clamp-none text-sm">
-              On this page
+              {t(locale, "On this page")}
             </Item.Title>
-            <nav class="mt-3 grid gap-1" aria-label="On this page">
+            <nav class="mt-3 grid gap-1" aria-label={t(locale, "On this page")}>
               {#each page.sections as section (section.id)}
                 <a
                   href={`#${section.id}`}
                   class="rounded-md px-2 py-1.5 text-sm leading-5 text-muted-foreground transition-[background-color,color] duration-150 hover:bg-background hover:text-foreground"
                 >
-                  {section.heading}
+                  {t(locale, section.heading)}
                 </a>
               {/each}
             </nav>
@@ -129,13 +145,13 @@
             >
               <Item.Content>
                 <Item.Title class="line-clamp-none text-lg">
-                  {section.heading}
+                  {t(locale, section.heading)}
                 </Item.Title>
                 <div
                   class="mt-3 grid max-w-184 gap-3 text-sm leading-6 text-muted-foreground"
                 >
                   {#each section.body as paragraph (paragraph)}
-                    <p>{paragraph}</p>
+                    <p>{t(locale, paragraph)}</p>
                   {/each}
                 </div>
 
@@ -150,7 +166,7 @@
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        <span>{link.label}</span>
+                        <span>{t(locale, link.label)}</span>
                         <ExternalLinkIcon class="size-3" />
                       </Button>
                     {/each}
@@ -166,13 +182,15 @@
     <footer
       class={`page-enter-delay-3 flex flex-col gap-3 border-t border-border/60 pt-6 pb-10 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between ${guideEnterUp}`}
     >
-      <span>{siteMetadata.name} is free. No account, no paid plan.</span>
+      <span>
+        {t(locale, "FoveaFlow is free. No account, no paid plan.")}
+      </span>
       <div class="flex flex-wrap gap-2">
         <Button href="/" variant="ghost" size="sm" class="pressable-ui">
-          App
+          {t(locale, "App")}
         </Button>
         <Button href="/guide/" variant="ghost" size="sm" class="pressable-ui">
-          Guide
+          {t(locale, "Guide")}
         </Button>
       </div>
     </footer>

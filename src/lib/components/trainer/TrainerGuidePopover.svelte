@@ -11,6 +11,8 @@
   import type { PageSeoContent } from "$lib/content/page-copy";
   import { homepageSeoContent } from "$lib/content/page-copy";
   import { siteMetadata } from "$lib/content/site";
+  import { languageState } from "$lib/i18n/state.svelte";
+  import { t } from "$lib/i18n/translate";
   import {
     trainingModeNotes,
     type TrainingModeGuide,
@@ -35,6 +37,7 @@
   } = $props();
 
   let quickFaqItems = $derived(guideSeoContent.faq.slice(0, 3));
+  let locale = $derived(languageState.locale);
 </script>
 
 {#snippet closeButton()}
@@ -42,12 +45,12 @@
     variant="ghost"
     class="absolute top-4 right-4 bg-secondary"
     size="icon-sm"
-    aria-label="Close"
+    aria-label={t(locale, "Close")}
     popovertarget="trainer-guide-popover"
     popovertargetaction="hide"
   >
     <XIcon />
-    <span class="sr-only">Close</span>
+    <span class="sr-only">{t(locale, "Close")}</span>
   </Button>
 {/snippet}
 
@@ -56,8 +59,10 @@
     class="guide-enter guide-enter-delay-4 mt-8 flex flex-col gap-4 border-t border-border/40 pt-4 sm:flex-row sm:items-center sm:justify-between"
   >
     <p class="min-w-0 text-xs leading-5 text-muted-foreground">
-      {siteMetadata.name} is free to use, requires no account or install, and stores
-      settings locally in your browser.
+      {t(
+        locale,
+        "FoveaFlow is free to use, requires no account or install, and stores settings locally in your browser.",
+      )}
     </p>
 
     <div class="flex shrink-0 flex-wrap gap-2 sm:justify-end">
@@ -69,15 +74,15 @@
         size="xs"
       >
         <ExternalLinkIcon class="size-3" />
-        <span class="pl-1">Source</span>
+        <span class="pl-1">{t(locale, "Source")}</span>
       </Button>
       <Button href={legalPageLinks.privacy.path} variant="ghost" size="xs">
         <ShieldCheckIcon class="size-3" />
-        <span class="pl-1">{legalPageLinks.privacy.label}</span>
+        <span class="pl-1">{t(locale, legalPageLinks.privacy.label)}</span>
       </Button>
       <Button href={legalPageLinks.terms.path} variant="ghost" size="xs">
         <FileTextIcon class="size-3" />
-        <span class="pl-1">{legalPageLinks.terms.label}</span>
+        <span class="pl-1">{t(locale, legalPageLinks.terms.label)}</span>
       </Button>
     </div>
   </footer>
@@ -85,17 +90,17 @@
 
 {#snippet homepageContent()}
   <div class="guide-enter guide-enter-top flex items-start gap-4">
-    <div class="min-w-0 space-y-2 pr-12">
+    <div class="grid min-w-0 gap-2 pr-12">
       <p
         class="text-[0.7rem] leading-4 font-semibold tracking-wide text-accent uppercase"
       >
-        {homepageSeoContent.kicker}
+        {t(locale, homepageSeoContent.kicker)}
       </p>
       <h2
         id="trainer-guide-popover-title"
         class="text-2xl leading-tight font-semibold text-balance"
       >
-        {homepageSeoContent.heading}
+        {t(locale, homepageSeoContent.heading)}
       </h2>
     </div>
   </div>
@@ -106,16 +111,18 @@
     class="mt-6 grid items-start gap-8 lg:grid-cols-[minmax(0,0.96fr)_minmax(0,1.18fr)_minmax(16rem,0.82fr)]"
   >
     <section
-      class="guide-enter guide-enter-delay-1 space-y-5 border-t border-border/40 pt-6"
-      aria-label="FoveaFlow overview"
+      class="guide-enter guide-enter-delay-1 grid gap-5 border-t border-border/40 pt-6"
+      aria-label={t(locale, "FoveaFlow overview")}
     >
-      <h3 class="text-base font-semibold text-foreground">Overview</h3>
+      <h3 class="text-base font-semibold text-foreground">
+        {t(locale, "Overview")}
+      </h3>
 
       <div
-        class="mt-6 space-y-4 text-sm leading-6 text-muted-foreground text-pretty sm:text-[0.95rem] sm:leading-7"
+        class="mt-6 grid gap-4 text-sm leading-6 text-muted-foreground text-pretty sm:text-[0.95rem] sm:leading-7"
       >
         {#each homepageSeoContent.body as paragraph (paragraph)}
-          <p class="max-w-[58ch]">{paragraph}</p>
+          <p class="max-w-[58ch]">{t(locale, paragraph)}</p>
         {/each}
       </div>
     </section>
@@ -128,7 +135,7 @@
         id="homepage-guide-drills"
         class="text-base font-semibold text-foreground"
       >
-        Drills
+        {t(locale, "Drills")}
       </h3>
       <ul class="mt-6 grid gap-5">
         {#each trainingModeNotes as trainingModeNote (trainingModeNote.title)}
@@ -141,9 +148,9 @@
             </span>
             <span class="pt-1 leading-6 text-muted-foreground text-pretty">
               <span class="font-semibold text-foreground">
-                {trainingModeNote.title}:
+                {t(locale, trainingModeNote.title)}:
               </span>
-              {trainingModeNote.body}
+              {t(locale, trainingModeNote.body)}
             </span>
           </li>
         {/each}
@@ -153,20 +160,22 @@
     <aside
       class="guide-enter guide-enter-delay-3 border-t border-border/40 pt-6"
     >
-      <h3 class="text-base font-semibold text-foreground">Safety</h3>
+      <h3 class="text-base font-semibold text-foreground">
+        {t(locale, "Safety")}
+      </h3>
       <p class="mt-6 text-sm leading-6 text-muted-foreground text-pretty">
-        {homepageSeoContent.trustNote}
+        {t(locale, homepageSeoContent.trustNote)}
       </p>
 
       <div
         class="mt-6 flex flex-wrap gap-2"
-        aria-label={`Best uses for ${siteMetadata.name}`}
+        aria-label={`${t(locale, "Best uses for")} ${siteMetadata.name}`}
       >
         {#each guideUseCases as useCase (useCase)}
           <span
             class="rounded-full border border-border/40 bg-muted/35 px-3 py-1 text-xs font-medium text-muted-foreground"
           >
-            {useCase}
+            {t(locale, useCase)}
           </span>
         {/each}
       </div>
@@ -176,29 +185,29 @@
         class={`${buttonVariants({ variant: "default", size: "lg" })} pressable-ui guide-enter guide-enter-delay-4 mt-6 w-full`}
       >
         <BookOpenIcon class="size-4" />
-        <span>Read the full guide</span>
+        <span>{t(locale, "Read the full guide")}</span>
       </a>
     </aside>
   </div>
 {/snippet}
 
 {#snippet routeContent()}
-  <div class="guide-enter guide-enter-top min-w-0 space-y-2 pr-12">
+  <div class="guide-enter guide-enter-top grid min-w-0 gap-2 pr-12">
     <p
       class="text-[0.7rem] leading-4 font-semibold tracking-wide text-accent uppercase"
     >
-      {guideSeoContent.kicker}
+      {t(locale, guideSeoContent.kicker)}
     </p>
     <h2
       id="trainer-guide-popover-title"
       class="max-w-[28ch] text-2xl leading-[1.04] font-semibold tracking-tight text-balance sm:text-3xl lg:text-[2.125rem]"
     >
-      {guideSeoContent.heading}
+      {t(locale, guideSeoContent.heading)}
     </h2>
     <p
       class="max-w-[62ch] text-sm leading-6 text-muted-foreground text-pretty sm:text-base"
     >
-      {guideSeoContent.hero}
+      {t(locale, guideSeoContent.hero)}
     </p>
   </div>
 
@@ -208,24 +217,26 @@
     class="mt-6 grid items-start gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] xl:grid-cols-[minmax(0,0.88fr)_minmax(0,1.06fr)_minmax(16rem,0.82fr)]"
   >
     <section
-      class="guide-enter guide-enter-delay-1 space-y-6 border-t border-border/40 pt-6"
-      aria-label={`${guideSeoContent.heading} overview`}
+      class="guide-enter guide-enter-delay-1 grid gap-6 border-t border-border/40 pt-6"
+      aria-label={`${t(locale, guideSeoContent.heading)} ${t(locale, "overview")}`}
     >
-      <h3 class="text-base font-semibold text-foreground">Overview</h3>
+      <h3 class="text-base font-semibold text-foreground">
+        {t(locale, "Overview")}
+      </h3>
 
       <div
-        class="mt-6 space-y-4 text-sm leading-6 text-muted-foreground text-pretty sm:text-[0.95rem] sm:leading-7"
+        class="mt-6 grid gap-4 text-sm leading-6 text-muted-foreground text-pretty sm:text-[0.95rem] sm:leading-7"
       >
         {#each guideSeoContent.body as paragraph (paragraph)}
           <p class="max-w-[58ch]">
-            {paragraph}
+            {t(locale, paragraph)}
           </p>
         {/each}
       </div>
 
       <Button href="/guide/" size="xl" class="pressable-ui w-full">
         <BookOpenIcon class="size-5" />
-        <span class="pl-1">Read full guide</span>
+        <span class="pl-1">{t(locale, "Read full guide")}</span>
       </Button>
     </section>
 
@@ -237,7 +248,8 @@
         id="trainer-guide-steps"
         class="text-base font-semibold text-foreground text-balance"
       >
-        How to use {activeTrainingModeGuide.title}
+        {t(locale, "How to use")}
+        {t(locale, activeTrainingModeGuide.title)}
       </h3>
 
       <ol class="mt-6 grid gap-5">
@@ -250,7 +262,7 @@
               {index + 1}
             </span>
             <span class="pt-1 leading-6 text-muted-foreground text-pretty">
-              {step}
+              {t(locale, step)}
             </span>
           </li>
         {/each}
@@ -259,8 +271,10 @@
       <p
         class="mt-6 border-t border-border/40 pt-6 text-sm leading-6 text-muted-foreground text-pretty"
       >
-        <span class="font-semibold text-foreground">What it trains:</span>
-        {activeTrainingModeGuide.benefits}
+        <span class="font-semibold text-foreground">
+          {t(locale, "What it trains:")}
+        </span>
+        {t(locale, activeTrainingModeGuide.benefits)}
       </p>
     </section>
 
@@ -272,7 +286,7 @@
         id="trainer-guide-faq"
         class="text-base font-semibold text-foreground text-balance"
       >
-        Quick answers
+        {t(locale, "Quick answers")}
       </h3>
 
       <div class="mt-6 divide-y divide-border/40">
@@ -286,7 +300,7 @@
               aria-controls={`trainer-guide-faq-answer-${index}`}
               onclick={() => toggleGuideFaq(faqItem.question)}
             >
-              <span>{faqItem.question}</span>
+              <span>{t(locale, faqItem.question)}</span>
               <span
                 class={[
                   "flex size-6 shrink-0 items-center justify-center rounded-full text-base leading-none text-muted-foreground transition-transform duration-200 ease-out",
@@ -311,7 +325,7 @@
                     faqOpen ? "opacity-100" : "opacity-0",
                   ]}
                 >
-                  {faqItem.answer}
+                  {t(locale, faqItem.answer)}
                 </p>
               </div>
             </div>
@@ -321,19 +335,19 @@
 
       <div
         class="mt-6 flex flex-wrap gap-2"
-        aria-label={`Best uses for ${activeTrainingModeGuide.title}`}
+        aria-label={`${t(locale, "Best uses for")} ${t(locale, activeTrainingModeGuide.title)}`}
       >
         {#each guideUseCases as useCase (useCase)}
           <span
             class="rounded-full border border-border/40 bg-muted/35 px-3 py-1 text-xs font-medium text-muted-foreground"
           >
-            {useCase}
+            {t(locale, useCase)}
           </span>
         {/each}
       </div>
 
       <p class="mt-6 text-xs leading-5 text-muted-foreground/85">
-        {guideSeoContent.trustNote}
+        {t(locale, guideSeoContent.trustNote)}
       </p>
     </aside>
   </div>

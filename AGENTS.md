@@ -36,7 +36,4 @@ After implementing, do a quality pass before final tests. Say the pass started, 
 
 ## UI rules
 
-- Before new UI component, check https://www.shadcn-svelte.com/docs/components.md and existing `src/lib/components/ui/**`; use fitting shadcn-svelte primitive if available.
-- Treat `src/lib/components/ui/**` as shadcn-owned vendor code. Do not edit, reformat, or canonicalize unless user explicitly asks for shadcn component change.
-- For `src/lib/components/ui/**` style variants, prefer `tailwind-variants` component API over app-only CSS classes.
-- Prefer Tailwind scale utilities/tokens over arbitrary values when equivalent exists.
+This project is using shadcn-svelte for UI components. If you're doing anything related to UI component such creating/editing make sure load `$shadcn-svelte` for important context.

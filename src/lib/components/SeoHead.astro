@@ -1,6 +1,15 @@
 ---
 import { createInitialModeExpression } from "mode-watcher";
 import { siteMetadata } from "../content/site";
+import {
+  defaultLocale,
+  languageOptions,
+  localeAliases,
+  localeCookieMaxAge,
+  localeCookieName,
+  localeLocalStorageKey,
+  localePrefixAliases,
+} from "../i18n/locales";
 import { absoluteUrl, getSiteOrigin } from "../seo";
 import ThemeFavicon from "./ThemeFavicon.astro";
 
@@ -36,10 +45,87 @@ const canonicalUrl = absoluteUrl(canonicalPath, siteOrigin);
 const ogImageUrl = absoluteUrl(siteMetadata.imagePath, siteOrigin);
 const structuredDataJson =
   structuredData === undefined ? "" : JSON.stringify(structuredData);
+const i18nBootConfig = {
+  cookieMaxAge: localeCookieMaxAge,
+  cookieName: localeCookieName,
+  defaultLocale,
+  localeAliases,
+  localePrefixAliases,
+  locales: languageOptions.map((option) => option.locale),
+  localStorageKey: localeLocalStorageKey,
+};
+const i18nBootScript = `
+(() => {
+  const config = ${JSON.stringify(i18nBootConfig)};
+  const resolveSupportedLocale = (value) => {
+    if (!value) return null;
+
+    const locale = String(value).replace(/_/g, "-");
+    if (config.locales.includes(locale)) return locale;
+
+    const lower = locale.toLowerCase();
+    if (config.localeAliases[lower]) return config.localeAliases[lower];
+
+    const prefixAlias = config.localePrefixAliases.find(([prefix]) => lower.startsWith(prefix));
+    return prefixAlias ? prefixAlias[1] : null;
+  };
+  const readLocalStorageLocale = () => {
+    try {
+      return window.localStorage.getItem(config.localStorageKey);
+    } catch {
+      return null;
+    }
+  };
+  const readCookieLocale = () => {
+    const cookiePrefix = config.cookieName + "=";
+    const cookie = document.cookie
+      .split(";")
+      .map((value) => value.trim())
+      .find((value) => value.startsWith(cookiePrefix));
+
+    return cookie ? decodeURIComponent(cookie.slice(cookiePrefix.length)) : null;
+  };
+  const readNavigatorLocale = () => {
+    const languages = Array.isArray(navigator.languages) ? navigator.languages : [];
+    for (const language of [...languages, navigator.language]) {
+      const locale = resolveSupportedLocale(language);
+      if (locale) return locale;
+    }
+    return null;
+  };
+  const storedLocale = resolveSupportedLocale(readLocalStorageLocale());
+  const cookieLocale = resolveSupportedLocale(readCookieLocale());
+  const resolvedLocale = storedLocale || cookieLocale || readNavigatorLocale() || config.defaultLocale;
+
+  document.documentElement.lang = resolvedLocale;
+  document.documentElement.dir = "ltr";
+
+  if (resolvedLocale !== config.defaultLocale) {
+    document.documentElement.dataset.i18nPending = "true";
+    window.setTimeout(() => {
+      delete document.documentElement.dataset.i18nPending;
+    }, 2500);
+  }
+
+  if (storedLocale || resolvedLocale !== config.defaultLocale) {
+    try {
+      document.cookie = config.cookieName + "=" + encodeURIComponent(resolvedLocale) + "; path=/; max-age=" + config.cookieMaxAge;
+    } catch {
+      // Ignore blocked cookie writes.
+    }
+  }
+})();
+`;
 ---
 
 <meta charset="utf-8" />
 <script is:inline set:html={initialModeExpression} />
+<script is:inline set:html={i18nBootScript} />
+<style is:inline>
+  html[data-i18n-pending="true"] body > * {
+    visibility: hidden;
+  }
+</style>
 <ThemeFavicon />
 <link rel="canonical" href={canonicalUrl} />
 <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt" />

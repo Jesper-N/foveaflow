@@ -20,6 +20,7 @@ export type TrainerHudActions = {
   handleHeaderPatternOpenChange: (open: boolean) => void;
   handleLilacChaserColorChange: (value: string) => void;
   handleHeaderLilacChaserColorOpenChange: (open: boolean) => void;
+  handleHeaderLanguageOpenChange: (open: boolean) => void;
   sizeSlider: SliderBinding;
   speedSlider: SliderBinding;
   lilacChaserScaleSlider: SliderBinding;

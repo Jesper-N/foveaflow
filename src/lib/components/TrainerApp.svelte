@@ -21,6 +21,8 @@
   import { darkenHexColor, safeStimulusColor } from "$lib/engine/safety";
   import { homepageSeoContent } from "$lib/content/page-copy";
   import { siteMetadata } from "$lib/content/site";
+  import { languageState } from "$lib/i18n/state.svelte";
+  import { t } from "$lib/i18n/translate";
   import {
     findTrainerRoute,
     getRouteSlugFromPath,
@@ -165,6 +167,7 @@
   let desktopPresetSelectOpen = $state(false);
   let desktopPatternSelectOpen = $state(false);
   let desktopLilacChaserColorSelectOpen = $state(false);
+  let languageSelectOpen = $state(false);
   let headerPresetSelectOpen = $derived(
     mobilePresetSelectOpen || desktopPresetSelectOpen,
   );
@@ -185,6 +188,8 @@
   });
 
   let safeBallColor = $derived(safeStimulusColor(settings.ballColor));
+  let locale = $derived(languageState.locale);
+  let localeReady = $derived(languageState.ready);
   let activeRoute = $derived(findTrainerRoute(currentRouteSlug));
   let pageSeoContent = $derived(activeRoute?.seoContent ?? homepageSeoContent);
   let activeGuideRoute = $derived(
@@ -199,12 +204,14 @@
     canPatternToggleDirection(settings.patternId),
   );
   let motionDirectionLabel = $derived(
-    settings.motionDirection === 1 ? "forward" : "reverse",
+    settings.motionDirection === 1
+      ? t(locale, "forward")
+      : t(locale, "reverse"),
   );
   let motionDirectionToggleLabel = $derived(
     settings.motionDirection === 1
-      ? "Reverse motion direction"
-      : "Use forward motion direction",
+      ? t(locale, "Reverse motion direction")
+      : t(locale, "Use forward motion direction"),
   );
   let distractorColor = $derived(
     darkenHexColor(safeBallColor, settings.distractorBrightness),
@@ -214,11 +221,20 @@
   let availableControlSections = $derived(
     getAvailableControlSections(isLilacChaserMode),
   );
+  let localizedControlSections = $derived(
+    availableControlSections.map((section) => ({
+      ...section,
+      label: t(locale, section.label),
+    })),
+  );
   let currentControlSection = $derived(
     resolveControlSection(activeControlSection, availableControlSections),
   );
   let currentControlSectionLabel = $derived(
-    getControlSectionLabel(currentControlSection, availableControlSections),
+    t(
+      locale,
+      getControlSectionLabel(currentControlSection, availableControlSections),
+    ),
   );
   let activeTrainingModeGuide = $derived(
     getTrainingModeGuide(settings.presetId),
@@ -248,6 +264,7 @@
       headerPresetSelectOpen,
       headerPatternSelectOpen,
       headerLilacChaserColorSelectOpen,
+      languageSelectOpen,
     ),
   );
   let hudHidden = $derived(
@@ -312,13 +329,17 @@
   };
 
   onMount(() => {
+    let mounted = true;
     const savedSettings = loadSettings();
     syncSettingsFromBrowserRoute(
       savedSettings ? resolveStoredSettings(savedSettings) : settings,
     );
 
     storageReady = true;
-    hudAutoHideTimer.start();
+    void languageState.init().then(() => {
+      if (!mounted) return;
+      hudAutoHideTimer.start();
+    });
     cursorAutoHideTimer.start();
 
     const reduceMotionQuery = window.matchMedia(
@@ -331,6 +352,7 @@
     reduceMotionQuery.addEventListener("change", handleReduceMotionChange);
 
     return () => {
+      mounted = false;
       settingsSaver.flush();
       hudAutoHideTimer.clear();
       cursorAutoHideTimer.clear();
@@ -733,6 +755,10 @@
     if (open) revealHud();
   };
 
+  const handleHeaderLanguageOpenChange = (open: boolean) => {
+    if (open) revealHud();
+  };
+
   const handleWindowPointerMove = (event: PointerEvent) => {
     if (event.pointerType !== "touch") cursorAutoHideTimer.start();
     if (!hudAutoHideReady || event.pointerType === "touch") return;
@@ -849,6 +875,7 @@
       headerPresetSelectOpen ||
       headerPatternSelectOpen ||
       headerLilacChaserColorSelectOpen ||
+      languageSelectOpen ||
       Boolean(document.querySelector(shortcutPrioritySurfaceSelector))
     );
   };
@@ -939,6 +966,7 @@
     handleHeaderPatternOpenChange,
     handleLilacChaserColorChange,
     handleHeaderLilacChaserColorOpenChange,
+    handleHeaderLanguageOpenChange,
     sizeSlider: {
       value: sizeSliderValue,
       set: setSizeSliderValue,
@@ -1025,58 +1053,71 @@
 <main
   class="trainer-stage relative h-dvh w-dvw overflow-hidden bg-background text-foreground"
   data-cursor-hidden={cursorHidden}
-  aria-label="FoveaFlow eye trainer app"
+  aria-label={t(locale, "FoveaFlow eye trainer app")}
 >
   {#if activeRoute}
     <h1 class="sr-only">{pageSeoContent.heading}</h1>
   {/if}
   <p id="trainer-canvas-description" class="sr-only">
-    FoveaFlow eye trainer animation for visual tracking practice. Use Pause
-    motion to stop target movement before changing controls.
+    {t(
+      locale,
+      "FoveaFlow eye trainer animation for visual tracking practice. Use Pause motion to stop target movement before changing controls.",
+    )}
   </p>
   <p id="trainer-motion-status" class="sr-only" aria-live="polite">
-    Motion {motionPaused ? "paused" : "playing"}. Direction {motionDirectionLabel}.
+    {t(locale, "Motion")}
+    {motionPaused ? t(locale, "paused") : t(locale, "playing")}.
+    {t(locale, "Direction")}
+    {motionDirectionLabel}.
   </p>
 
   <canvas
     {@attach attachCanvas}
     class="absolute inset-0 h-full w-full touch-none bg-background"
-    aria-label="FoveaFlow eye trainer animation for visual tracking practice"
+    aria-label={t(
+      locale,
+      "FoveaFlow eye trainer animation for visual tracking practice",
+    )}
     aria-describedby="trainer-canvas-description trainer-motion-status"
   ></canvas>
 
-  <nav class="sr-only" aria-label="Practice pages">
-    <a href="/">{siteMetadata.name} home</a>
-    <a href="/guide/">{siteMetadata.name} guide</a>
+  <nav class="sr-only" aria-label={t(locale, "Practice pages")}>
+    <a href="/">{t(locale, `${siteMetadata.name} home`)}</a>
+    <a href="/guide/">{t(locale, `${siteMetadata.name} guide`)}</a>
     {#each indexableTrainerRoutes as route (route.slug)}
-      <a href={route.path}>{route.label}</a>
+      <a href={route.path}>{t(locale, route.label)}</a>
     {/each}
   </nav>
 
-  <TrainerHud
-    {attachHudShell}
-    {hudHidden}
-    {hudContentWidth}
-    {attachHudContentSizer}
-    hasActiveRoute={Boolean(activeRoute)}
-    {settings}
-    {isLilacChaserMode}
-    {motionPaused}
-    {motionDirectionToggleLabel}
-    {canToggleDirection}
-    bind:mobilePresetSelectOpen
-    bind:mobilePatternSelectOpen
-    bind:mobileLilacChaserColorSelectOpen
-    bind:desktopPresetSelectOpen
-    bind:desktopPatternSelectOpen
-    bind:desktopLilacChaserColorSelectOpen
-    guideButtonLabel={activeRoute
-      ? `Open ${guideSeoContent.heading} guide`
-      : "About FoveaFlow eye trainer"}
-    guideButtonTitle={activeRoute ? "Open guide" : "About FoveaFlow"}
-    {patternSelectContentClass}
-    actions={hudActions}
-  />
+  {#if localeReady}
+    <TrainerHud
+      {attachHudShell}
+      {hudHidden}
+      {hudContentWidth}
+      {attachHudContentSizer}
+      hasActiveRoute={Boolean(activeRoute)}
+      {settings}
+      {isLilacChaserMode}
+      {motionPaused}
+      {motionDirectionToggleLabel}
+      {canToggleDirection}
+      bind:mobilePresetSelectOpen
+      bind:mobilePatternSelectOpen
+      bind:mobileLilacChaserColorSelectOpen
+      bind:desktopPresetSelectOpen
+      bind:desktopPatternSelectOpen
+      bind:desktopLilacChaserColorSelectOpen
+      bind:languageSelectOpen
+      guideButtonLabel={activeRoute
+        ? `${t(locale, "Open")} ${t(locale, guideSeoContent.heading)} ${t(locale, "guide")}`
+        : t(locale, "About FoveaFlow eye trainer")}
+      guideButtonTitle={activeRoute
+        ? t(locale, "Open guide")
+        : t(locale, "About FoveaFlow")}
+      {patternSelectContentClass}
+      actions={hudActions}
+    />
+  {/if}
 
   <TrainerGuidePopover
     {activeTrainingModeGuide}
@@ -1091,7 +1132,7 @@
   <TrainerControlsDialog
     bind:open={panelOpen}
     bind:settings
-    {availableControlSections}
+    availableControlSections={localizedControlSections}
     {currentControlSection}
     {currentControlSectionLabel}
     {motionPaused}
