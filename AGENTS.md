@@ -26,7 +26,7 @@ Be terse, direct, and useful. Think like a senior engineer: clear tradeoffs, sma
 
 ## Quality pass
 
-After implementing, do a quality pass before final tests. Say the pass started, then make the code simpler, clearer, faster, and safer where the change reasonably allows. Remove temp code, dead code, unused helpers, redundant wrappers, needless abstraction, and "works but ugly" shortcuts. Then run the relevant verification once and report the result.
+Do a quality pass before finishing code related tasks. Say the pass started, then make the code simpler, clearer, faster, and safer where the change reasonably allows. Remove temp code, dead code, unused helpers, redundant wrappers, needless abstraction, and "works but ugly" shortcuts. Then run the relevant verifications and report the result.
 
 ## Code style
 
