@@ -7,11 +7,7 @@ const trainingModes = [
   { name: "Lilac Chaser", path: "/lilac-chaser/" },
 ] as const;
 
-test("loads every training mode with active visuals", async ({
-  page,
-  context,
-  baseURL,
-}) => {
+test.beforeEach(async ({ context, baseURL }) => {
   if (!baseURL) throw new Error("Playwright baseURL is required.");
 
   await context.addCookies([
@@ -21,11 +17,12 @@ test("loads every training mode with active visuals", async ({
       url: baseURL,
     },
   ]);
+});
 
-  const pageErrors: Error[] = [];
-  page.on("pageerror", (error) => pageErrors.push(error));
-
-  for (const mode of trainingModes) {
+for (const mode of trainingModes) {
+  test(`${mode.name} loads with active visuals`, async ({ page }) => {
+    const pageErrors: Error[] = [];
+    page.on("pageerror", (error) => pageErrors.push(error));
     await page.goto(mode.path);
 
     await expect(
@@ -55,7 +52,7 @@ test("loads every training mode with active visuals", async ({
         { timeout: 3_000 },
       )
       .not.toBe(initialFrame);
-  }
 
-  expect(pageErrors).toEqual([]);
-});
+    expect(pageErrors).toEqual([]);
+  });
+}
