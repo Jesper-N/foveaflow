@@ -1,0 +1,33 @@
+---
+interface Props {
+  heading: string;
+  description: string;
+  showHomeLink?: boolean;
+}
+
+const { heading, description, showHomeLink = false } = Astro.props;
+---
+
+<noscript>
+  <style is:inline>
+    .trainer-stage {
+      display: none !important;
+    }
+  </style>
+  <main class="noscript-shell">
+    <section class="noscript-panel">
+      <p class="noscript-kicker">Free online eye trainer</p>
+      <h1 class="noscript-title">{heading}</h1>
+      <p>{description}</p>
+      <p>
+        FoveaFlow needs JavaScript to run its moving-target drills. The guide
+        and safety information remain available without JavaScript.
+      </p>
+      <p>
+        {showHomeLink && <a href="/">Open the FoveaFlow home page</a>}
+        {showHomeLink && " · "}
+        <a href="/guide/">Read the FoveaFlow guide</a>
+      </p>
+    </section>
+  </main>
+</noscript>

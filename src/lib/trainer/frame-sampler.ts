@@ -1,17 +1,25 @@
 import type { TrainerSettings } from "$lib/engine/presets";
-import { createPatternSampler } from "$lib/engine/patterns";
-import { sampleSizeProfile, sampleSpeedProfile } from "$lib/engine/profiles";
+import {
+  createPatternSampler,
+  getTeleportJumpDistancePx,
+} from "$lib/engine/patterns";
+import {
+  getMaximumSizeProfileRadius,
+  sampleSizeProfile,
+  sampleSpeedProfile,
+} from "$lib/engine/profiles";
 import type { Rng } from "$lib/engine/random";
 import type { Arena, PatternParams, TargetFrame } from "$lib/engine/types";
+import { getTargetVisualExtentPx } from "$lib/trainer/target-geometry";
 
-export type TrainerLetterContext = {
-  arena: Arena;
+type TrainerLetterContext = {
   elapsedSec: number;
   travelPx: number;
   seed: number;
+  reactionJumpDistancePx: number;
 };
 
-export type TrainerFrameSample = {
+type TrainerFrameSample = {
   frames: TargetFrame[];
   count: number;
   letterContext: TrainerLetterContext;
@@ -33,6 +41,7 @@ type TrainerFrameInput = {
 
 export const createTrainerFrameSampler = () => {
   const sampler = createPatternSampler();
+  let activePatternId: TrainerSettings["patternId"] | null = null;
   const frames: TargetFrame[] = [];
   const params: PatternParams = {
     radiusPx: 1,
@@ -41,15 +50,16 @@ export const createTrainerFrameSampler = () => {
     travelPx: 0,
   };
   const letterContext: TrainerLetterContext = {
-    arena: { width: 1, height: 1 },
     elapsedSec: 0,
     travelPx: 0,
     seed: 0,
+    reactionJumpDistancePx: 420,
   };
 
   return {
     reset() {
       sampler.reset();
+      activePatternId = null;
     },
     sample(input: TrainerFrameInput): TrainerFrameSample {
       const {
@@ -65,6 +75,11 @@ export const createTrainerFrameSampler = () => {
         rng,
         seed,
       } = input;
+      if (settings.patternId !== activePatternId) {
+        sampler.reset();
+        activePatternId = settings.patternId;
+      }
+
       const speedPxPerSec =
         currentSpeedPxPerSec ||
         sampleSpeedProfile(
@@ -77,9 +92,16 @@ export const createTrainerFrameSampler = () => {
         elapsedSec,
         settings.baseRadiusPx,
       );
+      const pathRadiusPx = getMaximumSizeProfileRadius(
+        settings.sizeProfile,
+        settings.baseRadiusPx,
+      );
 
       params.radiusPx = radiusPx;
-      params.pathMarginPx = pathMarginPx;
+      params.pathMarginPx = Math.max(
+        pathMarginPx,
+        getTargetVisualExtentPx(pathRadiusPx, settings.targetShape) + 8,
+      );
       params.speedPxPerSec = speedPxPerSec;
       params.travelPx = travelPx;
       params.targetCount = settings.targetCount;
@@ -96,10 +118,16 @@ export const createTrainerFrameSampler = () => {
         rng,
       );
 
-      letterContext.arena = arena;
       letterContext.elapsedSec = elapsedSec;
       letterContext.travelPx = travelPx;
       letterContext.seed = seed;
+      if (settings.presetId === "reactionTime") {
+        letterContext.reactionJumpDistancePx = getTeleportJumpDistancePx(
+          arena,
+          radiusPx,
+          params.pathMarginPx,
+        );
+      }
 
       return { frames, count, letterContext };
     },

@@ -1,4 +1,9 @@
-import { DEFAULT_CALIBRATION, type Calibration } from "$lib/engine/calibration";
+import {
+  DEFAULT_CALIBRATION,
+  pixelsPerSecondToSpeedValue,
+  speedToPixelsPerSecond,
+  type Calibration,
+} from "$lib/engine/calibration";
 import {
   DEFAULT_BALL_COLOR,
   DEFAULT_LETTER_SCALE,
@@ -21,7 +26,9 @@ import {
   letterWeightOptions,
   lilacChaserColorOptions,
   maxSpeedByUnit,
+  minSpeedByUnit,
   shapeOptions,
+  speedKeyboardStepByUnit,
 } from "./options";
 
 export type CalibrationField = "viewingDistanceCm" | "cssPxPerCm";
@@ -35,15 +42,18 @@ const isFiniteNumber = (value: unknown): value is number => {
   return typeof value === "number" && Number.isFinite(value);
 };
 
+const isProfileMultiplier = (value: unknown): value is number => {
+  return isFiniteNumber(value) && value >= 0 && value <= 4;
+};
+
 export const trainerSettingBounds = {
-  speedValue: { min: 0.5 },
   baseRadiusPx: { min: 4, max: 100 },
   targetCount: { min: 1, max: 6 },
   distractorCount: { min: 0, max: 10 },
   distractorBrightness: { min: 0.35, max: 1 },
   targetOpacity: { min: 0, max: 1 },
   letterScale: { min: 0.45, max: 1.2 },
-  lilacChaserScale: { min: 0.75, max: 1.5 },
+  lilacChaserScale: { min: 0.75, max: 1.25 },
   viewingDistanceCm: { min: 20, max: 120 },
   cssPxPerCm: { min: 10, max: 120 },
 } as const;
@@ -151,22 +161,37 @@ export const resolveSpeedSliderValue = (
   value: TrainerSliderValue,
   unit: SpeedUnit,
 ) => {
-  return resolveSliderNumber(
-    value,
-    trainerSettingBounds.speedValue.min,
-    maxSpeedByUnit[unit],
-  );
+  return resolveSliderNumber(value, minSpeedByUnit[unit], maxSpeedByUnit[unit]);
 };
 
 export const resolveSpeedUnit = (
   speed: TrainerSettings["speed"],
   unit: SpeedUnit,
+  arena: { width: number; height: number },
+  calibration: Calibration,
 ) => ({
   unit,
   value: clamp(
-    speed.value,
-    trainerSettingBounds.speedValue.min,
+    pixelsPerSecondToSpeedValue(
+      speedToPixelsPerSecond(speed, arena, calibration),
+      unit,
+      arena,
+      calibration,
+    ),
+    minSpeedByUnit[unit],
     maxSpeedByUnit[unit],
+  ),
+});
+
+export const adjustSpeedBySteps = (
+  speed: TrainerSettings["speed"],
+  stepCount: number,
+) => ({
+  ...speed,
+  value: clamp(
+    speed.value + speedKeyboardStepByUnit[speed.unit] * stepCount,
+    minSpeedByUnit[speed.unit],
+    maxSpeedByUnit[speed.unit],
   ),
 });
 
@@ -176,8 +201,9 @@ const isSpeedProfile = (profile: unknown): profile is SpeedProfile => {
 
   if (profile.kind === "sine") {
     return (
-      isFiniteNumber(profile.minMultiplier) &&
-      isFiniteNumber(profile.maxMultiplier) &&
+      isProfileMultiplier(profile.minMultiplier) &&
+      isProfileMultiplier(profile.maxMultiplier) &&
+      profile.minMultiplier <= profile.maxMultiplier &&
       isFiniteNumber(profile.periodSec) &&
       profile.periodSec > 0
     );
@@ -187,7 +213,8 @@ const isSpeedProfile = (profile: unknown): profile is SpeedProfile => {
     return (
       Array.isArray(profile.multipliers) &&
       profile.multipliers.length > 0 &&
-      profile.multipliers.every(isFiniteNumber) &&
+      profile.multipliers.length <= 32 &&
+      profile.multipliers.every(isProfileMultiplier) &&
       isFiniteNumber(profile.intervalSec) &&
       profile.intervalSec > 0 &&
       isFiniteNumber(profile.transitionSec) &&
@@ -197,8 +224,8 @@ const isSpeedProfile = (profile: unknown): profile is SpeedProfile => {
 
   if (profile.kind === "loopRamp") {
     return (
-      isFiniteNumber(profile.fromMultiplier) &&
-      isFiniteNumber(profile.toMultiplier) &&
+      isProfileMultiplier(profile.fromMultiplier) &&
+      isProfileMultiplier(profile.toMultiplier) &&
       isFiniteNumber(profile.periodSec) &&
       profile.periodSec > 0 &&
       isFiniteNumber(profile.resetSec) &&
@@ -215,8 +242,9 @@ const isSizeProfile = (profile: unknown): profile is SizeProfile => {
 
   return (
     profile.kind === "pulse" &&
-    isFiniteNumber(profile.minMultiplier) &&
-    isFiniteNumber(profile.maxMultiplier) &&
+    isProfileMultiplier(profile.minMultiplier) &&
+    isProfileMultiplier(profile.maxMultiplier) &&
+    profile.minMultiplier <= profile.maxMultiplier &&
     isFiniteNumber(profile.periodSec) &&
     profile.periodSec > 0
   );
@@ -237,7 +265,7 @@ const resolveSpeed = (
     unit,
     value: resolveNumber(
       speed.value,
-      trainerSettingBounds.speedValue.min,
+      minSpeedByUnit[unit],
       maxSpeedByUnit[unit],
       fallback.value,
     ),
@@ -394,12 +422,13 @@ export const updateCalibrationField = (
   now = Date.now,
 ) => {
   if (!Number.isFinite(value) || value <= 0) return null;
+  const bounds = trainerSettingBounds[field];
   const createdAt = now();
 
   return {
     ...calibration,
     id: `custom-${createdAt}`,
-    [field]: value,
+    [field]: clamp(value, bounds.min, bounds.max),
     createdAt,
   };
 };

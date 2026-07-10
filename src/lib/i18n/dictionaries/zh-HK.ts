@@ -177,8 +177,6 @@ export const zhHK = {
     "EyeTrainer.gg 也提供簡單的瀏覽器圖案練習，並在公開頁面推廣即將上線的 Steam 版本。",
   "EyeTrainer.gg focuses the public browser tool on simple pattern practice rather than detailed target and display calibration.":
     "EyeTrainer.gg 的公開瀏覽器工具更專注於簡單圖案練習，而不是細緻的目標和顯示校準。",
-  "EyeTrainer.gg provides simple pattern options, including patterns such as Vertical Waves.":
-    "EyeTrainer.gg 提供簡單的圖案選項，包括 垂直波浪 這樣的圖案。",
   FAQ: "常見問題",
   "FPS Eye Training Warmup": "FPS 眼部訓練熱身",
   "FPS Eye Training Warmup (HIGH FPS)": "FPS 眼部訓練熱身（高 FPS）",
@@ -205,6 +203,8 @@ export const zhHK = {
     "使用 FoveaFlow 不需要發送個人資料。它並不是為了收集兒童個人資料而設計的。",
   "FoveaFlow does not set advertising cookies. Cloudflare may set security cookies when it needs them to keep the site available and safe.":
     "FoveaFlow 不設定廣告 Cookie。Cloudflare 可能會在需要時設定安全 Cookie，以保持網站可用和安全。",
+  "FoveaFlow stores your language preference in local browser storage and in a same-site preference cookie so the correct language can be selected before the app starts. The cookie can last up to 400 days, uses SameSite=Lax, and is marked Secure on HTTPS.":
+    "FoveaFlow 會將你的語言偏好儲存在瀏覽器本機儲存和同站點偏好 Cookie 中，以便應用程式啟動前選擇正確的語言。該 Cookie 最長可保留 400 天，使用 SameSite=Lax，並在 HTTPS 上標記為 Secure。",
   "FoveaFlow eye trainer animation for visual tracking practice":
     "用於視覺追蹤練習的 FoveaFlow 眼部訓練動畫",
   "FoveaFlow eye trainer animation for visual tracking practice. Use Pause motion to stop target movement before changing controls.":
@@ -242,11 +242,10 @@ export const zhHK = {
   "FoveaFlow overview": "FoveaFlow 概覽",
   "FoveaFlow saves local controls for speed, size, shape, color, opacity, trails, paths, distractors, letters, and display scale.":
     "FoveaFlow 會本機儲存速度、大小、形狀、顏色、透明度、軌跡、路徑、干擾物、字母和顯示比例等控制設定。",
-  "FoveaFlow stores settings locally in your browser so the app can remember them on the current device. That can include the selected mode, motion pattern, speed, target size, color, opacity, trail setting, viewing distance, screen scale, and theme.":
-    "FoveaFlow 會把設定本機儲存在你的瀏覽器中，這樣應用程式能在當前設備上記住它們。設定可能包括所選模式、運動圖案、速度、目標大小、顏色、透明度、軌跡設定、觀看距離、屏幕比例和主題。",
+  "FoveaFlow stores settings locally in your browser so the app can remember them on the current device. That can include the selected language, mode, motion pattern, speed, target size, color, opacity, trail setting, viewing distance, screen scale, and theme.":
+    "FoveaFlow 會把設定本機儲存在你的瀏覽器中，這樣應用程式能在當前設備上記住它們。設定可能包括所選語言、模式、運動圖案、速度、目標大小、顏色、透明度、軌跡設定、觀看距離、屏幕比例和主題。",
   "FoveaFlow vs BlinkCamp": "FoveaFlow 對比 BlinkCamp",
   "FoveaFlow vs EyeTrainer.gg": "FoveaFlow 對比 EyeTrainer.gg",
-  "FoveaFlow, free online eye trainer": "FoveaFlow，免費網上眼部訓練工具",
   "Free access": "免費使用",
   "Free browser tool": "免費瀏覽器工具",
   "Free online eye trainer": "免費網上眼部訓練工具",
@@ -434,7 +433,6 @@ export const zhHK = {
   "People on screens all day": "整天面對屏幕的人",
   "Peripheral awareness": "周邊視覺覺察",
   "Pick a drill and tune the target": "選擇練習並調整目標",
-  "Practice pages": "練習頁面",
   "Practice software, not medical care. Stop if you feel eye strain, dizziness, headache, nausea, or any other discomfort.":
     "這是練習軟件，不是醫療護理。如果你感到眼疲勞、頭暈、頭痛、噁心或任何其他不適，請停止。",
   "Practice the Bounce smooth pursuit pattern online. Adjust speed, target size, color, trail, and screen scale for short visual tracking sessions.":
@@ -536,7 +534,6 @@ export const zhHK = {
   "Screen reset": "屏幕重置",
   "Screen scale": "屏幕比例",
   "Screen-work reset": "屏幕工作重置",
-  "Select language": "選擇語言",
   "Selective attention": "選擇性注意力",
   Semibold: "半粗體",
   Session: "訓練",
@@ -691,20 +688,19 @@ export const zhHK = {
   "Tune the session before you start": "開始前調整訓練",
   Unit: "單位",
   Unpredictive: "不可預測",
-  "Updated April 28, 2026": "更新於 2026 年 4 月 28 日",
-  "Updated May 14, 2026": "更新於 2026 年 5 月 14 日",
-  "Updated May 14, 2026. FoveaFlow is practice software, not medical care. Stop if a session causes strain, dizziness, headache, nausea, or any other discomfort.":
-    "更新於 2026 年 5 月 14 日。FoveaFlow 是練習軟件，不是醫療護理。如果訓練引起疲勞、頭暈、頭痛、噁心或任何其他不適，請停止。",
-  "Updated May 14, 2026. If the visual effect feels strange or uncomfortable, stop the session and rest.":
-    "更新於 2026 年 5 月 14 日。如果視覺效果讓你覺得奇怪或不舒服，請停止訓練並休息。",
-  "Updated May 14, 2026. Keep sessions brief and controlled. If the drill causes strain or discomfort, stop.":
-    "更新於 2026 年 5 月 14 日。訓練要短，並保持可控。如果練習引起疲勞或不適，請停止。",
-  "Updated May 14, 2026. Start with fewer distractors or a bigger target, and stop if the session becomes uncomfortable.":
-    "更新於 2026 年 5 月 14 日。從更少干擾物或更大目標開始；如果訓練變得不舒服，請停止。",
-  "Updated May 14, 2026. This is a browser-based practice drill and not medical therapy.":
-    "更新於 2026 年 5 月 14 日。這是以瀏覽器運行的練習，不是醫療治療。",
-  "Updated May 14, 2026. This is practice software, not medical care, so stop if the session feels uncomfortable.":
-    "更新於 2026 年 5 月 14 日。這是練習軟件，不是醫療護理；如果訓練讓你不舒服，請停止。",
+  "Updated July 10, 2026": "更新於 2026 年 7 月 10 日",
+  "Updated July 10, 2026. FoveaFlow is practice software, not medical care. Stop if a session causes strain, dizziness, headache, nausea, or any other discomfort.":
+    "更新於 2026 年 7 月 10 日。FoveaFlow 是練習軟件，不是醫療護理。如果訓練引起疲勞、頭暈、頭痛、噁心或任何其他不適，請停止。",
+  "Updated July 10, 2026. If the visual effect feels strange or uncomfortable, stop the session and rest.":
+    "更新於 2026 年 7 月 10 日。如果視覺效果讓你覺得奇怪或不舒服，請停止訓練並休息。",
+  "Updated July 10, 2026. Keep sessions brief and controlled. If the drill causes strain or discomfort, stop.":
+    "更新於 2026 年 7 月 10 日。訓練要短，並保持可控。如果練習引起疲勞或不適，請停止。",
+  "Updated July 10, 2026. Start with fewer distractors or a bigger target, and stop if the session becomes uncomfortable.":
+    "更新於 2026 年 7 月 10 日。從更少干擾物或更大目標開始；如果訓練變得不舒服，請停止。",
+  "Updated July 10, 2026. This is a browser-based practice drill and not medical therapy.":
+    "更新於 2026 年 7 月 10 日。這是以瀏覽器運行的練習，不是醫療治療。",
+  "Updated July 10, 2026. This is practice software, not medical care, so stop if the session feels uncomfortable.":
+    "更新於 2026 年 7 月 10 日。這是練習軟件，不是醫療護理；如果訓練讓你不舒服，請停止。",
   "Use FoveaFlow as a free FPS eye training warmup for visual tracking, quick refocus, target switching, and focus under distraction.":
     "把 FoveaFlow 用作免費的 FPS 眼部訓練熱身，練習視覺追蹤、快速重新對焦、目標切換和干擾下專注。",
   "Use FoveaFlow as a short FPS warmup, an active screen break, or a focused visual practice session.":

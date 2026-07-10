@@ -1,4 +1,4 @@
-import { guideFaqItems, guideMetadata } from "./content/page-copy";
+import { guideMetadata } from "./content/page-copy";
 import { siteMetadata } from "./content/site";
 import type { SupportPage } from "./content/support-pages";
 import { audienceNotes, referenceLinks } from "./content/training";
@@ -8,7 +8,7 @@ import {
 } from "./content/trainer-routes";
 import type { LegalPageContent } from "./content/legal";
 
-export const defaultSiteUrl = "https://foveaflow.com";
+const defaultSiteUrl = "https://foveaflow.com";
 
 export const getSiteOrigin = (site: URL | undefined) => {
   const siteUrl = site ?? new URL(defaultSiteUrl);
@@ -26,7 +26,7 @@ const getSoftwareId = (site: URL) => `${absoluteUrl("/", site)}#software`;
 const buildOrganizationStructuredData = (site: URL) => {
   const appUrl = absoluteUrl("/", site);
   const imageUrl = absoluteUrl(siteMetadata.imagePath, site);
-  const logoUrl = absoluteUrl("/metadata/favicon-96x96.png", site);
+  const logoUrl = absoluteUrl("/metadata/android-chrome-192x192.png", site);
 
   return {
     "@type": "Organization",
@@ -37,13 +37,12 @@ const buildOrganizationStructuredData = (site: URL) => {
     logo: {
       "@type": "ImageObject",
       url: logoUrl,
-      width: 96,
-      height: 96,
+      width: 192,
+      height: 192,
     },
     image: imageUrl,
     description: siteMetadata.entityDescription,
     sameAs: siteMetadata.sameAs,
-    knowsAbout: siteMetadata.keywords,
   };
 };
 
@@ -58,7 +57,6 @@ const buildWebsiteStructuredData = (site: URL) => {
     url: appUrl,
     description: siteMetadata.shortDescription,
     inLanguage: "en",
-    keywords: siteMetadata.keywords.join(", "),
     publisher: {
       "@id": getOrganizationId(site),
     },
@@ -70,12 +68,12 @@ const buildAppStructuredData = (site: URL) => {
   const imageUrl = absoluteUrl(siteMetadata.imagePath, site);
 
   return {
-    "@type": "SoftwareApplication",
+    "@type": "WebApplication",
     "@id": getSoftwareId(site),
     name: siteMetadata.name,
     url: appUrl,
     image: imageUrl,
-    applicationCategory: "WebApplication",
+    applicationCategory: "HealthApplication",
     operatingSystem: "Any modern browser",
     browserRequirements: "Requires JavaScript and a modern browser.",
     isAccessibleForFree: true,
@@ -94,7 +92,6 @@ const buildAppStructuredData = (site: URL) => {
       url: absoluteUrl("/pricing.md", site),
     },
     description: siteMetadata.description,
-    keywords: siteMetadata.keywords.join(", "),
     audience: audienceNotes.map((audienceNote) => ({
       "@type": "Audience",
       audienceType: audienceNote.title,
@@ -106,9 +103,7 @@ const buildAppStructuredData = (site: URL) => {
       "Lilac Chaser fixation and peripheral awareness drill",
       "Adjustable speed, target size, color, opacity, trail, shape, and path",
     ],
-    dateModified: siteMetadata.lastUpdated,
     sameAs: siteMetadata.sameAs,
-    citation: referenceLinks.map((referenceLink) => referenceLink.url),
   };
 };
 
@@ -119,8 +114,6 @@ type WebPageNodeInput = {
   headline: string;
   description: string;
   image?: string;
-  keywords?: string | null;
-  dateModified?: string;
   citation?: readonly string[];
   aboutSoftware?: boolean;
   mainEntity?: Record<string, string>;
@@ -133,8 +126,6 @@ const buildWebPageNode = ({
   headline,
   description,
   image,
-  keywords = siteMetadata.keywords.join(", "),
-  dateModified = siteMetadata.lastUpdated,
   citation,
   aboutSoftware = true,
   mainEntity,
@@ -147,8 +138,6 @@ const buildWebPageNode = ({
   description,
   ...(image ? { image } : {}),
   inLanguage: "en",
-  ...(keywords === null ? {} : { keywords }),
-  dateModified,
   publisher: {
     "@id": getOrganizationId(site),
   },
@@ -185,18 +174,19 @@ const buildBreadcrumbNode = (site: URL, pageUrl: string, pageName: string) => ({
   ],
 });
 
-const buildStructuredGraph = (
-  site: URL,
-  nodes: readonly unknown[],
-  { includeApp = true } = {},
-) => ({
+const buildStructuredGraph = (site: URL, nodes: readonly unknown[]) => ({
   "@context": "https://schema.org",
   "@graph": [
     buildWebsiteStructuredData(site),
     buildOrganizationStructuredData(site),
-    ...(includeApp ? [buildAppStructuredData(site)] : []),
+    buildAppStructuredData(site),
     ...nodes,
   ],
+});
+
+const buildPageGraph = (nodes: readonly unknown[]) => ({
+  "@context": "https://schema.org",
+  "@graph": nodes,
 });
 
 export const buildStructuredData = (site: URL) => {
@@ -223,7 +213,7 @@ export const buildGuideStructuredData = (site: URL) => {
   const guideUrl = absoluteUrl("/guide/", site);
   const imageUrl = absoluteUrl(siteMetadata.imagePath, site);
 
-  return buildStructuredGraph(site, [
+  return buildPageGraph([
     buildWebPageNode({
       site,
       pageUrl: guideUrl,
@@ -233,21 +223,6 @@ export const buildGuideStructuredData = (site: URL) => {
       image: imageUrl,
       citation: referenceLinks.map((referenceLink) => referenceLink.url),
     }),
-    {
-      "@type": "FAQPage",
-      "@id": `${guideUrl}#faq`,
-      isPartOf: {
-        "@id": `${guideUrl}#webpage`,
-      },
-      mainEntity: guideFaqItems.map((faqItem) => ({
-        "@type": "Question",
-        name: faqItem.question,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: faqItem.answer,
-        },
-      })),
-    },
     {
       "@type": "ItemList",
       "@id": `${guideUrl}#routes`,
@@ -271,7 +246,7 @@ export const buildSupportPageStructuredData = (
   const pageUrl = absoluteUrl(page.path, site);
   const imageUrl = absoluteUrl(siteMetadata.imagePath, site);
 
-  return buildStructuredGraph(site, [
+  return buildPageGraph([
     buildWebPageNode({
       site,
       pageUrl,
@@ -279,9 +254,7 @@ export const buildSupportPageStructuredData = (
       headline: page.heading,
       description: page.description,
       image: imageUrl,
-      citation: page.sourceLink
-        ? [page.sourceLink.href, ...referenceLinks.map((link) => link.url)]
-        : referenceLinks.map((link) => link.url),
+      citation: page.sourceLink ? [page.sourceLink.href] : undefined,
     }),
     buildBreadcrumbNode(site, pageUrl, page.heading),
   ]);
@@ -294,7 +267,7 @@ export const buildTrainerRouteStructuredData = (
   const routeUrl = absoluteUrl(route.path, site);
   const imageUrl = absoluteUrl(siteMetadata.imagePath, site);
 
-  return buildStructuredGraph(site, [
+  return buildPageGraph([
     buildWebPageNode({
       site,
       pageUrl: routeUrl,
@@ -302,7 +275,6 @@ export const buildTrainerRouteStructuredData = (
       headline: route.title,
       description: route.description,
       image: imageUrl,
-      citation: referenceLinks.map((referenceLink) => referenceLink.url),
     }),
     buildBreadcrumbNode(site, routeUrl, route.label),
   ]);
@@ -311,19 +283,14 @@ export const buildTrainerRouteStructuredData = (
 export const buildLegalStructuredData = (page: LegalPageContent, site: URL) => {
   const pageUrl = absoluteUrl(page.path, site);
 
-  return buildStructuredGraph(
-    site,
-    [
-      buildWebPageNode({
-        site,
-        pageUrl,
-        name: page.metaTitle,
-        headline: page.title,
-        description: page.description,
-        keywords: null,
-      }),
-      buildBreadcrumbNode(site, pageUrl, page.label),
-    ],
-    { includeApp: false },
-  );
+  return buildPageGraph([
+    buildWebPageNode({
+      site,
+      pageUrl,
+      name: page.metaTitle,
+      headline: page.title,
+      description: page.description,
+    }),
+    buildBreadcrumbNode(site, pageUrl, page.label),
+  ]);
 };

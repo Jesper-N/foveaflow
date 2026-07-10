@@ -3,6 +3,11 @@
   "compilerOptions": {
     "types": ["bun"]
   },
-  "include": ["astro.config.mjs", "playwright.config.ts", "scripts/**/*.ts"],
+  "include": [
+    "astro.config.mjs",
+    "playwright.config.ts",
+    "scripts/**/*.ts",
+    "tests/**/*.ts"
+  ],
   "exclude": ["dist", "node_modules"]
 }

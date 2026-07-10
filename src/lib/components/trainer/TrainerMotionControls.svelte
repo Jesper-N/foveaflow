@@ -7,11 +7,13 @@
   import type { TrainerSettings } from "$lib/engine/presets";
   import { languageState } from "$lib/i18n/state.svelte";
   import { t } from "$lib/i18n/translate";
-  import { maxSpeedByUnit, speedStepByUnit } from "$lib/trainer/options";
   import {
-    trainerSettingBounds,
-    type TrainerSliderValue,
-  } from "$lib/trainer/settings";
+    maxSpeedByUnit,
+    minSpeedByUnit,
+    speedDecimalPlacesByUnit,
+    speedSliderStepByUnit,
+  } from "$lib/trainer/options";
+  import type { TrainerSliderValue } from "$lib/trainer/settings";
 
   let {
     settings,
@@ -33,13 +35,13 @@
 <Field.Field>
   {@render sliderRow(
     t(locale, "Speed"),
-    `${settings.speed.value.toFixed(1)} ${settings.speed.unit}`,
+    `${settings.speed.value.toFixed(speedDecimalPlacesByUnit[settings.speed.unit])} ${settings.speed.unit}`,
   )}
   <Slider
     bind:value={speedSliderValue, setSpeedSliderValue}
-    min={trainerSettingBounds.speedValue.min}
+    min={minSpeedByUnit[settings.speed.unit]}
     max={maxSpeedByUnit[settings.speed.unit]}
-    step={speedStepByUnit[settings.speed.unit]}
+    step={speedSliderStepByUnit[settings.speed.unit]}
     aria-label={t(locale, "Speed")}
   />
 </Field.Field>

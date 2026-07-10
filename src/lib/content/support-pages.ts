@@ -1,11 +1,11 @@
-export type SupportPageSection = {
+type SupportPageSection = {
   heading: string;
   body?: readonly string[];
   list?: readonly string[];
   orderedList?: readonly string[];
 };
 
-export type ComparisonRow = {
+type ComparisonRow = {
   feature: string;
   foveaflow: string;
   alternative: string;
@@ -255,7 +255,7 @@ export const supportPages = [
         foveaflow:
           "Smooth Pursuit, Reaction Jumps, Multiple Distractions, and Lilac Chaser are available as separate modes.",
         alternative:
-          "EyeTrainer.gg provides simple pattern options, including patterns such as Vertical Waves.",
+          "EyeTrainer.gg also offers simple browser patterns and promotes its upcoming Steam version from the public page.",
       },
       {
         feature: "How much can I customize?",

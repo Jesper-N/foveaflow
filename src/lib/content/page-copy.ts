@@ -1,4 +1,4 @@
-export const faqItems = [
+const faqItems = [
   {
     question: "What is FoveaFlow?",
     answer:
@@ -99,7 +99,7 @@ export const guideFaqItems = [
   },
 ] as const;
 
-export type PageFaqItem = {
+type PageFaqItem = {
   question: string;
   answer: string;
 };
@@ -139,7 +139,7 @@ export const homepageSeoContent = {
     href: "/guide/",
   },
   trustNote:
-    "Updated May 14, 2026. FoveaFlow is practice software, not medical care. Stop if a session causes strain, dizziness, headache, nausea, or any other discomfort.",
+    "Updated July 10, 2026. FoveaFlow is practice software, not medical care. Stop if a session causes strain, dizziness, headache, nausea, or any other discomfort.",
   faq: faqItems,
 } satisfies PageSeoContent;
 

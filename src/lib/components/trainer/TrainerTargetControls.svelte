@@ -95,7 +95,7 @@
 
 <Field.Field>
   <label
-    class="flex h-11 min-w-0 cursor-pointer items-center gap-3 rounded-full border bg-input/50 px-3 transition-[color,box-shadow,background-color] hover:ring-4 hover:ring-ring/30"
+    class="flex h-11 min-w-0 cursor-pointer items-center gap-3 rounded-full border bg-input/50 px-3 transition-[color,box-shadow,background-color] hover:ring-4 hover:ring-ring/30 focus-within:ring-3 focus-within:ring-foreground"
     for="trainer-color"
   >
     <svg

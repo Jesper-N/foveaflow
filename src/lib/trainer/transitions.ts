@@ -6,8 +6,7 @@ export type HudControlTransition = (
   params?: { y?: number; duration?: number },
 ) => TransitionConfig;
 
-export const hudControlEase = (progress: number) =>
-  1 - Math.pow(1 - progress, 3);
+const hudControlEase = (progress: number) => 1 - Math.pow(1 - progress, 3);
 
 export const createHudControlTransition = (
   prefersReducedMotion: PrefersReducedMotion = () => false,

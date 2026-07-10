@@ -1,4 +1,4 @@
-export const MAX_CANVAS_PIXEL_COUNT = 6_000_000;
+const MAX_CANVAS_PIXEL_COUNT = 6_000_000;
 const MAX_DEVICE_PIXEL_RATIO = 2.5;
 
 const isPositiveFinite = (value: number) => Number.isFinite(value) && value > 0;

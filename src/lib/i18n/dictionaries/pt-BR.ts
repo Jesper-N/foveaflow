@@ -201,8 +201,6 @@ export const ptBR = {
     "O EyeTrainer.gg também oferece padrões simples no navegador e divulga a futura versão para Steam na página pública.",
   "EyeTrainer.gg focuses the public browser tool on simple pattern practice rather than detailed target and display calibration.":
     "O EyeTrainer.gg concentra a ferramenta pública no navegador em práticas simples de padrões, em vez de calibração detalhada do alvo e da tela.",
-  "EyeTrainer.gg provides simple pattern options, including patterns such as Vertical Waves.":
-    "O EyeTrainer.gg oferece opções simples de padrões, incluindo padrões como ondas verticais.",
   FAQ: "Perguntas frequentes",
   "FPS Eye Training Warmup": "Aquecimento de treino visual FPS",
   "FPS Eye Training Warmup (HIGH FPS)":
@@ -232,6 +230,8 @@ export const ptBR = {
     "O FoveaFlow pode ser usado sem enviar dados pessoais. Ele não foi criado para coletar informações pessoais de crianças.",
   "FoveaFlow does not set advertising cookies. Cloudflare may set security cookies when it needs them to keep the site available and safe.":
     "O FoveaFlow não define cookies de publicidade. A Cloudflare pode definir cookies de segurança quando precisar deles para manter o site disponível e seguro.",
+  "FoveaFlow stores your language preference in local browser storage and in a same-site preference cookie so the correct language can be selected before the app starts. The cookie can last up to 400 days, uses SameSite=Lax, and is marked Secure on HTTPS.":
+    "O FoveaFlow guarda sua preferência de idioma no armazenamento local do navegador e em um cookie de preferência do mesmo site para selecionar o idioma correto antes de o app iniciar. O cookie pode durar até 400 dias, usa SameSite=Lax e recebe a marca Secure em HTTPS.",
   "FoveaFlow eye trainer animation for visual tracking practice":
     "Animação do treinador visual FoveaFlow para prática de rastreamento visual",
   "FoveaFlow eye trainer animation for visual tracking practice. Use Pause motion to stop target movement before changing controls.":
@@ -269,12 +269,10 @@ export const ptBR = {
   "FoveaFlow overview": "Visão geral do FoveaFlow",
   "FoveaFlow saves local controls for speed, size, shape, color, opacity, trails, paths, distractors, letters, and display scale.":
     "O FoveaFlow salva controles locais de velocidade, tamanho, forma, cor, opacidade, rastros, trajetos, distrações, letras e escala da tela.",
-  "FoveaFlow stores settings locally in your browser so the app can remember them on the current device. That can include the selected mode, motion pattern, speed, target size, color, opacity, trail setting, viewing distance, screen scale, and theme.":
-    "O FoveaFlow guarda configurações localmente no navegador para o app lembrá-las no dispositivo atual. Isso pode incluir modo selecionado, padrão de movimento, velocidade, tamanho do alvo, cor, opacidade, configuração de rastro, distância de visualização, escala da tela e tema.",
+  "FoveaFlow stores settings locally in your browser so the app can remember them on the current device. That can include the selected language, mode, motion pattern, speed, target size, color, opacity, trail setting, viewing distance, screen scale, and theme.":
+    "O FoveaFlow guarda configurações localmente no navegador para o app lembrá-las no dispositivo atual. Isso pode incluir idioma e modo selecionados, padrão de movimento, velocidade, tamanho do alvo, cor, opacidade, configuração de rastro, distância de visualização, escala da tela e tema.",
   "FoveaFlow vs BlinkCamp": "FoveaFlow vs BlinkCamp",
   "FoveaFlow vs EyeTrainer.gg": "FoveaFlow vs EyeTrainer.gg",
-  "FoveaFlow, free online eye trainer":
-    "FoveaFlow, treinador visual online gratuito",
   "Free access": "Acesso gratuito",
   "Free browser tool": "Ferramenta gratuita no navegador",
   "Free online eye trainer": "Treinador visual online gratuito",
@@ -474,7 +472,6 @@ export const ptBR = {
   "People on screens all day": "Pessoas em telas o dia todo",
   "Peripheral awareness": "Percepção periférica",
   "Pick a drill and tune the target": "Escolha um exercício e ajuste o alvo",
-  "Practice pages": "Páginas de prática",
   "Practice software, not medical care. Stop if you feel eye strain, dizziness, headache, nausea, or any other discomfort.":
     "Software de prática, não cuidado médico. Pare se sentir cansaço visual, tontura, dor de cabeça, náusea ou qualquer outro desconforto.",
   "Practice the Bounce smooth pursuit pattern online. Adjust speed, target size, color, trail, and screen scale for short visual tracking sessions.":
@@ -578,7 +575,6 @@ export const ptBR = {
   "Screen reset": "Reset de tela",
   "Screen scale": "Escala da tela",
   "Screen-work reset": "Reset para trabalho em tela",
-  "Select language": "Escolher idioma",
   "Selective attention": "Atenção seletiva",
   Semibold: "Seminegrito",
   Session: "Sessão",
@@ -735,20 +731,19 @@ export const ptBR = {
   "Tune the session before you start": "Ajuste a sessão antes de começar",
   Unit: "Unidade",
   Unpredictive: "Imprevisível",
-  "Updated April 28, 2026": "Atualizado em 28 de abril de 2026",
-  "Updated May 14, 2026": "Atualizado em 14 de maio de 2026",
-  "Updated May 14, 2026. FoveaFlow is practice software, not medical care. Stop if a session causes strain, dizziness, headache, nausea, or any other discomfort.":
-    "Atualizado em 14 de maio de 2026. O FoveaFlow é software de prática, não cuidado médico. Pare se uma sessão causar cansaço, tontura, dor de cabeça, náusea ou qualquer outro desconforto.",
-  "Updated May 14, 2026. If the visual effect feels strange or uncomfortable, stop the session and rest.":
-    "Atualizado em 14 de maio de 2026. Se o efeito visual parecer estranho ou desconfortável, pare a sessão e descanse.",
-  "Updated May 14, 2026. Keep sessions brief and controlled. If the drill causes strain or discomfort, stop.":
-    "Atualizado em 14 de maio de 2026. Mantenha as sessões curtas e controladas. Se o exercício causar cansaço ou desconforto, pare.",
-  "Updated May 14, 2026. Start with fewer distractors or a bigger target, and stop if the session becomes uncomfortable.":
-    "Atualizado em 14 de maio de 2026. Comece com menos distrações ou um alvo maior e pare se a sessão ficar desconfortável.",
-  "Updated May 14, 2026. This is a browser-based practice drill and not medical therapy.":
-    "Atualizado em 14 de maio de 2026. Este é um exercício de prática no navegador, não terapia médica.",
-  "Updated May 14, 2026. This is practice software, not medical care, so stop if the session feels uncomfortable.":
-    "Atualizado em 14 de maio de 2026. Isto é software de prática, não cuidado médico. Pare se a sessão ficar desconfortável.",
+  "Updated July 10, 2026": "Atualizado em 10 de julho de 2026",
+  "Updated July 10, 2026. FoveaFlow is practice software, not medical care. Stop if a session causes strain, dizziness, headache, nausea, or any other discomfort.":
+    "Atualizado em 10 de julho de 2026. O FoveaFlow é software de prática, não cuidado médico. Pare se uma sessão causar cansaço, tontura, dor de cabeça, náusea ou qualquer outro desconforto.",
+  "Updated July 10, 2026. If the visual effect feels strange or uncomfortable, stop the session and rest.":
+    "Atualizado em 10 de julho de 2026. Se o efeito visual parecer estranho ou desconfortável, pare a sessão e descanse.",
+  "Updated July 10, 2026. Keep sessions brief and controlled. If the drill causes strain or discomfort, stop.":
+    "Atualizado em 10 de julho de 2026. Mantenha as sessões curtas e controladas. Se o exercício causar cansaço ou desconforto, pare.",
+  "Updated July 10, 2026. Start with fewer distractors or a bigger target, and stop if the session becomes uncomfortable.":
+    "Atualizado em 10 de julho de 2026. Comece com menos distrações ou um alvo maior e pare se a sessão ficar desconfortável.",
+  "Updated July 10, 2026. This is a browser-based practice drill and not medical therapy.":
+    "Atualizado em 10 de julho de 2026. Este é um exercício de prática no navegador, não terapia médica.",
+  "Updated July 10, 2026. This is practice software, not medical care, so stop if the session feels uncomfortable.":
+    "Atualizado em 10 de julho de 2026. Isto é software de prática, não cuidado médico. Pare se a sessão ficar desconfortável.",
   "Use FoveaFlow as a free FPS eye training warmup for visual tracking, quick refocus, target switching, and focus under distraction.":
     "Use o FoveaFlow como aquecimento visual FPS gratuito para rastreamento visual, refoco rápido, troca de alvo e foco sob distração.",
   "Use FoveaFlow as a short FPS warmup, an active screen break, or a focused visual practice session.":

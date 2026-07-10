@@ -210,8 +210,6 @@ export const fil = {
     "Nag-aalok din ang EyeTrainer.gg ng simpleng mga pattern sa browser at ipinapakita nito ang paparating na Steam version mula sa public na page.",
   "EyeTrainer.gg focuses the public browser tool on simple pattern practice rather than detailed target and display calibration.":
     "Nakatuon ang public na browser tool ng EyeTrainer.gg sa simpleng pattern practice, hindi sa detalyadong target at display calibration.",
-  "EyeTrainer.gg provides simple pattern options, including patterns such as Vertical Waves.":
-    "May simpleng mga pagpipilian sa pattern ang EyeTrainer.gg, kasama ang mga pattern tulad ng Patayong alon.",
   FAQ: "FAQ",
   "FPS Eye Training Warmup": "FPS warm-up para sa mata",
   "FPS Eye Training Warmup (HIGH FPS)": "FPS warm-up para sa mata (HIGH FPS)",
@@ -241,6 +239,8 @@ export const fil = {
     "Magagamit ang FoveaFlow nang hindi nagpapadala ng personal details. Hindi ito ginawa para mangolekta ng personal information mula sa mga bata.",
   "FoveaFlow does not set advertising cookies. Cloudflare may set security cookies when it needs them to keep the site available and safe.":
     "Hindi nagse-set ang FoveaFlow ng advertising cookies. Maaaring mag-set ang Cloudflare ng security cookies kung kailangan para mapanatiling available at ligtas ang site.",
+  "FoveaFlow stores your language preference in local browser storage and in a same-site preference cookie so the correct language can be selected before the app starts. The cookie can last up to 400 days, uses SameSite=Lax, and is marked Secure on HTTPS.":
+    "Sine-save ng FoveaFlow ang pinili mong wika sa local browser storage at sa isang same-site preference cookie para mapili ang tamang wika bago magsimula ang app. Maaaring tumagal ang cookie nang hanggang 400 araw, gumagamit ito ng SameSite=Lax, at minamarkahang Secure sa HTTPS.",
   "FoveaFlow eye trainer animation for visual tracking practice":
     "Animation ng FoveaFlow para sa pagsasanay sa pagsubaybay ng tingin",
   "FoveaFlow eye trainer animation for visual tracking practice. Use Pause motion to stop target movement before changing controls.":
@@ -278,12 +278,10 @@ export const fil = {
   "FoveaFlow overview": "Overview ng FoveaFlow",
   "FoveaFlow saves local controls for speed, size, shape, color, opacity, trails, paths, distractors, letters, and display scale.":
     "Sine-save ng FoveaFlow ang local controls para sa bilis, laki, hugis, kulay, opacity, trail, mga ruta, distractors, letters, at display scale.",
-  "FoveaFlow stores settings locally in your browser so the app can remember them on the current device. That can include the selected mode, motion pattern, speed, target size, color, opacity, trail setting, viewing distance, screen scale, and theme.":
-    "Lokal na sine-save ng FoveaFlow ang settings sa browser mo para maalala ito ng app sa kasalukuyang device. Kasama rito ang piniling mode, pattern ng galaw, bilis, laki ng target, kulay, opacity, trail setting, distansya sa screen, sukat ng screen, at tema.",
+  "FoveaFlow stores settings locally in your browser so the app can remember them on the current device. That can include the selected language, mode, motion pattern, speed, target size, color, opacity, trail setting, viewing distance, screen scale, and theme.":
+    "Lokal na sine-save ng FoveaFlow ang settings sa browser mo para maalala ito ng app sa kasalukuyang device. Kasama rito ang piniling wika, mode, pattern ng galaw, bilis, laki ng target, kulay, opacity, trail setting, distansya sa screen, sukat ng screen, at tema.",
   "FoveaFlow vs BlinkCamp": "FoveaFlow vs BlinkCamp",
   "FoveaFlow vs EyeTrainer.gg": "FoveaFlow vs EyeTrainer.gg",
-  "FoveaFlow, free online eye trainer":
-    "FoveaFlow, libreng online pampagsanay ng mata",
   "Free access": "Libreng access",
   "Free browser tool": "Libreng browser tool",
   "Free online eye trainer": "Libreng online pampagsanay ng mata",
@@ -487,7 +485,6 @@ export const fil = {
   "Peripheral awareness": "Awareness sa gilid ng paningin",
   "Pick a drill and tune the target":
     "Pumili ng ehersisyo at i-tune ang target",
-  "Practice pages": "Mga practice page",
   "Practice software, not medical care. Stop if you feel eye strain, dizziness, headache, nausea, or any other discomfort.":
     "Software para sa pagsasanay ito, hindi pangangalagang medikal. Huminto kung makaramdam ng eye strain, hilo, sakit ng ulo, nausea, o anumang discomfort.",
   "Practice the Bounce smooth pursuit pattern online. Adjust speed, target size, color, trail, and screen scale for short visual tracking sessions.":
@@ -593,7 +590,6 @@ export const fil = {
   "Screen reset": "Reset sa screen",
   "Screen scale": "Sukat ng screen",
   "Screen-work reset": "Reset mula sa screen work",
-  "Select language": "Pumili ng wika",
   "Selective attention": "Piniling atensyon",
   Semibold: "Medyo makapal",
   Session: "Sesyon",
@@ -752,20 +748,19 @@ export const fil = {
   "Tune the session before you start": "I-tune ang sesyon bago magsimula",
   Unit: "Yunit",
   Unpredictive: "Hindi predictable",
-  "Updated April 28, 2026": "Na-update noong Abril 28, 2026",
-  "Updated May 14, 2026": "Na-update noong Mayo 14, 2026",
-  "Updated May 14, 2026. FoveaFlow is practice software, not medical care. Stop if a session causes strain, dizziness, headache, nausea, or any other discomfort.":
-    "Na-update noong Mayo 14, 2026. Software para sa pagsasanay ang FoveaFlow, hindi pangangalagang medikal. Huminto kung magdulot ang sesyon ng strain, hilo, sakit ng ulo, nausea, o anumang discomfort.",
-  "Updated May 14, 2026. If the visual effect feels strange or uncomfortable, stop the session and rest.":
-    "Na-update noong Mayo 14, 2026. Kung kakaiba o hindi komportable ang visual effect, ihinto ang sesyon at magpahinga.",
-  "Updated May 14, 2026. Keep sessions brief and controlled. If the drill causes strain or discomfort, stop.":
-    "Na-update noong Mayo 14, 2026. Panatilihing maikli at kontrolado ang sesyon. Kung magdulot ng strain o discomfort ang ehersisyo, huminto.",
-  "Updated May 14, 2026. Start with fewer distractors or a bigger target, and stop if the session becomes uncomfortable.":
-    "Na-update noong Mayo 14, 2026. Magsimula sa mas kaunting distractors o mas malaking target, at huminto kung maging hindi komportable ang sesyon.",
-  "Updated May 14, 2026. This is a browser-based practice drill and not medical therapy.":
-    "Na-update noong Mayo 14, 2026. Nasa browser practice ehersisyo ito, hindi medical therapy.",
-  "Updated May 14, 2026. This is practice software, not medical care, so stop if the session feels uncomfortable.":
-    "Na-update noong Mayo 14, 2026. Software para sa pagsasanay ito, hindi pangangalagang medikal, kaya huminto kung hindi komportable ang sesyon.",
+  "Updated July 10, 2026": "Na-update noong Hulyo 10, 2026",
+  "Updated July 10, 2026. FoveaFlow is practice software, not medical care. Stop if a session causes strain, dizziness, headache, nausea, or any other discomfort.":
+    "Na-update noong Hulyo 10, 2026. Software para sa pagsasanay ang FoveaFlow, hindi pangangalagang medikal. Huminto kung magdulot ang sesyon ng strain, hilo, sakit ng ulo, nausea, o anumang discomfort.",
+  "Updated July 10, 2026. If the visual effect feels strange or uncomfortable, stop the session and rest.":
+    "Na-update noong Hulyo 10, 2026. Kung kakaiba o hindi komportable ang visual effect, ihinto ang sesyon at magpahinga.",
+  "Updated July 10, 2026. Keep sessions brief and controlled. If the drill causes strain or discomfort, stop.":
+    "Na-update noong Hulyo 10, 2026. Panatilihing maikli at kontrolado ang sesyon. Kung magdulot ng strain o discomfort ang ehersisyo, huminto.",
+  "Updated July 10, 2026. Start with fewer distractors or a bigger target, and stop if the session becomes uncomfortable.":
+    "Na-update noong Hulyo 10, 2026. Magsimula sa mas kaunting distractors o mas malaking target, at huminto kung maging hindi komportable ang sesyon.",
+  "Updated July 10, 2026. This is a browser-based practice drill and not medical therapy.":
+    "Na-update noong Hulyo 10, 2026. Nasa browser practice ehersisyo ito, hindi medical therapy.",
+  "Updated July 10, 2026. This is practice software, not medical care, so stop if the session feels uncomfortable.":
+    "Na-update noong Hulyo 10, 2026. Software para sa pagsasanay ito, hindi pangangalagang medikal, kaya huminto kung hindi komportable ang sesyon.",
   "Use FoveaFlow as a free FPS eye training warmup for visual tracking, quick refocus, target switching, and focus under distraction.":
     "Gamitin ang FoveaFlow bilang libreng FPS warm-up para sa mata, pagsubaybay ng tingin, mabilis na paglipat ng focus, target switching, at focus sa gitna ng distraction.",
   "Use FoveaFlow as a short FPS warmup, an active screen break, or a focused visual practice session.":

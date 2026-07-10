@@ -57,12 +57,15 @@
     />
   </Field.Field>
 </div>
-<div class="flex min-h-12 items-center justify-between gap-4">
-  <span class="text-base font-medium">{t(locale, "Show trail")}</span>
+<Field.Field orientation="horizontal" class="min-h-12 justify-between">
+  <Field.Label for="trainer-show-trail" class="text-base font-medium">
+    {t(locale, "Show trail")}
+  </Field.Label>
   <Switch
+    id="trainer-show-trail"
     checked={settings.showTrail && canToggleDirection}
     onCheckedChange={handleShowTrailChange}
     disabled={!canToggleDirection}
     aria-label={t(locale, "Show trail")}
   />
-</div>
+</Field.Field>

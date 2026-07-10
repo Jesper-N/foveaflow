@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import NoscriptFallback from "../lib/components/NoscriptFallback.astro";
 import SeoHead from "../lib/components/SeoHead.astro";
 import TrainerApp from "../lib/components/TrainerApp.svelte";
 import { siteMetadata } from "../lib/content/site";
@@ -23,7 +24,7 @@ const structuredData = buildStructuredData(siteOrigin);
   <body>
     <script is:inline>
       (() => {
-        const modelContext = navigator.modelContext;
+        const modelContext = document.modelContext ?? navigator.modelContext;
 
         if (!modelContext || typeof modelContext.registerTool !== "function") {
           return;
@@ -116,20 +117,9 @@ const structuredData = buildStructuredData(siteOrigin);
       })();
     </script>
     <TrainerApp client:load />
-    <noscript>
-      <main class="noscript-shell">
-        <section class="noscript-panel">
-          <p class="noscript-kicker">Free online eye trainer</p>
-          <h2 class="noscript-title">{siteMetadata.title}</h2>
-          <p>{siteMetadata.shortDescription}</p>
-          <p>
-            FoveaFlow needs JavaScript to run the moving target drills. It is a
-            free browser-based eye trainer for visual tracking, quick refocus,
-            peripheral awareness, and focus under distraction.
-          </p>
-          <p><a href="/guide/">Read the FoveaFlow guide</a></p>
-        </section>
-      </main>
-    </noscript>
+    <NoscriptFallback
+      heading={siteMetadata.name}
+      description={siteMetadata.shortDescription}
+    />
   </body>
 </html>

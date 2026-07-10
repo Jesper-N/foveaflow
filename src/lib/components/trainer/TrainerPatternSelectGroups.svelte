@@ -16,7 +16,7 @@
   {#each unpredictivePatternOptions as option (option.id)}
     <Select.Item value={option.id}>
       <span class="flex min-w-0 items-center gap-2">
-        <PatternPathPreview patternId={option.id} compact />
+        <PatternPathPreview patternId={option.id} />
         <span class="truncate">{t(locale, option.name)}</span>
       </span>
     </Select.Item>
@@ -27,7 +27,7 @@
   {#each predictivePatternOptions as option (option.id)}
     <Select.Item value={option.id}>
       <span class="flex min-w-0 items-center gap-2">
-        <PatternPathPreview patternId={option.id} compact />
+        <PatternPathPreview patternId={option.id} />
         <span class="truncate">{t(locale, option.name)}</span>
       </span>
     </Select.Item>

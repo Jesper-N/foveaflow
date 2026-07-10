@@ -12,7 +12,8 @@ export const GET: APIRoute = (context) => {
     stringifyDiscoveryJson(buildApiCatalogJson(getSiteOrigin(context.site))),
     {
       headers: {
-        "Content-Type": "application/linkset+json; charset=utf-8",
+        "Content-Type":
+          'application/linkset+json; profile="https://www.rfc-editor.org/info/rfc9727"; charset=utf-8',
       },
     },
   );

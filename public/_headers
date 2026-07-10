@@ -13,7 +13,11 @@
   Link: </.well-known/api-catalog>; rel="api-catalog", </.well-known/openapi.json>; rel="service-desc"; type="application/vnd.oai.openapi+json", </index.md>; rel="alternate"; type="text/markdown", </llms.txt>; rel="service-doc"; type="text/plain", </guide/>; rel="service-doc"; type="text/html", </.well-known/agent-skills/index.json>; rel="describedby"; type="application/json"
 
 /.well-known/api-catalog
-  Content-Type: application/linkset+json; charset=utf-8
+  Content-Type: application/linkset+json; profile="https://www.rfc-editor.org/info/rfc9727"; charset=utf-8
+  Link: </.well-known/api-catalog>; rel="api-catalog"
+
+/.well-known/openapi.json
+  Content-Type: application/vnd.oai.openapi+json; charset=utf-8
 
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
@@ -21,14 +25,5 @@
 /metadata/*
   Cache-Control: public, max-age=604800
 
-/*.ico
-  Cache-Control: public, max-age=604800
-
-/*.svg
-  Cache-Control: public, max-age=604800
-
-/*.png
-  Cache-Control: public, max-age=604800
-
-/*.webp
+/favicon*.ico
   Cache-Control: public, max-age=604800

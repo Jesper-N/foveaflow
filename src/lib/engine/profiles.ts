@@ -43,6 +43,11 @@ const smoothStep = (value: number) => {
   return progress * progress * (3 - 2 * progress);
 };
 
+const smoothStepPrimitive = (value: number) => {
+  const progress = clamp01(value);
+  return progress ** 3 - progress ** 4 / 2;
+};
+
 const sineWave = (elapsedSec: number, periodSec: number) => {
   return (
     (Math.sin(
@@ -126,6 +131,186 @@ export const sampleSpeedProfile = (
   }
 };
 
+const integrateSineMultiplier = (
+  profile: Extract<SpeedProfile, { kind: "sine" }>,
+  elapsedSec: number,
+) => {
+  if (profile.periodSec <= 0) return profile.minMultiplier * elapsedSec;
+
+  const angularFrequency = FULL_CIRCLE_RADIANS / profile.periodSec;
+  const midpoint = (profile.minMultiplier + profile.maxMultiplier) / 2;
+  const amplitude = (profile.maxMultiplier - profile.minMultiplier) / 2;
+  return (
+    midpoint * elapsedSec -
+    (amplitude * Math.cos(angularFrequency * elapsedSec)) / angularFrequency +
+    amplitude / angularFrequency
+  );
+};
+
+const integrateStepBucket = (
+  currentMultiplier: number,
+  nextMultiplier: number,
+  elapsedSec: number,
+  intervalSec: number,
+  transitionSec: number,
+) => {
+  if (transitionSec === 0) return currentMultiplier * elapsedSec;
+
+  const transitionStart = intervalSec - transitionSec;
+  if (elapsedSec <= transitionStart) return currentMultiplier * elapsedSec;
+
+  const transitionElapsedSec = elapsedSec - transitionStart;
+  return (
+    currentMultiplier * elapsedSec +
+    (nextMultiplier - currentMultiplier) *
+      transitionSec *
+      smoothStepPrimitive(transitionElapsedSec / transitionSec)
+  );
+};
+
+const integrateStepsMultiplier = (
+  profile: Extract<SpeedProfile, { kind: "steps" }>,
+  elapsedSec: number,
+) => {
+  const multipliers = profile.multipliers;
+  if (multipliers.length === 0 || profile.intervalSec <= 0) return elapsedSec;
+
+  const intervalSec = Math.max(0.1, profile.intervalSec);
+  const transitionSec = Math.min(
+    Math.max(0, profile.transitionSec),
+    intervalSec,
+  );
+  const cycleSec = intervalSec * multipliers.length;
+  const fullCycleCount = Math.floor(elapsedSec / cycleSec);
+  const cycleRemainderSec = elapsedSec - fullCycleCount * cycleSec;
+  let integral = 0;
+
+  for (let index = 0; index < multipliers.length; index += 1) {
+    const current = multipliers[index] ?? 1;
+    const next = multipliers[(index + 1) % multipliers.length] ?? current;
+    integral += integrateStepBucket(
+      current,
+      next,
+      intervalSec,
+      intervalSec,
+      transitionSec,
+    );
+  }
+  integral *= fullCycleCount;
+
+  const fullBucketCount = Math.min(
+    multipliers.length,
+    Math.floor(cycleRemainderSec / intervalSec),
+  );
+  for (let index = 0; index < fullBucketCount; index += 1) {
+    const current = multipliers[index] ?? 1;
+    const next = multipliers[(index + 1) % multipliers.length] ?? current;
+    integral += integrateStepBucket(
+      current,
+      next,
+      intervalSec,
+      intervalSec,
+      transitionSec,
+    );
+  }
+
+  if (fullBucketCount === multipliers.length) return integral;
+
+  const bucketElapsedSec = cycleRemainderSec - fullBucketCount * intervalSec;
+  const current = multipliers[fullBucketCount] ?? 1;
+  const next =
+    multipliers[(fullBucketCount + 1) % multipliers.length] ?? current;
+  return (
+    integral +
+    integrateStepBucket(
+      current,
+      next,
+      bucketElapsedSec,
+      intervalSec,
+      transitionSec,
+    )
+  );
+};
+
+const integrateLoopRampCycle = (
+  profile: Extract<SpeedProfile, { kind: "loopRamp" }>,
+  elapsedSec: number,
+) => {
+  const periodSec = Math.max(0.1, profile.periodSec);
+  const resetSec = Math.min(Math.max(0, profile.resetSec), periodSec);
+  const rampSec = Math.max(0.1, periodSec - resetSec);
+  const rampElapsedSec = Math.min(elapsedSec, rampSec);
+  const rampIntegral =
+    profile.fromMultiplier * rampElapsedSec +
+    (profile.toMultiplier - profile.fromMultiplier) *
+      rampSec *
+      smoothStepPrimitive(rampElapsedSec / rampSec);
+
+  if (elapsedSec <= rampSec || resetSec === 0) return rampIntegral;
+
+  const resetElapsedSec = elapsedSec - rampSec;
+  return (
+    rampIntegral +
+    profile.toMultiplier * resetElapsedSec +
+    (profile.fromMultiplier - profile.toMultiplier) *
+      resetSec *
+      smoothStepPrimitive(resetElapsedSec / resetSec)
+  );
+};
+
+const integrateLoopRampMultiplier = (
+  profile: Extract<SpeedProfile, { kind: "loopRamp" }>,
+  elapsedSec: number,
+) => {
+  const periodSec = Math.max(0.1, profile.periodSec);
+  const fullCycleCount = Math.floor(elapsedSec / periodSec);
+  const cycleRemainderSec = elapsedSec - fullCycleCount * periodSec;
+  return (
+    fullCycleCount * integrateLoopRampCycle(profile, periodSec) +
+    integrateLoopRampCycle(profile, cycleRemainderSec)
+  );
+};
+
+const integrateProfileMultiplier = (
+  profile: SpeedProfile,
+  elapsedSec: number,
+) => {
+  switch (profile.kind) {
+    case "constant":
+      return elapsedSec;
+    case "sine":
+      return integrateSineMultiplier(profile, elapsedSec);
+    case "steps":
+      return integrateStepsMultiplier(profile, elapsedSec);
+    case "loopRamp":
+      return integrateLoopRampMultiplier(profile, elapsedSec);
+  }
+};
+
+export const integrateSpeedProfile = (
+  profile: SpeedProfile,
+  fromSec: number,
+  toSec: number,
+  basePxPerSec: number,
+) => {
+  if (
+    !Number.isFinite(fromSec) ||
+    !Number.isFinite(toSec) ||
+    !Number.isFinite(basePxPerSec)
+  ) {
+    return 0;
+  }
+
+  const startSec = Math.max(0, Math.min(fromSec, toSec));
+  const endSec = Math.max(0, Math.max(fromSec, toSec));
+  const direction = toSec < fromSec ? -1 : 1;
+  const distancePx =
+    Math.max(0, basePxPerSec) *
+    (integrateProfileMultiplier(profile, endSec) -
+      integrateProfileMultiplier(profile, startSec));
+  return distancePx * direction;
+};
+
 export const sampleSizeProfile = (
   profile: SizeProfile,
   elapsedSec: number,
@@ -147,4 +332,17 @@ export const sampleSizeProfile = (
       );
     }
   }
+};
+
+export const getMaximumSizeProfileRadius = (
+  profile: SizeProfile,
+  baseRadiusPx: number,
+) => {
+  if (profile.kind === "constant" || profile.periodSec <= 0) {
+    return clampSize(baseRadiusPx);
+  }
+
+  return clampSize(
+    baseRadiusPx * Math.max(profile.minMultiplier, profile.maxMultiplier),
+  );
 };

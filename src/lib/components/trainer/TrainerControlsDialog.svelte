@@ -6,12 +6,9 @@
   import TrainerMotionControls from "$lib/components/trainer/TrainerMotionControls.svelte";
   import TrainerScreenControls from "$lib/components/trainer/TrainerScreenControls.svelte";
   import TrainerSessionControls from "$lib/components/trainer/TrainerSessionControls.svelte";
-  import TrainerSettingsSection from "$lib/components/trainer/TrainerSettingsSection.svelte";
   import TrainerTargetControls from "$lib/components/trainer/TrainerTargetControls.svelte";
   import { Button } from "$lib/components/ui/button/index.js";
   import * as Dialog from "$lib/components/ui/dialog/index.js";
-  import * as Sidebar from "$lib/components/ui/sidebar/index.js";
-  import * as Tabs from "$lib/components/ui/tabs/index.js";
   import type { TrainerSettings } from "$lib/engine/presets";
   import { languageState } from "$lib/i18n/state.svelte";
   import { t } from "$lib/i18n/translate";
@@ -53,13 +50,19 @@
     actions: TrainerDialogActions;
   } = $props();
 
-  const handleControlSectionValueChange = (sectionId: string) => {
-    if (availableControlSections.some((section) => section.id === sectionId)) {
-      actions.onControlSectionChange(sectionId as ControlSectionId);
-    }
-  };
-
   let locale = $derived(languageState.locale);
+
+  const handleOpenAutoFocus = (event: Event) => {
+    event.preventDefault();
+    requestAnimationFrame(() => {
+      const buttons = document.querySelectorAll<HTMLButtonElement>(
+        `[data-control-section="${currentControlSection}"]`,
+      );
+      [...buttons]
+        .find((button) => button.getClientRects().length > 0)
+        ?.focus();
+    });
+  };
 </script>
 
 {#snippet sliderRow(label: string, valueLabel: string)}
@@ -73,50 +76,50 @@
   </span>
 {/snippet}
 
+{#snippet sectionButton(section: ControlSection, compact: boolean)}
+  <Button
+    type="button"
+    variant={currentControlSection === section.id ? "secondary" : "ghost"}
+    size={compact ? "sm" : "default"}
+    class={compact ? "shrink-0" : "w-full justify-start"}
+    data-control-section={section.id}
+    aria-pressed={currentControlSection === section.id}
+    onclick={() => actions.onControlSectionChange(section.id)}
+  >
+    <span data-icon="inline-start" class="grid place-items-center">
+      <TrainerControlSectionIcon icon={section.icon} {colorMode} />
+    </span>
+    <span>{section.label}</span>
+  </Button>
+{/snippet}
+
 <Dialog.Root bind:open>
   <Dialog.Content
     class="h-[calc(100dvh-1rem)] max-h-none max-w-[calc(100dvw-1rem)] overflow-hidden p-0 md:h-auto md:max-h-125 md:max-w-175 lg:max-w-200"
-    trapFocus={false}
+    onOpenAutoFocus={handleOpenAutoFocus}
   >
     <Dialog.Title class="sr-only">{t(locale, "Controls")}</Dialog.Title>
     <Dialog.Description class="sr-only">
       {t(locale, "Change your saved FoveaFlow settings.")}
     </Dialog.Description>
-    <Sidebar.Provider
-      class="h-full min-h-0 min-w-0 items-start overflow-hidden"
-    >
-      <Sidebar.Root collapsible="none" class="hidden md:flex">
-        <Sidebar.Content>
-          <Sidebar.Group>
-            <Sidebar.GroupContent>
-              <Sidebar.Menu>
-                {#each availableControlSections as section (section.id)}
-                  <Sidebar.MenuItem>
-                    <Sidebar.MenuButton
-                      isActive={currentControlSection === section.id}
-                      onclick={() => actions.onControlSectionChange(section.id)}
-                    >
-                      <TrainerControlSectionIcon
-                        icon={section.icon}
-                        {colorMode}
-                      />
-                      <span>{section.label}</span>
-                    </Sidebar.MenuButton>
-                  </Sidebar.MenuItem>
-                {/each}
-              </Sidebar.Menu>
-            </Sidebar.GroupContent>
-          </Sidebar.Group>
-        </Sidebar.Content>
-      </Sidebar.Root>
+    <div class="flex h-full min-h-0 min-w-0 items-start overflow-hidden">
+      <aside
+        class="hidden h-full w-52 shrink-0 border-r border-sidebar-border bg-sidebar p-3 text-sidebar-foreground md:block"
+      >
+        <nav aria-label={t(locale, "Control sections")}>
+          <ul class="grid gap-1">
+            {#each availableControlSections as section (section.id)}
+              <li>{@render sectionButton(section, false)}</li>
+            {/each}
+          </ul>
+        </nav>
+      </aside>
 
-      <Tabs.Root
-        value={currentControlSection}
-        onValueChange={handleControlSectionValueChange}
+      <div
         class="flex h-full min-h-0 min-w-0 flex-1 flex-col gap-0 overflow-hidden md:h-120"
       >
         <header
-          class="flex h-16 shrink-0 items-center gap-2 px-4 pr-16 transition-[width,height] ease-linear md:px-4 md:pr-4 group-has-data-[collapsible=icon]/sidebar-wrapper:h-12"
+          class="flex h-16 shrink-0 items-center gap-2 px-4 pr-16 md:pr-4"
         >
           <div class="flex min-w-0 items-center gap-2 text-base">
             <span class="shrink-0 text-muted-foreground">
@@ -135,17 +138,11 @@
           class="px-3 py-2 md:hidden"
           aria-label={t(locale, "Control sections")}
         >
-          <Tabs.List class="no-scrollbar w-full justify-start overflow-x-auto">
+          <div class="grid w-full grid-cols-2 gap-1 sm:grid-cols-3">
             {#each availableControlSections as section (section.id)}
-              <Tabs.Trigger
-                value={section.id}
-                class="pressable-ui shrink-0 grow-0 basis-auto"
-              >
-                <TrainerControlSectionIcon icon={section.icon} {colorMode} />
-                <span>{section.label}</span>
-              </Tabs.Trigger>
+              {@render sectionButton(section, true)}
             {/each}
-          </Tabs.List>
+          </div>
         </nav>
 
         <div
@@ -154,12 +151,8 @@
           <div
             class="t-resize w-full max-w-3xl rounded-3xl border border-border/60 bg-muted/55 p-4 shadow-[0_18px_50px_-42px_rgba(0,0,0,0.85)] md:rounded-xl md:border-0 md:bg-muted/50 md:shadow-none"
           >
-            {#if currentControlSection === "session"}
-              <TrainerSettingsSection
-                icon="theme"
-                label={t(locale, "Session")}
-                {colorMode}
-              >
+            <section class="grid gap-6">
+              {#if currentControlSection === "session"}
                 <TrainerSessionControls
                   {settings}
                   {motionPaused}
@@ -170,13 +163,7 @@
                   toggleMotionDirection={actions.toggleMotionDirection}
                   handleThemeCheckedChange={actions.handleThemeCheckedChange}
                 />
-              </TrainerSettingsSection>
-            {:else if currentControlSection === "drill"}
-              <TrainerSettingsSection
-                icon="target"
-                label={t(locale, "Drill")}
-                {colorMode}
-              >
+              {:else if currentControlSection === "drill"}
                 <TrainerDrillControls
                   {settings}
                   {isLilacChaserMode}
@@ -192,13 +179,7 @@
                     .set}
                   {sliderRow}
                 />
-              </TrainerSettingsSection>
-            {:else if currentControlSection === "targets"}
-              <TrainerSettingsSection
-                icon="eye"
-                label={t(locale, "Targets")}
-                {colorMode}
-              >
+              {:else if currentControlSection === "targets"}
                 <TrainerTargetControls
                   bind:settings
                   {isMotMode}
@@ -224,13 +205,7 @@
                   setLetterScaleSliderValue={actions.letterScaleSlider.set}
                   {sliderRow}
                 />
-              </TrainerSettingsSection>
-            {:else if currentControlSection === "motion"}
-              <TrainerSettingsSection
-                icon="motion"
-                label={t(locale, "Motion")}
-                {colorMode}
-              >
+              {:else if currentControlSection === "motion"}
                 <TrainerMotionControls
                   {settings}
                   speedSliderValue={actions.speedSlider.value}
@@ -238,25 +213,13 @@
                   handleSpeedUnitChange={actions.handleSpeedUnitChange}
                   {sliderRow}
                 />
-              </TrainerSettingsSection>
-            {:else if currentControlSection === "screen"}
-              <TrainerSettingsSection
-                icon="calibration"
-                label={t(locale, "Screen scale")}
-                {colorMode}
-              >
+              {:else if currentControlSection === "screen"}
                 <TrainerScreenControls
                   bind:settings
                   {canToggleDirection}
                   handleCalibrationInput={actions.handleCalibrationInput}
                 />
-              </TrainerSettingsSection>
-            {:else}
-              <TrainerSettingsSection
-                icon="reset"
-                label={t(locale, "Defaults")}
-                {colorMode}
-              >
+              {:else}
                 <p class="text-sm leading-6 text-muted-foreground">
                   {t(
                     locale,
@@ -264,18 +227,18 @@
                   )}
                 </p>
                 <Button
-                  class="pressable-ui w-full justify-start"
+                  class="w-full justify-start"
                   variant="outline"
                   onclick={actions.resetSettings}
                 >
-                  <RotateCcwIcon class="size-4" />
-                  <span class="pl-1">{t(locale, "Reset to defaults")}</span>
+                  <RotateCcwIcon data-icon="inline-start" />
+                  <span>{t(locale, "Reset to defaults")}</span>
                 </Button>
-              </TrainerSettingsSection>
-            {/if}
+              {/if}
+            </section>
           </div>
         </div>
-      </Tabs.Root>
-    </Sidebar.Provider>
+      </div>
+    </div>
   </Dialog.Content>
 </Dialog.Root>

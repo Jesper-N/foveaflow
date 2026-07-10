@@ -23,7 +23,9 @@
     getPresetName,
     lilacChaserColorOptions,
     maxSpeedByUnit,
-    speedStepByUnit,
+    minSpeedByUnit,
+    speedDecimalPlacesByUnit,
+    speedSliderStepByUnit,
   } from "$lib/trainer/options";
   import { trainerSettingBounds } from "$lib/trainer/settings";
   import type { TrainerHudActions } from "$lib/trainer/control-actions";
@@ -33,7 +35,6 @@
     hudHidden: boolean;
     hudContentWidth: number | null;
     attachHudContentSizer: Attachment<HTMLDivElement>;
-    hasActiveRoute: boolean;
     settings: TrainerSettings;
     isLilacChaserMode: boolean;
     motionPaused: boolean;
@@ -57,7 +58,6 @@
     hudHidden,
     hudContentWidth,
     attachHudContentSizer,
-    hasActiveRoute,
     settings,
     isLilacChaserMode,
     motionPaused,
@@ -88,14 +88,108 @@
   let sizeLabel = $derived(t(locale, "Size"));
   let speedLabel = $derived(t(locale, "Speed"));
   let scaleLabel = $derived(t(locale, "Scale"));
+
+  let pointerInside = false;
+  let pointerDown = false;
+  let focusInside = false;
+  let hudElement: HTMLDivElement | null = null;
+
+  const syncHudInteraction = () => {
+    actions.setHudInteractionActive(
+      pointerInside || pointerDown || focusInside,
+    );
+  };
+
+  const handlePointerEnter = () => {
+    pointerInside = true;
+    syncHudInteraction();
+  };
+
+  const handlePointerLeave = () => {
+    pointerInside = false;
+    syncHudInteraction();
+  };
+
+  const handlePointerDown = () => {
+    pointerDown = true;
+    syncHudInteraction();
+  };
+
+  const handlePointerEnd = () => {
+    pointerDown = false;
+    syncHudInteraction();
+  };
+
+  const handleFocusIn = (event: FocusEvent) => {
+    focusInside =
+      event.target instanceof HTMLElement &&
+      event.target.matches(":focus-visible");
+    syncHudInteraction();
+  };
+
+  const handleFocusOut = (event: FocusEvent) => {
+    if (
+      event.currentTarget instanceof HTMLElement &&
+      event.relatedTarget instanceof Node &&
+      event.currentTarget.contains(event.relatedTarget)
+    ) {
+      return;
+    }
+
+    focusInside = false;
+    syncHudInteraction();
+  };
+
+  const attachHudInteraction: Attachment<HTMLDivElement> = (node) => {
+    hudElement = node;
+    node.addEventListener("pointerenter", handlePointerEnter);
+    node.addEventListener("pointerleave", handlePointerLeave);
+    node.addEventListener("pointerdown", handlePointerDown);
+    node.addEventListener("focusin", handleFocusIn);
+    node.addEventListener("focusout", handleFocusOut);
+
+    return () => {
+      if (hudElement === node) hudElement = null;
+      node.removeEventListener("pointerenter", handlePointerEnter);
+      node.removeEventListener("pointerleave", handlePointerLeave);
+      node.removeEventListener("pointerdown", handlePointerDown);
+      node.removeEventListener("focusin", handleFocusIn);
+      node.removeEventListener("focusout", handleFocusOut);
+      actions.setHudInteractionActive(false);
+    };
+  };
+
+  const handleRevealFocus = (event: FocusEvent) => {
+    const shouldTransferFocus =
+      event.currentTarget instanceof HTMLElement &&
+      event.currentTarget.matches(":focus-visible");
+    actions.revealHud();
+    if (!shouldTransferFocus) return;
+
+    requestAnimationFrame(() => {
+      const focusTarget = hudElement?.querySelector<HTMLElement>(
+        "[data-hud-focus-target]",
+      );
+      if (!focusTarget) return;
+
+      focusTarget.focus();
+      focusInside = true;
+      syncHudInteraction();
+    });
+  };
 </script>
+
+<svelte:window
+  onpointerup={handlePointerEnd}
+  onpointercancel={handlePointerEnd}
+/>
 
 {#snippet presetSelectOptions()}
   <Select.Group>
     {#each exercisePresets as preset (preset.id)}
       <Select.Item value={preset.id}>
         <span class="flex min-w-0 items-center gap-2">
-          <ModePathPreview mode={preset.id} compact />
+          <ModePathPreview mode={preset.id} />
           <span class="truncate">{t(locale, preset.name)}</span>
         </span>
       </Select.Item>
@@ -125,10 +219,10 @@
 {#if hudHidden}
   <button
     type="button"
-    class="trainer-hud-peek absolute left-1/2 top-0 z-30 flex h-10 w-32 items-start justify-center rounded-b-full pt-2 outline-hidden focus-visible:ring-3 focus-visible:ring-ring/30"
+    class="trainer-hud-peek absolute left-1/2 top-0 z-30 flex h-10 w-32 items-start justify-center rounded-b-full pt-2 outline-hidden focus-visible:ring-3 focus-visible:ring-foreground"
     aria-label={t(locale, "Reveal controls")}
     onpointerenter={actions.revealHud}
-    onfocus={actions.revealHud}
+    onfocus={handleRevealFocus}
     onclick={actions.revealHud}
   >
     <span
@@ -140,6 +234,7 @@
 
 <div
   {@attach attachHudShell}
+  {@attach attachHudInteraction}
   class="trainer-hud-shell absolute top-3 left-1/2 z-20 max-w-[calc(100dvw-1.5rem)] -translate-x-1/2 sm:top-4"
   data-hidden={hudHidden}
   data-nosnippet
@@ -153,17 +248,13 @@
     inert={hudHidden}
   >
     <div {@attach attachHudContentSizer} class="flex w-max items-center gap-2">
-      <div class="flex shrink-0 items-center gap-2">
-        <svelte:element
-          this={hasActiveRoute ? "div" : "h1"}
+      <div class="flex shrink-0 items-center gap-2 max-[359px]:hidden">
+        <div
           class="m-0 flex shrink-0 items-center text-base font-semibold tracking-tight text-foreground"
-          aria-label={hasActiveRoute
-            ? undefined
-            : t(locale, "FoveaFlow, free online eye trainer")}
         >
           <a
             href="/"
-            class="flex shrink-0 items-center gap-2 rounded-2xl outline-hidden transition-colors hover:text-foreground/85 focus-visible:ring-3 focus-visible:ring-ring/30"
+            class="flex shrink-0 items-center gap-2 rounded-2xl outline-hidden transition-colors hover:text-foreground/85 focus-visible:ring-3 focus-visible:ring-foreground"
             aria-label={t(locale, `${siteMetadata.name} home`)}
           >
             <img
@@ -184,7 +275,7 @@
             />
             <span class="sr-only xl:not-sr-only">{siteMetadata.name}</span>
           </a>
-        </svelte:element>
+        </div>
       </div>
 
       <div class="flex shrink-0 items-center gap-2 md:hidden">
@@ -196,12 +287,11 @@
           onOpenChange={actions.handleHeaderPresetOpenChange}
         >
           <Select.Trigger
-            data-trainer-shortcut-select="mobile-mode"
-            class="pressable-ui size-9 justify-center rounded-full p-0 [&>svg:last-child]:hidden"
+            class="size-9 justify-center rounded-full p-0 [&>svg:last-child]:hidden"
             aria-label={`${t(locale, "Drill")}: ${currentPresetName}`}
             title={`${t(locale, "Drill")}: ${currentPresetName}`}
           >
-            <ModePathPreview mode={settings.presetId} compact />
+            <ModePathPreview mode={settings.presetId} />
             <span class="sr-only">{currentPresetName}</span>
           </Select.Trigger>
           <Select.Content>
@@ -219,12 +309,11 @@
               onOpenChange={actions.handleHeaderPatternOpenChange}
             >
               <Select.Trigger
-                data-trainer-shortcut-select="mobile-pattern"
-                class="pressable-ui size-9 justify-center rounded-full p-0 [&>svg:last-child]:hidden"
+                class="size-9 justify-center rounded-full p-0 [&>svg:last-child]:hidden"
                 aria-label={`${t(locale, "Motion path")}: ${currentPatternName}`}
                 title={`${t(locale, "Motion path")}: ${currentPatternName}`}
               >
-                <PatternPathPreview patternId={settings.patternId} compact />
+                <PatternPathPreview patternId={settings.patternId} />
                 <span class="sr-only">
                   {currentPatternName}
                 </span>
@@ -244,7 +333,7 @@
               onOpenChange={actions.handleHeaderLilacChaserColorOpenChange}
             >
               <Select.Trigger
-                class="pressable-ui size-9 justify-center rounded-full p-0 [&>svg:last-child]:hidden"
+                class="size-9 justify-center rounded-full p-0 [&>svg:last-child]:hidden"
                 aria-label={`${t(locale, "Lilac Chaser ball color")}: ${currentLilacChaserColorName}`}
                 title={`${t(locale, "Lilac Chaser ball color")}: ${currentLilacChaserColorName}`}
               >
@@ -286,7 +375,6 @@
           onOpenChange={actions.handleHeaderPresetOpenChange}
         >
           <Select.Trigger
-            data-trainer-shortcut-select="desktop-mode"
             class={[
               "overflow-hidden transition-[width] duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none",
               settings.presetId === "pursuit"
@@ -314,7 +402,6 @@
               onOpenChange={actions.handleHeaderPatternOpenChange}
             >
               <Select.Trigger
-                data-trainer-shortcut-select="desktop-pattern"
                 class="w-36 overflow-hidden lg:w-40 2xl:w-44"
                 aria-label={t(locale, "Motion path")}
               >
@@ -370,16 +457,18 @@
             </span>
             <Slider
               bind:value={actions.speedSlider.value, actions.speedSlider.set}
-              min={trainerSettingBounds.speedValue.min}
+              min={minSpeedByUnit[settings.speed.unit]}
               max={maxSpeedByUnit[settings.speed.unit]}
-              step={speedStepByUnit[settings.speed.unit]}
+              step={speedSliderStepByUnit[settings.speed.unit]}
               aria-label={t(locale, "Header target speed")}
               class="w-full"
             />
             <span
               class="w-[4.5ch] text-center text-xs font-semibold tabular-nums"
             >
-              {settings.speed.value.toFixed(1)}
+              {settings.speed.value.toFixed(
+                speedDecimalPlacesByUnit[settings.speed.unit],
+              )}
             </span>
           </div>
         </div>
@@ -446,13 +535,12 @@
         aria-label={t(locale, "App actions")}
       >
         <Button
-          class="pressable-ui hidden sm:inline-flex"
+          data-hud-focus-target
           variant="outline"
           size="icon"
           aria-label={motionPaused
             ? t(locale, "Resume motion")
             : t(locale, "Pause motion")}
-          aria-pressed={motionPaused}
           aria-describedby="trainer-motion-status"
           onclick={actions.toggleMotionPaused}
         >
@@ -464,11 +552,10 @@
         </Button>
 
         <Button
-          class="pressable-ui hidden sm:inline-flex"
+          class="hidden sm:inline-flex"
           variant="outline"
           size="icon"
           aria-label={motionDirectionToggleLabel}
-          aria-pressed={settings.motionDirection === -1}
           aria-describedby="trainer-motion-status"
           disabled={!canToggleDirection}
           onclick={actions.toggleMotionDirection}
@@ -477,7 +564,6 @@
         </Button>
 
         <Button
-          class="pressable-ui"
           variant="outline"
           size="icon"
           aria-label={guideButtonLabel}
@@ -489,7 +575,6 @@
         </Button>
 
         <Button
-          class="pressable-ui"
           variant="outline"
           size="icon"
           aria-label={t(locale, "Open controls")}

@@ -1,22 +1,3 @@
-const MAX_SAFE_FLASHES_PER_SECOND = 3;
-
-export const isFlashSequenceSafe = (flashTimesMs: number[]) => {
-  const sortedTimes = [...flashTimesMs].sort((a, b) => a - b);
-  let windowStart = 0;
-
-  for (let windowEnd = 0; windowEnd < sortedTimes.length; windowEnd += 1) {
-    while (sortedTimes[windowEnd] - sortedTimes[windowStart] >= 1000) {
-      windowStart += 1;
-    }
-
-    if (windowEnd - windowStart + 1 > MAX_SAFE_FLASHES_PER_SECOND) {
-      return false;
-    }
-  }
-
-  return true;
-};
-
 const parseHexColor = (hexColor: string) => {
   const match = /^#?([0-9a-f]{6})$/i.exec(hexColor.trim());
   if (!match) return null;

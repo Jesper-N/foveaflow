@@ -37,9 +37,7 @@
   let locale = $derived(languageState.locale);
 </script>
 
-<main
-  class="fixed inset-0 min-h-dvh overflow-auto bg-background text-foreground selection:bg-accent/30"
->
+<main class="min-h-dvh bg-background text-foreground selection:bg-accent/30">
   <div class="mx-auto grid w-full max-w-7xl gap-10 px-4 py-5 sm:px-6 lg:px-8">
     <nav
       class={`flex items-center justify-between gap-4 ${guideEnterTop}`}
@@ -48,7 +46,6 @@
       <Button
         href="/"
         variant="outline"
-        class="pressable-ui"
         aria-label={`${t(locale, "Open")} ${siteMetadata.name}`}
       >
         <ArrowLeftIcon class="size-4" />
@@ -60,7 +57,7 @@
           variant="outline"
           class="hidden h-8 border-border/80 bg-background/80 px-3 py-0 text-sm text-muted-foreground sm:inline-flex"
         >
-          {t(locale, "Updated May 14, 2026")}
+          {t(locale, "Updated July 10, 2026")}
         </Badge>
         <LanguageSelect
           showSelectedName
@@ -90,16 +87,12 @@
           {t(locale, page.summary)}
         </p>
         <div class="mt-8 flex flex-wrap gap-3">
-          <Button href={page.primaryCta.href} class="pressable-ui">
+          <Button href={page.primaryCta.href}>
             <CrosshairIcon class="size-4" />
             <span class="pl-1">{t(locale, page.primaryCta.label)}</span>
           </Button>
           {#if page.secondaryCta}
-            <Button
-              href={page.secondaryCta.href}
-              variant="outline"
-              class="pressable-ui"
-            >
+            <Button href={page.secondaryCta.href} variant="outline">
               <BookOpenIcon class="size-4" />
               <span class="pl-1">{t(locale, page.secondaryCta.label)}</span>
             </Button>
@@ -110,11 +103,11 @@
       <div class="grid gap-4 md:translate-y-6">
         <Item.Root
           variant="outline"
-          class={`border-border/80 p-5 backdrop-blur ${supportItemSurface}`}
+          class={`border-border/80 p-5 ${supportItemSurface}`}
         >
           <Item.Media
             variant="icon"
-            class="size-10 rounded-lg border bg-muted text-accent"
+            class="size-10 rounded-lg border bg-muted text-brand-foreground"
           >
             <SlidersHorizontalIcon class="size-5" />
           </Item.Media>
@@ -137,7 +130,7 @@
         >
           <Item.Media
             variant="icon"
-            class="size-10 rounded-lg border bg-background text-accent"
+            class="size-10 rounded-lg border bg-background text-brand-foreground"
           >
             <ShieldCheckIcon class="size-5" />
           </Item.Media>
@@ -174,50 +167,57 @@
             {/if}
 
             {#if section.orderedList}
-              <div class="grid gap-3">
+              <ol class="grid gap-3">
                 {#each section.orderedList as item, itemIndex (item)}
-                  <Item.Root
-                    variant="outline"
-                    class={`items-center ${supportItemSurface}`}
-                  >
-                    <Item.Media
-                      variant="icon"
-                      class="size-9 rounded-lg border bg-muted text-accent"
-                      aria-hidden="true"
+                  <li>
+                    <Item.Root
+                      variant="outline"
+                      class={`items-center ${supportItemSurface}`}
                     >
-                      <span class="text-xs font-semibold">{itemIndex + 1}</span>
-                    </Item.Media>
-                    <Item.Content>
-                      <Item.Description class="line-clamp-none leading-6">
-                        {t(locale, item)}
-                      </Item.Description>
-                    </Item.Content>
-                  </Item.Root>
+                      <Item.Media
+                        variant="icon"
+                        class="size-9 rounded-lg border bg-muted text-brand-foreground"
+                        aria-hidden="true"
+                      >
+                        <span class="text-xs font-semibold"
+                          >{itemIndex + 1}</span
+                        >
+                      </Item.Media>
+                      <Item.Content>
+                        <Item.Description class="line-clamp-none leading-6">
+                          {t(locale, item)}
+                        </Item.Description>
+                      </Item.Content>
+                    </Item.Root>
+                  </li>
                 {/each}
-              </div>
+              </ol>
             {/if}
 
             {#if section.list}
-              <div class="grid gap-3">
+              <ul class="grid gap-3">
                 {#each section.list as item (item)}
-                  <Item.Root
-                    variant="outline"
-                    class={`items-center ${supportItemSurface}`}
-                  >
-                    <Item.Media
-                      variant="icon"
-                      class="size-9 rounded-lg border bg-muted text-accent"
+                  <li>
+                    <Item.Root
+                      variant="outline"
+                      class={`items-center ${supportItemSurface}`}
                     >
-                      <CheckIcon class="size-4" />
-                    </Item.Media>
-                    <Item.Content>
-                      <Item.Description class="line-clamp-none leading-6">
-                        {t(locale, item)}
-                      </Item.Description>
-                    </Item.Content>
-                  </Item.Root>
+                      <Item.Media
+                        variant="icon"
+                        class="size-9 rounded-lg border bg-muted text-brand-foreground"
+                        aria-hidden="true"
+                      >
+                        <CheckIcon class="size-4" />
+                      </Item.Media>
+                      <Item.Content>
+                        <Item.Description class="line-clamp-none leading-6">
+                          {t(locale, item)}
+                        </Item.Description>
+                      </Item.Content>
+                    </Item.Root>
+                  </li>
                 {/each}
-              </div>
+              </ul>
             {/if}
           </div>
         </section>
