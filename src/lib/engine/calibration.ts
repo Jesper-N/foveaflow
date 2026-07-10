@@ -14,19 +14,43 @@ export const DEFAULT_CALIBRATION: Calibration = {
   createdAt: 0,
 };
 
-export const cmToPx = (cm: number, calibration: Calibration) =>
+const cmToPx = (cm: number, calibration: Calibration) =>
   cm * calibration.cssPxPerCm;
 
-export const pxToCm = (px: number, calibration: Calibration) =>
+const pxToCm = (px: number, calibration: Calibration) =>
   px / calibration.cssPxPerCm;
 
-export const degreesToCm = (degrees: number, calibration: Calibration) => {
+const degreesToCm = (degrees: number, calibration: Calibration) => {
   const radians = (degrees * Math.PI) / 180;
   return 2 * calibration.viewingDistanceCm * Math.tan(radians / 2);
 };
 
-export const degreesToPx = (degrees: number, calibration: Calibration) => {
+const cmToDegrees = (cm: number, calibration: Calibration) => {
+  return (
+    (2 * Math.atan(cm / (2 * calibration.viewingDistanceCm)) * 180) / Math.PI
+  );
+};
+
+const degreesToPx = (degrees: number, calibration: Calibration) => {
   return cmToPx(degreesToCm(degrees, calibration), calibration);
+};
+
+export const pixelsPerSecondToSpeedValue = (
+  pixelsPerSecond: number,
+  unit: SpeedSetting["unit"],
+  arena: Arena,
+  calibration: Calibration,
+) => {
+  const value = Number.isFinite(pixelsPerSecond)
+    ? Math.max(0, pixelsPerSecond)
+    : 0;
+  if (unit === "deg/s") {
+    return cmToDegrees(pxToCm(value, calibration), calibration);
+  }
+  if (unit === "cm/s") return pxToCm(value, calibration);
+
+  const screenSpan = Math.max(1, Math.min(arena.width, arena.height));
+  return value / screenSpan;
 };
 
 export const speedToPixelsPerSecond = (
@@ -34,7 +58,8 @@ export const speedToPixelsPerSecond = (
   arena: Arena,
   calibration: Calibration,
 ) => {
-  if (setting.unit === "deg/s") return degreesToPx(setting.value, calibration);
-  if (setting.unit === "cm/s") return cmToPx(setting.value, calibration);
-  return setting.value * Math.min(arena.width, arena.height);
+  const value = Number.isFinite(setting.value) ? Math.max(0, setting.value) : 0;
+  if (setting.unit === "deg/s") return degreesToPx(value, calibration);
+  if (setting.unit === "cm/s") return cmToPx(value, calibration);
+  return value * Math.max(1, Math.min(arena.width, arena.height));
 };

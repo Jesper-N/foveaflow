@@ -1,11 +1,13 @@
 import type { TrainerSettings } from "$lib/engine/presets";
+import { integrateSpeedProfile, type SpeedProfile } from "$lib/engine/profiles";
 
-export type MotionTickState = {
+type MotionTickState = {
   timestamp: number;
   lastTimestamp: number;
   elapsedSec: number;
   travelPx: number;
-  speedPxPerSec: number;
+  baseSpeedPxPerSec: number;
+  speedProfile: SpeedProfile;
   canToggleDirection: boolean;
   motionDirection: TrainerSettings["motionDirection"];
 };
@@ -16,13 +18,13 @@ export type MotionTickResult = {
   travelPx: number;
 };
 
-export const getMotionDeltaSec = (timestamp: number, lastTimestamp: number) => {
-  const deltaMs =
-    lastTimestamp === 0 ? 16.7 : Math.min(80, timestamp - lastTimestamp);
+const getMotionDeltaSec = (timestamp: number, lastTimestamp: number) => {
+  if (lastTimestamp <= 0) return 0;
+  const deltaMs = Math.min(80, Math.max(0, timestamp - lastTimestamp));
   return deltaMs / 1000;
 };
 
-export const getMotionDirectionMultiplier = (
+const getMotionDirectionMultiplier = (
   canToggleDirection: boolean,
   motionDirection: TrainerSettings["motionDirection"],
 ) => {
@@ -35,7 +37,8 @@ export const advanceMotionTick = (
     lastTimestamp,
     elapsedSec,
     travelPx,
-    speedPxPerSec,
+    baseSpeedPxPerSec,
+    speedProfile,
     canToggleDirection,
     motionDirection,
   }: MotionTickState,
@@ -50,9 +53,16 @@ export const advanceMotionTick = (
     canToggleDirection,
     motionDirection,
   );
+  const nextElapsedSec = elapsedSec + deltaSec;
+  const distancePx = integrateSpeedProfile(
+    speedProfile,
+    elapsedSec,
+    nextElapsedSec,
+    baseSpeedPxPerSec,
+  );
 
   result.lastTimestamp = timestamp;
-  result.elapsedSec = elapsedSec + deltaSec;
-  result.travelPx = travelPx + speedPxPerSec * deltaSec * directionMultiplier;
+  result.elapsedSec = nextElapsedSec;
+  result.travelPx = travelPx + distancePx * directionMultiplier;
   return result;
 };

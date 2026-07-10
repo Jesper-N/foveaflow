@@ -59,7 +59,7 @@
     size={triggerSize}
     variant={triggerVariant}
     class={cn(
-      "pressable-ui shrink-0",
+      "shrink-0",
       showSelectedName && "min-w-36 justify-between",
       showSelectedName &&
         collapseNameOnSmall &&

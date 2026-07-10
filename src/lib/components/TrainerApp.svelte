@@ -1,40 +1,37 @@
 <script lang="ts">
-  import { onMount, tick as flushSvelte, untrack } from "svelte";
+  import { onMount, untrack } from "svelte";
   import type { Attachment } from "svelte/attachments";
   import { ModeWatcher, mode, setMode } from "mode-watcher";
 
   import TrainerControlsDialog from "$lib/components/trainer/TrainerControlsDialog.svelte";
   import TrainerGuidePopover from "$lib/components/trainer/TrainerGuidePopover.svelte";
   import TrainerHud from "$lib/components/trainer/TrainerHud.svelte";
-  import {
-    DEFAULT_CALIBRATION,
-    speedToPixelsPerSecond,
-  } from "$lib/engine/calibration";
-  import { resolveCanvasLayout } from "$lib/engine/canvas";
+  import { DEFAULT_CALIBRATION } from "$lib/engine/calibration";
   import {
     firstPreset,
     settingsFromPreset,
     type TrainerSettings,
   } from "$lib/engine/presets";
-  import { sampleSpeedProfile } from "$lib/engine/profiles";
-  import { createRng, createSessionSeed } from "$lib/engine/random";
   import { darkenHexColor, safeStimulusColor } from "$lib/engine/safety";
   import { homepageSeoContent } from "$lib/content/page-copy";
   import { siteMetadata } from "$lib/content/site";
   import { languageState } from "$lib/i18n/state.svelte";
   import { t } from "$lib/i18n/translate";
   import {
+    buildStructuredData,
+    buildTrainerRouteStructuredData,
+  } from "$lib/seo";
+  import {
     findTrainerRoute,
     getRouteSlugFromPath,
     getTrainerRoute,
-    indexableTrainerRoutes,
   } from "$lib/content/trainer-routes";
   import { getTrainingModeGuide } from "$lib/content/training";
   import {
     createDebouncedSettingsSaver,
     loadSettings,
   } from "$lib/engine/storage";
-  import type { Arena, PatternId, SpeedUnit } from "$lib/engine/types";
+  import type { PatternId, SpeedUnit } from "$lib/engine/types";
   import {
     canPatternToggleDirection,
     getAvailableControlSections,
@@ -57,15 +54,10 @@
     getHudPointerIntent,
     type HudBounds,
   } from "$lib/trainer/hud";
-  import { createTrainerFrameSampler } from "$lib/trainer/frame-sampler";
   import type {
     TrainerDialogActions,
     TrainerHudActions,
   } from "$lib/trainer/control-actions";
-  import {
-    advanceMotionTick,
-    type MotionTickResult,
-  } from "$lib/trainer/motion";
   import {
     getTrainerShortcutAction,
     isTrainerShortcutCapturedByTarget,
@@ -76,14 +68,11 @@
     createHudAutoHideTimer,
   } from "$lib/trainer/auto-hide";
   import {
-    desktopHeaderQuery,
-    focusHeaderSelectTriggerFromShortcut,
-    getHeaderSelectOpenState,
     runTrainerShortcutAction,
     shortcutPrioritySurfaceSelector,
-    type HeaderShortcutSelect,
   } from "$lib/trainer/shortcut-runner";
   import {
+    adjustSpeedBySteps,
     applyPresetToSettings,
     applyRouteToSettings,
     isHexColor,
@@ -96,7 +85,6 @@
     resolveSliderNumber,
     resolveSpeedSliderValue,
     resolveSpeedUnit,
-    resetUnsupportedMotionDirection,
     resetSettingsToPresetDefaults,
     resolveStoredSettings,
     trainerSettingBounds,
@@ -104,42 +92,12 @@
     type CalibrationField,
     type TrainerSliderValue,
   } from "$lib/trainer/settings";
-  import {
-    createGuideGridPath,
-    drawGuides,
-    drawLilacChaserFrame,
-    drawTargetFrame,
-    getCanvasTheme,
-    getLilacChaserHiddenIndex,
-    type CanvasColorMode,
-    type CanvasTheme,
-  } from "$lib/trainer/rendering";
+  import { createTrainerCanvasRuntime } from "$lib/trainer/canvas-runtime";
+  import type { CanvasColorMode } from "$lib/trainer/rendering";
   import { createHudControlTransition } from "$lib/trainer/transitions";
 
   let { routeSlug = "" }: { routeSlug?: string } = $props();
 
-  let canvas!: HTMLCanvasElement;
-  let context: CanvasRenderingContext2D | null = null;
-  let motionFrame = 0;
-  let lastTimestamp = 0;
-  let arena: Arena = { width: 1, height: 1 };
-  let elapsedSec = 0;
-  let travelPx = 0;
-  let currentSpeedPxPerSec = 0;
-  let baseSpeedPxPerSec = 0;
-  let seed = createSessionSeed();
-  let rng = createRng(seed);
-  const frameSampler = createTrainerFrameSampler();
-  let canvasTheme: CanvasTheme | null = null;
-  let gridPath: Path2D | null = null;
-  let canvasScale = 1;
-  let lastLilacChaserHiddenIndex = -1;
-  const motionTickResult: MotionTickResult = {
-    lastTimestamp,
-    elapsedSec,
-    travelPx,
-  };
-  const pathMarginPx = 16;
   const hudAutoHideDelayMs = 5000;
   const cursorHideDelayMs = 2000;
 
@@ -160,6 +118,7 @@
   let storageReady = $state(false);
   let hudAutoHideReady = $state(false);
   let hudVisible = $state(true);
+  let hudElementInteractionActive = $state(false);
   let cursorHidden = $state(false);
   let mobilePresetSelectOpen = $state(false);
   let mobilePatternSelectOpen = $state(false);
@@ -245,27 +204,46 @@
       : homepageGuideUseCases,
   );
   let isDarkMode = $derived(colorMode === "dark");
-
-  const refreshBaseSpeed = () => {
-    baseSpeedPxPerSec = speedToPixelsPerSecond(
-      settings.speed,
-      arena,
-      settings.calibration,
-    );
-  };
+  const canvasRuntime = createTrainerCanvasRuntime({
+    getState: () => ({
+      settings,
+      colorMode,
+      motionPaused,
+      canToggleDirection,
+      isLilacChaserMode,
+      safeBallColor,
+      distractorColor,
+    }),
+  });
+  const {
+    attachCanvas,
+    drawFrame,
+    getArena,
+    handleVisibilityChange,
+    invalidateLilacChaserFrame,
+    normalizeMotionDirection,
+    redrawForTheme,
+    refreshBaseSpeed,
+    resetMotion,
+    resetPatternState,
+    syncPlayback,
+  } = canvasRuntime;
+  const attachCanvasOnce: Attachment<HTMLCanvasElement> = (node) =>
+    untrack(() => attachCanvas(node));
 
   let behaviorValue = $derived(
     getBehaviorId(settings.speedProfile, settings.sizeProfile),
   );
   let hudInteractionOpen = $derived(
-    getHudInteractionOpen(
-      panelOpen,
-      guidePopoverOpen,
-      headerPresetSelectOpen,
-      headerPatternSelectOpen,
-      headerLilacChaserColorSelectOpen,
-      languageSelectOpen,
-    ),
+    hudElementInteractionActive ||
+      getHudInteractionOpen(
+        panelOpen,
+        guidePopoverOpen,
+        headerPresetSelectOpen,
+        headerPatternSelectOpen,
+        headerLilacChaserColorSelectOpen,
+        languageSelectOpen,
+      ),
   );
   let hudHidden = $derived(
     getHudHidden(hudAutoHideReady, hudVisible, hudInteractionOpen),
@@ -294,29 +272,14 @@
     settingsSaver.schedule($state.snapshot(settings));
   });
 
-  const attachCanvas: Attachment<HTMLCanvasElement> = (node) => {
-    canvas = node;
-    context = node.getContext("2d", { alpha: false, desynchronized: true });
-
-    const resizeObserver = new ResizeObserver(resizeCanvas);
-    resizeObserver.observe(node);
-
-    canvasTheme = getCanvasTheme(node, colorMode);
-    resizeCanvas();
-    if (shouldAnimateMotion()) startLoop();
-
-    return () => {
-      cancelAnimationFrame(motionFrame);
-      resizeObserver.disconnect();
-    };
-  };
-
   const syncSettingsFromBrowserRoute = (baseSettings = settings) => {
     const browserRouteSlug = getBrowserRouteSlug();
     currentRouteSlug = browserRouteSlug;
     settings = applyRouteToSettings(baseSettings, browserRouteSlug);
+    resetPatternState();
     resetDirectionForFixedPatterns(settings.patternId);
     refreshBaseSpeed();
+    syncDocumentRouteMetadata(window.location.pathname);
   };
 
   const handlePopState = () => {
@@ -494,90 +457,9 @@
     });
   };
 
-  const resizeCanvas = (entries?: ResizeObserverEntry[]) => {
-    if (!context) return;
-    const observedRect = entries?.[0]?.contentRect;
-    const rect = observedRect ?? canvas.getBoundingClientRect();
-    const layout = resolveCanvasLayout(
-      rect.width,
-      rect.height,
-      window.devicePixelRatio,
-    );
-    const nextArena = layout.arena;
-    const arenaChanged =
-      nextArena.width !== arena.width || nextArena.height !== arena.height;
-    arena = nextArena;
-    const backingStoreChanged =
-      canvas.width !== layout.canvasWidth ||
-      canvas.height !== layout.canvasHeight;
-    if (canvas.width !== layout.canvasWidth) canvas.width = layout.canvasWidth;
-    if (canvas.height !== layout.canvasHeight) {
-      canvas.height = layout.canvasHeight;
-    }
-    if (backingStoreChanged || canvasScale !== layout.scale) {
-      canvasScale = layout.scale;
-      context.setTransform(layout.scale, 0, 0, layout.scale, 0, 0);
-    }
-    if (arenaChanged) {
-      refreshBaseSpeed();
-      rebuildGridPath();
-      invalidateLilacChaserFrame();
-    }
-    drawFrame();
-  };
-
-  const rebuildGridPath = () => {
-    gridPath = createGuideGridPath(arena);
-  };
-
-  const shouldAnimateMotion = () => !motionPaused && !document.hidden;
-
-  const stopLoop = () => {
-    cancelAnimationFrame(motionFrame);
-    motionFrame = 0;
-    lastTimestamp = 0;
-  };
-
-  const startLoop = () => {
-    if (!shouldAnimateMotion()) return;
-    stopLoop();
-    motionFrame = requestAnimationFrame(tick);
-  };
-
-  const tick = (timestamp: number) => {
-    if (!shouldAnimateMotion()) {
-      stopLoop();
-      return;
-    }
-
-    currentSpeedPxPerSec = getSpeedPxPerSec(elapsedSec);
-    const nextMotion = advanceMotionTick(
-      {
-        timestamp,
-        lastTimestamp,
-        elapsedSec,
-        travelPx,
-        speedPxPerSec: currentSpeedPxPerSec,
-        canToggleDirection,
-        motionDirection: settings.motionDirection,
-      },
-      motionTickResult,
-    );
-    lastTimestamp = nextMotion.lastTimestamp;
-    elapsedSec = nextMotion.elapsedSec;
-    travelPx = nextMotion.travelPx;
-    if (shouldDrawTickFrame()) drawFrame();
-    motionFrame = requestAnimationFrame(tick);
-  };
-
   const setMotionPaused = (paused: boolean) => {
     motionPaused = paused;
-    if (paused) {
-      stopLoop();
-      drawFrame();
-      return;
-    }
-    startLoop();
+    syncPlayback();
   };
 
   const toggleMotionPaused = () => {
@@ -585,14 +467,10 @@
   };
 
   const resetDirectionForFixedPatterns = (patternId: PatternId) => {
-    const directionState = resetUnsupportedMotionDirection(
+    settings.motionDirection = normalizeMotionDirection(
       patternId,
       settings.motionDirection,
-      travelPx,
     );
-
-    settings.motionDirection = directionState.motionDirection;
-    travelPx = directionState.travelPx;
   };
 
   const toggleMotionDirection = () => {
@@ -601,93 +479,20 @@
     drawFrame();
   };
 
-  const getSpeedPxPerSec = (timeSec: number) => {
-    return sampleSpeedProfile(
-      settings.speedProfile,
-      timeSec,
-      baseSpeedPxPerSec,
-    );
-  };
-
-  const drawFrame = ({ clearTrail = false } = {}) => {
-    if (!context) return;
-    const ctx = context;
-    if (isLilacChaserMode) {
-      drawCurrentLilacChaserFrame(ctx);
-      return;
-    }
-
-    const theme = canvasTheme ?? getCanvasTheme(canvas, colorMode);
-    const showTrail =
-      settings.showTrail && canPatternToggleDirection(settings.patternId);
-    ctx.fillStyle = showTrail && !clearTrail ? theme.trail : theme.background;
-    ctx.fillRect(0, 0, arena.width, arena.height);
-    drawGuides(
-      ctx,
-      gridPath,
-      theme,
-      showTrail && !clearTrail ? theme.trailGrid : theme.grid,
-    );
-
-    const frameSample = frameSampler.sample({
-      settings,
-      arena,
-      elapsedSec,
-      travelPx,
-      currentSpeedPxPerSec,
-      baseSpeedPxPerSec,
-      safeBallColor,
-      distractorColor,
-      pathMarginPx,
-      rng,
-      seed,
-    });
-    for (let index = 0; index < frameSample.count; index += 1) {
-      drawTargetFrame(
-        ctx,
-        frameSample.frames[index],
-        index,
-        settings,
-        frameSample.letterContext,
-      );
-    }
-  };
-
   const adjustTargetSize = (deltaPx: number) => {
     setSizeSliderValue([settings.baseRadiusPx + deltaPx]);
   };
 
   const adjustSpeed = (delta: number) => {
-    setSpeedSliderValue([settings.speed.value + delta]);
-  };
-
-  const invalidateLilacChaserFrame = () => {
-    lastLilacChaserHiddenIndex = -1;
-  };
-
-  const shouldDrawTickFrame = () => {
-    if (!isLilacChaserMode) return true;
-    return getLilacChaserHiddenIndex(elapsedSec) !== lastLilacChaserHiddenIndex;
-  };
-
-  const drawCurrentLilacChaserFrame = (ctx: CanvasRenderingContext2D) => {
-    const hiddenIndex = getLilacChaserHiddenIndex(elapsedSec);
-    lastLilacChaserHiddenIndex = hiddenIndex;
-
-    drawLilacChaserFrame(
-      ctx,
-      arena,
-      settings.lilacChaserScale,
-      settings.lilacChaserBallColor,
-      hiddenIndex,
-    );
+    settings.speed = adjustSpeedBySteps(settings.speed, delta);
+    refreshBaseSpeed();
   };
 
   const applyPreset = (presetId: string) => {
     settings = applyPresetToSettings(settings, presetId);
+    resetPatternState();
     resetDirectionForFixedPatterns(settings.patternId);
     refreshBaseSpeed();
-    invalidateLilacChaserFrame();
     drawFrame({ clearTrail: true });
   };
 
@@ -695,11 +500,61 @@
     return getRouteSlugFromPath(window.location.pathname);
   };
 
+  const syncDocumentRouteMetadata = (path: string) => {
+    const route = findTrainerRoute(getRouteSlugFromPath(path));
+    const title = route?.title ?? siteMetadata.title;
+    const description = route?.description ?? siteMetadata.description;
+    const siteOrigin = new URL(window.location.origin);
+    const canonicalUrl = new URL(route?.path ?? "/", siteOrigin).toString();
+    const robots =
+      route?.indexable === false
+        ? "noindex,follow"
+        : "index,follow,max-image-preview:large";
+    const setMetaContent = (selector: string, content: string) => {
+      document.head
+        .querySelector<HTMLMetaElement>(selector)
+        ?.setAttribute("content", content);
+    };
+
+    document.title = title;
+    document.head
+      .querySelector<HTMLLinkElement>('link[rel="canonical"]')
+      ?.setAttribute("href", canonicalUrl);
+    setMetaContent('meta[name="description"]', description);
+    setMetaContent('meta[name="robots"]', robots);
+    setMetaContent('meta[property="og:title"]', title);
+    setMetaContent('meta[property="og:description"]', description);
+    setMetaContent('meta[property="og:url"]', canonicalUrl);
+    setMetaContent('meta[name="twitter:title"]', title);
+    setMetaContent('meta[name="twitter:description"]', description);
+
+    const structuredData = route
+      ? route.indexable
+        ? buildTrainerRouteStructuredData(route, siteOrigin)
+        : undefined
+      : buildStructuredData(siteOrigin);
+    let structuredDataElement = document.head.querySelector<HTMLScriptElement>(
+      "script[data-seo-structured-data]",
+    );
+    if (!structuredData) {
+      structuredDataElement?.remove();
+      return;
+    }
+    if (!structuredDataElement) {
+      structuredDataElement = document.createElement("script");
+      structuredDataElement.type = "application/ld+json";
+      structuredDataElement.dataset.seoStructuredData = "";
+      document.head.append(structuredDataElement);
+    }
+    structuredDataElement.textContent = JSON.stringify(structuredData);
+  };
+
   const setBrowserPath = (path: string) => {
     currentRouteSlug = getRouteSlugFromPath(path);
     if (window.location.pathname !== path) {
       window.history.pushState({}, "", path);
     }
+    syncDocumentRouteMetadata(path);
   };
 
   const syncBrowserPath = () => {
@@ -709,15 +564,7 @@
 
   const resetSettings = () => {
     settings = resetSettingsToPresetDefaults(settings);
-    seed = createSessionSeed();
-    rng = createRng(seed);
-    frameSampler.reset();
-    elapsedSec = 0;
-    travelPx = 0;
-    currentSpeedPxPerSec = 0;
-    refreshBaseSpeed();
-    invalidateLilacChaserFrame();
-    drawFrame({ clearTrail: true });
+    resetMotion();
     syncBrowserPath();
   };
 
@@ -736,6 +583,24 @@
 
   const revealHud = () => {
     hudVisible = true;
+  };
+
+  const setHudInteractionActive = (active: boolean) => {
+    if (hudElementInteractionActive === active) return;
+    hudElementInteractionActive = active;
+
+    if (active) {
+      hudAutoHideTimer.clear();
+      revealHud();
+      return;
+    }
+
+    if (hudAutoHideReady) {
+      hudVisible = false;
+      return;
+    }
+
+    hudAutoHideTimer.start();
   };
 
   const hideHud = () => {
@@ -781,12 +646,18 @@
 
   const setPattern = (patternId: PatternId) => {
     settings.patternId = patternId;
+    resetPatternState();
     resetDirectionForFixedPatterns(patternId);
     drawFrame({ clearTrail: true });
   };
 
   const setSpeedUnit = (unit: SpeedUnit) => {
-    settings.speed = resolveSpeedUnit(settings.speed, unit);
+    settings.speed = resolveSpeedUnit(
+      settings.speed,
+      unit,
+      getArena(),
+      settings.calibration,
+    );
     refreshBaseSpeed();
   };
 
@@ -832,42 +703,6 @@
     panelOpen = true;
   };
 
-  const openHeaderSelectFromShortcut = (select: HeaderShortcutSelect) => {
-    const useDesktopSelect = window.matchMedia(desktopHeaderQuery).matches;
-    const openState = getHeaderSelectOpenState(select, useDesktopSelect);
-    revealHud();
-
-    mobilePresetSelectOpen = openState.mobilePresetSelectOpen;
-    desktopPresetSelectOpen = openState.desktopPresetSelectOpen;
-    mobilePatternSelectOpen = openState.mobilePatternSelectOpen;
-    desktopPatternSelectOpen = openState.desktopPatternSelectOpen;
-    mobileLilacChaserColorSelectOpen =
-      openState.mobileLilacChaserColorSelectOpen;
-    desktopLilacChaserColorSelectOpen =
-      openState.desktopLilacChaserColorSelectOpen;
-
-    void focusHeaderSelectTriggerFromShortcut({
-      select,
-      useDesktopSelect,
-      flushSvelte,
-    });
-  };
-
-  const openGuideDialog = () => {
-    const guidePopover = document.getElementById("trainer-guide-popover");
-    if (!(guidePopover instanceof HTMLElement)) return false;
-
-    revealHud();
-    if (guidePopover.matches(":popover-open")) return true;
-
-    if (typeof guidePopover.showPopover === "function") {
-      guidePopover.showPopover();
-      return true;
-    }
-
-    return false;
-  };
-
   const hasPriorityKeyboardSurface = () => {
     return (
       panelOpen ||
@@ -886,11 +721,6 @@
       toggleMotionPaused,
       adjustTargetSize,
       adjustSpeed,
-      toggleTheme: () => setMode(isDarkMode ? "light" : "dark"),
-      canOpenPatternSelect: () => settings.presetId === "pursuit",
-      openHeaderSelect: openHeaderSelectFromShortcut,
-      openControlsPanel,
-      openGuideDialog,
     });
   };
 
@@ -943,22 +773,6 @@
     refreshBaseSpeed();
   };
 
-  const handleVisibilityChange = () => {
-    if (document.hidden) {
-      stopLoop();
-      return;
-    }
-    startLoop();
-  };
-
-  const redrawCanvasForTheme = (nextColorMode: CanvasColorMode) => {
-    if (!canvas) return;
-    requestAnimationFrame(() => {
-      canvasTheme = getCanvasTheme(canvas, nextColorMode);
-      drawFrame();
-    });
-  };
-
   const hudActions: TrainerHudActions = {
     handlePresetChange,
     handleHeaderPresetOpenChange,
@@ -983,6 +797,7 @@
     toggleMotionPaused,
     toggleMotionDirection,
     revealHud,
+    setHudInteractionActive,
     openControlsPanel,
   };
 
@@ -1037,7 +852,15 @@
   };
 
   $effect(() => {
-    redrawCanvasForTheme(colorMode);
+    const pausedFrameSettings = $state.snapshot(settings);
+    if (!untrack(() => motionPaused)) return;
+
+    void pausedFrameSettings;
+    untrack(() => drawFrame({ clearTrail: true }));
+  });
+
+  $effect(() => {
+    redrawForTheme(colorMode);
   });
 </script>
 
@@ -1055,9 +878,7 @@
   data-cursor-hidden={cursorHidden}
   aria-label={t(locale, "FoveaFlow eye trainer app")}
 >
-  {#if activeRoute}
-    <h1 class="sr-only">{pageSeoContent.heading}</h1>
-  {/if}
+  <h1 class="sr-only">{t(locale, pageSeoContent.heading)}</h1>
   <p id="trainer-canvas-description" class="sr-only">
     {t(
       locale,
@@ -1072,7 +893,7 @@
   </p>
 
   <canvas
-    {@attach attachCanvas}
+    {@attach attachCanvasOnce}
     class="absolute inset-0 h-full w-full touch-none bg-background"
     aria-label={t(
       locale,
@@ -1081,21 +902,12 @@
     aria-describedby="trainer-canvas-description trainer-motion-status"
   ></canvas>
 
-  <nav class="sr-only" aria-label={t(locale, "Practice pages")}>
-    <a href="/">{t(locale, `${siteMetadata.name} home`)}</a>
-    <a href="/guide/">{t(locale, `${siteMetadata.name} guide`)}</a>
-    {#each indexableTrainerRoutes as route (route.slug)}
-      <a href={route.path}>{t(locale, route.label)}</a>
-    {/each}
-  </nav>
-
   {#if localeReady}
     <TrainerHud
       {attachHudShell}
       {hudHidden}
       {hudContentWidth}
       {attachHudContentSizer}
-      hasActiveRoute={Boolean(activeRoute)}
       {settings}
       {isLilacChaserMode}
       {motionPaused}

@@ -7,7 +7,6 @@ import {
   localeAliases,
   localeCookieMaxAge,
   localeCookieName,
-  localeLocalStorageKey,
   localePrefixAliases,
 } from "../i18n/locales";
 import { absoluteUrl, getSiteOrigin } from "../seo";
@@ -18,12 +17,13 @@ type OpenGraphType = "website" | "article";
 interface Props {
   title: string;
   description: string;
-  canonicalPath: `/${string}`;
+  canonicalPath?: `/${string}`;
   structuredData?: unknown;
   ogType?: OpenGraphType;
   ogDescription?: string;
   twitterDescription?: string;
   robots?: string;
+  initializeI18n?: boolean;
 }
 
 const {
@@ -35,13 +35,16 @@ const {
   ogDescription = description,
   twitterDescription = ogDescription,
   robots = "index,follow,max-image-preview:large",
+  initializeI18n = true,
 } = Astro.props;
 
 const initialModeExpression = createInitialModeExpression({
   defaultMode: "system",
 });
 const siteOrigin = getSiteOrigin(Astro.site);
-const canonicalUrl = absoluteUrl(canonicalPath, siteOrigin);
+const canonicalUrl = canonicalPath
+  ? absoluteUrl(canonicalPath, siteOrigin)
+  : undefined;
 const ogImageUrl = absoluteUrl(siteMetadata.imagePath, siteOrigin);
 const structuredDataJson =
   structuredData === undefined ? "" : JSON.stringify(structuredData);
@@ -52,7 +55,7 @@ const i18nBootConfig = {
   localeAliases,
   localePrefixAliases,
   locales: languageOptions.map((option) => option.locale),
-  localStorageKey: localeLocalStorageKey,
+  localStorageKey: localeCookieName,
 };
 const i18nBootScript = `
 (() => {
@@ -83,7 +86,13 @@ const i18nBootScript = `
       .map((value) => value.trim())
       .find((value) => value.startsWith(cookiePrefix));
 
-    return cookie ? decodeURIComponent(cookie.slice(cookiePrefix.length)) : null;
+    if (!cookie) return null;
+
+    try {
+      return decodeURIComponent(cookie.slice(cookiePrefix.length));
+    } catch {
+      return null;
+    }
   };
   const readNavigatorLocale = () => {
     const languages = Array.isArray(navigator.languages) ? navigator.languages : [];
@@ -93,9 +102,9 @@ const i18nBootScript = `
     }
     return null;
   };
-  const storedLocale = resolveSupportedLocale(readLocalStorageLocale());
   const cookieLocale = resolveSupportedLocale(readCookieLocale());
-  const resolvedLocale = storedLocale || cookieLocale || readNavigatorLocale() || config.defaultLocale;
+  const storedLocale = resolveSupportedLocale(readLocalStorageLocale());
+  const resolvedLocale = cookieLocale || storedLocale || readNavigatorLocale() || config.defaultLocale;
 
   document.documentElement.lang = resolvedLocale;
   document.documentElement.dir = "ltr";
@@ -109,7 +118,8 @@ const i18nBootScript = `
 
   if (storedLocale || resolvedLocale !== config.defaultLocale) {
     try {
-      document.cookie = config.cookieName + "=" + encodeURIComponent(resolvedLocale) + "; path=/; max-age=" + config.cookieMaxAge;
+      const secure = window.location.protocol === "https:" ? "; Secure" : "";
+      document.cookie = config.cookieName + "=" + encodeURIComponent(resolvedLocale) + "; Path=/; Max-Age=" + config.cookieMaxAge + "; SameSite=Lax" + secure;
     } catch {
       // Ignore blocked cookie writes.
     }
@@ -120,62 +130,41 @@ const i18nBootScript = `
 
 <meta charset="utf-8" />
 <script is:inline set:html={initialModeExpression} />
-<script is:inline set:html={i18nBootScript} />
+{initializeI18n && <script is:inline set:html={i18nBootScript} />}
 <style is:inline>
   html[data-i18n-pending="true"] body > * {
     visibility: hidden;
   }
 </style>
 <ThemeFavicon />
-<link rel="canonical" href={canonicalUrl} />
-<link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt" />
-<link
-  rel="alternate"
-  type="application/xml"
-  href="/sitemap.xml"
-  title="Sitemap"
-/>
-<meta name="viewport" content="width=device-width" />
+{canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="generator" content={Astro.generator} />
 <meta name="description" content={description} />
 <meta name="robots" content={robots} />
-<meta name="date" content={siteMetadata.lastUpdated} />
-<meta name="last-modified" content={siteMetadata.lastUpdated} />
-<meta name="DC.date.modified" content={siteMetadata.lastUpdated} />
 <meta name="application-name" content={siteMetadata.name} />
 <meta name="apple-mobile-web-app-title" content={siteMetadata.name} />
-<meta name="theme-color" content="#95E217" />
+<meta name="theme-color" content="#94E516" />
 <meta property="og:type" content={ogType} />
 <meta property="og:site_name" content={siteMetadata.name} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={ogDescription} />
-<meta property="og:url" content={canonicalUrl} />
+{canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
 <meta property="og:image" content={ogImageUrl} />
-<meta property="og:updated_time" content={siteMetadata.lastUpdated} />
-<meta
-  property="og:image:alt"
-  content="FoveaFlow canvas with a moving practice target"
-/>
+<meta property="og:image:alt" content="FoveaFlow wordmark" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-{
-  ogType === "article" && (
-    <meta property="article:modified_time" content={siteMetadata.lastUpdated} />
-  )
-}
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={twitterDescription} />
 <meta name="twitter:image" content={ogImageUrl} />
-<meta
-  name="twitter:image:alt"
-  content="FoveaFlow canvas with a moving practice target"
-/>
+<meta name="twitter:image:alt" content="FoveaFlow wordmark" />
 {
   structuredDataJson && (
     <script
       is:inline
       type="application/ld+json"
+      data-seo-structured-data
       set:html={structuredDataJson}
     />
   )

@@ -5,6 +5,3 @@ test-results/
 .wrangler/
 output/
 src/lib/components/ui/**
-project.inlang/**
-!project.inlang/settings.json
-src/paraglide/**

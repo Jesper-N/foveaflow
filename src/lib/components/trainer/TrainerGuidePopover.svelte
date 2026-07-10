@@ -6,7 +6,7 @@
   import ShieldCheckIcon from "@lucide/svelte/icons/shield-check";
   import XIcon from "@lucide/svelte/icons/x";
 
-  import { Button, buttonVariants } from "$lib/components/ui/button/index.js";
+  import { Button } from "$lib/components/ui/button/index.js";
   import { legalPageLinks } from "$lib/content/legal";
   import type { PageSeoContent } from "$lib/content/page-copy";
   import { homepageSeoContent } from "$lib/content/page-copy";
@@ -38,10 +38,19 @@
 
   let quickFaqItems = $derived(guideSeoContent.faq.slice(0, 3));
   let locale = $derived(languageState.locale);
+  let closeButtonElement: HTMLButtonElement | null = null;
+
+  const handlePopoverToggle = (event: ToggleEvent) => {
+    onGuidePopoverToggle(event);
+    if (event.newState !== "open") return;
+
+    requestAnimationFrame(() => closeButtonElement?.focus());
+  };
 </script>
 
 {#snippet closeButton()}
   <Button
+    bind:ref={closeButtonElement}
     variant="ghost"
     class="absolute top-4 right-4 bg-secondary"
     size="icon-sm"
@@ -92,7 +101,7 @@
   <div class="guide-enter guide-enter-top flex items-start gap-4">
     <div class="grid min-w-0 gap-2 pr-12">
       <p
-        class="text-[0.7rem] leading-4 font-semibold tracking-wide text-accent uppercase"
+        class="text-[0.7rem] leading-4 font-semibold tracking-wide text-brand-foreground uppercase"
       >
         {t(locale, homepageSeoContent.kicker)}
       </p>
@@ -119,7 +128,7 @@
       </h3>
 
       <div
-        class="mt-6 grid gap-4 text-sm leading-6 text-muted-foreground text-pretty sm:text-[0.95rem] sm:leading-7"
+        class="grid gap-4 text-sm leading-6 text-muted-foreground text-pretty sm:text-[0.95rem] sm:leading-7"
       >
         {#each homepageSeoContent.body as paragraph (paragraph)}
           <p class="max-w-[58ch]">{t(locale, paragraph)}</p>
@@ -141,7 +150,7 @@
         {#each trainingModeNotes as trainingModeNote (trainingModeNote.title)}
           <li class="grid grid-cols-[2.25rem_1fr] gap-4">
             <span
-              class="flex size-8 items-center justify-center rounded-full bg-accent/12 text-accent shadow-[inset_0_0_0_1px_rgba(118,217,0,0.14)]"
+              class="flex size-8 items-center justify-center rounded-full bg-accent/12 text-brand-foreground shadow-[inset_0_0_0_1px_rgba(118,217,0,0.14)]"
               aria-hidden="true"
             >
               <TargetIcon class="size-4" />
@@ -180,13 +189,14 @@
         {/each}
       </div>
 
-      <a
+      <Button
         href="/guide/"
-        class={`${buttonVariants({ variant: "default", size: "lg" })} pressable-ui guide-enter guide-enter-delay-4 mt-6 w-full`}
+        size="lg"
+        class="guide-enter guide-enter-delay-4 mt-6 w-full"
       >
-        <BookOpenIcon class="size-4" />
+        <BookOpenIcon data-icon="inline-start" />
         <span>{t(locale, "Read the full guide")}</span>
-      </a>
+      </Button>
     </aside>
   </div>
 {/snippet}
@@ -194,7 +204,7 @@
 {#snippet routeContent()}
   <div class="guide-enter guide-enter-top grid min-w-0 gap-2 pr-12">
     <p
-      class="text-[0.7rem] leading-4 font-semibold tracking-wide text-accent uppercase"
+      class="text-[0.7rem] leading-4 font-semibold tracking-wide text-brand-foreground uppercase"
     >
       {t(locale, guideSeoContent.kicker)}
     </p>
@@ -225,7 +235,7 @@
       </h3>
 
       <div
-        class="mt-6 grid gap-4 text-sm leading-6 text-muted-foreground text-pretty sm:text-[0.95rem] sm:leading-7"
+        class="grid gap-4 text-sm leading-6 text-muted-foreground text-pretty sm:text-[0.95rem] sm:leading-7"
       >
         {#each guideSeoContent.body as paragraph (paragraph)}
           <p class="max-w-[58ch]">
@@ -234,7 +244,7 @@
         {/each}
       </div>
 
-      <Button href="/guide/" size="xl" class="pressable-ui w-full">
+      <Button href="/guide/" size="xl" class="w-full">
         <BookOpenIcon class="size-5" />
         <span class="pl-1">{t(locale, "Read full guide")}</span>
       </Button>
@@ -256,7 +266,7 @@
         {#each activeTrainingModeGuide.steps as step, index (step)}
           <li class="grid grid-cols-[2.25rem_1fr] gap-4">
             <span
-              class="flex size-8 items-center justify-center rounded-full bg-accent/12 text-xs font-semibold tabular-nums text-accent shadow-[inset_0_0_0_1px_rgba(118,217,0,0.14)]"
+              class="flex size-8 items-center justify-center rounded-full bg-accent/12 text-xs font-semibold tabular-nums text-brand-foreground shadow-[inset_0_0_0_1px_rgba(118,217,0,0.14)]"
               aria-hidden="true"
             >
               {index + 1}
@@ -295,7 +305,7 @@
           <div class="py-4 first:pt-0 last:pb-0">
             <button
               type="button"
-              class="flex min-h-10 w-full cursor-pointer items-center justify-between gap-3 text-left text-sm font-semibold text-foreground outline-hidden transition-colors duration-150 ease-out hover:text-foreground/90 focus-visible:ring-3 focus-visible:ring-ring/30"
+              class="flex min-h-10 w-full cursor-pointer items-center justify-between gap-3 text-left text-sm font-semibold text-foreground outline-hidden transition-colors duration-150 ease-out hover:text-foreground/90 focus-visible:ring-3 focus-visible:ring-foreground"
               aria-expanded={faqOpen}
               aria-controls={`trainer-guide-faq-answer-${index}`}
               onclick={() => toggleGuideFaq(faqItem.question)}
@@ -313,6 +323,8 @@
             </button>
             <div
               id={`trainer-guide-faq-answer-${index}`}
+              aria-hidden={!faqOpen}
+              inert={!faqOpen}
               class={[
                 "grid overflow-hidden transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none",
                 faqOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
@@ -346,19 +358,20 @@
         {/each}
       </div>
 
-      <p class="mt-6 text-xs leading-5 text-muted-foreground/85">
+      <p class="mt-6 text-xs leading-5 text-muted-foreground">
         {t(locale, guideSeoContent.trustNote)}
       </p>
     </aside>
   </div>
 {/snippet}
 
-<section
+<div
   id="trainer-guide-popover"
   popover="auto"
+  role="dialog"
   class="native-dialog-popover t-resize native-guide-popover relative rounded-4xl bg-popover p-6 text-sm text-popover-foreground shadow-xl ring-1 ring-foreground/5 outline-hidden animation-duration-[100ms] dark:ring-foreground/10 sm:p-8"
   aria-labelledby="trainer-guide-popover-title"
-  ontoggle={onGuidePopoverToggle}
+  ontoggle={handlePopoverToggle}
 >
   {#if hasActiveRoute}
     {@render routeContent()}
@@ -367,4 +380,4 @@
   {/if}
 
   {@render footer()}
-</section>
+</div>

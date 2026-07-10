@@ -5,7 +5,6 @@ import {
   getLetterForBucket,
   getReactionLetterBucket,
 } from "$lib/engine/letters";
-import { getTeleportJumpDistancePx } from "$lib/engine/patterns";
 
 import { letterScaleByShape } from "./options";
 
@@ -41,13 +40,13 @@ export type CanvasColorMode = "light" | "dark";
 type GuidePath = Pick<Path2D, "lineTo" | "moveTo">;
 
 type LetterContext = {
-  arena: Arena;
   elapsedSec: number;
   travelPx: number;
   seed: number;
+  reactionJumpDistancePx: number;
 };
 
-export const withOklchAlpha = (color: string, alpha: number) => {
+const withOklchAlpha = (color: string, alpha: number) => {
   const alphaValue = Math.min(1, Math.max(0, alpha));
   return color.startsWith("oklch(")
     ? color.replace(/\s*(?:\/[^)]*)?\)$/, ` / ${alphaValue})`)
@@ -113,6 +112,14 @@ export function createGuideGridPath<TPath extends GuidePath>(
   return gridPath;
 }
 
+export const getLilacChaserOuterRadiusPx = (arena: Arena, scale: number) => {
+  return (
+    Math.min(arena.width, arena.height) *
+    (LILAC_CHASER_ORBIT_RATIO + LILAC_CHASER_DOT_RATIO) *
+    scale
+  );
+};
+
 export const drawLilacChaserFrame = (
   ctx: CanvasRenderingContext2D,
   arena: Arena,
@@ -123,8 +130,8 @@ export const drawLilacChaserFrame = (
   const centerX = arena.width / 2;
   const centerY = arena.height / 2;
   const minSide = Math.min(arena.width, arena.height);
-  const orbitRadius = minSide * LILAC_CHASER_ORBIT_RATIO * scale;
   const dotRadius = minSide * LILAC_CHASER_DOT_RATIO * scale;
+  const orbitRadius = getLilacChaserOuterRadiusPx(arena, scale) - dotRadius;
   const crossRadius = minSide * LILAC_CHASER_CROSS_ARM_RATIO * scale;
 
   ctx.fillStyle = LILAC_CHASER_THEME.background;
@@ -158,13 +165,13 @@ export const getLilacChaserHiddenIndex = (elapsedSec: number) => {
   );
 };
 
-export const getLetterFontSize = (
+const getLetterFontSize = (
   radiusPx: number,
   shape: TargetShape,
   letterScale: number,
 ) => Math.max(6, radiusPx * letterScaleByShape[shape] * letterScale);
 
-export const drawLetterGlyph = (
+const drawLetterGlyph = (
   ctx: CanvasRenderingContext2D,
   letter: string,
   frame: TargetFrame,
@@ -188,17 +195,13 @@ export const drawLetterGlyph = (
   ctx.restore();
 };
 
-export const getFrameLetter = (
+const getFrameLetter = (
   settings: Pick<TrainerSettings, "presetId">,
-  frame: TargetFrame,
   index: number,
-  { arena, elapsedSec, travelPx, seed }: LetterContext,
+  { elapsedSec, travelPx, seed, reactionJumpDistancePx }: LetterContext,
 ) => {
   if (settings.presetId === "reactionTime") {
-    const bucket = getReactionLetterBucket(
-      travelPx,
-      getTeleportJumpDistancePx(arena, frame.radiusPx),
-    );
+    const bucket = getReactionLetterBucket(travelPx, reactionJumpDistancePx);
     return getLetterForBucket(seed, index, bucket);
   }
 
@@ -234,7 +237,7 @@ export const drawTargetFrame = (
   );
   drawLetterGlyph(
     ctx,
-    getFrameLetter(settings, frame, index, letterContext),
+    getFrameLetter(settings, index, letterContext),
     frame,
     settings,
   );

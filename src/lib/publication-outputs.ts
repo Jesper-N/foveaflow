@@ -1,34 +1,21 @@
 import { legalPageLinks } from "./content/legal";
-import { aiCrawlerAccess, siteMetadata } from "./content/site";
+import { siteMetadata } from "./content/site";
 import { supportPages } from "./content/support-pages";
 import {
-  audienceNotes,
   referenceLinks,
   safetyNote,
-  trainingModeGuides,
   trainingModeNotes,
 } from "./content/training";
-import {
-  indexableTrainerRoutes,
-  trainerRoutes,
-} from "./content/trainer-routes";
+import { indexableTrainerRoutes } from "./content/trainer-routes";
 import { absoluteUrl } from "./seo";
 
-const sitemapEntries = [
-  { path: "/", changefreq: "weekly", priority: "1.0" },
-  { path: "/guide/", changefreq: "monthly", priority: "0.8" },
-  ...supportPages.map((page) => ({
-    path: page.path,
-    changefreq: "monthly",
-    priority: "0.65",
-  })),
-  { path: legalPageLinks.privacy.path, changefreq: "yearly", priority: "0.3" },
-  { path: legalPageLinks.terms.path, changefreq: "yearly", priority: "0.3" },
-  ...indexableTrainerRoutes.map((route) => ({
-    path: route.path,
-    changefreq: "monthly",
-    priority: "0.7",
-  })),
+const sitemapPaths = [
+  "/",
+  "/guide/",
+  ...supportPages.map((page) => page.path),
+  legalPageLinks.privacy.path,
+  legalPageLinks.terms.path,
+  ...indexableTrainerRoutes.map((route) => route.path),
 ] as const;
 
 const escapeXml = (value: string) =>
@@ -40,14 +27,11 @@ const escapeXml = (value: string) =>
     .replaceAll("'", "&apos;");
 
 export const buildSitemapXml = (site: URL) => {
-  const urls = sitemapEntries
-    .map((entry) => {
+  const urls = sitemapPaths
+    .map((path) => {
       return [
         "  <url>",
-        `    <loc>${escapeXml(absoluteUrl(entry.path, site))}</loc>`,
-        `    <lastmod>${siteMetadata.lastUpdated}</lastmod>`,
-        `    <changefreq>${entry.changefreq}</changefreq>`,
-        `    <priority>${entry.priority}</priority>`,
+        `    <loc>${escapeXml(absoluteUrl(path, site))}</loc>`,
         "  </url>",
       ].join("\n");
     })
@@ -69,13 +53,6 @@ export const buildRobotsText = (site: URL) => {
     "Allow: /",
     "Content-Signal: ai-train=yes, search=yes, ai-input=yes",
     "",
-    ...aiCrawlerAccess.flatMap((crawler) => [
-      `# ${crawler.purpose}`,
-      `User-agent: ${crawler.userAgent}`,
-      "Allow: /",
-      "Content-Signal: ai-train=yes, search=yes, ai-input=yes",
-      "",
-    ]),
     `Sitemap: ${absoluteUrl("/sitemap.xml", site)}`,
     "",
   ].join("\n");
@@ -85,110 +62,48 @@ export const buildLlmsText = (site: URL) => {
   return [
     "# FoveaFlow",
     "",
-    siteMetadata.shortDescription,
+    `> ${siteMetadata.shortDescription}`,
     "",
-    "FoveaFlow is a free online eye trainer for smooth pursuit, quick refocus, distractor tracking, peripheral awareness, and FPS warmups. It helps gamers, IT professionals, developers, sysadmins, support teams, and people on screens all day warm up with browser-based visual drills. Settings are stored locally in the browser, and no account or install is needed. It is self-guided practice, not diagnosis, prescription, or clinical care.",
-    "",
-    "## Quick summary",
-    siteMetadata.entityDescription,
+    "Key facts:",
     "",
     "- Price: free",
     "- Account required: no",
     "- Install required: no",
-    "- Includes: free online eye trainer, visual tracking drills, refocus drills, peripheral awareness drill, and distractor tracking drill",
-    "- Best-fit users: gamers, developers, sysadmins, support engineers, other IT professionals, and people who spend long days on screens",
-    "- Safety status: practice software only, not medical advice, diagnosis, treatment, vision therapy, or a medical device",
-    "- Last updated: " + siteMetadata.lastUpdated,
+    "- Settings storage: local browser storage on the current device",
+    "- Safety status: practice software, not medical advice, diagnosis, treatment, vision therapy, or a medical device",
     "",
-    "## Main page",
-    `- App: ${absoluteUrl("/", site)}`,
-    `- Guide: ${absoluteUrl("/guide/", site)}`,
-    ...supportPages.map(
-      (page) => `- ${page.heading}: ${absoluteUrl(page.path, site)}`,
-    ),
-    `- Pricing: ${absoluteUrl("/pricing.md", site)}`,
-    `- Privacy: ${absoluteUrl(legalPageLinks.privacy.path, site)}`,
-    `- Terms: ${absoluteUrl(legalPageLinks.terms.path, site)}`,
-    `- Source code: ${siteMetadata.repositoryUrl}`,
+    "Training modes:",
     "",
-    "## AI crawler access",
-    "Public pages are crawlable. robots.txt explicitly allows these user-agent tokens:",
-    ...aiCrawlerAccess.map(
-      (crawler) => `- ${crawler.userAgent}: ${crawler.purpose}`,
-    ),
+    ...trainingModeNotes.map((mode) => `- ${mode.title}: ${mode.body}`),
     "",
-    "## Direct app routes",
-    ...indexableTrainerRoutes.map(
-      (route) => `- ${route.label}: ${absoluteUrl(route.path, site)}`,
-    ),
+    "Controls: Speed, target size, shape, color, opacity, trail, motion path, behavior, distractor count, viewing distance, screen scale, and Lilac Chaser color and scale.",
     "",
-    "## Supporting pages",
+    `Safety: ${safetyNote}`,
+    "",
+    "## Main resources",
+    "",
+    `- [App](${absoluteUrl("/", site)}): Open the FoveaFlow trainer.`,
+    `- [Guide](${absoluteUrl("/guide/", site)}): Read the complete usage and safety guide.`,
     ...supportPages.map(
       (page) =>
-        `- ${page.heading}: ${page.description} ${absoluteUrl(page.path, site)}`,
+        `- [${page.heading}](${absoluteUrl(page.path, site)}): ${page.description}`,
     ),
+    `- [Pricing](${absoluteUrl("/pricing.md", site)}): Pricing and plan details.`,
+    `- [Privacy](${absoluteUrl(legalPageLinks.privacy.path, site)}): Privacy policy.`,
+    `- [Terms](${absoluteUrl(legalPageLinks.terms.path, site)}): Terms of use.`,
+    `- [Source code](${siteMetadata.repositoryUrl}): Project repository.`,
     "",
-    "## Smooth Pursuit pattern pages",
-    ...trainerRoutes
-      .filter((route) => route.mode === "pursuit" && route.patternId)
-      .map(
-        (route) =>
-          `- ${route.label}: ${absoluteUrl(route.path, site)} - ${route.seoContent.body[0]}`,
-      ),
+    "## Direct drill routes",
     "",
-    "## What the tool includes",
-    ...trainingModeNotes.map(
-      (trainingModeNote) =>
-        `- ${trainingModeNote.title}: ${trainingModeNote.body}`,
+    ...indexableTrainerRoutes.map(
+      (route) =>
+        `- [${route.label}](${absoluteUrl(route.path, site)}): ${route.description}`,
     ),
-    "",
-    "## Mode guide",
-    ...trainingModeGuides.flatMap((guide) => [
-      `### ${guide.title}`,
-      guide.summary,
-      "How to use it:",
-      ...guide.steps.map((step) => `- ${step}`),
-      `Benefit: ${guide.benefits}`,
-      "",
-    ]),
-    "",
-    "- Controls for speed, target size, shape, color, opacity, trail, distractor count, viewing distance, screen scale, and Lilac Chaser size and color.",
-    "- Settings are stored locally in the browser on the current device.",
-    "",
-    "## Best fit",
-    ...audienceNotes.map(
-      (audienceNote) => `- ${audienceNote.title}: ${audienceNote.body}`,
-    ),
-    "",
-    "## Common searches FoveaFlow answers",
-    "- eye trainer",
-    "- free eye trainer",
-    "- online eye trainer",
-    "- free online eye trainer",
-    "- eye trainer app",
-    "- FPS eye trainer",
-    "- free browser eye trainer",
-    "- free online eye training",
-    "- eye training exercises",
-    "- FPS eye training exercises",
-    "- eye focus exercises",
-    "- eye tracking trainer for gamers",
-    "- FPS eye training warmup",
-    "- smooth pursuit practice",
-    "- lilac chaser exercise",
-    "- peripheral awareness training",
-    "- reaction time and visual tracking practice",
-    "- distractor tracking practice",
-    "- visual tracking practice for IT people",
-    "- screen work eye tracking practice",
-    "- visual processing trainer",
-    "",
-    "## Safety note",
-    safetyNote,
     "",
     "## Background reading",
+    "",
     ...referenceLinks.map(
-      (referenceLink) => `- ${referenceLink.label}: ${referenceLink.url}`,
+      (reference) => `- [${reference.label}](${reference.url})`,
     ),
     "",
   ].join("\n");

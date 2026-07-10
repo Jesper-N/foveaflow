@@ -5,6 +5,15 @@ export const TAU = Math.PI * 2;
 export type PatternPathCacheState = {
   cachedCurve: CurvePath | null;
   cachedPolyline: CurvePath | null;
+  curveTravelState: ScaledTravelState;
+  polylineTravelState: ScaledTravelState;
+};
+
+export type ScaledTravelState = {
+  identity: string;
+  geometryKey: string;
+  unitLength: number;
+  offset: number;
 };
 
 type CurvePath = {
@@ -17,7 +26,51 @@ type CurvePath = {
 export const createPatternPathCacheState = (): PatternPathCacheState => ({
   cachedCurve: null,
   cachedPolyline: null,
+  curveTravelState: createScaledTravelState(),
+  polylineTravelState: createScaledTravelState(),
 });
+
+export const createScaledTravelState = (): ScaledTravelState => ({
+  identity: "",
+  geometryKey: "",
+  unitLength: 0,
+  offset: 0,
+});
+
+export const resolveScaledTravel = (
+  state: ScaledTravelState,
+  identity: string,
+  geometryKey: string,
+  travelPx: number,
+  unitLength: number,
+) => {
+  const safeTravelPx = Number.isFinite(travelPx) ? travelPx : 0;
+  const safeUnitLength = Number.isFinite(unitLength)
+    ? Math.max(0, unitLength)
+    : 0;
+
+  if (state.identity !== identity) {
+    state.identity = identity;
+    state.geometryKey = geometryKey;
+    state.unitLength = safeUnitLength;
+    state.offset = 0;
+    return safeTravelPx;
+  }
+
+  if (state.geometryKey !== geometryKey) {
+    if (state.unitLength > 0 && safeUnitLength > 0) {
+      const previousTravelPx = safeTravelPx + state.offset;
+      state.offset =
+        (previousTravelPx / state.unitLength) * safeUnitLength - safeTravelPx;
+    } else {
+      state.offset = 0;
+    }
+    state.geometryKey = geometryKey;
+    state.unitLength = safeUnitLength;
+  }
+
+  return safeTravelPx + state.offset;
+};
 
 export const clamp = (value: number, min: number, max: number) =>
   Math.min(max, Math.max(min, value));
@@ -44,14 +97,14 @@ export const resolvePatternBounds = (
   pathMarginPx = 16,
 ) => {
   const requestedMargin = Math.max(pathMarginPx, radiusPx + 8);
-  const maxMargin = Math.max(1, Math.min(arena.width, arena.height) / 2);
+  const maxMargin = Math.max(0, Math.min(arena.width, arena.height) / 2);
   const margin = Math.min(requestedMargin, maxMargin);
   const left = margin;
   const top = margin;
   const right = Math.max(left, arena.width - margin);
   const bottom = Math.max(top, arena.height - margin);
-  const width = Math.max(1, right - left);
-  const height = Math.max(1, bottom - top);
+  const width = Math.max(0, right - left);
+  const height = Math.max(0, bottom - top);
 
   return {
     left,
@@ -62,8 +115,8 @@ export const resolvePatternBounds = (
     height,
     centerX: arena.width / 2,
     centerY: arena.height / 2,
-    radiusX: Math.max(1, width / 2),
-    radiusY: Math.max(1, height / 2),
+    radiusX: width / 2,
+    radiusY: height / 2,
   };
 };
 
@@ -74,11 +127,21 @@ export const sampleClosedCurve = (
   samples: number,
   pointAt: (phase: number) => [number, number],
 ) => {
-  if (state.cachedCurve?.key !== key) {
-    state.cachedCurve = buildClosedCurve(key, samples, pointAt);
-  }
-
-  return sampleCurvePath(state.cachedCurve, travelPx);
+  const previousPath = state.cachedCurve;
+  const path =
+    previousPath?.key === key
+      ? previousPath
+      : buildClosedCurve(key, samples, pointAt);
+  const effectiveTravelPx = resolveCurveTravel(
+    state.curveTravelState,
+    getPathIdentity(key),
+    key,
+    travelPx,
+    previousPath,
+    path,
+  );
+  state.cachedCurve = path;
+  return sampleCurvePath(path, effectiveTravelPx);
 };
 
 export const sampleClosedPolyline = (
@@ -88,11 +151,75 @@ export const sampleClosedPolyline = (
   pointCount: number,
   pointAt: (index: number) => [number, number],
 ) => {
-  if (state.cachedPolyline?.key !== key) {
-    state.cachedPolyline = buildClosedPolyline(key, pointCount, pointAt);
-  }
+  const previousPath = state.cachedPolyline;
+  const path =
+    previousPath?.key === key
+      ? previousPath
+      : buildClosedPolyline(key, pointCount, pointAt);
+  const effectiveTravelPx = resolveCurveTravel(
+    state.polylineTravelState,
+    getPathIdentity(key),
+    key,
+    travelPx,
+    previousPath,
+    path,
+  );
+  state.cachedPolyline = path;
+  return sampleCurvePath(path, effectiveTravelPx);
+};
 
-  return sampleCurvePath(state.cachedPolyline, travelPx);
+const getPathIdentity = (key: string) => {
+  const separatorIndex = key.indexOf(":");
+  return separatorIndex < 0 ? key : key.slice(0, separatorIndex);
+};
+
+const resolveCurveTravel = (
+  state: ScaledTravelState,
+  identity: string,
+  geometryKey: string,
+  travelPx: number,
+  previousPath: CurvePath | null,
+  path: CurvePath,
+) => {
+  const safeTravelPx = Number.isFinite(travelPx) ? travelPx : 0;
+  if (state.identity !== identity) {
+    state.identity = identity;
+    state.geometryKey = geometryKey;
+    state.unitLength = path.totalLength;
+    state.offset = 0;
+    return safeTravelPx;
+  }
+  if (state.geometryKey === geometryKey) return safeTravelPx + state.offset;
+
+  if (previousPath && previousPath.totalLength > 0 && path.totalLength > 0) {
+    const previousTravelPx = safeTravelPx + state.offset;
+    const cycleCount = Math.floor(previousTravelPx / previousPath.totalLength);
+    let remainingPx = positiveModulo(
+      previousTravelPx,
+      previousPath.totalLength,
+    );
+    let nextCycleTravelPx = 0;
+
+    for (let index = 0; index < previousPath.lengths.length; index += 1) {
+      const previousLength = previousPath.lengths[index];
+      const nextLength = path.lengths[index] ?? 0;
+      if (remainingPx <= previousLength) {
+        const progress = previousLength <= 0 ? 0 : remainingPx / previousLength;
+        nextCycleTravelPx += nextLength * progress;
+        break;
+      }
+      remainingPx -= previousLength;
+      nextCycleTravelPx += nextLength;
+    }
+
+    state.offset =
+      cycleCount * path.totalLength + nextCycleTravelPx - safeTravelPx;
+  } else {
+    state.offset = 0;
+  }
+  state.geometryKey = geometryKey;
+  state.unitLength = path.totalLength;
+  return safeTravelPx + state.offset;
 };
 
 const positiveModulo = (value: number, divisor: number) =>

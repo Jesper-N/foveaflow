@@ -40,7 +40,7 @@ const smoothPursuitSeoContent = {
     href: "/guide/",
   },
   trustNote:
-    "Updated May 14, 2026. This is practice software, not medical care, so stop if the session feels uncomfortable.",
+    "Updated July 10, 2026. This is practice software, not medical care, so stop if the session feels uncomfortable.",
   faq: [
     {
       question: "What is Smooth Pursuit?",
@@ -93,7 +93,7 @@ const reactionJumpsSeoContent = {
     href: "/guide/",
   },
   trustNote:
-    "Updated May 14, 2026. Keep sessions brief and controlled. If the drill causes strain or discomfort, stop.",
+    "Updated July 10, 2026. Keep sessions brief and controlled. If the drill causes strain or discomfort, stop.",
   faq: [
     {
       question: "What does Reaction Jumps train?",
@@ -146,7 +146,7 @@ const multipleDistractionsSeoContent = {
     href: "/smooth-pursuit/",
   },
   trustNote:
-    "Updated May 14, 2026. Start with fewer distractors or a bigger target, and stop if the session becomes uncomfortable.",
+    "Updated July 10, 2026. Start with fewer distractors or a bigger target, and stop if the session becomes uncomfortable.",
   faq: [
     {
       question: "What is distractor tracking?",
@@ -199,7 +199,7 @@ const lilacChaserSeoContent = {
     href: "/guide/",
   },
   trustNote:
-    "Updated May 14, 2026. If the visual effect feels strange or uncomfortable, stop the session and rest.",
+    "Updated July 10, 2026. If the visual effect feels strange or uncomfortable, stop the session and rest.",
   faq: [
     {
       question: "What is Lilac Chaser?",
@@ -343,7 +343,7 @@ const buildPatternSeoContent = (
       href: "/smooth-pursuit/",
     },
     trustNote:
-      "Updated May 14, 2026. This is a browser-based practice drill and not medical therapy.",
+      "Updated July 10, 2026. This is a browser-based practice drill and not medical therapy.",
     faq: [
       {
         question: `What is the ${label} drill?`,

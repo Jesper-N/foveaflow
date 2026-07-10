@@ -40,17 +40,15 @@
   <div class="flex min-h-12 items-center justify-between gap-4">
     <div class="flex min-w-0 items-center gap-3">
       {#if motionPaused}
-        <PlayIcon class="size-5 shrink-0 text-accent" />
+        <PlayIcon class="size-5 shrink-0 text-brand-foreground" />
       {:else}
-        <PauseIcon class="size-5 shrink-0 text-accent" />
+        <PauseIcon class="size-5 shrink-0 text-brand-foreground" />
       {/if}
       <span class="truncate text-base font-medium">{t(locale, "Motion")}</span>
     </div>
     <Button
-      class="pressable-ui"
       variant="outline"
       size="sm"
-      aria-pressed={motionPaused}
       aria-describedby="trainer-motion-status"
       onclick={toggleMotionPaused}
     >
@@ -60,16 +58,14 @@
 
   <div class="flex min-h-12 items-center justify-between gap-4">
     <div class="flex min-w-0 items-center gap-3">
-      <ArrowLeftRightIcon class="size-5 shrink-0 text-accent" />
+      <ArrowLeftRightIcon class="size-5 shrink-0 text-brand-foreground" />
       <span class="truncate text-base font-medium">
         {t(locale, "Direction")}
       </span>
     </div>
     <Button
-      class="pressable-ui"
       variant="outline"
       size="sm"
-      aria-pressed={settings.motionDirection === -1}
       aria-describedby="trainer-motion-status"
       disabled={!canToggleDirection}
       onclick={toggleMotionDirection}
@@ -81,9 +77,9 @@
   <div class="flex min-h-12 items-center justify-between gap-4">
     <div class="flex min-w-0 items-center gap-3">
       {#if isDarkMode}
-        <MoonIcon class="size-5 shrink-0 text-accent" />
+        <MoonIcon class="size-5 shrink-0 text-brand-foreground" />
       {:else}
-        <SunIcon class="size-5 shrink-0 text-accent" />
+        <SunIcon class="size-5 shrink-0 text-brand-foreground" />
       {/if}
       <span class="truncate text-base font-medium">
         {t(locale, "Dark mode")}
@@ -98,7 +94,7 @@
 
   <div class="flex min-h-12 items-center justify-between gap-4">
     <div class="flex min-w-0 items-center gap-3">
-      <LanguagesIcon class="size-5 shrink-0 text-accent" />
+      <LanguagesIcon class="size-5 shrink-0 text-brand-foreground" />
       <span class="truncate text-base font-medium">
         {t(locale, "Language")}
       </span>

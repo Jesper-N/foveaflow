@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import NoscriptFallback from "../lib/components/NoscriptFallback.astro";
 import SeoHead from "../lib/components/SeoHead.astro";
 import TrainerApp from "../lib/components/TrainerApp.svelte";
 import {
@@ -42,5 +43,10 @@ const structuredData = route.indexable
   </head>
   <body>
     <TrainerApp routeSlug={route.slug} client:load />
+    <NoscriptFallback
+      heading={route.heading}
+      description={route.description}
+      showHomeLink
+    />
   </body>
 </html>

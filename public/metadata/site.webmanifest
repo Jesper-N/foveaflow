@@ -1,6 +1,9 @@
 {
   "name": "FoveaFlow",
   "short_name": "FoveaFlow",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
   "description": "Free eye training exercises for visual tracking, focus, reaction speed, and screen-heavy work.",
   "icons": [
     {

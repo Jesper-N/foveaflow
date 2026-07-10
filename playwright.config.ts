@@ -24,7 +24,7 @@ export default defineConfig({
     trace: "retain-on-failure",
   },
   webServer: {
-    command: `bun run build && bun run astro preview --host 127.0.0.1 --port ${smokePort}`,
+    command: `bunx wrangler dev --ip 127.0.0.1 --port ${smokePort} --log-level error`,
     url: smokeBaseUrl,
     reuseExistingServer: false,
     timeout: 30_000,

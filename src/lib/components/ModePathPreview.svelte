@@ -1,18 +1,12 @@
 <script lang="ts">
   import type { TrainingMode } from "$lib/engine/presets";
 
-  let { mode, compact = false }: { mode: TrainingMode; compact?: boolean } =
-    $props();
+  let { mode }: { mode: TrainingMode } = $props();
 </script>
 
 <svg
   data-slot="mode-path-preview"
-  class={[
-    "shrink-0",
-    compact
-      ? "size-4 text-current"
-      : "size-preview h-7 w-11 rounded-lg border border-border/70 bg-background/80 text-accent",
-  ]}
+  class="size-4 shrink-0 text-current"
   viewBox="0 0 48 32"
   fill="none"
   aria-hidden="true"

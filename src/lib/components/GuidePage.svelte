@@ -54,9 +54,7 @@
   let locale = $derived(languageState.locale);
 </script>
 
-<main
-  class="fixed inset-0 min-h-dvh overflow-auto bg-background text-foreground selection:bg-accent/30"
->
+<main class="min-h-dvh bg-background text-foreground selection:bg-accent/30">
   <div class="mx-auto grid w-full max-w-7xl gap-10 px-4 py-5 sm:px-6 lg:px-8">
     <nav
       class={`flex items-center justify-between gap-4 ${guideEnterTop}`}
@@ -65,7 +63,6 @@
       <Button
         href="/"
         variant="outline"
-        class="pressable-ui"
         aria-label={`${t(locale, "Open")} ${siteMetadata.name}`}
       >
         <ArrowLeftIcon class="size-4" />
@@ -77,7 +74,7 @@
           variant="outline"
           class="hidden h-8 border-border/80 bg-background/80 px-3 py-0 text-sm text-muted-foreground sm:inline-flex"
         >
-          {t(locale, "Updated May 14, 2026")}
+          {t(locale, "Updated July 10, 2026")}
         </Badge>
         <LanguageSelect
           showSelectedName
@@ -107,19 +104,15 @@
           {t(locale, guideMetadata.summary)}
         </p>
         <div class="mt-8 flex flex-wrap gap-3">
-          <Button href="/" class="pressable-ui">
+          <Button href="/">
             <CrosshairIcon class="size-4" />
             <span class="pl-1">{t(locale, "Open")} {siteMetadata.name}</span>
           </Button>
-          <Button
-            href="/smooth-pursuit/"
-            variant="outline"
-            class="pressable-ui"
-          >
+          <Button href="/smooth-pursuit/" variant="outline">
             <CrosshairIcon class="size-4" />
             <span class="pl-1">{t(locale, "Try Smooth Pursuit")}</span>
           </Button>
-          <Button href="#faq" variant="outline" class="pressable-ui">
+          <Button href="#faq" variant="outline">
             <BookOpenIcon class="size-4" />
             <span class="pl-1">{t(locale, "Read guide FAQ")}</span>
           </Button>
@@ -129,11 +122,11 @@
       <div class="grid gap-4 md:translate-y-6">
         <Item.Root
           variant="outline"
-          class={`border-border/80 p-5 backdrop-blur ${guideItemSurface}`}
+          class={`border-border/80 p-5 ${guideItemSurface}`}
         >
           <Item.Media
             variant="icon"
-            class="size-10 rounded-lg border bg-muted text-accent"
+            class="size-10 rounded-lg border bg-muted text-brand-foreground"
           >
             <ActivityIcon class="size-5" />
           </Item.Media>
@@ -156,7 +149,7 @@
         >
           <Item.Media
             variant="icon"
-            class="size-10 rounded-lg border bg-background text-accent"
+            class="size-10 rounded-lg border bg-background text-brand-foreground"
           >
             <ShieldCheckIcon class="size-5" />
           </Item.Media>
@@ -185,7 +178,7 @@
           <Item.Root variant="outline" class={guideItemSurface}>
             <Item.Media
               variant="icon"
-              class="size-9 rounded-lg border bg-muted text-accent"
+              class="size-9 rounded-lg border bg-muted text-brand-foreground"
             >
               <CrosshairIcon class="size-4" />
             </Item.Media>
@@ -221,7 +214,7 @@
           <Item.Root variant="outline" class={guideItemSurface}>
             <Item.Media
               variant="icon"
-              class="size-9 rounded-lg border bg-muted text-accent"
+              class="size-9 rounded-lg border bg-muted text-brand-foreground"
             >
               <CrosshairIcon class="size-4" />
             </Item.Media>
@@ -262,7 +255,7 @@
           <Item.Root variant="outline" class={guideItemSurface}>
             <Item.Media
               variant="icon"
-              class="size-9 rounded-lg border bg-muted text-accent"
+              class="size-9 rounded-lg border bg-muted text-brand-foreground"
             >
               <ActivityIcon class="size-4" />
             </Item.Media>
@@ -287,7 +280,7 @@
           <Item.Root variant="outline" class={guideItemSurface}>
             <Item.Media
               variant="icon"
-              class="size-9 rounded-lg border bg-background text-accent"
+              class="size-9 rounded-lg border bg-background text-brand-foreground"
             >
               <MousePointerIcon class="size-4" />
             </Item.Media>
@@ -331,12 +324,7 @@
         </p>
         <div class="mt-5 flex flex-wrap gap-2">
           {#each patternRoutes as route (route.slug)}
-            <Button
-              href={route.path}
-              variant="outline"
-              size="sm"
-              class="pressable-ui"
-            >
+            <Button href={route.path} variant="outline" size="sm">
               {t(locale, route.label)}
             </Button>
           {/each}
@@ -365,7 +353,7 @@
           <Item.Root variant="outline" class={guideItemSurface}>
             <Item.Media
               variant="icon"
-              class="size-9 rounded-lg border bg-background text-accent"
+              class="size-9 rounded-lg border bg-background text-brand-foreground"
             >
               <BookOpenIcon class="size-4" />
             </Item.Media>
@@ -407,7 +395,7 @@
         >
           <Item.Media
             variant="icon"
-            class="size-9 rounded-lg border bg-background text-accent"
+            class="size-9 rounded-lg border bg-background text-brand-foreground"
           >
             <SlidersHorizontalIcon class="size-4" />
           </Item.Media>
@@ -429,7 +417,7 @@
         >
           <Item.Media
             variant="icon"
-            class="size-9 rounded-lg border bg-background text-accent"
+            class="size-9 rounded-lg border bg-background text-brand-foreground"
           >
             <ActivityIcon class="size-4" />
           </Item.Media>

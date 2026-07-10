@@ -19,9 +19,7 @@ Each file exports a single function (named or default):
 
 ```js
 export function layoutX(config) {
-  return {
-    /* Satori JSX object */
-  };
+  return {/* Satori JSX object */};
 }
 ```
 

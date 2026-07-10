@@ -190,8 +190,6 @@ export const bn = {
     "EyeTrainer.gg-তেও সহজ ব্রাউজার প্যাটার্ন আছে এবং পাবলিক পেজে তাদের আসন্ন Steam সংস্করণ দেখানো হয়।",
   "EyeTrainer.gg focuses the public browser tool on simple pattern practice rather than detailed target and display calibration.":
     "EyeTrainer.gg পাবলিক ব্রাউজার টুলে বিস্তারিত লক্ষ্য ও ডিসপ্লে ক্যালিব্রেশনের বদলে সহজ প্যাটার্ন অনুশীলনে জোর দেয়।",
-  "EyeTrainer.gg provides simple pattern options, including patterns such as Vertical Waves.":
-    "EyeTrainer.gg সহজ প্যাটার্ন অপশন দেয়, যেমন উল্লম্ব ঢেউ।",
   FAQ: "প্রশ্নোত্তর",
   "FPS Eye Training Warmup": "FPS চোখের অনুশীলন ওয়ার্মআপ",
   "FPS Eye Training Warmup (HIGH FPS)": "FPS চোখের অনুশীলন ওয়ার্মআপ (HIGH FPS)",
@@ -219,6 +217,8 @@ export const bn = {
     "ব্যক্তিগত তথ্য না পাঠিয়েও FoveaFlow ব্যবহার করা যায়। এটি শিশুদের ব্যক্তিগত তথ্য সংগ্রহের জন্য বানানো নয়।",
   "FoveaFlow does not set advertising cookies. Cloudflare may set security cookies when it needs them to keep the site available and safe.":
     "FoveaFlow বিজ্ঞাপন কুকি সেট করে না। সাইট চালু ও নিরাপদ রাখতে প্রয়োজন হলে Cloudflare নিরাপত্তা কুকি সেট করতে পারে।",
+  "FoveaFlow stores your language preference in local browser storage and in a same-site preference cookie so the correct language can be selected before the app starts. The cookie can last up to 400 days, uses SameSite=Lax, and is marked Secure on HTTPS.":
+    "FoveaFlow আপনার ভাষার পছন্দ ব্রাউজারের স্থানীয় স্টোরেজ এবং একই সাইটের একটি পছন্দের কুকিতে রাখে, যাতে অ্যাপ চালু হওয়ার আগে সঠিক ভাষা নির্বাচন করা যায়। কুকিটি সর্বোচ্চ ৪০০ দিন থাকতে পারে, SameSite=Lax ব্যবহার করে এবং HTTPS-এ Secure হিসেবে চিহ্নিত থাকে।",
   "FoveaFlow eye trainer animation for visual tracking practice":
     "ভিজ্যুয়াল ট্র্যাকিং অনুশীলনের জন্য FoveaFlow চোখের অনুশীলন অ্যানিমেশন",
   "FoveaFlow eye trainer animation for visual tracking practice. Use Pause motion to stop target movement before changing controls.":
@@ -256,12 +256,10 @@ export const bn = {
   "FoveaFlow overview": "FoveaFlow সারাংশ",
   "FoveaFlow saves local controls for speed, size, shape, color, opacity, trails, paths, distractors, letters, and display scale.":
     "FoveaFlow গতি, সাইজ, আকৃতি, রং, অস্বচ্ছতা, ট্রেইল, পথ, বিভ্রান্তিকারী, অক্ষর ও ডিসপ্লে স্কেলের লোকাল কন্ট্রোল সংরক্ষণ করে।",
-  "FoveaFlow stores settings locally in your browser so the app can remember them on the current device. That can include the selected mode, motion pattern, speed, target size, color, opacity, trail setting, viewing distance, screen scale, and theme.":
-    "FoveaFlow সেটিং আপনার ব্রাউজারে লোকালি রাখে, যাতে এই ডিভাইসে অ্যাপটি সেগুলো মনে রাখতে পারে। এর মধ্যে নির্বাচিত মোড, চলন প্যাটার্ন, গতি, লক্ষ্যের সাইজ, রং, অস্বচ্ছতা, ট্রেইল সেটিং, দেখার দূরত্ব, স্ক্রিন স্কেল ও থিম থাকতে পারে।",
+  "FoveaFlow stores settings locally in your browser so the app can remember them on the current device. That can include the selected language, mode, motion pattern, speed, target size, color, opacity, trail setting, viewing distance, screen scale, and theme.":
+    "FoveaFlow সেটিং আপনার ব্রাউজারে লোকালি রাখে, যাতে এই ডিভাইসে অ্যাপটি সেগুলো মনে রাখতে পারে। এর মধ্যে নির্বাচিত ভাষা, মোড, চলন প্যাটার্ন, গতি, লক্ষ্যের সাইজ, রং, অস্বচ্ছতা, ট্রেইল সেটিং, দেখার দূরত্ব, স্ক্রিন স্কেল ও থিম থাকতে পারে।",
   "FoveaFlow vs BlinkCamp": "FoveaFlow বনাম BlinkCamp",
   "FoveaFlow vs EyeTrainer.gg": "FoveaFlow বনাম EyeTrainer.gg",
-  "FoveaFlow, free online eye trainer":
-    "FoveaFlow, বিনা খরচের অনলাইন চোখের অনুশীলন টুল",
   "Free access": "বিনা খরচে ব্যবহার",
   "Free browser tool": "বিনা খরচের ব্রাউজার টুল",
   "Free online eye trainer": "বিনা খরচের অনলাইন চোখের অনুশীলন টুল",
@@ -455,7 +453,6 @@ export const bn = {
   "People on screens all day": "সারাদিন স্ক্রিনে থাকা মানুষ",
   "Peripheral awareness": "পারিপার্শ্বিক সচেতনতা",
   "Pick a drill and tune the target": "একটি ড্রিল বেছে নিন এবং লক্ষ্য সেট করুন",
-  "Practice pages": "অনুশীলন পেজ",
   "Practice software, not medical care. Stop if you feel eye strain, dizziness, headache, nausea, or any other discomfort.":
     "অনুশীলনের সফটওয়্যার, চিকিৎসা নয়। চোখে চাপ, মাথা ঘোরা, মাথাব্যথা, বমিভাব বা অন্য কোনো অস্বস্তি হলে থামুন।",
   "Practice the Bounce smooth pursuit pattern online. Adjust speed, target size, color, trail, and screen scale for short visual tracking sessions.":
@@ -558,7 +555,6 @@ export const bn = {
   "Screen reset": "স্ক্রিন রিসেট",
   "Screen scale": "স্ক্রিন স্কেল",
   "Screen-work reset": "স্ক্রিন কাজের রিসেট",
-  "Select language": "ভাষা বেছে নিন",
   "Selective attention": "নির্বাচিত মনোযোগ",
   Semibold: "সেমিবোল্ড",
   Session: "সেশন",
@@ -714,20 +710,19 @@ export const bn = {
   "Tune the session before you start": "শুরু করার আগে সেশন ঠিক করুন",
   Unit: "একক",
   Unpredictive: "অনুমান করা কঠিন",
-  "Updated April 28, 2026": "আপডেট: ২৮ এপ্রিল ২০২৬",
-  "Updated May 14, 2026": "আপডেট: ১৪ মে ২০২৬",
-  "Updated May 14, 2026. FoveaFlow is practice software, not medical care. Stop if a session causes strain, dizziness, headache, nausea, or any other discomfort.":
-    "আপডেট: ১৪ মে ২০২৬। FoveaFlow অনুশীলনের সফটওয়্যার, চিকিৎসা নয়। কোনো সেশনে চাপ, মাথা ঘোরা, মাথাব্যথা, বমিভাব বা অন্য অস্বস্তি হলে থামুন।",
-  "Updated May 14, 2026. If the visual effect feels strange or uncomfortable, stop the session and rest.":
-    "আপডেট: ১৪ মে ২০২৬। ভিজ্যুয়াল প্রভাব অদ্ভুত বা অস্বস্তিকর লাগলে সেশন থামিয়ে বিশ্রাম নিন।",
-  "Updated May 14, 2026. Keep sessions brief and controlled. If the drill causes strain or discomfort, stop.":
-    "আপডেট: ১৪ মে ২০২৬। সেশন ছোট ও নিয়ন্ত্রিত রাখুন। ড্রিলে চাপ বা অস্বস্তি হলে থামুন।",
-  "Updated May 14, 2026. Start with fewer distractors or a bigger target, and stop if the session becomes uncomfortable.":
-    "আপডেট: ১৪ মে ২০২৬। কম বিভ্রান্তিকারী বা বড় লক্ষ্য দিয়ে শুরু করুন, এবং সেশন অস্বস্তিকর হলে থামুন।",
-  "Updated May 14, 2026. This is a browser-based practice drill and not medical therapy.":
-    "আপডেট: ১৪ মে ২০২৬। এটি ব্রাউজার-ভিত্তিক অনুশীলন ড্রিল, চিকিৎসা থেরাপি নয়।",
-  "Updated May 14, 2026. This is practice software, not medical care, so stop if the session feels uncomfortable.":
-    "আপডেট: ১৪ মে ২০২৬। এটি অনুশীলনের সফটওয়্যার, চিকিৎসা নয়, তাই সেশন অস্বস্তিকর লাগলে থামুন।",
+  "Updated July 10, 2026": "আপডেট: ১০ জুলাই ২০২৬",
+  "Updated July 10, 2026. FoveaFlow is practice software, not medical care. Stop if a session causes strain, dizziness, headache, nausea, or any other discomfort.":
+    "আপডেট: ১০ জুলাই ২০২৬। FoveaFlow অনুশীলনের সফটওয়্যার, চিকিৎসা নয়। কোনো সেশনে চাপ, মাথা ঘোরা, মাথাব্যথা, বমিভাব বা অন্য অস্বস্তি হলে থামুন।",
+  "Updated July 10, 2026. If the visual effect feels strange or uncomfortable, stop the session and rest.":
+    "আপডেট: ১০ জুলাই ২০২৬। ভিজ্যুয়াল প্রভাব অদ্ভুত বা অস্বস্তিকর লাগলে সেশন থামিয়ে বিশ্রাম নিন।",
+  "Updated July 10, 2026. Keep sessions brief and controlled. If the drill causes strain or discomfort, stop.":
+    "আপডেট: ১০ জুলাই ২০২৬। সেশন ছোট ও নিয়ন্ত্রিত রাখুন। ড্রিলে চাপ বা অস্বস্তি হলে থামুন।",
+  "Updated July 10, 2026. Start with fewer distractors or a bigger target, and stop if the session becomes uncomfortable.":
+    "আপডেট: ১০ জুলাই ২০২৬। কম বিভ্রান্তিকারী বা বড় লক্ষ্য দিয়ে শুরু করুন, এবং সেশন অস্বস্তিকর হলে থামুন।",
+  "Updated July 10, 2026. This is a browser-based practice drill and not medical therapy.":
+    "আপডেট: ১০ জুলাই ২০২৬। এটি ব্রাউজার-ভিত্তিক অনুশীলন ড্রিল, চিকিৎসা থেরাপি নয়।",
+  "Updated July 10, 2026. This is practice software, not medical care, so stop if the session feels uncomfortable.":
+    "আপডেট: ১০ জুলাই ২০২৬। এটি অনুশীলনের সফটওয়্যার, চিকিৎসা নয়, তাই সেশন অস্বস্তিকর লাগলে থামুন।",
   "Use FoveaFlow as a free FPS eye training warmup for visual tracking, quick refocus, target switching, and focus under distraction.":
     "ভিজ্যুয়াল ট্র্যাকিং, দ্রুত রিফোকাস, লক্ষ্য বদল এবং বিভ্রান্তির মধ্যে ফোকাসের জন্য FoveaFlow বিনা খরচের FPS চোখের ওয়ার্মআপ হিসেবে ব্যবহার করুন।",
   "Use FoveaFlow as a short FPS warmup, an active screen break, or a focused visual practice session.":

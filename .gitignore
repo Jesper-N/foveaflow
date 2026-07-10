@@ -2,6 +2,7 @@ node_modules/
 dist/
 .astro/
 test-results/
+.playwright-cli/
 .DS_Store
 
 # wrangler files

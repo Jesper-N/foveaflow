@@ -32,7 +32,7 @@ export const loadSettings = () => {
   }
 };
 
-export const saveSettings = (settings: TrainerSettings) => {
+const saveSettings = (settings: TrainerSettings) => {
   if (!hasBrowserStorage()) return;
   try {
     window.localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));

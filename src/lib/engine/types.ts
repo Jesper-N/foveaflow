@@ -23,12 +23,7 @@ export type TargetFrame = {
 };
 
 export type TargetShape =
-  | "circle"
-  | "ring"
-  | "square"
-  | "diamond"
-  | "triangle"
-  | "cross";
+  "circle" | "ring" | "square" | "diamond" | "triangle" | "cross";
 
 export type PatternId =
   | "circle"

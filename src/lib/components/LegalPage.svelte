@@ -19,7 +19,7 @@
   const guideEnterHero = "guide-enter page-enter-delay-1 guide-enter-up";
   const guideEnterUp = "guide-enter guide-enter-up";
   const articleCard =
-    "bg-card/70 shadow-[0_16px_36px_-30px_rgba(20,24,22,0.4)] backdrop-blur";
+    "bg-card/70 shadow-[0_16px_36px_-30px_rgba(20,24,22,0.4)]";
   const navLinks = [
     { href: "/guide/", label: "Guide" },
     { href: "/privacy/", label: "Privacy" },
@@ -28,15 +28,12 @@
   let locale = $derived(languageState.locale);
 </script>
 
-<main
-  class="fixed inset-0 min-h-dvh overflow-auto bg-background text-foreground selection:bg-accent/30"
->
+<main class="min-h-dvh bg-background text-foreground selection:bg-accent/30">
   <div class="mx-auto grid w-full max-w-5xl gap-10 px-4 py-5 sm:px-6 lg:px-8">
     <header class={`flex items-center justify-between gap-4 ${guideEnterTop}`}>
       <Button
         href="/"
         variant="outline"
-        class="pressable-ui"
         aria-label={`${t(locale, "Open")} ${siteMetadata.name}`}
       >
         <ArrowLeftIcon class="size-4" />
@@ -53,7 +50,6 @@
               href={navLink.href}
               variant={page.path === navLink.href ? "outline" : "ghost"}
               size="sm"
-              class="pressable-ui"
             >
               {t(locale, navLink.label)}
             </Button>
@@ -94,7 +90,7 @@
       >
         <Item.Media
           variant="icon"
-          class="size-10 rounded-lg border bg-muted text-accent"
+          class="size-10 rounded-lg border bg-muted text-brand-foreground"
         >
           {#if page.path === "/privacy/"}
             <ShieldCheckIcon class="size-5" />
@@ -104,7 +100,7 @@
         </Item.Media>
         <Item.Content>
           <Item.Title class="line-clamp-none text-base">
-            {t(locale, "Updated April 28, 2026")}
+            {t(locale, "Updated July 10, 2026")}
           </Item.Title>
           <Item.Description class="line-clamp-none leading-6">
             {t(locale, "This page is specific to this free browser tool.")}
@@ -119,9 +115,9 @@
       <div class="md:sticky md:top-6 md:self-start">
         <Item.Root variant="muted" class="border border-border/70">
           <Item.Content>
-            <Item.Title class="line-clamp-none text-sm">
+            <h2 class="font-heading text-sm leading-snug font-medium">
               {t(locale, "On this page")}
-            </Item.Title>
+            </h2>
             <nav class="mt-3 grid gap-1" aria-label={t(locale, "On this page")}>
               {#each page.sections as section (section.id)}
                 <a
@@ -144,9 +140,9 @@
               class={`items-start border-border/80 p-5 md:p-6 ${articleCard}`}
             >
               <Item.Content>
-                <Item.Title class="line-clamp-none text-lg">
+                <h2 class="font-heading text-lg leading-snug font-medium">
                   {t(locale, section.heading)}
-                </Item.Title>
+                </h2>
                 <div
                   class="mt-3 grid max-w-184 gap-3 text-sm leading-6 text-muted-foreground"
                 >
@@ -162,7 +158,6 @@
                         href={link.url}
                         variant="outline"
                         size="sm"
-                        class="pressable-ui"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -186,10 +181,10 @@
         {t(locale, "FoveaFlow is free. No account, no paid plan.")}
       </span>
       <div class="flex flex-wrap gap-2">
-        <Button href="/" variant="ghost" size="sm" class="pressable-ui">
+        <Button href="/" variant="ghost" size="sm">
           {t(locale, "App")}
         </Button>
-        <Button href="/guide/" variant="ghost" size="sm" class="pressable-ui">
+        <Button href="/guide/" variant="ghost" size="sm">
           {t(locale, "Guide")}
         </Button>
       </div>

@@ -5,26 +5,32 @@ import {
   getBehaviorId,
   isBehaviorId,
 } from "../src/lib/trainer/behavior";
+import { runTrainerShortcutAction } from "../src/lib/trainer/shortcut-runner";
 import {
-  getHeaderSelectOpenState,
-  runTrainerShortcutAction,
-} from "../src/lib/trainer/shortcut-runner";
-import type { TrainerShortcutAction } from "../src/lib/trainer/keyboard";
+  getTrainerShortcutAction,
+  type TrainerShortcutAction,
+  type TrainerShortcutEvent,
+} from "../src/lib/trainer/keyboard";
 
 const createShortcutHandlers = (calls: string[]) => ({
   hasPriorityKeyboardSurface: () => false,
   toggleMotionPaused: () => calls.push("toggleMotionPaused"),
   adjustTargetSize: (deltaPx: number) => calls.push(`targetSize:${deltaPx}`),
   adjustSpeed: (delta: number) => calls.push(`speed:${delta}`),
-  toggleTheme: () => calls.push("toggleTheme"),
-  canOpenPatternSelect: () => true,
-  openHeaderSelect: (select: "mode" | "pattern") =>
-    calls.push(`header:${select}`),
-  openControlsPanel: () => calls.push("controls"),
-  openGuideDialog: () => {
-    calls.push("guide");
-    return true;
-  },
+});
+
+const createShortcutEvent = (
+  key: string,
+  overrides: Partial<TrainerShortcutEvent> = {},
+): TrainerShortcutEvent => ({
+  altKey: false,
+  ctrlKey: false,
+  defaultPrevented: false,
+  isComposing: false,
+  key,
+  metaKey: false,
+  repeat: false,
+  ...overrides,
 });
 
 describe("behavior profiles", () => {
@@ -60,11 +66,6 @@ describe("shortcut runner", () => {
     ["decreaseTargetSize", "targetSize:-1"],
     ["increaseSpeed", "speed:1"],
     ["decreaseSpeed", "speed:-1"],
-    ["toggleTheme", "toggleTheme"],
-    ["openPatternSelect", "header:pattern"],
-    ["openModeSelect", "header:mode"],
-    ["openSettingsDialog", "controls"],
-    ["openGuideDialog", "guide"],
   ] as const satisfies readonly [TrainerShortcutAction, string][])(
     "dispatches %s",
     (action, expectedCall) => {
@@ -89,35 +90,9 @@ describe("shortcut runner", () => {
     expect(calls).toEqual([]);
   });
 
-  test("blocks pattern select outside pursuit mode", () => {
-    const calls: string[] = [];
-
-    expect(
-      runTrainerShortcutAction("openPatternSelect", {
-        ...createShortcutHandlers(calls),
-        canOpenPatternSelect: () => false,
-      }),
-    ).toBe(false);
-    expect(calls).toEqual([]);
-  });
-
-  test("opens only the shortcut target select", () => {
-    expect(getHeaderSelectOpenState("mode", false)).toEqual({
-      mobilePresetSelectOpen: true,
-      desktopPresetSelectOpen: false,
-      mobilePatternSelectOpen: false,
-      desktopPatternSelectOpen: false,
-      mobileLilacChaserColorSelectOpen: false,
-      desktopLilacChaserColorSelectOpen: false,
-    });
-
-    expect(getHeaderSelectOpenState("pattern", true)).toEqual({
-      mobilePresetSelectOpen: false,
-      desktopPresetSelectOpen: false,
-      mobilePatternSelectOpen: false,
-      desktopPatternSelectOpen: true,
-      mobileLilacChaserColorSelectOpen: false,
-      desktopLilacChaserColorSelectOpen: false,
-    });
+  test("does not reserve bare letter keys", () => {
+    for (const key of ["d", "p", "m", "s", "g"]) {
+      expect(getTrainerShortcutAction(createShortcutEvent(key))).toBeNull();
+    }
   });
 });

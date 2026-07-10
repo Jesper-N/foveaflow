@@ -1,18 +1,6 @@
-import {
-  baseLocale,
-  cookieMaxAge,
-  cookieName,
-  getLocale,
-  locales,
-  localStorageKey,
-  setLocale,
-  type Locale as ParaglideLocale,
-} from "../../paraglide/runtime.js";
-
-export const defaultLocale = baseLocale;
-export const localeCookieMaxAge = cookieMaxAge;
-export const localeCookieName = cookieName;
-export const localeLocalStorageKey = localStorageKey;
+export const defaultLocale = "en";
+export const localeCookieMaxAge = 34_560_000;
+export const localeCookieName = "PARAGLIDE_LOCALE";
 
 export const languageOptions = [
   {
@@ -86,18 +74,19 @@ export const languageOptions = [
     direction: "ltr",
   },
 ] as const satisfies readonly {
-  locale: ParaglideLocale;
+  locale: string;
   flag: string;
   label: string;
   nativeLabel: string;
   direction: "ltr" | "rtl";
 }[];
 
-export type AppLocale = ParaglideLocale;
-
 export type LanguageOption = (typeof languageOptions)[number];
+export type AppLocale = LanguageOption["locale"];
 
-const supportedLocaleSet: ReadonlySet<string> = new Set(locales);
+const supportedLocaleSet: ReadonlySet<string> = new Set(
+  languageOptions.map(({ locale }) => locale),
+);
 
 export const isAppLocale = (value: string): value is AppLocale =>
   supportedLocaleSet.has(value);
@@ -141,7 +130,7 @@ export const localePrefixAliases = [
   ["de-", "de"],
 ] as const satisfies readonly (readonly [string, AppLocale])[];
 
-export const resolveSupportedLocale = (
+const resolveSupportedLocale = (
   value: string | null | undefined,
 ): AppLocale | null => {
   if (!value) return null;
@@ -159,14 +148,69 @@ export const resolveSupportedLocale = (
   );
 };
 
-export const normalizeLocale = (
-  value: string | null | undefined,
-): AppLocale => {
-  return resolveSupportedLocale(value) ?? defaultLocale;
+const readCookieLocale = () => {
+  if (typeof document === "undefined") return null;
+
+  const prefix = `${localeCookieName}=`;
+  const value = document.cookie
+    .split(";")
+    .map((cookie) => cookie.trim())
+    .find((cookie) => cookie.startsWith(prefix))
+    ?.slice(prefix.length);
+
+  if (!value) return null;
+
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return null;
+  }
 };
 
-export const getResolvedLocale = (): AppLocale => normalizeLocale(getLocale());
+const readLocalStorageLocale = () => {
+  if (typeof window === "undefined") return null;
+
+  try {
+    return window.localStorage.getItem(localeCookieName);
+  } catch {
+    return null;
+  }
+};
+
+const readPreferredLocale = (): AppLocale | null => {
+  if (typeof navigator === "undefined") return null;
+
+  const preferredLanguages = [
+    ...(navigator.languages ?? []),
+    navigator.language,
+  ];
+  for (const language of preferredLanguages) {
+    const locale = resolveSupportedLocale(language);
+    if (locale) return locale;
+  }
+
+  return null;
+};
+
+export const getResolvedLocale = (): AppLocale =>
+  resolveSupportedLocale(readCookieLocale()) ??
+  resolveSupportedLocale(readLocalStorageLocale()) ??
+  readPreferredLocale() ??
+  defaultLocale;
 
 export const setResolvedLocale = (locale: AppLocale) => {
-  setLocale(locale, { reload: false });
+  if (typeof window === "undefined") return;
+
+  try {
+    window.localStorage.setItem(localeCookieName, locale);
+  } catch {
+    // Storage can be blocked by browser privacy settings.
+  }
+
+  try {
+    const secure = window.location.protocol === "https:" ? "; Secure" : "";
+    document.cookie = `${localeCookieName}=${encodeURIComponent(locale)}; Path=/; Max-Age=${localeCookieMaxAge}; SameSite=Lax${secure}`;
+  } catch {
+    // Cookie writes can be blocked independently of local storage.
+  }
 };

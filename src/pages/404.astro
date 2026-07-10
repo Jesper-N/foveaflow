@@ -1,0 +1,40 @@
+---
+import "../styles/global.css";
+import { Button } from "../lib/components/ui/button/index.js";
+import SeoHead from "../lib/components/SeoHead.astro";
+---
+
+<html lang="en">
+  <head>
+    <SeoHead
+      title="Page not found | FoveaFlow"
+      description="The requested FoveaFlow page could not be found."
+      robots="noindex,follow"
+      initializeI18n={false}
+    />
+  </head>
+  <body>
+    <main
+      class="grid min-h-dvh place-items-center bg-background px-6 py-16 text-foreground"
+    >
+      <section class="flex max-w-xl flex-col items-center gap-6 text-center">
+        <p class="text-sm font-semibold tracking-[0.2em] text-brand-foreground">
+          404
+        </p>
+        <div class="flex flex-col gap-3">
+          <h1 class="text-4xl font-semibold tracking-tight sm:text-5xl">
+            Page not found
+          </h1>
+          <p class="text-balance text-muted-foreground">
+            This route does not exist. Return to the trainer or open the guide
+            to choose a drill.
+          </p>
+        </div>
+        <div class="flex flex-wrap justify-center gap-3">
+          <Button href="/">Open eye trainer</Button>
+          <Button href="/guide/" variant="outline">Read guide</Button>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

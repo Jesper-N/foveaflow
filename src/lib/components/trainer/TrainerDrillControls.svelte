@@ -78,7 +78,7 @@
         {#each exercisePresets as preset (preset.id)}
           <Select.Item value={preset.id}>
             <span class="flex min-w-0 items-center gap-2">
-              <ModePathPreview mode={preset.id} compact />
+              <ModePathPreview mode={preset.id} />
               <span class="truncate">{t(locale, preset.name)}</span>
             </span>
           </Select.Item>

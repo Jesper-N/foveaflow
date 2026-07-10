@@ -1,12 +1,13 @@
 import type { AppLocale } from "$lib/i18n/locales";
-import { en } from "$lib/i18n/dictionaries/en";
+import { defaultLocale } from "$lib/i18n/locales";
+import type { en } from "$lib/i18n/dictionaries/en";
 
 type Dictionary = Record<keyof typeof en, string>;
+type TranslatedLocale = Exclude<AppLocale, typeof defaultLocale>;
 
-const dictionaries: Partial<Record<AppLocale, Dictionary>> = { en };
+const dictionaries: Partial<Record<TranslatedLocale, Dictionary>> = {};
 
 const dictionaryLoaders = {
-  en: async () => en,
   "zh-CN": async () => (await import("$lib/i18n/dictionaries/zh-CN")).zhCN,
   "zh-HK": async () => (await import("$lib/i18n/dictionaries/zh-HK")).zhHK,
   "pt-BR": async () => (await import("$lib/i18n/dictionaries/pt-BR")).ptBR,
@@ -16,11 +17,14 @@ const dictionaryLoaders = {
   hi: async () => (await import("$lib/i18n/dictionaries/hi")).hi,
   fil: async () => (await import("$lib/i18n/dictionaries/fil")).fil,
   de: async () => (await import("$lib/i18n/dictionaries/de")).de,
-} satisfies Record<AppLocale, () => Promise<Dictionary>>;
+} satisfies Record<TranslatedLocale, () => Promise<Dictionary>>;
 
-const dictionaryPromises: Partial<Record<AppLocale, Promise<Dictionary>>> = {};
+const dictionaryPromises: Partial<
+  Record<TranslatedLocale, Promise<Dictionary>>
+> = {};
 
 export const loadDictionary = async (locale: AppLocale) => {
+  if (locale === defaultLocale) return;
   if (dictionaries[locale]) return;
 
   dictionaryPromises[locale] ??= dictionaryLoaders[locale]()
@@ -36,5 +40,7 @@ export const loadDictionary = async (locale: AppLocale) => {
   await dictionaryPromises[locale];
 };
 
-export const t = (locale: AppLocale, text: string): string =>
-  text in en ? (dictionaries[locale] ?? en)[text as keyof typeof en] : text;
+export const t = (locale: AppLocale, text: string): string => {
+  if (locale === defaultLocale) return text;
+  return dictionaries[locale]?.[text as keyof typeof en] ?? text;
+};

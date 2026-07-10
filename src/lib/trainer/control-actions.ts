@@ -1,7 +1,4 @@
 import type { HudControlTransition } from "$lib/trainer/transitions";
-import type { TrainerSettings } from "$lib/engine/presets";
-import type { CanvasColorMode } from "$lib/trainer/rendering";
-import type { BehaviorId } from "$lib/trainer/behavior";
 import type { ControlSectionId } from "$lib/trainer/options";
 import type {
   CalibrationField,
@@ -28,6 +25,7 @@ export type TrainerHudActions = {
   toggleMotionPaused: () => void;
   toggleMotionDirection: () => void;
   revealHud: () => void;
+  setHudInteractionActive: (active: boolean) => void;
   openControlsPanel: () => void;
 };
 
@@ -55,16 +53,4 @@ export type TrainerDialogActions = {
   toggleMotionPaused: () => void;
   toggleMotionDirection: () => void;
   resetSettings: () => void;
-};
-
-export type TrainerDialogState = {
-  settings: TrainerSettings;
-  motionPaused: boolean;
-  motionDirectionLabel: string;
-  canToggleDirection: boolean;
-  colorMode: CanvasColorMode;
-  isDarkMode: boolean;
-  isMotMode: boolean;
-  isLilacChaserMode: boolean;
-  behaviorValue: BehaviorId;
 };

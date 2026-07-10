@@ -33,7 +33,12 @@ const hashInlineBlocks = (html: string, tagName: "script" | "style") => {
     const attributes = match[1] ?? "";
     const content = match[2] ?? "";
 
-    if (tagName === "script" && /\ssrc\s*=/i.test(attributes)) continue;
+    if (tagName === "script") {
+      if (/\ssrc\s*=/i.test(attributes)) continue;
+      if (/\stype\s*=\s*(["'])application\/ld\+json\1/i.test(attributes)) {
+        continue;
+      }
+    }
     if (!content.trim()) continue;
 
     const digest = createHash("sha256").update(content).digest("base64");
@@ -78,14 +83,15 @@ const csp = [
 ].join("; ");
 
 const headers = readFileSync(headersPath, "utf8");
-const updatedHeaders = headers.replace(
-  /Content-Security-Policy: .*/u,
-  `Content-Security-Policy: ${csp}`,
-);
-
-if (headers === updatedHeaders) {
+const cspHeaderPattern = /Content-Security-Policy: .*/u;
+if (!cspHeaderPattern.test(headers)) {
   throw new Error(`No Content-Security-Policy header found in ${headersPath}`);
 }
 
-writeFileSync(headersPath, updatedHeaders);
+const updatedHeaders = headers.replace(
+  cspHeaderPattern,
+  `Content-Security-Policy: ${csp}`,
+);
+
+if (headers !== updatedHeaders) writeFileSync(headersPath, updatedHeaders);
 console.log(`Applied CSP with ${scriptHashes.length} script hash(es).`);

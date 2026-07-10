@@ -40,13 +40,16 @@
   );
 </script>
 
-<div class="flex min-h-12 items-center justify-between gap-4">
-  <span class="text-base font-medium">{t(locale, "Letter")}</span>
+<Field.Field orientation="horizontal" class="min-h-12 justify-between">
+  <Field.Label for="trainer-letter-enabled" class="text-base font-medium">
+    {t(locale, "Letter")}
+  </Field.Label>
   <Switch
+    id="trainer-letter-enabled"
     bind:checked={settings.letterEnabled}
     aria-label={t(locale, "Show target letters")}
   />
-</div>
+</Field.Field>
 
 {#if settings.letterEnabled}
   <Field.Field>
@@ -54,7 +57,7 @@
       {t(locale, "Letter color")}
     </Field.Label>
     <label
-      class="flex h-11 min-w-0 cursor-pointer items-center gap-3 rounded-full border bg-input/50 px-3 transition-[color,box-shadow,background-color] hover:ring-4 hover:ring-ring/30"
+      class="flex h-11 min-w-0 cursor-pointer items-center gap-3 rounded-full border bg-input/50 px-3 transition-[color,box-shadow,background-color] hover:ring-4 hover:ring-ring/30 focus-within:ring-3 focus-within:ring-foreground"
       for="trainer-letter-color"
     >
       <svg

@@ -3,12 +3,7 @@ export type TrainerShortcutAction =
   | "increaseTargetSize"
   | "decreaseTargetSize"
   | "decreaseSpeed"
-  | "increaseSpeed"
-  | "toggleTheme"
-  | "openPatternSelect"
-  | "openModeSelect"
-  | "openSettingsDialog"
-  | "openGuideDialog";
+  | "increaseSpeed";
 
 export type TrainerShortcutEvent = Pick<
   KeyboardEvent,
@@ -28,11 +23,6 @@ const shortcutActionsByKey: Readonly<Record<string, TrainerShortcutAction>> = {
   ArrowDown: "decreaseTargetSize",
   ArrowLeft: "decreaseSpeed",
   ArrowRight: "increaseSpeed",
-  d: "toggleTheme",
-  p: "openPatternSelect",
-  m: "openModeSelect",
-  s: "openSettingsDialog",
-  g: "openGuideDialog",
 };
 
 const repeatableShortcutActions = new Set<TrainerShortcutAction>([

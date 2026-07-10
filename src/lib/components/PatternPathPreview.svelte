@@ -144,7 +144,14 @@
     return [7 + column * 8.5, 5 + row * (22 / 3)];
   });
 
-  const staticPatternIconNodes: Partial<Record<PatternId, IconNode[]>> = {
+  const hourglassIconPath = buildParametricPath(49, (phase) => {
+    const angle = phase * Math.PI * 2;
+    const vertical = Math.sin(angle);
+    const pinch = 0.22 + 0.74 * Math.abs(vertical);
+    return [24 + Math.sin(angle * 2) * 17 * pinch, 16 + vertical * 12];
+  });
+
+  const patternIconNodes = {
     randomWalk: [
       pathNode("trail", "M6 22 C13 7 24 25 32 12 C36 7 39 8 42 12", {
         "stroke-width": 2,
@@ -215,6 +222,16 @@
       circleNode("turn-a", 15, 13, 1.7),
       circleNode("turn-b", 30, 8, 1.7),
     ],
+    teleport: [
+      pathNode("jump", "M9 23 L20 9 L30 21 L40 11", {
+        "stroke-dasharray": "2.5 3",
+        opacity: 0.55,
+      }),
+      circleNode("jump-a", 9, 23, 2.5),
+      circleNode("jump-b", 20, 9, 2.5),
+      circleNode("jump-c", 30, 21, 2.5),
+      circleNode("jump-d", 40, 11, 2.5),
+    ],
     horizontalSweep: [
       pathNode("horizontal", "M8 16 L40 16", {
         "stroke-width": 2.4,
@@ -235,50 +252,32 @@
         "stroke-width": 2.4,
       }),
     ],
-  };
-
-  const dynamicPatternIconNodes: Partial<
-    Record<PatternId, (pathData: string) => IconNode[]>
-  > = {
-    hourglass: (pathData: string) => [
-      pathNode("hourglass", pathData, {
-        transform: "translate(24 16) scale(1.25 1.8) translate(-24 -16)",
-        "stroke-width": 1.65,
+    hourglass: [
+      pathNode("hourglass", hourglassIconPath, {
+        "stroke-width": 1.8,
       }),
     ],
-  };
-
-  const fallbackIconNodes = (pathData: string) => [
-    pathNode("generated", pathData, { opacity: 0.95 }),
-  ];
-
-  const getPatternIconNodes = (patternId: PatternId, pathData: string) =>
-    dynamicPatternIconNodes[patternId]?.(pathData) ??
-    staticPatternIconNodes[patternId] ??
-    fallbackIconNodes(pathData);
+    multipleObjectTracking: [
+      circleNode("mot-a", 14, 10, 2.5, { opacity: 0.42 }),
+      circleNode("mot-b", 34, 11, 2.4, { opacity: 0.42 }),
+      circleNode("mot-c", 12, 23, 2.4, { opacity: 0.42 }),
+      circleNode("mot-d", 36, 23, 2.5, { opacity: 0.42 }),
+      circleNode("mot-target", 24, 17, 4.2),
+    ],
+  } satisfies Record<PatternId, IconNode[]>;
 </script>
 
 <script lang="ts">
-  import { getPatternPreviewPath } from "$lib/engine/pattern-preview";
   import type { PatternId } from "$lib/engine/types";
 
-  let {
-    patternId,
-    compact = false,
-  }: { patternId: PatternId; compact?: boolean } = $props();
+  let { patternId }: { patternId: PatternId } = $props();
 
-  const pathData = $derived(getPatternPreviewPath(patternId));
-  const iconNodes = $derived(getPatternIconNodes(patternId, pathData));
+  const iconNodes = $derived(patternIconNodes[patternId]);
 </script>
 
 <svg
   data-slot="pattern-path-preview"
-  class={[
-    "shrink-0",
-    compact
-      ? "size-4 text-current"
-      : "size-preview h-7 w-11 rounded-lg border border-border/70 bg-background/80 text-accent",
-  ]}
+  class="size-4 shrink-0 text-current"
   viewBox="0 0 48 32"
   fill="none"
   aria-hidden="true"

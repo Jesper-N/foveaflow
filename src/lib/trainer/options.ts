@@ -4,20 +4,10 @@ import type { PatternId, SpeedUnit, TargetShape } from "$lib/engine/types";
 import { behaviorOptions, type BehaviorId } from "$lib/trainer/behavior";
 
 export type ControlIconId =
-  | "target"
-  | "motion"
-  | "eye"
-  | "calibration"
-  | "theme"
-  | "reset";
+  "target" | "motion" | "eye" | "calibration" | "theme" | "reset";
 
 export type ControlSectionId =
-  | "session"
-  | "drill"
-  | "targets"
-  | "motion"
-  | "screen"
-  | "defaults";
+  "session" | "drill" | "targets" | "motion" | "screen" | "defaults";
 
 export type ControlSection = {
   id: ControlSectionId;
@@ -154,10 +144,28 @@ export const maxSpeedByUnit: Record<SpeedUnit, number> = {
   "screen/s": 6,
 };
 
-export const speedStepByUnit: Record<SpeedUnit, number> = {
+export const minSpeedByUnit: Record<SpeedUnit, number> = {
+  "deg/s": 0.1,
+  "cm/s": 0.1,
+  "screen/s": 0.01,
+};
+
+export const speedSliderStepByUnit: Record<SpeedUnit, number> = {
+  "deg/s": 0.1,
+  "cm/s": 0.1,
+  "screen/s": 0.01,
+};
+
+export const speedKeyboardStepByUnit: Record<SpeedUnit, number> = {
   "deg/s": 1,
   "cm/s": 1,
   "screen/s": 0.05,
+};
+
+export const speedDecimalPlacesByUnit: Record<SpeedUnit, number> = {
+  "deg/s": 1,
+  "cm/s": 1,
+  "screen/s": 2,
 };
 
 const pursuitPatternOptions = patternOptions.filter(
