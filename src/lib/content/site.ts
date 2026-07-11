@@ -6,6 +6,7 @@ export const siteMetadata = {
     "Free online eye trainer for visual tracking, quick refocus, peripheral awareness, and focus under distraction. Browser-based with no account or install.",
   shortDescription:
     "Free online eye trainer for visual tracking, quick refocus, peripheral awareness, and focus under distraction.",
+  homepageLastModified: "2026-07-10",
   imagePath: "/metadata/og.jpg",
   repositoryUrl: "https://github.com/Jesper-N/foveaflow",
   licenseUrl: "https://github.com/Jesper-N/foveaflow/blob/main/LICENSE",
