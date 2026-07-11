@@ -29,15 +29,11 @@ const LILAC_CHASER_UNIT_POINTS = Array.from(
 );
 
 export type CanvasTheme = {
-  background: string;
-  trail: string;
   grid: string;
-  trailGrid: string;
+  trailFadeAlpha: number;
 };
 
 export type CanvasColorMode = "light" | "dark";
-
-type GuidePath = Pick<Path2D, "lineTo" | "moveTo">;
 
 type LetterContext = {
   elapsedSec: number;
@@ -46,71 +42,32 @@ type LetterContext = {
   reactionJumpDistancePx: number;
 };
 
-const withOklchAlpha = (color: string, alpha: number) => {
-  const alphaValue = Math.min(1, Math.max(0, alpha));
-  return color.startsWith("oklch(")
-    ? color.replace(/\s*(?:\/[^)]*)?\)$/, ` / ${alphaValue})`)
-    : color;
-};
-
-export const getCanvasTheme = (
-  node: HTMLCanvasElement,
-  colorMode: CanvasColorMode,
-): CanvasTheme => {
-  const background = getComputedStyle(node).backgroundColor;
-
-  return colorMode === "dark"
+export const getCanvasTheme = (colorMode: CanvasColorMode): CanvasTheme =>
+  colorMode === "dark"
     ? {
-        background,
-        trail: withOklchAlpha(background, 0.35),
         grid: "rgba(255, 255, 255, 0.045)",
-        trailGrid: "rgba(255, 255, 255, 0.026)",
+        trailFadeAlpha: 0.35,
       }
     : {
-        background,
-        trail: withOklchAlpha(background, 0.38),
         grid: "rgba(16, 18, 22, 0.075)",
-        trailGrid: "rgba(16, 18, 22, 0.048)",
+        trailFadeAlpha: 0.38,
       };
-};
 
-export const drawGuides = (
-  ctx: CanvasRenderingContext2D,
-  gridPath: Path2D | null,
+const getGuideGridStep = (arena: Arena) =>
+  Math.max(96, Math.min(arena.width, arena.height) / 5);
+
+export const applyCanvasBackground = (
+  node: HTMLCanvasElement,
+  arena: Arena,
   theme: CanvasTheme,
-  gridColor = theme.grid,
 ) => {
-  if (!gridPath) return;
-
-  ctx.strokeStyle = gridColor;
-  ctx.lineWidth = 1;
-  ctx.stroke(gridPath);
+  const step = getGuideGridStep(arena);
+  node.style.backgroundImage = [
+    `linear-gradient(to right, ${theme.grid} 1px, transparent 1px)`,
+    `linear-gradient(to bottom, ${theme.grid} 1px, transparent 1px)`,
+  ].join(",");
+  node.style.backgroundSize = `${step}px ${step}px`;
 };
-
-export function createGuideGridPath(arena: Arena): Path2D;
-export function createGuideGridPath<TPath extends GuidePath>(
-  arena: Arena,
-  path: TPath,
-): TPath;
-export function createGuideGridPath<TPath extends GuidePath>(
-  arena: Arena,
-  path?: TPath,
-) {
-  const gridPath = path ?? new Path2D();
-  const step = Math.max(96, Math.min(arena.width, arena.height) / 5);
-
-  for (let x = step; x < arena.width; x += step) {
-    gridPath.moveTo(x, 0);
-    gridPath.lineTo(x, arena.height);
-  }
-
-  for (let y = step; y < arena.height; y += step) {
-    gridPath.moveTo(0, y);
-    gridPath.lineTo(arena.width, y);
-  }
-
-  return gridPath;
-}
 
 export const getLilacChaserOuterRadiusPx = (arena: Arena, scale: number) => {
   return (

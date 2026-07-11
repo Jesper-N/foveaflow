@@ -39,7 +39,7 @@ type PatternSamplerState = PatternPathCacheState & {
   primaryTravelState: ScaledTravelState;
   xTravelState: ScaledTravelState;
   yTravelState: ScaledTravelState;
-  randomWalkState: RandomWalkState | null;
+  randomWalkCache: RandomWalkCache | null;
   hardTurnState: HardTurnState | null;
   motRandomWalkCache: MotRandomWalkCache | null;
 };
@@ -49,28 +49,20 @@ const createPatternSamplerState = (): PatternSamplerState => ({
   primaryTravelState: createScaledTravelState(),
   xTravelState: createScaledTravelState(),
   yTravelState: createScaledTravelState(),
-  randomWalkState: null,
+  randomWalkCache: null,
   hardTurnState: null,
   motRandomWalkCache: null,
 });
 
-let activeSamplerState = createPatternSamplerState();
-
-const withSamplerState = <Result>(
-  state: PatternSamplerState,
-  sample: () => Result,
-) => {
-  const previousState = activeSamplerState;
-  activeSamplerState = state;
-  try {
-    return sample();
-  } finally {
-    activeSamplerState = previousState;
-  }
-};
-
 type PatternSampler = {
-  sampleInto: typeof samplePatternInto;
+  sampleInto: (
+    frames: TargetFrame[],
+    id: PatternId,
+    elapsedSec: number,
+    arena: Arena,
+    params: PatternParams,
+    rng: Rng,
+  ) => number;
   reset: () => void;
 };
 
@@ -103,11 +95,32 @@ type HardTurnState = {
 type MotRandomWalkObject = {
   rng: Rng;
   state: RandomWalkState;
+  previewState: RandomWalkState;
+};
+
+type RandomWalkCache = {
+  state: RandomWalkState;
+  previewState: RandomWalkState;
 };
 
 type MotRandomWalkCache = {
   seed: number;
   objects: MotRandomWalkObject[];
+};
+
+const copyRandomWalkState = (
+  target: RandomWalkState,
+  source: RandomWalkState,
+) => {
+  target.seed = source.seed;
+  target.x = source.x;
+  target.y = source.y;
+  target.heading = source.heading;
+  target.targetHeading = source.targetHeading;
+  target.turnIndex = source.turnIndex;
+  target.nextTurnTravel = source.nextTurnTravel;
+  target.committedTravelPx = source.committedTravelPx;
+  target.lastSampleTravelPx = source.lastSampleTravelPx;
 };
 
 const shortestAngleDelta = (from: number, to: number) => {
@@ -276,6 +289,7 @@ const setNextHardTurnWaypoint = (
 };
 
 const sampleHardTurnPath = (
+  samplerState: PatternSamplerState,
   rng: Rng,
   travelPx: number,
   left: number,
@@ -284,10 +298,10 @@ const sampleHardTurnPath = (
   bottom: number,
 ) => {
   const distancePx = Number.isFinite(travelPx) ? Math.max(0, travelPx) : 0;
-  let state = activeSamplerState.hardTurnState;
+  let state = samplerState.hardTurnState;
   if (!state || state.seed !== rng.seed || distancePx < state.lastTravelPx) {
     state = createHardTurnState(rng, distancePx, left, top, right, bottom);
-    activeSamplerState.hardTurnState = state;
+    samplerState.hardTurnState = state;
   }
 
   reconcileHardTurnBounds(state, left, top, right, bottom);
@@ -365,6 +379,7 @@ const createRandomWalkState = (
 };
 
 const initializeRandomWalk = (
+  samplerState: PatternSamplerState,
   rng: Rng,
   travelPx: number,
   left: number,
@@ -373,12 +388,14 @@ const initializeRandomWalk = (
   bottom: number,
 ) => {
   const state = createRandomWalkState(rng, travelPx, left, top, right, bottom);
-  activeSamplerState.randomWalkState = state;
-  return state;
+  const cache = { state, previewState: { ...state } };
+  samplerState.randomWalkCache = cache;
+  return cache;
 };
 
 const advanceRandomWalk = (
   state: RandomWalkState,
+  previewState: RandomWalkState,
   rng: Rng,
   travelPx: number,
   left: number,
@@ -389,7 +406,7 @@ const advanceRandomWalk = (
   confineRandomWalkState(state, left, top, right, bottom);
   if (!Number.isFinite(travelPx) || travelPx <= state.committedTravelPx) {
     state.lastSampleTravelPx = travelPx;
-    return [state.x, state.y] satisfies [number, number];
+    return state;
   }
 
   while (state.committedTravelPx + RANDOM_WALK_STEP_PX <= travelPx) {
@@ -410,10 +427,10 @@ const advanceRandomWalk = (
   const remainderPx = travelPx - state.committedTravelPx;
   if (remainderPx <= 0) {
     state.lastSampleTravelPx = travelPx;
-    return [state.x, state.y] satisfies [number, number];
+    return state;
   }
 
-  const previewState = { ...state };
+  copyRandomWalkState(previewState, state);
   integrateRandomWalkStep(
     previewState,
     rng,
@@ -425,7 +442,7 @@ const advanceRandomWalk = (
     bottom,
   );
   state.lastSampleTravelPx = travelPx;
-  return [previewState.x, previewState.y] satisfies [number, number];
+  return previewState;
 };
 
 const integrateRandomWalkStep = (
@@ -557,6 +574,7 @@ const writeTarget = (
 };
 
 const getMotRandomWalkObjects = (
+  samplerState: PatternSamplerState,
   rng: Rng,
   total: number,
   travelPx: number,
@@ -565,31 +583,33 @@ const getMotRandomWalkObjects = (
   right: number,
   bottom: number,
 ) => {
-  let cache = activeSamplerState.motRandomWalkCache;
-  if (
-    !cache ||
-    cache.seed !== rng.seed ||
-    cache.objects.some((object) => travelPx < object.state.lastSampleTravelPx)
-  ) {
+  let cache = samplerState.motRandomWalkCache;
+  let mustResetCache = !cache || cache.seed !== rng.seed;
+  if (cache && !mustResetCache) {
+    for (let index = 0; index < cache.objects.length; index += 1) {
+      if (travelPx >= cache.objects[index].state.lastSampleTravelPx) continue;
+      mustResetCache = true;
+      break;
+    }
+  }
+  if (mustResetCache || !cache) {
     cache = { seed: rng.seed, objects: [] };
-    activeSamplerState.motRandomWalkCache = cache;
+    samplerState.motRandomWalkCache = cache;
   }
 
   if (cache.objects.length > total) cache.objects.length = total;
 
   for (let index = cache.objects.length; index < total; index += 1) {
     const objectRng = createRng(rng.seed + 120_000 + index * 9_973);
-    cache.objects.push({
-      rng: objectRng,
-      state: createRandomWalkState(
-        objectRng,
-        travelPx,
-        left,
-        top,
-        right,
-        bottom,
-      ),
-    });
+    const state = createRandomWalkState(
+      objectRng,
+      travelPx,
+      left,
+      top,
+      right,
+      bottom,
+    );
+    cache.objects.push({ rng: objectRng, state, previewState: { ...state } });
   }
 
   return cache.objects;
@@ -605,6 +625,7 @@ export const getTeleportJumpDistancePx = (
 };
 
 const samplePatternInto = (
+  samplerState: PatternSamplerState,
   frames: TargetFrame[],
   id: PatternId,
   elapsedSec: number,
@@ -640,7 +661,7 @@ const samplePatternInto = (
   if (id === "circle") {
     const radius = Math.min(rx, ry);
     const effectiveTravelPx = resolveScaledTravel(
-      activeSamplerState.primaryTravelState,
+      samplerState.primaryTravelState,
       id,
       `${id}:${radius}`,
       travelPx,
@@ -660,7 +681,7 @@ const samplePatternInto = (
 
   if (id === "ellipse") {
     const [x, y] = sampleClosedCurve(
-      activeSamplerState,
+      samplerState,
       curveCacheKey(id, left, top, right, bottom, 160),
       travelPx,
       160,
@@ -674,7 +695,7 @@ const samplePatternInto = (
 
   if (id === "figureEight") {
     const [x, y] = sampleClosedCurve(
-      activeSamplerState,
+      samplerState,
       curveCacheKey(id, left, top, right, bottom, 180),
       travelPx,
       180,
@@ -691,7 +712,7 @@ const samplePatternInto = (
 
   if (id === "wave") {
     const [x, y] = sampleClosedCurve(
-      activeSamplerState,
+      samplerState,
       curveCacheKey(id, left, top, right, bottom, 120),
       travelPx,
       120,
@@ -708,14 +729,14 @@ const samplePatternInto = (
 
   if (id === "diagonal") {
     const xTravelPx = resolveScaledTravel(
-      activeSamplerState.xTravelState,
+      samplerState.xTravelState,
       `${id}:x`,
       `${id}:x:${width}`,
       travelPx * DIAGONAL_X_RATE * DIAGONAL_SPEED_SCALE,
       width,
     );
     const yTravelPx = resolveScaledTravel(
-      activeSamplerState.yTravelState,
+      samplerState.yTravelState,
       `${id}:y`,
       `${id}:y:${height}`,
       travelPx * DIAGONAL_Y_RATE * DIAGONAL_SPEED_SCALE,
@@ -734,14 +755,14 @@ const samplePatternInto = (
 
   if (id === "bounce") {
     const xTravelPx = resolveScaledTravel(
-      activeSamplerState.xTravelState,
+      samplerState.xTravelState,
       `${id}:x`,
       `${id}:x:${width}`,
       travelPx * BOUNCE_X_RATE * BOUNCE_SPEED_SCALE,
       width,
     );
     const yTravelPx = resolveScaledTravel(
-      activeSamplerState.yTravelState,
+      samplerState.yTravelState,
       `${id}:y`,
       `${id}:y:${height}`,
       travelPx * BOUNCE_Y_RATE * BOUNCE_SPEED_SCALE,
@@ -759,16 +780,47 @@ const samplePatternInto = (
   }
 
   if (id === "randomWalk") {
-    let state = activeSamplerState.randomWalkState;
+    let cache = samplerState.randomWalkCache;
     if (
-      !state ||
-      state.seed !== rng.seed ||
-      travelPx < state.lastSampleTravelPx
+      !cache ||
+      cache.state.seed !== rng.seed ||
+      travelPx < cache.state.lastSampleTravelPx
     ) {
-      state = initializeRandomWalk(rng, travelPx, left, top, right, bottom);
+      cache = initializeRandomWalk(
+        samplerState,
+        rng,
+        travelPx,
+        left,
+        top,
+        right,
+        bottom,
+      );
     }
-    const [x, y] = advanceRandomWalk(
-      state,
+    const sampledState = advanceRandomWalk(
+      cache.state,
+      cache.previewState,
+      rng,
+      travelPx,
+      left,
+      top,
+      right,
+      bottom,
+    );
+
+    return writeTarget(
+      frames,
+      0,
+      sampledState.x,
+      sampledState.y,
+      params,
+      radiusPx,
+      primaryColor,
+    );
+  }
+
+  if (id === "directionChange") {
+    const [x, y] = sampleHardTurnPath(
+      samplerState,
       rng,
       travelPx,
       left,
@@ -780,12 +832,6 @@ const samplePatternInto = (
     return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
   }
 
-  if (id === "directionChange") {
-    const [x, y] = sampleHardTurnPath(rng, travelPx, left, top, right, bottom);
-
-    return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
-  }
-
   if (id === "teleport") {
     const jumpDistancePx = getTeleportJumpDistancePx(
       arena,
@@ -793,7 +839,7 @@ const samplePatternInto = (
       params.pathMarginPx,
     );
     const effectiveTravelPx = resolveScaledTravel(
-      activeSamplerState.primaryTravelState,
+      samplerState.primaryTravelState,
       id,
       `${id}:${jumpDistancePx}`,
       travelPx,
@@ -816,7 +862,7 @@ const samplePatternInto = (
 
   if (id === "horizontalSweep") {
     const effectiveTravelPx = resolveScaledTravel(
-      activeSamplerState.primaryTravelState,
+      samplerState.primaryTravelState,
       id,
       `${id}:${width}`,
       travelPx,
@@ -835,7 +881,7 @@ const samplePatternInto = (
 
   if (id === "verticalSweep") {
     const effectiveTravelPx = resolveScaledTravel(
-      activeSamplerState.primaryTravelState,
+      samplerState.primaryTravelState,
       id,
       `${id}:${height}`,
       travelPx,
@@ -855,7 +901,7 @@ const samplePatternInto = (
   if (id === "downRightSweep") {
     const diagonalLength = Math.max(1, Math.hypot(width, height));
     const effectiveTravelPx = resolveScaledTravel(
-      activeSamplerState.primaryTravelState,
+      samplerState.primaryTravelState,
       id,
       `${id}:${width}:${height}`,
       travelPx,
@@ -877,7 +923,7 @@ const samplePatternInto = (
   if (id === "downLeftSweep") {
     const diagonalLength = Math.max(1, Math.hypot(width, height));
     const effectiveTravelPx = resolveScaledTravel(
-      activeSamplerState.primaryTravelState,
+      samplerState.primaryTravelState,
       id,
       `${id}:${width}:${height}`,
       travelPx,
@@ -898,7 +944,7 @@ const samplePatternInto = (
 
   if (id === "perimeterLoop") {
     const [x, y] = sampleClosedPolyline(
-      activeSamplerState,
+      samplerState,
       curveCacheKey(id, left, top, right, bottom, 4),
       travelPx,
       4,
@@ -914,7 +960,7 @@ const samplePatternInto = (
 
   if (id === "diamondLoop") {
     const [x, y] = sampleClosedPolyline(
-      activeSamplerState,
+      samplerState,
       curveCacheKey(id, left, top, right, bottom, 4),
       travelPx,
       4,
@@ -930,7 +976,7 @@ const samplePatternInto = (
 
   if (id === "clover") {
     const [x, y] = sampleClosedCurve(
-      activeSamplerState,
+      samplerState,
       curveCacheKey(id, left, top, right, bottom, 160),
       travelPx,
       160,
@@ -949,7 +995,7 @@ const samplePatternInto = (
   if (id === "zigZag") {
     const lanes = 5;
     const [x, y] = sampleClosedPolyline(
-      activeSamplerState,
+      samplerState,
       curveCacheKey(id, left, top, right, bottom, lanes),
       travelPx,
       lanes,
@@ -966,7 +1012,7 @@ const samplePatternInto = (
     const columns = 5;
     const pointCount = rows * columns;
     const [x, y] = sampleClosedPolyline(
-      activeSamplerState,
+      samplerState,
       curveCacheKey(id, left, top, right, bottom, pointCount),
       travelPx,
       pointCount,
@@ -984,7 +1030,7 @@ const samplePatternInto = (
 
   if (id === "lissajous") {
     const [x, y] = sampleClosedCurve(
-      activeSamplerState,
+      samplerState,
       curveCacheKey(id, left, top, right, bottom, 180),
       travelPx,
       180,
@@ -1001,7 +1047,7 @@ const samplePatternInto = (
 
   if (id === "hourglass") {
     const [x, y] = sampleClosedCurve(
-      activeSamplerState,
+      samplerState,
       curveCacheKey(id, left, top, right, bottom, 160),
       travelPx,
       160,
@@ -1019,7 +1065,7 @@ const samplePatternInto = (
     const insetX = width * 0.18;
     const insetY = height * 0.18;
     const [x, y] = sampleClosedPolyline(
-      activeSamplerState,
+      samplerState,
       curveCacheKey(id, left, top, right, bottom, 4),
       travelPx,
       4,
@@ -1042,6 +1088,7 @@ const samplePatternInto = (
     );
     const total = targetCount + distractorCount;
     const objects = getMotRandomWalkObjects(
+      samplerState,
       rng,
       total,
       travelPx,
@@ -1055,8 +1102,9 @@ const samplePatternInto = (
     for (let index = 0; index < total; index += 1) {
       const object = objects[index];
       const role: TargetRole = index < targetCount ? "target" : "distractor";
-      const [x, y] = advanceRandomWalk(
+      const sampledState = advanceRandomWalk(
         object.state,
+        object.previewState,
         object.rng,
         travelPx,
         left,
@@ -1067,8 +1115,8 @@ const samplePatternInto = (
       count = writeTarget(
         frames,
         count,
-        x,
-        y,
+        sampledState.x,
+        sampledState.y,
         params,
         radiusPx,
         role === "target" ? primaryColor : secondaryColor,
@@ -1081,15 +1129,23 @@ const samplePatternInto = (
     return count;
   }
 
-  return samplePatternInto(frames, "ellipse", elapsedSec, arena, params, rng);
+  return samplePatternInto(
+    samplerState,
+    frames,
+    "ellipse",
+    elapsedSec,
+    arena,
+    params,
+    rng,
+  );
 };
 
 export const createPatternSampler = (): PatternSampler => {
   let state = createPatternSamplerState();
 
   return {
-    sampleInto: (...args) =>
-      withSamplerState(state, () => samplePatternInto(...args)),
+    sampleInto: (frames, id, elapsedSec, arena, params, rng) =>
+      samplePatternInto(state, frames, id, elapsedSec, arena, params, rng),
     reset: () => {
       state = createPatternSamplerState();
     },
