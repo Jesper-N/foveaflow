@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, untrack } from "svelte";
+  import { onMount, tick as flushSvelte, untrack } from "svelte";
   import type { Attachment } from "svelte/attachments";
   import { ModeWatcher, mode, setMode } from "mode-watcher";
 
@@ -68,8 +68,12 @@
     createHudAutoHideTimer,
   } from "$lib/trainer/auto-hide";
   import {
+    desktopHeaderQuery,
+    focusHeaderSelectTriggerFromShortcut,
+    getHeaderSelectOpenState,
     runTrainerShortcutAction,
     shortcutPrioritySurfaceSelector,
+    type HeaderShortcutSelect,
   } from "$lib/trainer/shortcut-runner";
   import {
     adjustSpeedBySteps,
@@ -94,7 +98,6 @@
   } from "$lib/trainer/settings";
   import { createTrainerCanvasRuntime } from "$lib/trainer/canvas-runtime";
   import type { CanvasColorMode } from "$lib/trainer/rendering";
-  import { createHudControlTransition } from "$lib/trainer/transitions";
 
   let { routeSlug = "" }: { routeSlug?: string } = $props();
 
@@ -324,10 +327,6 @@
   });
 
   const speedSliderValue = () => [settings.speed.value];
-
-  const hudControlTransition = createHudControlTransition(
-    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-  );
 
   const attachHudContentSizer: Attachment<HTMLDivElement> = (node) => {
     const updateWidth = () => {
@@ -585,6 +584,10 @@
     hudVisible = true;
   };
 
+  const revealHudTemporarily = () => {
+    hudAutoHideTimer.start();
+  };
+
   const setHudInteractionActive = (active: boolean) => {
     if (hudElementInteractionActive === active) return;
     hudElementInteractionActive = active;
@@ -703,6 +706,42 @@
     panelOpen = true;
   };
 
+  const openHeaderSelectFromShortcut = (select: HeaderShortcutSelect) => {
+    const useDesktopSelect = window.matchMedia(desktopHeaderQuery).matches;
+    const openState = getHeaderSelectOpenState(select, useDesktopSelect);
+    revealHud();
+
+    mobilePresetSelectOpen = openState.mobilePresetSelectOpen;
+    desktopPresetSelectOpen = openState.desktopPresetSelectOpen;
+    mobilePatternSelectOpen = openState.mobilePatternSelectOpen;
+    desktopPatternSelectOpen = openState.desktopPatternSelectOpen;
+    mobileLilacChaserColorSelectOpen =
+      openState.mobileLilacChaserColorSelectOpen;
+    desktopLilacChaserColorSelectOpen =
+      openState.desktopLilacChaserColorSelectOpen;
+
+    void focusHeaderSelectTriggerFromShortcut({
+      select,
+      useDesktopSelect,
+      flushSvelte,
+    });
+  };
+
+  const openGuideDialog = () => {
+    const guidePopover = document.getElementById("trainer-guide-popover");
+    if (!(guidePopover instanceof HTMLElement)) return false;
+
+    revealHud();
+    if (guidePopover.matches(":popover-open")) return true;
+
+    if (typeof guidePopover.showPopover === "function") {
+      guidePopover.showPopover();
+      return true;
+    }
+
+    return false;
+  };
+
   const hasPriorityKeyboardSurface = () => {
     return (
       panelOpen ||
@@ -721,6 +760,11 @@
       toggleMotionPaused,
       adjustTargetSize,
       adjustSpeed,
+      toggleTheme: () => setMode(isDarkMode ? "light" : "dark"),
+      canOpenPatternSelect: () => settings.presetId === "pursuit",
+      openHeaderSelect: openHeaderSelectFromShortcut,
+      openControlsPanel,
+      openGuideDialog,
     });
   };
 
@@ -793,10 +837,10 @@
       value: lilacChaserScaleSliderValue,
       set: setLilacChaserScaleSliderValue,
     },
-    hudControlTransition,
     toggleMotionPaused,
     toggleMotionDirection,
     revealHud,
+    revealHudTemporarily,
     setHudInteractionActive,
     openControlsPanel,
   };

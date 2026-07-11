@@ -1,4 +1,3 @@
-import type { HudControlTransition } from "$lib/trainer/transitions";
 import type { ControlSectionId } from "$lib/trainer/options";
 import type {
   CalibrationField,
@@ -21,10 +20,10 @@ export type TrainerHudActions = {
   sizeSlider: SliderBinding;
   speedSlider: SliderBinding;
   lilacChaserScaleSlider: SliderBinding;
-  hudControlTransition: HudControlTransition;
   toggleMotionPaused: () => void;
   toggleMotionDirection: () => void;
   revealHud: () => void;
+  revealHudTemporarily: () => void;
   setHudInteractionActive: (active: boolean) => void;
   openControlsPanel: () => void;
 };

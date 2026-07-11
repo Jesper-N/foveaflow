@@ -38,7 +38,7 @@
 
   let quickFaqItems = $derived(guideSeoContent.faq.slice(0, 3));
   let locale = $derived(languageState.locale);
-  let closeButtonElement: HTMLButtonElement | null = null;
+  let closeButtonElement = $state<HTMLButtonElement | null>(null);
 
   const handlePopoverToggle = (event: ToggleEvent) => {
     onGuidePopoverToggle(event);
@@ -326,16 +326,13 @@
               aria-hidden={!faqOpen}
               inert={!faqOpen}
               class={[
-                "grid overflow-hidden transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none",
+                "grid overflow-hidden transition-[grid-template-rows] duration-200 ease-out motion-reduce:transition-none",
                 faqOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
               ]}
             >
               <div class="min-h-0 overflow-hidden">
                 <p
-                  class={[
-                    "pb-1 text-sm leading-6 text-muted-foreground text-pretty transition-opacity duration-200 ease-out motion-reduce:transition-none",
-                    faqOpen ? "opacity-100" : "opacity-0",
-                  ]}
+                  class="pb-1 text-sm leading-6 text-muted-foreground text-pretty"
                 >
                   {t(locale, faqItem.answer)}
                 </p>
