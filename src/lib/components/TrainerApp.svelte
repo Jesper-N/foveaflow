@@ -205,9 +205,9 @@
   );
   let isDarkMode = $derived(colorMode === "dark");
   const canvasRuntime = createTrainerCanvasRuntime({
+    getColorMode: () => colorMode,
     getState: () => ({
       settings,
-      colorMode,
       motionPaused,
       canToggleDirection,
       isLilacChaserMode,

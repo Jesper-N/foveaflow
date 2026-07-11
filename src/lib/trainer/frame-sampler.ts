@@ -6,7 +6,6 @@ import {
 import {
   getMaximumSizeProfileRadius,
   sampleSizeProfile,
-  sampleSpeedProfile,
 } from "$lib/engine/profiles";
 import type { Rng } from "$lib/engine/random";
 import type { Arena, PatternParams, TargetFrame } from "$lib/engine/types";
@@ -25,13 +24,11 @@ type TrainerFrameSample = {
   letterContext: TrainerLetterContext;
 };
 
-type TrainerFrameInput = {
+export type TrainerFrameInput = {
   settings: TrainerSettings;
   arena: Arena;
   elapsedSec: number;
   travelPx: number;
-  currentSpeedPxPerSec: number;
-  baseSpeedPxPerSec: number;
   safeBallColor: string;
   distractorColor: string;
   pathMarginPx: number;
@@ -67,8 +64,6 @@ export const createTrainerFrameSampler = () => {
         arena,
         elapsedSec,
         travelPx,
-        currentSpeedPxPerSec,
-        baseSpeedPxPerSec,
         safeBallColor,
         distractorColor,
         pathMarginPx,
@@ -80,13 +75,6 @@ export const createTrainerFrameSampler = () => {
         activePatternId = settings.patternId;
       }
 
-      const speedPxPerSec =
-        currentSpeedPxPerSec ||
-        sampleSpeedProfile(
-          settings.speedProfile,
-          elapsedSec,
-          baseSpeedPxPerSec,
-        );
       const radiusPx = sampleSizeProfile(
         settings.sizeProfile,
         elapsedSec,
@@ -102,7 +90,6 @@ export const createTrainerFrameSampler = () => {
         pathMarginPx,
         getTargetVisualExtentPx(pathRadiusPx, settings.targetShape) + 8,
       );
-      params.speedPxPerSec = speedPxPerSec;
       params.travelPx = travelPx;
       params.targetCount = settings.targetCount;
       params.distractorCount = settings.distractorCount;

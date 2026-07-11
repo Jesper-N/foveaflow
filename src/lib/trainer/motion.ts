@@ -1,18 +1,7 @@
 import type { TrainerSettings } from "$lib/engine/presets";
 import { integrateSpeedProfile, type SpeedProfile } from "$lib/engine/profiles";
 
-type MotionTickState = {
-  timestamp: number;
-  lastTimestamp: number;
-  elapsedSec: number;
-  travelPx: number;
-  baseSpeedPxPerSec: number;
-  speedProfile: SpeedProfile;
-  canToggleDirection: boolean;
-  motionDirection: TrainerSettings["motionDirection"];
-};
-
-export type MotionTickResult = {
+export type MotionState = {
   lastTimestamp: number;
   elapsedSec: number;
   travelPx: number;
@@ -32,37 +21,27 @@ const getMotionDirectionMultiplier = (
 };
 
 export const advanceMotionTick = (
-  {
-    timestamp,
-    lastTimestamp,
-    elapsedSec,
-    travelPx,
-    baseSpeedPxPerSec,
-    speedProfile,
-    canToggleDirection,
-    motionDirection,
-  }: MotionTickState,
-  result: MotionTickResult = {
-    lastTimestamp: 0,
-    elapsedSec: 0,
-    travelPx: 0,
-  },
+  state: MotionState,
+  timestamp: number,
+  baseSpeedPxPerSec: number,
+  speedProfile: SpeedProfile,
+  canToggleDirection: boolean,
+  motionDirection: TrainerSettings["motionDirection"],
 ) => {
-  const deltaSec = getMotionDeltaSec(timestamp, lastTimestamp);
+  const deltaSec = getMotionDeltaSec(timestamp, state.lastTimestamp);
   const directionMultiplier = getMotionDirectionMultiplier(
     canToggleDirection,
     motionDirection,
   );
-  const nextElapsedSec = elapsedSec + deltaSec;
+  const nextElapsedSec = state.elapsedSec + deltaSec;
   const distancePx = integrateSpeedProfile(
     speedProfile,
-    elapsedSec,
+    state.elapsedSec,
     nextElapsedSec,
     baseSpeedPxPerSec,
   );
 
-  result.lastTimestamp = timestamp;
-  result.elapsedSec = nextElapsedSec;
-  result.travelPx = travelPx + distancePx * directionMultiplier;
-  return result;
+  state.lastTimestamp = timestamp;
+  state.elapsedSec = nextElapsedSec;
+  state.travelPx += distancePx * directionMultiplier;
 };
