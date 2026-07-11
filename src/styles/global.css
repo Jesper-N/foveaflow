@@ -404,12 +404,16 @@ canvas {
   .trainer-hud {
     transform: translate3d(0, 0, 0);
     opacity: 1;
-    animation: trainer-hud-enter 360ms cubic-bezier(0.32, 0.72, 0, 1) backwards;
+    animation: trainer-hud-enter 200ms cubic-bezier(0.23, 1, 0.32, 1) backwards;
     transition:
       width 300ms cubic-bezier(0.22, 1, 0.36, 1),
-      transform 300ms cubic-bezier(0.32, 0.72, 0, 1),
-      opacity 180ms ease;
+      transform 200ms cubic-bezier(0.23, 1, 0.32, 1),
+      opacity 200ms cubic-bezier(0.23, 1, 0.32, 1);
     will-change: width, transform, opacity;
+  }
+
+  .trainer-hud-shell[data-instant-reveal="true"] .trainer-hud {
+    transition: width 300ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .trainer-hud-shell[data-hidden="true"] .trainer-hud {
@@ -426,10 +430,16 @@ canvas {
       transform 180ms cubic-bezier(0.23, 1, 0.32, 1);
   }
 
-  .trainer-hud-peek:hover,
   .trainer-hud-peek:focus-visible {
     opacity: 1;
     transform: translate3d(-50%, 1px, 0);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .trainer-hud-peek:hover {
+      opacity: 1;
+      transform: translate3d(-50%, 1px, 0);
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {

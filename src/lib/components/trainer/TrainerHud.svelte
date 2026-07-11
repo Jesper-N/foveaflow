@@ -76,7 +76,6 @@
     actions,
   }: Props = $props();
 
-  let hudControlTransition = $derived(actions.hudControlTransition);
   let locale = $derived(languageState.locale);
   let currentPresetName = $derived(t(locale, getPresetName(settings.presetId)));
   let currentPatternName = $derived(
@@ -92,6 +91,7 @@
   let pointerInside = false;
   let pointerDown = false;
   let focusInside = false;
+  let instantReveal = $state(false);
   let hudElement: HTMLDivElement | null = null;
 
   const syncHudInteraction = () => {
@@ -163,6 +163,7 @@
     const shouldTransferFocus =
       event.currentTarget instanceof HTMLElement &&
       event.currentTarget.matches(":focus-visible");
+    instantReveal = shouldTransferFocus;
     actions.revealHud();
     if (!shouldTransferFocus) return;
 
@@ -170,12 +171,23 @@
       const focusTarget = hudElement?.querySelector<HTMLElement>(
         "[data-hud-focus-target]",
       );
-      if (!focusTarget) return;
+      if (!focusTarget) {
+        instantReveal = false;
+        return;
+      }
 
       focusTarget.focus();
       focusInside = true;
       syncHudInteraction();
+      requestAnimationFrame(() => {
+        instantReveal = false;
+      });
     });
+  };
+
+  const handleRevealPointerEnter = (event: PointerEvent) => {
+    if (event.pointerType === "touch") return;
+    actions.revealHudTemporarily();
   };
 </script>
 
@@ -219,11 +231,11 @@
 {#if hudHidden}
   <button
     type="button"
-    class="trainer-hud-peek absolute left-1/2 top-0 z-30 flex h-10 w-32 items-start justify-center rounded-b-full pt-2 outline-hidden focus-visible:ring-3 focus-visible:ring-foreground"
+    class="trainer-hud-peek absolute left-1/2 top-0 z-30 flex h-10 w-full items-start justify-center rounded-b-full pt-2 outline-hidden focus-visible:ring-3 focus-visible:ring-foreground sm:w-32"
     aria-label={t(locale, "Reveal controls")}
-    onpointerenter={actions.revealHud}
+    onpointerenter={handleRevealPointerEnter}
+    onpointerdown={actions.revealHudTemporarily}
     onfocus={handleRevealFocus}
-    onclick={actions.revealHud}
   >
     <span
       class="h-1 w-16 rounded-full bg-accent/70 shadow-[0_0_16px_rgba(118,217,0,0.22)]"
@@ -237,6 +249,7 @@
   {@attach attachHudInteraction}
   class="trainer-hud-shell absolute top-3 left-1/2 z-20 max-w-[calc(100dvw-1.5rem)] -translate-x-1/2 sm:top-4"
   data-hidden={hudHidden}
+  data-instant-reveal={instantReveal}
   data-nosnippet
 >
   <header
@@ -287,6 +300,7 @@
           onOpenChange={actions.handleHeaderPresetOpenChange}
         >
           <Select.Trigger
+            data-trainer-shortcut-select="mobile-mode"
             class="size-9 justify-center rounded-full p-0 [&>svg:last-child]:hidden"
             aria-label={`${t(locale, "Drill")}: ${currentPresetName}`}
             title={`${t(locale, "Drill")}: ${currentPresetName}`}
@@ -300,7 +314,7 @@
         </Select.Root>
 
         {#if settings.presetId === "pursuit"}
-          <div class="flex shrink-0" in:hudControlTransition>
+          <div class="flex shrink-0">
             <Select.Root
               bind:open={mobilePatternSelectOpen}
               type="single"
@@ -309,6 +323,7 @@
               onOpenChange={actions.handleHeaderPatternOpenChange}
             >
               <Select.Trigger
+                data-trainer-shortcut-select="mobile-pattern"
                 class="size-9 justify-center rounded-full p-0 [&>svg:last-child]:hidden"
                 aria-label={`${t(locale, "Motion path")}: ${currentPatternName}`}
                 title={`${t(locale, "Motion path")}: ${currentPatternName}`}
@@ -324,7 +339,7 @@
             </Select.Root>
           </div>
         {:else if isLilacChaserMode}
-          <div class="flex shrink-0" in:hudControlTransition>
+          <div class="flex shrink-0">
             <Select.Root
               bind:open={mobileLilacChaserColorSelectOpen}
               type="single"
@@ -375,6 +390,7 @@
           onOpenChange={actions.handleHeaderPresetOpenChange}
         >
           <Select.Trigger
+            data-trainer-shortcut-select="desktop-mode"
             class={[
               "overflow-hidden transition-[width] duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none",
               settings.presetId === "pursuit"
@@ -393,7 +409,7 @@
         </Select.Root>
 
         {#if settings.presetId === "pursuit"}
-          <div class="flex shrink-0" in:hudControlTransition>
+          <div class="flex shrink-0">
             <Select.Root
               bind:open={desktopPatternSelectOpen}
               type="single"
@@ -402,6 +418,7 @@
               onOpenChange={actions.handleHeaderPatternOpenChange}
             >
               <Select.Trigger
+                data-trainer-shortcut-select="desktop-pattern"
                 class="w-36 overflow-hidden lg:w-40 2xl:w-44"
                 aria-label={t(locale, "Motion path")}
               >
@@ -418,10 +435,7 @@
       </div>
 
       {#if !isLilacChaserMode}
-        <div
-          class="hidden shrink-0 items-center gap-2 overflow-hidden xl:flex"
-          in:hudControlTransition
-        >
+        <div class="hidden shrink-0 items-center gap-2 overflow-hidden xl:flex">
           <div
             class="grid h-9 grid-cols-[auto_5.5rem_auto] items-center gap-3 rounded-full border bg-muted/60 px-3"
           >
@@ -473,10 +487,7 @@
           </div>
         </div>
       {:else}
-        <div
-          class="hidden shrink-0 items-center gap-2 overflow-hidden xl:flex"
-          in:hudControlTransition
-        >
+        <div class="hidden shrink-0 items-center gap-2 overflow-hidden xl:flex">
           <Select.Root
             bind:open={desktopLilacChaserColorSelectOpen}
             type="single"
