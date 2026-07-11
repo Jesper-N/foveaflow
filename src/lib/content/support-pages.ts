@@ -14,6 +14,7 @@ type ComparisonRow = {
 export type SupportPage = {
   slug: string;
   path: `/${string}/`;
+  lastModified: string;
   title: string;
   description: string;
   kicker: string;
@@ -40,6 +41,7 @@ export const supportPages = [
   {
     slug: "fps-eye-training",
     path: "/fps-eye-training/",
+    lastModified: "2026-07-10",
     title: "FoveaFlow - FPS Eye Training Warmup",
     description:
       "Use FoveaFlow as a free FPS eye training warmup for visual tracking, quick refocus, target switching, and focus under distraction.",
@@ -85,6 +87,7 @@ export const supportPages = [
   {
     slug: "blinkcamp-alternative",
     path: "/blinkcamp-alternative/",
+    lastModified: "2026-07-10",
     title: "FoveaFlow - BlinkCamp Alternative for Eye Training",
     description:
       "Compare FoveaFlow and BlinkCamp for free browser-based eye training, visual tracking, FPS warmups, reaction jumps, and distractor tracking.",
@@ -189,6 +192,7 @@ export const supportPages = [
   {
     slug: "eyetrainer-gg-alternative",
     path: "/eyetrainer-gg-alternative/",
+    lastModified: "2026-07-10",
     title: "FoveaFlow - EyeTrainer.gg Alternative for FPS Eye Training",
     description:
       "Compare FoveaFlow and EyeTrainer.gg for FPS eye training, visual tracking, reaction drills, distraction control, and browser-based warmups.",

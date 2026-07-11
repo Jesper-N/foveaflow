@@ -1,4 +1,5 @@
-import { legalPageLinks } from "./content/legal";
+import { legalPageLinks, legalPages } from "./content/legal";
+import { guideMetadata } from "./content/page-copy";
 import { siteMetadata } from "./content/site";
 import { supportPages } from "./content/support-pages";
 import {
@@ -9,13 +10,22 @@ import {
 import { indexableTrainerRoutes } from "./content/trainer-routes";
 import { absoluteUrl } from "./seo";
 
-const sitemapPaths = [
-  "/",
-  "/guide/",
-  ...supportPages.map((page) => page.path),
-  legalPageLinks.privacy.path,
-  legalPageLinks.terms.path,
-  ...indexableTrainerRoutes.map((route) => route.path),
+const sitemapEntries = [
+  { path: "/", lastModified: siteMetadata.homepageLastModified },
+  { path: "/guide/", lastModified: guideMetadata.lastModified },
+  ...supportPages.map(({ path, lastModified }) => ({ path, lastModified })),
+  {
+    path: legalPageLinks.privacy.path,
+    lastModified: legalPages.privacy.lastModified,
+  },
+  {
+    path: legalPageLinks.terms.path,
+    lastModified: legalPages.terms.lastModified,
+  },
+  ...indexableTrainerRoutes.map(({ path, lastModified }) => ({
+    path,
+    lastModified,
+  })),
 ] as const;
 
 const escapeXml = (value: string) =>
@@ -27,11 +37,12 @@ const escapeXml = (value: string) =>
     .replaceAll("'", "&apos;");
 
 export const buildSitemapXml = (site: URL) => {
-  const urls = sitemapPaths
-    .map((path) => {
+  const urls = sitemapEntries
+    .map(({ path, lastModified }) => {
       return [
         "  <url>",
         `    <loc>${escapeXml(absoluteUrl(path, site))}</loc>`,
+        `    <lastmod>${escapeXml(lastModified)}</lastmod>`,
         "  </url>",
       ].join("\n");
     })

@@ -146,6 +146,7 @@ export const homepageSeoContent = {
 export const guideMetadata = {
   title: "FoveaFlow Guide - Eye Trainer Drills & Visual Tracking Settings",
   heading: "FoveaFlow Guide",
+  lastModified: "2026-07-10",
   description:
     "Choose the right FoveaFlow drill for visual tracking, quick refocus, peripheral awareness, FPS warmups, and focus under distraction.",
   summary:

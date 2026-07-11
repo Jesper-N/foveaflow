@@ -12,6 +12,7 @@ const toTitleCase = (value: string) =>
 export type TrainerRoute = {
   slug: string;
   path: `/${string}/`;
+  lastModified: string;
   mode: TrainingMode;
   patternId?: PatternId;
   label: string;
@@ -372,6 +373,7 @@ export const trainerRoutes = [
   {
     slug: "smooth-pursuit",
     path: "/smooth-pursuit/",
+    lastModified: "2026-07-10",
     mode: "pursuit",
     patternId: "randomWalk",
     label: "Smooth Pursuit",
@@ -385,6 +387,7 @@ export const trainerRoutes = [
   ...publicPursuitPatternRoutes.map((patternRoute) => ({
     slug: patternRoute.slug,
     path: `/${patternRoute.slug}/` as const,
+    lastModified: "2026-07-10",
     mode: "pursuit" as const,
     patternId: patternRoute.patternId,
     label: patternRoute.label,
@@ -401,6 +404,7 @@ export const trainerRoutes = [
   {
     slug: "reaction-jumps",
     path: "/reaction-jumps/",
+    lastModified: "2026-07-10",
     mode: "reactionTime",
     label: "Reaction Jumps",
     heading: "Reaction Jumps Eye Training",
@@ -413,6 +417,7 @@ export const trainerRoutes = [
   {
     slug: "multiple-distractions",
     path: "/multiple-distractions/",
+    lastModified: "2026-07-10",
     mode: "mot",
     label: "Multiple Distractions",
     heading: "Distractor Tracking Eye Training",
@@ -425,6 +430,7 @@ export const trainerRoutes = [
   {
     slug: "lilac-chaser",
     path: "/lilac-chaser/",
+    lastModified: "2026-07-10",
     mode: "lilacChaser",
     label: "Lilac Chaser",
     heading: "Lilac Chaser Fixation and Peripheral Awareness",

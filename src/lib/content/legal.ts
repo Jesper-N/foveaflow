@@ -15,6 +15,7 @@ export const legalPageLinks = {
 export const legalPages = {
   privacy: {
     ...legalPageLinks.privacy,
+    lastModified: "2026-07-10",
     metaTitle: "FoveaFlow - Privacy Policy",
     title: "Privacy Policy",
     description:
@@ -109,6 +110,7 @@ export const legalPages = {
   },
   terms: {
     ...legalPageLinks.terms,
+    lastModified: "2026-07-10",
     metaTitle: "FoveaFlow - Terms of Use",
     title: "Terms of Use",
     description:
