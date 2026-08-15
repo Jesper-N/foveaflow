@@ -239,8 +239,6 @@ export const fil = {
     "Magagamit ang FoveaFlow nang hindi nagpapadala ng personal details. Hindi ito ginawa para mangolekta ng personal information mula sa mga bata.",
   "FoveaFlow does not set advertising cookies. Cloudflare may set security cookies when it needs them to keep the site available and safe.":
     "Hindi nagse-set ang FoveaFlow ng advertising cookies. Maaaring mag-set ang Cloudflare ng security cookies kung kailangan para mapanatiling available at ligtas ang site.",
-  "FoveaFlow stores your language preference in local browser storage and in a same-site preference cookie so the correct language can be selected before the app starts. The cookie can last up to 400 days, uses SameSite=Lax, and is marked Secure on HTTPS.":
-    "Sine-save ng FoveaFlow ang pinili mong wika sa local browser storage at sa isang same-site preference cookie para mapili ang tamang wika bago magsimula ang app. Maaaring tumagal ang cookie nang hanggang 400 araw, gumagamit ito ng SameSite=Lax, at minamarkahang Secure sa HTTPS.",
   "FoveaFlow eye trainer animation for visual tracking practice":
     "Animation ng FoveaFlow para sa pagsasanay sa pagsubaybay ng tingin",
   "FoveaFlow eye trainer animation for visual tracking practice. Use Pause motion to stop target movement before changing controls.":
@@ -280,6 +278,8 @@ export const fil = {
     "Sine-save ng FoveaFlow ang local controls para sa bilis, laki, hugis, kulay, opacity, trail, mga ruta, distractors, letters, at display scale.",
   "FoveaFlow stores settings locally in your browser so the app can remember them on the current device. That can include the selected language, mode, motion pattern, speed, target size, color, opacity, trail setting, viewing distance, screen scale, and theme.":
     "Lokal na sine-save ng FoveaFlow ang settings sa browser mo para maalala ito ng app sa kasalukuyang device. Kasama rito ang piniling wika, mode, pattern ng galaw, bilis, laki ng target, kulay, opacity, trail setting, distansya sa screen, sukat ng screen, at tema.",
+  "FoveaFlow stores your language preference in local browser storage and in a same-site preference cookie so the correct language can be selected before the app starts. The cookie can last up to 400 days, uses SameSite=Lax, and is marked Secure on HTTPS.":
+    "Sine-save ng FoveaFlow ang pinili mong wika sa local browser storage at sa isang same-site preference cookie para mapili ang tamang wika bago magsimula ang app. Maaaring tumagal ang cookie nang hanggang 400 araw, gumagamit ito ng SameSite=Lax, at minamarkahang Secure sa HTTPS.",
   "FoveaFlow vs BlinkCamp": "FoveaFlow vs BlinkCamp",
   "FoveaFlow vs EyeTrainer.gg": "FoveaFlow vs EyeTrainer.gg",
   "Free access": "Libreng access",
@@ -594,7 +594,6 @@ export const fil = {
   Semibold: "Medyo makapal",
   Session: "Sesyon",
   "Settings saved in your browser": "Settings na naka-save sa browser mo",
-  Shape: "Hugis",
   "Shape, color, opacity, trail length, and trail behavior are adjustable.":
     "Naa-adjust ang hugis, kulay, opacity, haba ng trail, at trail behavior.",
   "Sharpen focus between code, logs, dashboards, terminals, tickets, and multi-monitor work.":
@@ -696,6 +695,7 @@ export const fil = {
   "Target acquisition": "Paghahanap ng target",
   "Target appearance, trail display, distractor brightness, letter styling, viewing distance, and screen scale can be tuned.":
     "Puwedeng i-tune ang target appearance, trail display, distractor brightness, letter styling, distansya sa screen, at sukat ng screen.",
+  "Target form": "Hugis",
   "Target opacity": "Opacity ng target",
   "Target size": "Laki ng target",
   Targets: "Mga target",

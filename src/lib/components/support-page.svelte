@@ -1,14 +1,5 @@
 <script lang="ts">
-  import ArrowLeftIcon from "@lucide/svelte/icons/arrow-left";
-  import BookOpenIcon from "@lucide/svelte/icons/book-open";
-  import CheckIcon from "@lucide/svelte/icons/check";
-  import CrosshairIcon from "@lucide/svelte/icons/crosshair";
-  import ExternalLinkIcon from "@lucide/svelte/icons/external-link";
-  import FileTextIcon from "@lucide/svelte/icons/file-text";
-  import ShieldCheckIcon from "@lucide/svelte/icons/shield-check";
-  import SlidersHorizontalIcon from "@lucide/svelte/icons/sliders-horizontal";
-
-  import LanguageSelect from "$lib/components/LanguageSelect.svelte";
+  import LanguageSelect from "$lib/components/language-select.svelte";
   import { Badge } from "$lib/components/ui/badge/index.js";
   import { Button } from "$lib/components/ui/button/index.js";
   import * as Item from "$lib/components/ui/item/index.js";
@@ -18,6 +9,14 @@
   import type { SupportPage } from "$lib/content/support-pages";
   import { languageState } from "$lib/i18n/state.svelte";
   import { t } from "$lib/i18n/translate";
+  import ArrowLeftIcon from "@lucide/svelte/icons/arrow-left";
+  import BookOpenIcon from "@lucide/svelte/icons/book-open";
+  import CheckIcon from "@lucide/svelte/icons/check";
+  import CrosshairIcon from "@lucide/svelte/icons/crosshair";
+  import ExternalLinkIcon from "@lucide/svelte/icons/external-link";
+  import FileTextIcon from "@lucide/svelte/icons/file-text";
+  import ShieldCheckIcon from "@lucide/svelte/icons/shield-check";
+  import SlidersHorizontalIcon from "@lucide/svelte/icons/sliders-horizontal";
 
   let { page }: { page: SupportPage } = $props();
 
@@ -37,7 +36,7 @@
   let locale = $derived(languageState.locale);
 </script>
 
-<main class="min-h-dvh bg-background text-foreground selection:bg-accent/30">
+<main class="bg-background text-foreground selection:bg-accent/30 min-h-dvh">
   <div class="mx-auto grid w-full max-w-7xl gap-10 px-4 py-5 sm:px-6 lg:px-8">
     <nav
       class={`flex items-center justify-between gap-4 ${guideEnterTop}`}
@@ -55,7 +54,7 @@
       <div class="flex items-center gap-2">
         <Badge
           variant="outline"
-          class="hidden h-8 border-border/80 bg-background/80 px-3 py-0 text-sm text-muted-foreground sm:inline-flex"
+          class="border-border/80 bg-background/80 text-muted-foreground hidden h-8 px-3 py-0 text-sm sm:inline-flex"
         >
           {t(locale, "Updated July 10, 2026")}
         </Badge>
@@ -77,12 +76,12 @@
           {t(locale, page.kicker)}
         </Badge>
         <h1
-          class="max-w-[14ch] text-4xl leading-none font-semibold tracking-tight text-foreground md:text-6xl"
+          class="text-foreground max-w-[14ch] text-4xl leading-none font-semibold tracking-tight md:text-6xl"
         >
           {t(locale, page.heading)}
         </h1>
         <p
-          class="mt-6 max-w-160 text-base leading-7 text-muted-foreground md:text-lg md:leading-8"
+          class="text-muted-foreground mt-6 max-w-160 text-base leading-7 md:text-lg md:leading-8"
         >
           {t(locale, page.summary)}
         </p>
@@ -107,7 +106,7 @@
         >
           <Item.Media
             variant="icon"
-            class="size-10 rounded-lg border bg-muted text-brand-foreground"
+            class="bg-muted text-brand-foreground size-10 rounded-lg border"
           >
             <SlidersHorizontalIcon class="size-5" />
           </Item.Media>
@@ -118,7 +117,7 @@
             <Item.Description class="line-clamp-none leading-6">
               {t(
                 locale,
-                "FoveaFlow saves local controls for speed, size, shape, color, opacity, trails, paths, distractors, letters, and display scale.",
+                "FoveaFlow saves local controls for speed, size, shape, color, opacity, trails, paths, distractors, letters, and display scale."
               )}
             </Item.Description>
           </Item.Content>
@@ -126,11 +125,11 @@
 
         <Item.Root
           variant="muted"
-          class={`ml-0 border border-border/70 p-5 md:ml-8 ${supportItemSurface}`}
+          class={`border-border/70 ml-0 border p-5 md:ml-8 ${supportItemSurface}`}
         >
           <Item.Media
             variant="icon"
-            class="size-10 rounded-lg border bg-background text-brand-foreground"
+            class="bg-background text-brand-foreground size-10 rounded-lg border"
           >
             <ShieldCheckIcon class="size-5" />
           </Item.Media>
@@ -141,7 +140,7 @@
             <Item.Description class="line-clamp-none leading-6">
               {t(
                 locale,
-                "Use it for short practice sessions. Stop if you feel eye strain, dizziness, headache, nausea, or discomfort.",
+                "Use it for short practice sessions. Stop if you feel eye strain, dizziness, headache, nausea, or discomfort."
               )}
             </Item.Description>
           </Item.Content>
@@ -159,7 +158,7 @@
             <h2 class={sectionTitle}>{t(locale, section.heading)}</h2>
           </div>
 
-          <div class="grid gap-4 text-base leading-7 text-muted-foreground">
+          <div class="text-muted-foreground grid gap-4 text-base leading-7">
             {#if section.body}
               {#each section.body as paragraph (paragraph)}
                 <p>{t(locale, paragraph)}</p>
@@ -176,7 +175,7 @@
                     >
                       <Item.Media
                         variant="icon"
-                        class="size-9 rounded-lg border bg-muted text-brand-foreground"
+                        class="bg-muted text-brand-foreground size-9 rounded-lg border"
                         aria-hidden="true"
                       >
                         <span class="text-xs font-semibold"
@@ -204,7 +203,7 @@
                     >
                       <Item.Media
                         variant="icon"
-                        class="size-9 rounded-lg border bg-muted text-brand-foreground"
+                        class="bg-muted text-brand-foreground size-9 rounded-lg border"
                         aria-hidden="true"
                       >
                         <CheckIcon class="size-4" />
@@ -248,13 +247,13 @@
             <Table.Body>
               {#each page.comparisonRows as row (row.feature)}
                 <Table.Row>
-                  <Table.Cell class="font-medium text-foreground">
+                  <Table.Cell class="text-foreground font-medium">
                     {t(locale, row.feature)}
                   </Table.Cell>
-                  <Table.Cell class="leading-6 text-muted-foreground">
+                  <Table.Cell class="text-muted-foreground leading-6">
                     {t(locale, row.foveaflow)}
                   </Table.Cell>
-                  <Table.Cell class="leading-6 text-muted-foreground">
+                  <Table.Cell class="text-muted-foreground leading-6">
                     {t(locale, row.alternative)}
                   </Table.Cell>
                 </Table.Row>
@@ -265,7 +264,7 @@
       {/if}
 
       <footer
-        class={`page-enter-delay-4 flex flex-col gap-3 border-t border-border/60 pt-8 pb-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between ${guideEnterUp}`}
+        class={`page-enter-delay-4 border-border/60 text-muted-foreground flex flex-col gap-3 border-t pt-8 pb-8 text-sm sm:flex-row sm:items-center sm:justify-between ${guideEnterUp}`}
       >
         <span>{t(locale, "FoveaFlow is free. No account, no install.")}</span>
         <div class="flex flex-wrap gap-2">

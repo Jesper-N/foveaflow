@@ -1,4 +1,5 @@
 import type { APIRoute } from "astro";
+
 import {
   buildAgentSkillsIndexJson,
   stringifyDiscoveryJson,
@@ -7,15 +8,14 @@ import { getSiteOrigin } from "../../../lib/seo";
 
 export const prerender = true;
 
-export const GET: APIRoute = (context) => {
-  return new Response(
+export const GET: APIRoute = (context) =>
+  new Response(
     stringifyDiscoveryJson(
-      buildAgentSkillsIndexJson(getSiteOrigin(context.site)),
+      buildAgentSkillsIndexJson(getSiteOrigin(context.site))
     ),
     {
       headers: {
         "Content-Type": "application/json; charset=utf-8",
       },
-    },
+    }
   );
-};

@@ -1,97 +1,97 @@
 import { createHash } from "node:crypto";
+
 import { siteMetadata } from "./content/site";
 import { absoluteUrl } from "./seo";
 
-const json = (value: unknown) => JSON.stringify(value, null, 2);
 const agentSkillName = "foveaflow";
 const agentSkillDescription =
   "Use when helping users understand or navigate FoveaFlow's public eye training app, safety positioning, or discovery resources.";
 
 export const buildHealthJson = (site: URL) => ({
-  status: "ok",
   name: siteMetadata.name,
+  status: "ok",
   url: absoluteUrl("/", site),
 });
 
 export const buildOpenApiJson = (site: URL) => ({
-  openapi: "3.1.0",
   info: {
-    title: `${siteMetadata.name} public discovery endpoints`,
-    version: "1.0.0",
     description:
       "Public, unauthenticated metadata endpoints for FoveaFlow agent and search discovery.",
+    title: `${siteMetadata.name} public discovery endpoints`,
+    version: "1.0.0",
   },
-  servers: [{ url: absoluteUrl("/", site).replace(/\/$/u, "") }],
+  openapi: "3.1.0",
   paths: {
     "/health.json": {
       get: {
-        summary: "Read site health metadata",
         responses: {
           "200": {
-            description: "The site is available.",
             content: {
               "application/json": {
                 schema: {
-                  type: "object",
                   properties: {
-                    status: { type: "string" },
                     name: { type: "string" },
-                    url: { type: "string", format: "uri" },
+                    status: { type: "string" },
+                    url: { format: "uri", type: "string" },
                   },
                   required: ["status", "name", "url"],
+                  type: "object",
                 },
               },
             },
+            description: "The site is available.",
           },
         },
+        summary: "Read site health metadata",
       },
     },
     "/llms.txt": {
       get: {
-        summary: "Read the agent-focused site summary",
         responses: {
           "200": {
-            description: "Plain-text summary and public route index.",
             content: {
               "text/plain": {
                 schema: { type: "string" },
               },
             },
+            description: "Plain-text summary and public route index.",
           },
         },
+        summary: "Read the agent-focused site summary",
       },
     },
     "/robots.txt": {
       get: {
-        summary: "Read crawler and Content Signal preferences",
         responses: {
           "200": {
-            description: "Crawler directives and AI content usage signals.",
             content: {
               "text/plain": {
                 schema: { type: "string" },
               },
             },
+            description: "Crawler directives and AI content usage signals.",
           },
         },
+        summary: "Read crawler and Content Signal preferences",
       },
     },
     "/sitemap.xml": {
       get: {
-        summary: "Read the public sitemap",
         responses: {
           "200": {
-            description: "XML sitemap for public FoveaFlow pages.",
             content: {
               "application/xml": {
                 schema: { type: "string" },
               },
             },
+            description: "XML sitemap for public FoveaFlow pages.",
           },
         },
+        summary: "Read the public sitemap",
       },
     },
   },
+  servers: [{ url: absoluteUrl("/", site).replace(/\/$/u, "") }],
 });
 
 export const buildApiCatalogJson = (site: URL) => ({
@@ -160,14 +160,21 @@ export const buildAgentSkillsIndexJson = (site: URL) => {
     $schema: "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
     skills: [
       {
+        description: agentSkillDescription,
+        digest: `sha256:${digest}`,
         name: agentSkillName,
         type: "skill-md",
-        description: agentSkillDescription,
         url: absoluteUrl("/.well-known/agent-skills/foveaflow/SKILL.md", site),
-        digest: `sha256:${digest}`,
       },
     ],
   };
 };
 
-export { json as stringifyDiscoveryJson };
+type DiscoveryJson =
+  | ReturnType<typeof buildAgentSkillsIndexJson>
+  | ReturnType<typeof buildApiCatalogJson>
+  | ReturnType<typeof buildHealthJson>
+  | ReturnType<typeof buildOpenApiJson>;
+
+export const stringifyDiscoveryJson = (value: DiscoveryJson) =>
+  JSON.stringify(value, null, 2);

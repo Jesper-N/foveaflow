@@ -4,12 +4,12 @@ import type {
   TrainerSliderValue,
 } from "$lib/trainer/settings";
 
-type SliderBinding = {
+interface SliderBinding {
   value: () => number[];
   set: (value: TrainerSliderValue) => void;
-};
+}
 
-export type TrainerHudActions = {
+export interface TrainerHudActions {
   handlePresetChange: (value: string) => void;
   handleHeaderPresetOpenChange: (open: boolean) => void;
   handlePatternChange: (value: string) => void;
@@ -26,15 +26,15 @@ export type TrainerHudActions = {
   revealHudTemporarily: () => void;
   setHudInteractionActive: (active: boolean) => void;
   openControlsPanel: () => void;
-};
+}
 
-export type TrainerDialogActions = {
+export interface TrainerDialogActions {
   onControlSectionChange: (section: ControlSectionId) => void;
   handlePresetChange: (value: string) => void;
   handlePatternChange: (value: string) => void;
   handleBehaviorChange: (value: string) => void;
   handleLilacChaserColorChange: (value: string) => void;
-  handleShapeChange: (value: string) => void;
+  handleTargetFormChange: (value: string) => void;
   handleLetterWeightChange: (value: string) => void;
   handleThemeCheckedChange: (checked: boolean) => void;
   handleSpeedUnitChange: (value: string) => void;
@@ -52,4 +52,4 @@ export type TrainerDialogActions = {
   toggleMotionPaused: () => void;
   toggleMotionDirection: () => void;
   resetSettings: () => void;
-};
+}

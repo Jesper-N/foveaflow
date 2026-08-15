@@ -1,20 +1,19 @@
 <script lang="ts">
-  import RotateCcwIcon from "@lucide/svelte/icons/rotate-ccw";
-
-  import TrainerControlSectionIcon from "$lib/components/trainer/TrainerControlSectionIcon.svelte";
-  import TrainerDrillControls from "$lib/components/trainer/TrainerDrillControls.svelte";
-  import TrainerMotionControls from "$lib/components/trainer/TrainerMotionControls.svelte";
-  import TrainerScreenControls from "$lib/components/trainer/TrainerScreenControls.svelte";
-  import TrainerSessionControls from "$lib/components/trainer/TrainerSessionControls.svelte";
-  import TrainerTargetControls from "$lib/components/trainer/TrainerTargetControls.svelte";
+  import TrainerControlSectionIcon from "$lib/components/trainer/trainer-control-section-icon.svelte";
+  import TrainerDrillControls from "$lib/components/trainer/trainer-drill-controls.svelte";
+  import TrainerMotionControls from "$lib/components/trainer/trainer-motion-controls.svelte";
+  import TrainerScreenControls from "$lib/components/trainer/trainer-screen-controls.svelte";
+  import TrainerSessionControls from "$lib/components/trainer/trainer-session-controls.svelte";
+  import TrainerTargetControls from "$lib/components/trainer/trainer-target-controls.svelte";
   import { Button } from "$lib/components/ui/button/index.js";
   import * as Dialog from "$lib/components/ui/dialog/index.js";
   import type { TrainerSettings } from "$lib/engine/presets";
   import { languageState } from "$lib/i18n/state.svelte";
   import { t } from "$lib/i18n/translate";
   import type { BehaviorId } from "$lib/trainer/behavior";
-  import type { ControlSection, ControlSectionId } from "$lib/trainer/options";
   import type { TrainerDialogActions } from "$lib/trainer/control-actions";
+  import type { ControlSection, ControlSectionId } from "$lib/trainer/options";
+  import RotateCcwIcon from "@lucide/svelte/icons/rotate-ccw";
 
   let {
     open = $bindable(false),
@@ -56,7 +55,7 @@
     event.preventDefault();
     requestAnimationFrame(() => {
       const buttons = document.querySelectorAll<HTMLButtonElement>(
-        `[data-control-section="${currentControlSection}"]`,
+        `[data-control-section="${currentControlSection}"]`
       );
       [...buttons]
         .find((button) => button.getClientRects().length > 0)
@@ -67,10 +66,10 @@
 
 {#snippet sliderRow(label: string, valueLabel: string)}
   <span
-    class="flex items-center justify-between gap-4 text-xs text-muted-foreground"
+    class="text-muted-foreground flex items-center justify-between gap-4 text-xs"
   >
     {label}
-    <strong class="font-semibold tabular-nums text-foreground">
+    <strong class="text-foreground font-semibold tabular-nums">
       {valueLabel}
     </strong>
   </span>
@@ -104,7 +103,7 @@
     </Dialog.Description>
     <div class="flex h-full min-h-0 min-w-0 items-start overflow-hidden">
       <aside
-        class="hidden h-full w-52 shrink-0 border-r border-sidebar-border bg-sidebar p-3 text-sidebar-foreground md:block"
+        class="border-sidebar-border bg-sidebar text-sidebar-foreground hidden h-full w-52 shrink-0 border-r p-3 md:block"
       >
         <nav aria-label={t(locale, "Control sections")}>
           <ul class="grid gap-1">
@@ -122,10 +121,10 @@
           class="flex h-16 shrink-0 items-center gap-2 px-4 pr-16 md:pr-4"
         >
           <div class="flex min-w-0 items-center gap-2 text-base">
-            <span class="shrink-0 text-muted-foreground">
+            <span class="text-muted-foreground shrink-0">
               {t(locale, "Controls")}
             </span>
-            <span class="shrink-0 text-muted-foreground" aria-hidden="true">
+            <span class="text-muted-foreground shrink-0" aria-hidden="true">
               ›
             </span>
             <h2 class="truncate font-medium">
@@ -149,7 +148,7 @@
           class="flex min-h-0 min-w-0 flex-1 flex-col gap-4 overflow-y-auto p-3 md:p-4 md:pt-0"
         >
           <div
-            class="t-resize w-full max-w-3xl rounded-3xl border border-border/60 bg-muted/55 p-4 shadow-[0_18px_50px_-42px_rgba(0,0,0,0.85)] md:rounded-xl md:border-0 md:bg-muted/50 md:shadow-none"
+            class="t-resize border-border/60 bg-muted/55 md:bg-muted/50 w-full max-w-3xl rounded-3xl border p-4 shadow-[0_18px_50px_-42px_rgba(0,0,0,0.85)] md:rounded-xl md:border-0 md:shadow-none"
           >
             <section class="grid gap-6">
               {#if currentControlSection === "session"}
@@ -184,7 +183,7 @@
                   bind:settings
                   {isMotMode}
                   handleColorInput={actions.handleColorInput}
-                  handleShapeChange={actions.handleShapeChange}
+                  handleTargetFormChange={actions.handleTargetFormChange}
                   handleLetterColorInput={actions.handleLetterColorInput}
                   handleLetterWeightChange={actions.handleLetterWeightChange}
                   sizeSliderValue={actions.sizeSlider.value}
@@ -220,10 +219,10 @@
                   handleCalibrationInput={actions.handleCalibrationInput}
                 />
               {:else}
-                <p class="text-sm leading-6 text-muted-foreground">
+                <p class="text-muted-foreground text-sm leading-6">
                   {t(
                     locale,
-                    "Restore the selected drill to its default behavior, visuals, calibration, and saved local settings.",
+                    "Restore the selected drill to its default behavior, visuals, calibration, and saved local settings."
                   )}
                 </p>
                 <Button

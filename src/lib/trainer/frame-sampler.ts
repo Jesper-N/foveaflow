@@ -1,8 +1,8 @@
-import type { TrainerSettings } from "$lib/engine/presets";
 import {
   createPatternSampler,
   getTeleportJumpDistancePx,
 } from "$lib/engine/patterns";
+import type { TrainerSettings } from "$lib/engine/presets";
 import {
   getMaximumSizeProfileRadius,
   sampleSizeProfile,
@@ -11,20 +11,20 @@ import type { Rng } from "$lib/engine/random";
 import type { Arena, PatternParams, TargetFrame } from "$lib/engine/types";
 import { getTargetVisualExtentPx } from "$lib/trainer/target-geometry";
 
-type TrainerLetterContext = {
+interface TrainerLetterContext {
   elapsedSec: number;
   travelPx: number;
   seed: number;
   reactionJumpDistancePx: number;
-};
+}
 
-type TrainerFrameSample = {
+interface TrainerFrameSample {
   frames: TargetFrame[];
   count: number;
   letterContext: TrainerLetterContext;
-};
+}
 
-export type TrainerFrameInput = {
+export interface TrainerFrameInput {
   settings: TrainerSettings;
   arena: Arena;
   elapsedSec: number;
@@ -34,23 +34,23 @@ export type TrainerFrameInput = {
   pathMarginPx: number;
   rng: Rng;
   seed: number;
-};
+}
 
 export const createTrainerFrameSampler = () => {
   const sampler = createPatternSampler();
   let activePatternId: TrainerSettings["patternId"] | null = null;
   const frames: TargetFrame[] = [];
   const params: PatternParams = {
-    radiusPx: 1,
     pathMarginPx: 16,
+    radiusPx: 1,
     speedPxPerSec: 1,
     travelPx: 0,
   };
   const letterContext: TrainerLetterContext = {
     elapsedSec: 0,
-    travelPx: 0,
-    seed: 0,
     reactionJumpDistancePx: 420,
+    seed: 0,
+    travelPx: 0,
   };
 
   return {
@@ -78,17 +78,17 @@ export const createTrainerFrameSampler = () => {
       const radiusPx = sampleSizeProfile(
         settings.sizeProfile,
         elapsedSec,
-        settings.baseRadiusPx,
+        settings.baseRadiusPx
       );
       const pathRadiusPx = getMaximumSizeProfileRadius(
         settings.sizeProfile,
-        settings.baseRadiusPx,
+        settings.baseRadiusPx
       );
 
       params.radiusPx = radiusPx;
       params.pathMarginPx = Math.max(
         pathMarginPx,
-        getTargetVisualExtentPx(pathRadiusPx, settings.targetShape) + 8,
+        getTargetVisualExtentPx(pathRadiusPx, settings.targetForm) + 8
       );
       params.travelPx = travelPx;
       params.targetCount = settings.targetCount;
@@ -102,7 +102,7 @@ export const createTrainerFrameSampler = () => {
         elapsedSec,
         arena,
         params,
-        rng,
+        rng
       );
 
       letterContext.elapsedSec = elapsedSec;
@@ -112,11 +112,11 @@ export const createTrainerFrameSampler = () => {
         letterContext.reactionJumpDistancePx = getTeleportJumpDistancePx(
           arena,
           radiusPx,
-          params.pathMarginPx,
+          params.pathMarginPx
         );
       }
 
-      return { frames, count, letterContext };
+      return { count, frames, letterContext };
     },
   };
 };

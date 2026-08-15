@@ -1,6 +1,4 @@
 <script lang="ts">
-  import type { Snippet } from "svelte";
-
   import * as Field from "$lib/components/ui/field/index.js";
   import { Input } from "$lib/components/ui/input/index.js";
   import * as Select from "$lib/components/ui/select/index.js";
@@ -13,10 +11,9 @@
     getLetterWeightName,
     letterWeightOptions,
   } from "$lib/trainer/options";
-  import {
-    trainerSettingBounds,
-    type TrainerSliderValue,
-  } from "$lib/trainer/settings";
+  import { trainerSettingBounds } from "$lib/trainer/settings";
+  import type { TrainerSliderValue } from "$lib/trainer/settings";
+  import type { Snippet } from "svelte";
 
   let {
     settings = $bindable(),
@@ -36,7 +33,7 @@
 
   let locale = $derived(languageState.locale);
   let currentLetterWeightName = $derived(
-    t(locale, getLetterWeightName(settings.letterWeight)),
+    t(locale, getLetterWeightName(settings.letterWeight))
   );
 </script>
 
@@ -57,12 +54,12 @@
       {t(locale, "Letter color")}
     </Field.Label>
     <label
-      class="flex h-11 min-w-0 cursor-pointer items-center gap-3 rounded-full border bg-input/50 px-3 transition-[color,box-shadow,background-color] hover:ring-4 hover:ring-ring/30 focus-within:ring-3 focus-within:ring-foreground"
+      class="bg-input/50 hover:ring-ring/30 focus-within:ring-foreground flex h-11 min-w-0 cursor-pointer items-center gap-3 rounded-full border px-3 transition-[color,box-shadow,background-color] focus-within:ring-3 hover:ring-4"
       for="trainer-letter-color"
     >
       <svg
         viewBox="0 0 24 24"
-        class="size-6 shrink-0 rounded-full border bg-background shadow-sm"
+        class="bg-background size-6 shrink-0 rounded-full border shadow-sm"
         aria-hidden="true"
       >
         <text
@@ -79,7 +76,7 @@
         </text>
       </svg>
       <span
-        class="min-w-0 truncate font-sans text-sm uppercase text-foreground"
+        class="text-foreground min-w-0 truncate font-sans text-sm uppercase"
       >
         {settings.letterColor}
       </span>
@@ -123,7 +120,7 @@
   <Field.Field>
     {@render sliderRow(
       t(locale, "Text size"),
-      `${Math.round(settings.letterScale * 100)}%`,
+      `${Math.round(settings.letterScale * 100)}%`
     )}
     <Slider
       bind:value={letterScaleSliderValue, setLetterScaleSliderValue}

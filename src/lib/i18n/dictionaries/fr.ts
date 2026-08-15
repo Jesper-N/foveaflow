@@ -233,8 +233,6 @@ export const fr = {
     "FoveaFlow peut s'utiliser sans envoyer de données personnelles. Il n'est pas conçu pour collecter des informations personnelles auprès des enfants.",
   "FoveaFlow does not set advertising cookies. Cloudflare may set security cookies when it needs them to keep the site available and safe.":
     "FoveaFlow ne dépose pas de cookies publicitaires. Cloudflare peut déposer des cookies de sécurité quand ils sont nécessaires pour garder le site disponible et sûr.",
-  "FoveaFlow stores your language preference in local browser storage and in a same-site preference cookie so the correct language can be selected before the app starts. The cookie can last up to 400 days, uses SameSite=Lax, and is marked Secure on HTTPS.":
-    "FoveaFlow enregistre votre préférence de langue dans le stockage local du navigateur et dans un cookie de préférence du même site afin de choisir la bonne langue avant le démarrage de l’application. Le cookie peut durer jusqu’à 400 jours, utilise SameSite=Lax et porte l’attribut Secure en HTTPS.",
   "FoveaFlow eye trainer animation for visual tracking practice":
     "Animation d'entraînement visuel FoveaFlow pour le suivi visuel",
   "FoveaFlow eye trainer animation for visual tracking practice. Use Pause motion to stop target movement before changing controls.":
@@ -274,6 +272,8 @@ export const fr = {
     "FoveaFlow enregistre localement les contrôles de vitesse, taille, forme, couleur, opacité, traînées, trajectoires, distractions, lettres et échelle d'affichage.",
   "FoveaFlow stores settings locally in your browser so the app can remember them on the current device. That can include the selected language, mode, motion pattern, speed, target size, color, opacity, trail setting, viewing distance, screen scale, and theme.":
     "FoveaFlow stocke les réglages localement dans votre navigateur pour les retrouver sur cet appareil. Cela peut inclure la langue et le mode choisis, le motif de mouvement, la vitesse, la taille de la cible, la couleur, l'opacité, le réglage de traînée, la distance à l'écran, l'échelle d'affichage et le thème.",
+  "FoveaFlow stores your language preference in local browser storage and in a same-site preference cookie so the correct language can be selected before the app starts. The cookie can last up to 400 days, uses SameSite=Lax, and is marked Secure on HTTPS.":
+    "FoveaFlow enregistre votre préférence de langue dans le stockage local du navigateur et dans un cookie de préférence du même site afin de choisir la bonne langue avant le démarrage de l’application. Le cookie peut durer jusqu’à 400 jours, utilise SameSite=Lax et porte l’attribut Secure en HTTPS.",
   "FoveaFlow vs BlinkCamp": "FoveaFlow vs BlinkCamp",
   "FoveaFlow vs EyeTrainer.gg": "FoveaFlow vs EyeTrainer.gg",
   "Free access": "Accès gratuit",
@@ -587,7 +587,6 @@ export const fr = {
   Session: "Séance",
   "Settings saved in your browser":
     "Réglages enregistrés dans votre navigateur",
-  Shape: "Forme",
   "Shape, color, opacity, trail length, and trail behavior are adjustable.":
     "La forme, la couleur, l'opacité, la longueur de traînée et le comportement de la traînée sont réglables.",
   "Sharpen focus between code, logs, dashboards, terminals, tickets, and multi-monitor work.":
@@ -687,6 +686,7 @@ export const fr = {
   "Target acquisition": "Acquisition de cible",
   "Target appearance, trail display, distractor brightness, letter styling, viewing distance, and screen scale can be tuned.":
     "Vous pouvez régler l'apparence de la cible, l'affichage de la traînée, la luminosité des distractions, le style des lettres, la distance à l'écran et l'échelle d'affichage.",
+  "Target form": "Forme",
   "Target opacity": "Opacité de la cible",
   "Target size": "Taille de la cible",
   Targets: "Cibles",

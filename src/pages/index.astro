@@ -1,8 +1,8 @@
 ---
 import "../styles/global.css";
-import NoscriptFallback from "../lib/components/NoscriptFallback.astro";
-import SeoHead from "../lib/components/SeoHead.astro";
-import TrainerApp from "../lib/components/TrainerApp.svelte";
+import NoscriptFallback from "../lib/components/noscript-fallback.astro";
+import SeoHead from "../lib/components/seo-head.astro";
+import TrainerApp from "../lib/components/trainer-app.svelte";
 import { siteMetadata } from "../lib/content/site";
 import { buildStructuredData, getSiteOrigin } from "../lib/seo";
 
@@ -26,16 +26,16 @@ const structuredData = buildStructuredData(siteOrigin);
       (() => {
         const modelContext = document.modelContext ?? navigator.modelContext;
 
-        if (!modelContext || typeof modelContext.registerTool !== "function") {
+        if (!modelContext?.registerTool) {
           return;
         }
 
         const drillRoutes = {
-          "smooth-pursuit": "/smooth-pursuit/",
-          "reaction-jumps": "/reaction-jumps/",
-          "multiple-distractions": "/multiple-distractions/",
-          "lilac-chaser": "/lilac-chaser/",
           guide: "/guide/",
+          "lilac-chaser": "/lilac-chaser/",
+          "multiple-distractions": "/multiple-distractions/",
+          "reaction-jumps": "/reaction-jumps/",
+          "smooth-pursuit": "/smooth-pursuit/",
         };
 
         const registerTool = (tool) => {
@@ -54,22 +54,8 @@ const structuredData = buildStructuredData(siteOrigin);
         };
 
         registerTool({
-          name: "open_foveaflow_route",
-          title: "Open FoveaFlow Route",
           description:
             "Open a FoveaFlow drill or guide route in the current browser tab.",
-          inputSchema: {
-            type: "object",
-            properties: {
-              route: {
-                type: "string",
-                enum: Object.keys(drillRoutes),
-                description: "The FoveaFlow route to open.",
-              },
-            },
-            required: ["route"],
-            additionalProperties: false,
-          },
           execute: ({ route }) => {
             const path = drillRoutes[route] ?? "/";
             const url = new URL(path, window.location.origin).toString();
@@ -78,41 +64,55 @@ const structuredData = buildStructuredData(siteOrigin);
             return {
               content: [
                 {
-                  type: "text",
                   text: `Opening ${url}`,
+                  type: "text",
                 },
               ],
             };
           },
+          inputSchema: {
+            additionalProperties: false,
+            properties: {
+              route: {
+                description: "The FoveaFlow route to open.",
+                enum: Object.keys(drillRoutes),
+                type: "string",
+              },
+            },
+            required: ["route"],
+            type: "object",
+          },
+          name: "open_foveaflow_route",
+          title: "Open FoveaFlow Route",
         });
 
         registerTool({
-          name: "get_foveaflow_resources",
-          title: "Get FoveaFlow Resources",
           description:
             "Return public FoveaFlow discovery, documentation, and safety resources.",
-          inputSchema: {
-            type: "object",
-            properties: {},
-            additionalProperties: false,
-          },
           execute: () => ({
             content: [
               {
-                type: "json",
                 json: {
-                  app: new URL("/", window.location.origin).toString(),
-                  guide: new URL("/guide/", window.location.origin).toString(),
-                  llms: new URL("/llms.txt", window.location.origin).toString(),
                   apiCatalog: new URL(
                     "/.well-known/api-catalog",
                     window.location.origin,
                   ).toString(),
+                  app: new URL("/", window.location.origin).toString(),
+                  guide: new URL("/guide/", window.location.origin).toString(),
+                  llms: new URL("/llms.txt", window.location.origin).toString(),
                   note: "FoveaFlow is practice software, not medical advice, diagnosis, treatment, vision therapy, or a medical device.",
                 },
+                type: "json",
               },
             ],
           }),
+          inputSchema: {
+            additionalProperties: false,
+            properties: {},
+            type: "object",
+          },
+          name: "get_foveaflow_resources",
+          title: "Get FoveaFlow Resources",
         });
       })();
     </script>

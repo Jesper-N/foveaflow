@@ -7,7 +7,7 @@ export const desktopHeaderQuery = "(min-width: 48rem)";
 export const shortcutPrioritySurfaceSelector =
   "[data-slot='dialog-content'], [data-slot='select-content'], [popover]:popover-open";
 
-type TrainerShortcutHandlers = {
+interface TrainerShortcutHandlers {
   hasPriorityKeyboardSurface: () => boolean;
   toggleMotionPaused: () => void;
   adjustTargetSize: (deltaPx: number) => void;
@@ -17,18 +17,18 @@ type TrainerShortcutHandlers = {
   openHeaderSelect: (select: HeaderShortcutSelect) => void;
   openControlsPanel: () => void;
   openGuideDialog: () => boolean;
-};
+}
 
 export const getHeaderSelectOpenState = (
   select: HeaderShortcutSelect,
-  useDesktopSelect: boolean,
+  useDesktopSelect: boolean
 ) => ({
-  mobilePresetSelectOpen: select === "mode" && !useDesktopSelect,
-  desktopPresetSelectOpen: select === "mode" && useDesktopSelect,
-  mobilePatternSelectOpen: select === "pattern" && !useDesktopSelect,
-  desktopPatternSelectOpen: select === "pattern" && useDesktopSelect,
-  mobileLilacChaserColorSelectOpen: false,
   desktopLilacChaserColorSelectOpen: false,
+  desktopPatternSelectOpen: select === "pattern" && useDesktopSelect,
+  desktopPresetSelectOpen: select === "mode" && useDesktopSelect,
+  mobileLilacChaserColorSelectOpen: false,
+  mobilePatternSelectOpen: select === "pattern" && !useDesktopSelect,
+  mobilePresetSelectOpen: select === "mode" && !useDesktopSelect,
 });
 
 export const focusHeaderSelectTriggerFromShortcut = async ({
@@ -44,47 +44,64 @@ export const focusHeaderSelectTriggerFromShortcut = async ({
 
   const viewport = useDesktopSelect ? "desktop" : "mobile";
   const trigger = document.querySelector<HTMLButtonElement>(
-    `[data-trainer-shortcut-select="${viewport}-${select}"]`,
+    `[data-trainer-shortcut-select="${viewport}-${select}"]`
   );
   trigger?.focus({ preventScroll: true });
 };
 
 export const runTrainerShortcutAction = (
   action: TrainerShortcutAction,
-  handlers: TrainerShortcutHandlers,
+  handlers: TrainerShortcutHandlers
 ): boolean => {
-  if (handlers.hasPriorityKeyboardSurface()) return false;
+  if (handlers.hasPriorityKeyboardSurface()) {
+    return false;
+  }
 
   switch (action) {
-    case "toggleMotion":
+    case "toggleMotion": {
       handlers.toggleMotionPaused();
       return true;
-    case "increaseTargetSize":
+    }
+    case "increaseTargetSize": {
       handlers.adjustTargetSize(1);
       return true;
-    case "decreaseTargetSize":
+    }
+    case "decreaseTargetSize": {
       handlers.adjustTargetSize(-1);
       return true;
-    case "decreaseSpeed":
+    }
+    case "decreaseSpeed": {
       handlers.adjustSpeed(-1);
       return true;
-    case "increaseSpeed":
+    }
+    case "increaseSpeed": {
       handlers.adjustSpeed(1);
       return true;
-    case "toggleTheme":
+    }
+    case "toggleTheme": {
       handlers.toggleTheme();
       return true;
-    case "openPatternSelect":
-      if (!handlers.canOpenPatternSelect()) return false;
+    }
+    case "openPatternSelect": {
+      if (!handlers.canOpenPatternSelect()) {
+        return false;
+      }
       handlers.openHeaderSelect("pattern");
       return true;
-    case "openModeSelect":
+    }
+    case "openModeSelect": {
       handlers.openHeaderSelect("mode");
       return true;
-    case "openSettingsDialog":
+    }
+    case "openSettingsDialog": {
       handlers.openControlsPanel();
       return true;
-    case "openGuideDialog":
+    }
+    case "openGuideDialog": {
       return handlers.openGuideDialog();
+    }
+    default: {
+      throw new Error("Unsupported trainer shortcut action.");
+    }
   }
 };

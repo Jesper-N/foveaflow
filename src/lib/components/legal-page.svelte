@@ -1,17 +1,16 @@
 <script lang="ts">
+  import LanguageSelect from "$lib/components/language-select.svelte";
+  import { Badge } from "$lib/components/ui/badge/index.js";
+  import { Button } from "$lib/components/ui/button/index.js";
+  import * as Item from "$lib/components/ui/item/index.js";
+  import type { LegalPageContent } from "$lib/content/legal";
+  import { siteMetadata } from "$lib/content/site";
+  import { languageState } from "$lib/i18n/state.svelte";
+  import { t } from "$lib/i18n/translate";
   import ArrowLeftIcon from "@lucide/svelte/icons/arrow-left";
   import ExternalLinkIcon from "@lucide/svelte/icons/external-link";
   import FileTextIcon from "@lucide/svelte/icons/file-text";
   import ShieldCheckIcon from "@lucide/svelte/icons/shield-check";
-
-  import LanguageSelect from "$lib/components/LanguageSelect.svelte";
-  import { Badge } from "$lib/components/ui/badge/index.js";
-  import { Button } from "$lib/components/ui/button/index.js";
-  import * as Item from "$lib/components/ui/item/index.js";
-  import { siteMetadata } from "$lib/content/site";
-  import type { LegalPageContent } from "$lib/content/legal";
-  import { languageState } from "$lib/i18n/state.svelte";
-  import { t } from "$lib/i18n/translate";
 
   let { page }: { page: LegalPageContent } = $props();
 
@@ -28,7 +27,7 @@
   let locale = $derived(languageState.locale);
 </script>
 
-<main class="min-h-dvh bg-background text-foreground selection:bg-accent/30">
+<main class="bg-background text-foreground selection:bg-accent/30 min-h-dvh">
   <div class="mx-auto grid w-full max-w-5xl gap-10 px-4 py-5 sm:px-6 lg:px-8">
     <header class={`flex items-center justify-between gap-4 ${guideEnterTop}`}>
       <Button
@@ -73,12 +72,12 @@
           {t(locale, page.label)}
         </Badge>
         <h1
-          class="max-w-[12ch] text-4xl leading-none font-semibold tracking-tight text-foreground md:text-6xl"
+          class="text-foreground max-w-[12ch] text-4xl leading-none font-semibold tracking-tight md:text-6xl"
         >
           {t(locale, page.title)}
         </h1>
         <p
-          class="mt-6 max-w-164 text-base leading-7 text-muted-foreground md:text-lg md:leading-8"
+          class="text-muted-foreground mt-6 max-w-164 text-base leading-7 md:text-lg md:leading-8"
         >
           {t(locale, page.summary)}
         </p>
@@ -90,7 +89,7 @@
       >
         <Item.Media
           variant="icon"
-          class="size-10 rounded-lg border bg-muted text-brand-foreground"
+          class="bg-muted text-brand-foreground size-10 rounded-lg border"
         >
           {#if page.path === "/privacy/"}
             <ShieldCheckIcon class="size-5" />
@@ -110,10 +109,10 @@
     </section>
 
     <section
-      class={`page-enter-delay-2 grid gap-6 border-t border-border/60 pt-10 md:grid-cols-[15rem_minmax(0,1fr)] md:gap-10 ${guideEnterUp}`}
+      class={`page-enter-delay-2 border-border/60 grid gap-6 border-t pt-10 md:grid-cols-[15rem_minmax(0,1fr)] md:gap-10 ${guideEnterUp}`}
     >
       <div class="md:sticky md:top-6 md:self-start">
-        <Item.Root variant="muted" class="border border-border/70">
+        <Item.Root variant="muted" class="border-border/70 border">
           <Item.Content>
             <h2 class="font-heading text-sm leading-snug font-medium">
               {t(locale, "On this page")}
@@ -122,7 +121,7 @@
               {#each page.sections as section (section.id)}
                 <a
                   href={`#${section.id}`}
-                  class="rounded-md px-2 py-1.5 text-sm leading-5 text-muted-foreground transition-[background-color,color] duration-150 hover:bg-background hover:text-foreground"
+                  class="text-muted-foreground hover:bg-background hover:text-foreground rounded-md px-2 py-1.5 text-sm leading-5 transition-[background-color,color] duration-150"
                 >
                   {t(locale, section.heading)}
                 </a>
@@ -137,14 +136,14 @@
           <article id={section.id} class="scroll-mt-6">
             <Item.Root
               variant="outline"
-              class={`items-start border-border/80 p-5 md:p-6 ${articleCard}`}
+              class={`border-border/80 items-start p-5 md:p-6 ${articleCard}`}
             >
               <Item.Content>
                 <h2 class="font-heading text-lg leading-snug font-medium">
                   {t(locale, section.heading)}
                 </h2>
                 <div
-                  class="mt-3 grid max-w-184 gap-3 text-sm leading-6 text-muted-foreground"
+                  class="text-muted-foreground mt-3 grid max-w-184 gap-3 text-sm leading-6"
                 >
                   {#each section.body as paragraph (paragraph)}
                     <p>{t(locale, paragraph)}</p>
@@ -175,7 +174,7 @@
     </section>
 
     <footer
-      class={`page-enter-delay-3 flex flex-col gap-3 border-t border-border/60 pt-6 pb-10 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between ${guideEnterUp}`}
+      class={`page-enter-delay-3 border-border/60 text-muted-foreground flex flex-col gap-3 border-t pt-6 pb-10 text-sm sm:flex-row sm:items-center sm:justify-between ${guideEnterUp}`}
     >
       <span>
         {t(locale, "FoveaFlow is free. No account, no paid plan.")}

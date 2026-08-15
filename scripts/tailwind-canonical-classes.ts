@@ -1,11 +1,16 @@
-import { createRequire } from "node:module";
 import { readdirSync, readFileSync } from "node:fs";
-import { dirname, relative, resolve, sep } from "node:path";
+import path from "node:path";
 import { fileURLToPath } from "node:url";
+
+import enhancedResolve from "enhanced-resolve";
 import { __unstable__loadDesignSystem } from "tailwindcss";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
-const require = createRequire(import.meta.url);
+const resolveStylesheet = enhancedResolve.create.sync({
+  conditionNames: ["style", "import", "default"],
+  extensions: [".css"],
+  mainFields: ["style", "main"],
+});
 const sourceExtensions = new Set([
   ".astro",
   ".css",
@@ -18,67 +23,57 @@ const sourceExtensions = new Set([
 ]);
 const ignoredSourceDirs = new Set(["src/lib/components/ui"]);
 
-type Edit = {
+interface Edit {
   file: string;
   start: number;
   end: number;
   from: string;
   to: string;
-};
-
-type PackageJson = {
-  exports?: Record<string, string | { style?: string }>;
-  main?: string;
-};
-
-function packageStylesheet(id: string) {
-  const parts = id.split("/");
-  const name = id.startsWith("@") ? parts.slice(0, 2).join("/") : parts[0];
-  const subpath = id.slice(name.length) || ".";
-  const pkgPath = require.resolve(`${name}/package.json`, { paths: [root] });
-  const pkg = JSON.parse(readFileSync(pkgPath, "utf8")) as PackageJson;
-  const entry =
-    pkg.exports?.[subpath === "" ? "." : `.${subpath}`] ?? pkg.exports?.["."];
-  const style = entry && typeof entry === "object" ? entry.style : undefined;
-
-  if (style) return resolve(dirname(pkgPath), style);
-  if (pkg.main?.endsWith(".css")) return resolve(dirname(pkgPath), pkg.main);
-
-  return require.resolve(id, { paths: [root] });
 }
 
-async function designSystem() {
-  const css = resolve(root, "src/styles/global.css");
+const packageStylesheet = (id: string) => {
+  const stylesheet = resolveStylesheet(root, id);
+  if (!stylesheet) {
+    throw new Error(`Cannot resolve stylesheet: ${id}`);
+  }
+  return stylesheet;
+};
 
-  return __unstable__loadDesignSystem(readFileSync(css, "utf8"), {
-    base: dirname(css),
+const designSystem = () => {
+  const css = path.resolve(root, "src/styles/global.css");
+
+  return __unstable__loadDesignSystem(readFileSync(css, "utf-8"), {
+    base: path.dirname(css),
     from: css,
-    async loadStylesheet(id: string, base: string) {
-      const path =
+    loadStylesheet(id: string, base: string) {
+      const stylesheet =
         id.startsWith(".") || id.startsWith("/")
-          ? resolve(base, id)
+          ? path.resolve(base, id)
           : packageStylesheet(id);
 
-      return {
-        path,
-        base: dirname(path),
-        content: readFileSync(path, "utf8"),
-      };
+      return Promise.resolve({
+        base: path.dirname(stylesheet),
+        content: readFileSync(stylesheet, "utf-8"),
+        path: stylesheet,
+      });
     },
   });
-}
+};
 
-function strings(text: string) {
-  const ranges: Array<{ start: number; value: string }> = [];
+const strings = (text: string) => {
+  const ranges: { start: number; value: string }[] = [];
 
-  for (let i = 0; i < text.length; i++) {
+  for (let i = 0; i < text.length; i += 1) {
     const quote = text[i];
-    if (quote !== `"` && quote !== "'" && quote !== "`") continue;
+    if (quote !== `"` && quote !== "'" && quote !== "`") {
+      continue;
+    }
 
-    const start = ++i;
-    for (; i < text.length; i++) {
-      if (text[i] === "\\") i++;
-      else if (text[i] === quote) {
+    const start = (i += 1);
+    for (; i < text.length; i += 1) {
+      if (text[i] === "\\") {
+        i += 1;
+      } else if (text[i] === quote) {
         ranges.push({ start, value: text.slice(start, i) });
         break;
       }
@@ -86,83 +81,101 @@ function strings(text: string) {
   }
 
   return ranges;
-}
+};
 
-function tokens(value: string) {
-  const ranges: Array<{ start: number; end: number; value: string }> = [];
+const tokens = (value: string) => {
+  const ranges: { start: number; end: number; value: string }[] = [];
   let start = -1;
   let depth = 0;
   let quote = "";
 
-  for (let i = 0; i <= value.length; i++) {
+  for (let i = 0; i <= value.length; i += 1) {
     const char = value[i] ?? " ";
 
     if (quote) {
-      if (char === "\\") i++;
-      else if (char === quote) quote = "";
+      if (char === "\\") {
+        i += 1;
+      } else if (char === quote) {
+        quote = "";
+      }
       continue;
     }
 
     if (char === `"` || char === "'") {
       quote = char;
-      if (start < 0) start = i;
+      if (start < 0) {
+        start = i;
+      }
       continue;
     }
 
     if (char === "[" || char === "(") {
-      depth++;
-      if (start < 0) start = i;
+      depth += 1;
+      if (start < 0) {
+        start = i;
+      }
       continue;
     }
 
     if ((char === "]" || char === ")") && depth > 0) {
-      depth--;
+      depth -= 1;
       continue;
     }
 
-    if (/\s/.test(char) && depth === 0) {
-      if (start >= 0)
-        ranges.push({ start, end: i, value: value.slice(start, i) });
+    if (/\s/u.test(char) && depth === 0) {
+      if (start >= 0) {
+        ranges.push({ end: i, start, value: value.slice(start, i) });
+      }
       start = -1;
       continue;
     }
 
-    if (start < 0) start = i;
+    if (start < 0) {
+      start = i;
+    }
   }
 
   return ranges;
-}
+};
 
-function listSourceFiles(dir: string): string[] {
-  return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
-    const path = resolve(dir, entry.name);
-    const relativePath = relative(root, path).split(sep).join("/");
+const listSourceFiles = (dir: string): string[] =>
+  readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    const entryPath = path.resolve(dir, entry.name);
+    const relativePath = path
+      .relative(root, entryPath)
+      .split(path.sep)
+      .join("/");
 
-    if (entry.isDirectory() && ignoredSourceDirs.has(relativePath)) return [];
+    if (entry.isDirectory() && ignoredSourceDirs.has(relativePath)) {
+      return [];
+    }
 
-    if (entry.isDirectory()) return listSourceFiles(path);
-    if (!entry.isFile()) return [];
+    if (entry.isDirectory()) {
+      return listSourceFiles(entryPath);
+    }
+    if (!entry.isFile()) {
+      return [];
+    }
 
     const extension = entry.name.slice(entry.name.lastIndexOf("."));
-    return sourceExtensions.has(extension) ? [path] : [];
+    return sourceExtensions.has(extension) ? [entryPath] : [];
   });
-}
 
 const system = await designSystem();
-const sourceFiles = listSourceFiles(resolve(root, "src"));
+const sourceFiles = listSourceFiles(path.resolve(root, "src"));
 const sources = sourceFiles.map((file) => {
-  const text = readFileSync(file, "utf8");
+  const text = readFileSync(file, "utf-8");
   const found = strings(text).flatMap((string) =>
     tokens(string.value)
       .filter(
         (token) =>
-          !token.value.includes("${") && /[\w\][\]():!@*/.-]/.test(token.value),
+          !token.value.includes("${") && /[\w\][\]():!@*/.-]/u.test(token.value)
       )
       .map((token) => ({
-        start: string.start + token.start,
         end: string.start + token.end,
+        start: string.start + token.start,
         value: token.value,
-      })),
+      }))
   );
 
   return { file, text, tokens: found };
@@ -170,14 +183,16 @@ const sources = sourceFiles.map((file) => {
 const seen = new Set<string>();
 
 for (const source of sources) {
-  for (const token of source.tokens) seen.add(token.value);
+  for (const token of source.tokens) {
+    seen.add(token.value);
+  }
 }
 
 const canonical = new Map(
   [...seen].map((token) => [
     token,
     system.canonicalizeCandidates([token], { rem: 16 })[0],
-  ]),
+  ])
 );
 const edits: Edit[] = [];
 
@@ -186,10 +201,10 @@ for (const source of sources) {
     const to = canonical.get(token.value);
     if (to && to !== token.value) {
       edits.push({
-        file: source.file,
-        start: token.start,
         end: token.end,
+        file: source.file,
         from: token.value,
+        start: token.start,
         to,
       });
     }
@@ -202,7 +217,7 @@ if (edits.length === 0) {
 }
 
 for (const edit of edits) {
-  const file = relative(root, edit.file).split(sep).join("/");
+  const file = path.relative(root, edit.file).split(path.sep).join("/");
   console.log(`${file} ${edit.from} -> ${edit.to}`);
 }
 

@@ -1,27 +1,38 @@
 import type { LetterWeight, TrainingMode } from "$lib/engine/presets";
 import { getPreset, patternOptions } from "$lib/engine/presets";
-import type { PatternId, SpeedUnit, TargetShape } from "$lib/engine/types";
-import { behaviorOptions, type BehaviorId } from "$lib/trainer/behavior";
+import type { PatternId, SpeedUnit, TargetForm } from "$lib/engine/types";
+import { behaviorOptions } from "$lib/trainer/behavior";
+import type { BehaviorId } from "$lib/trainer/behavior";
 
 export type ControlIconId =
-  "target" | "motion" | "eye" | "calibration" | "theme" | "reset";
+  | "target"
+  | "motion"
+  | "eye"
+  | "calibration"
+  | "theme"
+  | "reset";
 
 export type ControlSectionId =
-  "session" | "drill" | "targets" | "motion" | "screen" | "defaults";
+  | "session"
+  | "drill"
+  | "targets"
+  | "motion"
+  | "screen"
+  | "defaults";
 
-export type ControlSection = {
+export interface ControlSection {
   id: ControlSectionId;
   label: string;
   icon: ControlIconId;
   hideInLilacChaser?: boolean;
-};
+}
 
-export const guideUseCasesByMode: Record<TrainingMode, readonly string[]> = {
+export const guideUseCasesByMode = {
+  lilacChaser: ["Steady fixation", "Peripheral awareness", "Screen reset"],
+  mot: ["Selective attention", "Visual clutter", "Game awareness"],
   pursuit: ["Visual tracking", "Gamer warm-up", "Screen-work reset"],
   reactionTime: ["Quick refocus", "Target acquisition", "Reaction warm-up"],
-  mot: ["Selective attention", "Visual clutter", "Game awareness"],
-  lilacChaser: ["Steady fixation", "Peripheral awareness", "Screen reset"],
-};
+} as const satisfies Record<TrainingMode, readonly string[]>;
 
 export const homepageGuideUseCases = [
   "FPS warmup",
@@ -31,51 +42,50 @@ export const homepageGuideUseCases = [
 
 const controlSections = [
   {
+    icon: "theme",
     id: "session",
     label: "Session",
-    icon: "theme",
   },
   {
+    icon: "target",
     id: "drill",
     label: "Drill",
-    icon: "target",
   },
   {
+    hideInLilacChaser: true,
+    icon: "eye",
     id: "targets",
     label: "Targets",
-    icon: "eye",
-    hideInLilacChaser: true,
   },
   {
+    hideInLilacChaser: true,
+    icon: "motion",
     id: "motion",
     label: "Motion",
-    icon: "motion",
-    hideInLilacChaser: true,
   },
   {
+    hideInLilacChaser: true,
+    icon: "calibration",
     id: "screen",
     label: "Screen",
-    icon: "calibration",
-    hideInLilacChaser: true,
   },
   {
+    icon: "reset",
     id: "defaults",
     label: "Defaults",
-    icon: "reset",
   },
 ] as const satisfies readonly ControlSection[];
 
 const lilacChaserControlSections = controlSections.filter(
-  (section: ControlSection) => !section.hideInLilacChaser,
+  (section: ControlSection) => !section.hideInLilacChaser
 );
 
-export const getAvailableControlSections = (isLilacChaserMode: boolean) => {
-  return isLilacChaserMode ? lilacChaserControlSections : controlSections;
-};
+export const getAvailableControlSections = (isLilacChaserMode: boolean) =>
+  isLilacChaserMode ? lilacChaserControlSections : controlSections;
 
 export const resolveControlSection = (
   activeSection: ControlSectionId,
-  availableSections: readonly ControlSection[],
+  availableSections: readonly ControlSection[]
 ): ControlSectionId => {
   const fallback = availableSections[0]?.id ?? "session";
   return availableSections.some((section) => section.id === activeSection)
@@ -85,38 +95,35 @@ export const resolveControlSection = (
 
 export const getControlSectionLabel = (
   sectionId: ControlSectionId,
-  availableSections: readonly ControlSection[],
-) => {
-  return (
-    availableSections.find((section) => section.id === sectionId)?.label ??
-    "Controls"
-  );
-};
+  availableSections: readonly ControlSection[]
+) =>
+  availableSections.find((section) => section.id === sectionId)?.label ??
+  "Controls";
 
 const getOptionName = (
-  options: ReadonlyArray<{ id: string | number; name: string }>,
-  id: string | number,
+  options: readonly { id: string | number; name: string }[],
+  id: string | number
 ) => options.find((option) => option.id === id)?.name ?? String(id);
 
 export const getPresetName = (id: string) => getPreset(id).name;
 
-export const shapeOptions = [
+export const targetFormOptions = [
   { id: "circle", name: "Circle" },
   { id: "ring", name: "Ring" },
   { id: "square", name: "Square" },
   { id: "diamond", name: "Diamond" },
   { id: "triangle", name: "Triangle" },
   { id: "cross", name: "Cross" },
-] as const satisfies ReadonlyArray<{ id: TargetShape; name: string }>;
+] as const satisfies readonly { id: TargetForm; name: string }[];
 
-export const letterScaleByShape: Record<TargetShape, number> = {
+export const letterScaleByTargetForm = {
   circle: 1,
+  cross: 0.72,
+  diamond: 0.86,
   ring: 0.82,
   square: 1.05,
-  diamond: 0.86,
   triangle: 0.76,
-  cross: 0.72,
-};
+} satisfies Record<TargetForm, number>;
 
 export const letterWeightOptions = [
   { id: 400, name: "Regular" },
@@ -124,7 +131,7 @@ export const letterWeightOptions = [
   { id: 600, name: "Semibold" },
   { id: 700, name: "Bold" },
   { id: 800, name: "Heavy" },
-] as const satisfies ReadonlyArray<{ id: LetterWeight; name: string }>;
+] as const satisfies readonly { id: LetterWeight; name: string }[];
 
 export const getPatternName = (id: PatternId) =>
   getOptionName(patternOptions, id);
@@ -132,44 +139,44 @@ export const getPatternName = (id: PatternId) =>
 export const getBehaviorName = (id: BehaviorId) =>
   getOptionName(behaviorOptions, id);
 
-export const getShapeName = (id: TargetShape) =>
-  getOptionName(shapeOptions, id);
+export const getTargetFormName = (id: TargetForm) =>
+  getOptionName(targetFormOptions, id);
 
 export const getLetterWeightName = (id: LetterWeight) =>
   getOptionName(letterWeightOptions, id);
 
-export const maxSpeedByUnit: Record<SpeedUnit, number> = {
-  "deg/s": 100,
+export const maxSpeedByUnit = {
   "cm/s": 143,
+  "deg/s": 100,
   "screen/s": 6,
-};
+} satisfies Record<SpeedUnit, number>;
 
-export const minSpeedByUnit: Record<SpeedUnit, number> = {
-  "deg/s": 0.1,
+export const minSpeedByUnit = {
   "cm/s": 0.1,
-  "screen/s": 0.01,
-};
-
-export const speedSliderStepByUnit: Record<SpeedUnit, number> = {
   "deg/s": 0.1,
-  "cm/s": 0.1,
   "screen/s": 0.01,
-};
+} satisfies Record<SpeedUnit, number>;
 
-export const speedKeyboardStepByUnit: Record<SpeedUnit, number> = {
-  "deg/s": 1,
+export const speedSliderStepByUnit = {
+  "cm/s": 0.1,
+  "deg/s": 0.1,
+  "screen/s": 0.01,
+} satisfies Record<SpeedUnit, number>;
+
+export const speedKeyboardStepByUnit = {
   "cm/s": 1,
+  "deg/s": 1,
   "screen/s": 0.05,
-};
+} satisfies Record<SpeedUnit, number>;
 
-export const speedDecimalPlacesByUnit: Record<SpeedUnit, number> = {
-  "deg/s": 1,
+export const speedDecimalPlacesByUnit = {
   "cm/s": 1,
+  "deg/s": 1,
   "screen/s": 2,
-};
+} satisfies Record<SpeedUnit, number>;
 
 const pursuitPatternOptions = patternOptions.filter(
-  (option) => option.id !== "multipleObjectTracking",
+  (option) => option.id !== "multipleObjectTracking"
 );
 
 const unpredictivePatternIds = [
@@ -189,13 +196,13 @@ const fixedDirectionPatternIds = [
 ] as const satisfies readonly PatternId[];
 
 const unpredictivePatternIdSet: ReadonlySet<PatternId> = new Set(
-  unpredictivePatternIds,
+  unpredictivePatternIds
 );
 const pursuitPatternIdSet: ReadonlySet<PatternId> = new Set(
-  pursuitPatternOptions.map((option) => option.id),
+  pursuitPatternOptions.map((option) => option.id)
 );
 const fixedDirectionPatternIdSet: ReadonlySet<PatternId> = new Set(
-  fixedDirectionPatternIds,
+  fixedDirectionPatternIds
 );
 
 const isUnpredictivePattern = (patternId: PatternId) =>
@@ -206,11 +213,11 @@ export const canPatternToggleDirection = (patternId: PatternId) =>
   !fixedDirectionPatternIdSet.has(patternId);
 
 export const unpredictivePatternOptions = pursuitPatternOptions.filter(
-  (option) => isUnpredictivePattern(option.id),
+  (option) => isUnpredictivePattern(option.id)
 );
 
 export const predictivePatternOptions = pursuitPatternOptions.filter(
-  (option) => !isUnpredictivePattern(option.id),
+  (option) => !isUnpredictivePattern(option.id)
 );
 
 export const lilacChaserColorOptions = [

@@ -2,29 +2,29 @@ import { legalPageLinks, legalPages } from "./content/legal";
 import { guideMetadata } from "./content/page-copy";
 import { siteMetadata } from "./content/site";
 import { supportPages } from "./content/support-pages";
+import { indexableTrainerRoutes } from "./content/trainer-routes";
 import {
   referenceLinks,
   safetyNote,
   trainingModeNotes,
 } from "./content/training";
-import { indexableTrainerRoutes } from "./content/trainer-routes";
 import { absoluteUrl } from "./seo";
 
 const sitemapEntries = [
-  { path: "/", lastModified: siteMetadata.homepageLastModified },
-  { path: "/guide/", lastModified: guideMetadata.lastModified },
-  ...supportPages.map(({ path, lastModified }) => ({ path, lastModified })),
+  { lastModified: siteMetadata.homepageLastModified, path: "/" },
+  { lastModified: guideMetadata.lastModified, path: "/guide/" },
+  ...supportPages.map(({ path, lastModified }) => ({ lastModified, path })),
   {
-    path: legalPageLinks.privacy.path,
     lastModified: legalPages.privacy.lastModified,
+    path: legalPageLinks.privacy.path,
   },
   {
-    path: legalPageLinks.terms.path,
     lastModified: legalPages.terms.lastModified,
+    path: legalPageLinks.terms.path,
   },
   ...indexableTrainerRoutes.map(({ path, lastModified }) => ({
-    path,
     lastModified,
+    path,
   })),
 ] as const;
 
@@ -38,14 +38,14 @@ const escapeXml = (value: string) =>
 
 export const buildSitemapXml = (site: URL) => {
   const urls = sitemapEntries
-    .map(({ path, lastModified }) => {
-      return [
+    .map(({ path, lastModified }) =>
+      [
         "  <url>",
         `    <loc>${escapeXml(absoluteUrl(path, site))}</loc>`,
         `    <lastmod>${escapeXml(lastModified)}</lastmod>`,
         "  </url>",
-      ].join("\n");
-    })
+      ].join("\n")
+    )
     .join("\n");
 
   return [
@@ -57,8 +57,8 @@ export const buildSitemapXml = (site: URL) => {
   ].join("\n");
 };
 
-export const buildRobotsText = (site: URL) => {
-  return [
+export const buildRobotsText = (site: URL) =>
+  [
     "# FoveaFlow allows search engines and AI tools to crawl public pages.",
     "User-agent: *",
     "Allow: /",
@@ -67,10 +67,9 @@ export const buildRobotsText = (site: URL) => {
     `Sitemap: ${absoluteUrl("/sitemap.xml", site)}`,
     "",
   ].join("\n");
-};
 
-export const buildLlmsText = (site: URL) => {
-  return [
+export const buildLlmsText = (site: URL) =>
+  [
     "# FoveaFlow",
     "",
     `> ${siteMetadata.shortDescription}`,
@@ -97,7 +96,7 @@ export const buildLlmsText = (site: URL) => {
     `- [Guide](${absoluteUrl("/guide/", site)}): Read the complete usage and safety guide.`,
     ...supportPages.map(
       (page) =>
-        `- [${page.heading}](${absoluteUrl(page.path, site)}): ${page.description}`,
+        `- [${page.heading}](${absoluteUrl(page.path, site)}): ${page.description}`
     ),
     `- [Pricing](${absoluteUrl("/pricing.md", site)}): Pricing and plan details.`,
     `- [Privacy](${absoluteUrl(legalPageLinks.privacy.path, site)}): Privacy policy.`,
@@ -108,20 +107,19 @@ export const buildLlmsText = (site: URL) => {
     "",
     ...indexableTrainerRoutes.map(
       (route) =>
-        `- [${route.label}](${absoluteUrl(route.path, site)}): ${route.description}`,
+        `- [${route.label}](${absoluteUrl(route.path, site)}): ${route.description}`
     ),
     "",
     "## Background reading",
     "",
     ...referenceLinks.map(
-      (reference) => `- [${reference.label}](${reference.url})`,
+      (reference) => `- [${reference.label}](${reference.url})`
     ),
     "",
   ].join("\n");
-};
 
-export const buildPricingText = (site: URL) => {
-  return [
+export const buildPricingText = (site: URL) =>
+  [
     "# Pricing",
     "",
     "FoveaFlow is free online eye training for visual tracking and focus.",
@@ -137,4 +135,3 @@ export const buildPricingText = (site: URL) => {
     `Use the app: ${absoluteUrl("/", site)}`,
     "",
   ].join("\n");
-};

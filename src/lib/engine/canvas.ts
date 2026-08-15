@@ -7,15 +7,19 @@ const resolveCanvasScale = (
   cssWidth: number,
   cssHeight: number,
   devicePixelRatio: number,
-  maxPixelCount = MAX_CANVAS_PIXEL_COUNT,
+  maxPixelCount = MAX_CANVAS_PIXEL_COUNT
 ) => {
-  if (!isPositiveFinite(cssWidth) || !isPositiveFinite(cssHeight)) return 1;
+  if (!isPositiveFinite(cssWidth) || !isPositiveFinite(cssHeight)) {
+    return 1;
+  }
 
   const preferredScale = isPositiveFinite(devicePixelRatio)
     ? Math.min(devicePixelRatio, MAX_DEVICE_PIXEL_RATIO)
     : 1;
 
-  if (!isPositiveFinite(maxPixelCount)) return preferredScale;
+  if (!isPositiveFinite(maxPixelCount)) {
+    return preferredScale;
+  }
 
   const cssPixelCount = cssWidth * cssHeight;
   const budgetScale = Math.sqrt(maxPixelCount / cssPixelCount);
@@ -27,7 +31,7 @@ export const resolveCanvasLayout = (
   cssWidth: number,
   cssHeight: number,
   devicePixelRatio: number,
-  maxPixelCount = MAX_CANVAS_PIXEL_COUNT,
+  maxPixelCount = MAX_CANVAS_PIXEL_COUNT
 ) => {
   const width = isPositiveFinite(cssWidth) ? cssWidth : 1;
   const height = isPositiveFinite(cssHeight) ? cssHeight : 1;
@@ -35,7 +39,7 @@ export const resolveCanvasLayout = (
     width,
     height,
     devicePixelRatio,
-    maxPixelCount,
+    maxPixelCount
   );
   let canvasWidth = Math.max(1, Math.round(width * scale));
   let canvasHeight = Math.max(1, Math.round(height * scale));
@@ -43,16 +47,16 @@ export const resolveCanvasLayout = (
   if (canvasWidth * canvasHeight > maxPixelCount) {
     scale = Math.min(
       Math.max(1, Math.floor(width * scale)) / width,
-      Math.max(1, Math.floor(height * scale)) / height,
+      Math.max(1, Math.floor(height * scale)) / height
     );
     canvasWidth = Math.max(1, Math.floor(width * scale));
     canvasHeight = Math.max(1, Math.floor(height * scale));
   }
 
   return {
-    arena: { width, height },
-    scale,
-    canvasWidth,
+    arena: { height, width },
     canvasHeight,
+    canvasWidth,
+    scale,
   };
 };

@@ -203,8 +203,6 @@ export const zhHK = {
     "使用 FoveaFlow 不需要發送個人資料。它並不是為了收集兒童個人資料而設計的。",
   "FoveaFlow does not set advertising cookies. Cloudflare may set security cookies when it needs them to keep the site available and safe.":
     "FoveaFlow 不設定廣告 Cookie。Cloudflare 可能會在需要時設定安全 Cookie，以保持網站可用和安全。",
-  "FoveaFlow stores your language preference in local browser storage and in a same-site preference cookie so the correct language can be selected before the app starts. The cookie can last up to 400 days, uses SameSite=Lax, and is marked Secure on HTTPS.":
-    "FoveaFlow 會將你的語言偏好儲存在瀏覽器本機儲存和同站點偏好 Cookie 中，以便應用程式啟動前選擇正確的語言。該 Cookie 最長可保留 400 天，使用 SameSite=Lax，並在 HTTPS 上標記為 Secure。",
   "FoveaFlow eye trainer animation for visual tracking practice":
     "用於視覺追蹤練習的 FoveaFlow 眼部訓練動畫",
   "FoveaFlow eye trainer animation for visual tracking practice. Use Pause motion to stop target movement before changing controls.":
@@ -244,6 +242,8 @@ export const zhHK = {
     "FoveaFlow 會本機儲存速度、大小、形狀、顏色、透明度、軌跡、路徑、干擾物、字母和顯示比例等控制設定。",
   "FoveaFlow stores settings locally in your browser so the app can remember them on the current device. That can include the selected language, mode, motion pattern, speed, target size, color, opacity, trail setting, viewing distance, screen scale, and theme.":
     "FoveaFlow 會把設定本機儲存在你的瀏覽器中，這樣應用程式能在當前設備上記住它們。設定可能包括所選語言、模式、運動圖案、速度、目標大小、顏色、透明度、軌跡設定、觀看距離、屏幕比例和主題。",
+  "FoveaFlow stores your language preference in local browser storage and in a same-site preference cookie so the correct language can be selected before the app starts. The cookie can last up to 400 days, uses SameSite=Lax, and is marked Secure on HTTPS.":
+    "FoveaFlow 會將你的語言偏好儲存在瀏覽器本機儲存和同站點偏好 Cookie 中，以便應用程式啟動前選擇正確的語言。該 Cookie 最長可保留 400 天，使用 SameSite=Lax，並在 HTTPS 上標記為 Secure。",
   "FoveaFlow vs BlinkCamp": "FoveaFlow 對比 BlinkCamp",
   "FoveaFlow vs EyeTrainer.gg": "FoveaFlow 對比 EyeTrainer.gg",
   "Free access": "免費使用",
@@ -538,7 +538,6 @@ export const zhHK = {
   Semibold: "半粗體",
   Session: "訓練",
   "Settings saved in your browser": "設定已儲存在瀏覽器中",
-  Shape: "形狀",
   "Shape, color, opacity, trail length, and trail behavior are adjustable.":
     "形狀、顏色、透明度、軌跡長度和軌跡行為都可以調整。",
   "Sharpen focus between code, logs, dashboards, terminals, tickets, and multi-monitor work.":
@@ -636,6 +635,7 @@ export const zhHK = {
   "Target acquisition": "目標捕捉",
   "Target appearance, trail display, distractor brightness, letter styling, viewing distance, and screen scale can be tuned.":
     "目標外觀、軌跡顯示、干擾物亮度、字母樣式、觀看距離和屏幕比例都可以調整。",
+  "Target form": "形狀",
   "Target opacity": "目標透明度",
   "Target size": "目標大小",
   Targets: "目標",
