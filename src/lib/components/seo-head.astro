@@ -52,10 +52,10 @@ const i18nBootConfig = {
   cookieMaxAge: localeCookieMaxAge,
   cookieName: localeCookieName,
   defaultLocale,
+  localStorageKey: localeCookieName,
   localeAliases,
   localePrefixAliases,
   locales: languageOptions.map((option) => option.locale),
-  localStorageKey: localeCookieName,
 };
 const i18nBootScript = `
 (() => {

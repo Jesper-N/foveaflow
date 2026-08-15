@@ -1,5 +1,5 @@
 <script lang="ts">
-  import PatternPathPreview from "$lib/components/PatternPathPreview.svelte";
+  import PatternPathPreview from "$lib/components/pattern-path-preview.svelte";
   import * as Select from "$lib/components/ui/select/index.js";
   import { languageState } from "$lib/i18n/state.svelte";
   import { t } from "$lib/i18n/translate";

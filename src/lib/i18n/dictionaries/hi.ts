@@ -59,22 +59,19 @@ export const hi = {
   "Can I change how the target looks?": "क्या मैं लक्ष्य का रूप बदल सकता हूं?",
   "Can I change paths and motion behavior?":
     "क्या मैं रास्ते और गति का व्यवहार बदल सकता हूं?",
-  "Can I link straight to a drill?":
-    "क्या मैं सीधे किसी अभ्यास का लिंक दे सकता हूं?",
+  "Can I link straight to a drill?": "क्या मैं सीधे किसी अभ्यास का लिंक दे सकता हूं?",
   "Can I start in the browser?": "क्या मैं ब्राउजर में शुरू कर सकता हूं?",
   "Can I train with distractors or letters?":
     "क्या मैं भटकाने वाली वस्तुओं या अक्षरों के साथ अभ्यास कर सकता हूं?",
   "Can I tune target appearance and calibration?":
     "क्या मैं लक्ष्य का रूप और कैलिब्रेशन बदल सकता हूं?",
-  "Can I use FoveaFlow on a phone?":
-    "क्या मैं FoveaFlow फोन पर इस्तेमाल कर सकता हूं?",
+  "Can I use FoveaFlow on a phone?": "क्या मैं FoveaFlow फोन पर इस्तेमाल कर सकता हूं?",
   "Can I use it free in the browser?":
     "क्या मैं इसे ब्राउजर में मुफ्त इस्तेमाल कर सकता हूं?",
   "Change language": "भाषा बदलें",
   "Change speed and target size first. They usually have the biggest effect on difficulty and control.":
     "पहले गति और लक्ष्य का आकार बदलें. कठिनाई और कंट्रोल पर आम तौर पर इन्हीं का सबसे ज्यादा असर होता है.",
-  "Change your saved FoveaFlow settings.":
-    "अपनी सेव की गई FoveaFlow सेटिंग बदलें.",
+  "Change your saved FoveaFlow settings.": "अपनी सेव की गई FoveaFlow सेटिंग बदलें.",
   "Changes to these terms": "इन शर्तों में बदलाव",
   Children: "बच्चे",
   "Choose BlinkCamp if you want a simple browser tool centered on basic eye-training routines and speed-and-size adjustment.":
@@ -124,8 +121,7 @@ export const hi = {
     "गति इकाई, लक्ष्य आकार, आकार प्रकार, रंग, अपारदर्शिता, ट्रेल लंबाई, गति रास्ता, गति व्यवहार, विचलन, अक्षर ओवरले, देखने की दूरी, स्क्रीन स्केल और लाइलैक चेजर गेंद स्केल जैसे मोड विकल्पों के कंट्रोल.",
   Cookies: "कुकी",
   "Corner Tour Smooth Pursuit Drill": "कॉर्नर टूर स्मूद परसूट अभ्यास",
-  "Corner Tour Smooth Pursuit Eye Training":
-    "कॉर्नर टूर स्मूद परसूट आंख अभ्यास",
+  "Corner Tour Smooth Pursuit Eye Training": "कॉर्नर टूर स्मूद परसूट आंख अभ्यास",
   "Corner Tour gives each corner of the display a deliberate role, making the route spacious and structured.":
     "कॉर्नर टूर स्क्रीन के हर कोने को साफ भूमिका देता है. रास्ता खुला और व्यवस्थित लगता है.",
   "Corner tour": "कॉर्नर टूर",
@@ -144,8 +140,7 @@ export const hi = {
     "तिरछा लंबे कोने से कोने तक चलने वाला रास्ता इस्तेमाल करता है. इससे ज्यादा स्क्रीन कवरेज और दूरी पर साफ ट्रैकिंग पर ध्यान जाता है.",
   Diamond: "डायमंड",
   "Diamond Loop Smooth Pursuit Drill": "डायमंड लूप स्मूद परसूट अभ्यास",
-  "Diamond Loop Smooth Pursuit Eye Training":
-    "डायमंड लूप स्मूद परसूट आंख अभ्यास",
+  "Diamond Loop Smooth Pursuit Eye Training": "डायमंड लूप स्मूद परसूट आंख अभ्यास",
   "Diamond Loop combines a simple repeating route with clear corner transitions and sharper shifts than Circle.":
     "डायमंड लूप सरल दोहराए जाने वाले रास्ते को साफ कोना बदलावों से जोड़ता है. इसमें सर्कल से तेज बदलाव होते हैं.",
   "Diamond loop": "डायमंड लूप",
@@ -199,8 +194,7 @@ export const hi = {
   "Figure Eight adds a crossover point, which means the target passes through the center and changes direction more often than a simple loop.":
     "फिगर आठ में एक क्रॉसओवर बिंदु होता है. लक्ष्य बीच से गुजरता है और सरल लूप से ज्यादा बार दिशा बदलता है.",
   "Figure eight": "फिगर आठ",
-  "Focused guides for FPS and alternatives":
-    "FPS और विकल्पों के लिए केंद्रित गाइड",
+  "Focused guides for FPS and alternatives": "FPS और विकल्पों के लिए केंद्रित गाइड",
   "Follow it like Smooth Pursuit, but do not let the darker balls pull your eyes away.":
     "इसे स्मूद परसूट की तरह फॉलो करें, लेकिन गहरी गेंदों को आपकी नजर भटकाने न दें.",
   "Follow one moving target and train steady visual tracking.":
@@ -216,8 +210,6 @@ export const hi = {
     "FoveaFlow निजी जानकारी भेजे बिना इस्तेमाल किया जा सकता है. यह बच्चों की निजी जानकारी इकट्ठा करने के लिए नहीं बना है.",
   "FoveaFlow does not set advertising cookies. Cloudflare may set security cookies when it needs them to keep the site available and safe.":
     "FoveaFlow विज्ञापन कुकी सेट नहीं करता. साइट उपलब्ध और सुरक्षित रखने के लिए जरूरत पड़ने पर Cloudflare सुरक्षा कुकी सेट कर सकता है.",
-  "FoveaFlow stores your language preference in local browser storage and in a same-site preference cookie so the correct language can be selected before the app starts. The cookie can last up to 400 days, uses SameSite=Lax, and is marked Secure on HTTPS.":
-    "FoveaFlow आपकी भाषा की पसंद को ब्राउज़र के स्थानीय स्टोरेज और उसी साइट की preference cookie में रखता है, ताकि ऐप शुरू होने से पहले सही भाषा चुनी जा सके. कुकी 400 दिनों तक रह सकती है, SameSite=Lax का उपयोग करती है और HTTPS पर Secure के रूप में चिह्नित होती है.",
   "FoveaFlow eye trainer animation for visual tracking practice":
     "विजुअल ट्रैकिंग अभ्यास के लिए FoveaFlow आई ट्रेनर एनिमेशन",
   "FoveaFlow eye trainer animation for visual tracking practice. Use Pause motion to stop target movement before changing controls.":
@@ -257,6 +249,8 @@ export const hi = {
     "FoveaFlow गति, आकार, आकार प्रकार, रंग, अपारदर्शिता, ट्रेल, रास्ते, विचलन, अक्षर और डिस्प्ले स्केल के स्थानीय कंट्रोल सेव करता है.",
   "FoveaFlow stores settings locally in your browser so the app can remember them on the current device. That can include the selected language, mode, motion pattern, speed, target size, color, opacity, trail setting, viewing distance, screen scale, and theme.":
     "FoveaFlow सेटिंग आपके ब्राउजर में स्थानीय रूप से रखता है ताकि ऐप उन्हें इसी डिवाइस पर याद रख सके. इनमें चुनी हुई भाषा, मोड, गति पैटर्न, गति, लक्ष्य आकार, रंग, अपारदर्शिता, ट्रेल सेटिंग, देखने की दूरी, स्क्रीन स्केल और थीम शामिल हो सकते हैं.",
+  "FoveaFlow stores your language preference in local browser storage and in a same-site preference cookie so the correct language can be selected before the app starts. The cookie can last up to 400 days, uses SameSite=Lax, and is marked Secure on HTTPS.":
+    "FoveaFlow आपकी भाषा की पसंद को ब्राउज़र के स्थानीय स्टोरेज और उसी साइट की preference cookie में रखता है, ताकि ऐप शुरू होने से पहले सही भाषा चुनी जा सके. कुकी 400 दिनों तक रह सकती है, SameSite=Lax का उपयोग करती है और HTTPS पर Secure के रूप में चिह्नित होती है.",
   "FoveaFlow vs BlinkCamp": "FoveaFlow बनाम BlinkCamp",
   "FoveaFlow vs EyeTrainer.gg": "FoveaFlow बनाम EyeTrainer.gg",
   "Free access": "मुफ्त पहुंच",
@@ -279,8 +273,7 @@ export const hi = {
   "Guide FAQ": "गाइड सवाल-जवाब",
   "Guide navigation": "गाइड नेविगेशन",
   "Hard Turns Smooth Pursuit Drill": "हार्ड टर्न्स स्मूद परसूट अभ्यास",
-  "Hard Turns Smooth Pursuit Eye Training":
-    "हार्ड टर्न्स स्मूद परसूट आंख अभ्यास",
+  "Hard Turns Smooth Pursuit Eye Training": "हार्ड टर्न्स स्मूद परसूट आंख अभ्यास",
   "Hard Turns is one of the most demanding Smooth Pursuit patterns because the target changes direction abruptly.":
     "हार्ड टर्न्स सबसे कठिन स्मूद परसूट पैटर्न में से है, क्योंकि लक्ष्य अचानक दिशा बदलता है.",
   "Hard turns": "हार्ड टर्न्स",
@@ -321,10 +314,8 @@ export const hi = {
   "Is FoveaFlow good for gamers?": "क्या FoveaFlow गेमरों के लिए अच्छा है?",
   "Is FoveaFlow useful for IT professionals?":
     "क्या FoveaFlow IT पेशेवरों के लिए उपयोगी है?",
-  "Is Reaction Jumps useful before games?":
-    "क्या रिएक्शन जंप्स गेम से पहले उपयोगी है?",
-  "Is Smooth Pursuit good as a warmup?":
-    "क्या स्मूद परसूट वॉर्मअप के लिए अच्छा है?",
+  "Is Reaction Jumps useful before games?": "क्या रिएक्शन जंप्स गेम से पहले उपयोगी है?",
+  "Is Smooth Pursuit good as a warmup?": "क्या स्मूद परसूट वॉर्मअप के लिए अच्छा है?",
   "Is it aimed at FPS eye training?": "क्या यह FPS आंख अभ्यास के लिए है?",
   "Is there a public source link?": "क्या सार्वजनिक सोर्स लिंक है?",
   "Is this a medical tool?": "क्या यह चिकित्सा टूल है?",
@@ -384,8 +375,7 @@ export const hi = {
     "लिसाजू ज्यादा जटिल बहते पैटर्न में से एक है. लक्ष्य ऐसे लूप वाले रास्ते से चलता है जिसका केंद्र से रिश्ता समय के साथ बदलता है.",
   "Local settings with no account or install.":
     "बिना खाता या इंस्टॉल, स्थानीय सेटिंग.",
-  "Look only at the black cross in the middle.":
-    "सिर्फ बीच के काले क्रॉस को देखें.",
+  "Look only at the black cross in the middle.": "सिर्फ बीच के काले क्रॉस को देखें.",
   "Lower the speed and increase target size so you have more time to settle on each jump.":
     "गति कम करें और लक्ष्य का आकार बढ़ाएं ताकि हर जंप पर नजर जमाने के लिए ज्यादा समय मिले.",
   "Lower the speed, increase target size, and keep the trail visible until you can stay on target comfortably.":
@@ -511,8 +501,7 @@ export const hi = {
     "रैंडम दोहराए जाने वाले लूप की आसानी हटाता है. लक्ष्य की दिशा और जगह का अंदाजा कम लगता है, इसलिए यह सरल सर्कल या दीर्घवृत्त से ज्यादा लक्ष्य खोजने का काम जोड़ता है.",
   "Reaction Jumps": "तेज़ फोकस शिफ्ट",
   "Reaction Jumps Eye Training": "रिएक्शन जंप्स आंख अभ्यास",
-  "Reaction Jumps for quick refocus.":
-    "जल्दी दोबारा फोकस के लिए रिएक्शन जंप्स.",
+  "Reaction Jumps for quick refocus.": "जल्दी दोबारा फोकस के लिए रिएक्शन जंप्स.",
   "Reaction Jumps is best when you want to find a new target position quickly and lock on before the next move.":
     "नई लक्ष्य जगह जल्दी खोजकर अगले मूव से पहले उस पर टिकना हो तो रिएक्शन जंप्स सबसे अच्छा है.",
   "Reaction Jumps is for reaction time training, fast refocus, and target switching.":
@@ -559,7 +548,6 @@ export const hi = {
   Semibold: "सेमीबोल्ड",
   Session: "सेशन",
   "Settings saved in your browser": "सेटिंग आपके ब्राउजर में सेव हैं",
-  Shape: "आकार",
   "Shape, color, opacity, trail length, and trail behavior are adjustable.":
     "आकार, रंग, अपारदर्शिता, ट्रेल लंबाई और ट्रेल व्यवहार बदले जा सकते हैं.",
   "Sharpen focus between code, logs, dashboards, terminals, tickets, and multi-monitor work.":
@@ -569,8 +557,7 @@ export const hi = {
   "Sharpen your visual warmup before FPS games with tracking, refocus, peripheral awareness, and character movement reading drills.":
     "FPS गेम से पहले ट्रैकिंग, दोबारा फोकस, किनारी जागरूकता और कैरेक्टर मूवमेंट पढ़ने वाले अभ्यासों से अपना विजुअल वॉर्मअप तेज करें.",
   "Short bursts": "छोटे बर्स्ट",
-  "Should I follow the outer shapes?":
-    "क्या मुझे बाहरी आकारों को फॉलो करना चाहिए?",
+  "Should I follow the outer shapes?": "क्या मुझे बाहरी आकारों को फॉलो करना चाहिए?",
   "Show target letters": "लक्ष्य अक्षर दिखाएं",
   "Show trail": "ट्रेल दिखाएं",
   Size: "आकार",
@@ -614,8 +601,7 @@ export const hi = {
     "गति, लक्ष्य आकार और रास्ता सबसे अहम हैं, क्योंकि वे कठिनाई जल्दी बदलते हैं.",
   Square: "वर्ग",
   "Stair Steps Smooth Pursuit Drill": "सीढ़ी स्टेप्स स्मूद परसूट अभ्यास",
-  "Stair Steps Smooth Pursuit Eye Training":
-    "सीढ़ी स्टेप्स स्मूद परसूट आंख अभ्यास",
+  "Stair Steps Smooth Pursuit Eye Training": "सीढ़ी स्टेप्स स्मूद परसूट आंख अभ्यास",
   "Stair Steps creates a mechanical route with discrete directional segments that stays easier to predict than Random or Hard Turns.":
     "सीढ़ी स्टेप्स अलग-अलग दिशा खंडों वाला यांत्रिक रास्ता बनाता है. इसका अंदाजा रैंडम या हार्ड टर्न्स से आसान है.",
   "Stair steps": "सीढ़ी स्टेप्स",
@@ -659,6 +645,7 @@ export const hi = {
   "Target acquisition": "लक्ष्य पकड़ना",
   "Target appearance, trail display, distractor brightness, letter styling, viewing distance, and screen scale can be tuned.":
     "लक्ष्य का रूप, ट्रेल डिस्प्ले, विचलन चमक, अक्षर शैली, देखने की दूरी और स्क्रीन स्केल बदले जा सकते हैं.",
+  "Target form": "आकार",
   "Target opacity": "लक्ष्य अपारदर्शिता",
   "Target size": "लक्ष्य आकार",
   Targets: "लक्ष्य",
@@ -800,8 +787,7 @@ export const hi = {
   "Use this guide to choose the right FoveaFlow eye trainer drill for visual tracking, quick refocus, peripheral awareness, FPS warmups, or focus under distraction.":
     "विजुअल ट्रैकिंग, जल्दी दोबारा फोकस, किनारी जागरूकता, FPS वॉर्मअप या विचलन के बीच फोकस के लिए सही FoveaFlow आई ट्रेनर अभ्यास चुनने में इस गाइड का इस्तेमाल करें.",
   "Vertical Sweep Smooth Pursuit Drill": "ऊर्ध्व स्वीप स्मूद परसूट अभ्यास",
-  "Vertical Sweep Smooth Pursuit Eye Training":
-    "ऊर्ध्व स्वीप स्मूद परसूट आंख अभ्यास",
+  "Vertical Sweep Smooth Pursuit Eye Training": "ऊर्ध्व स्वीप स्मूद परसूट आंख अभ्यास",
   "Vertical Sweep mirrors the simplicity of Horizontal Sweep but changes the direction of travel for straightforward up-down tracking.":
     "ऊर्ध्व स्वीप, क्षैतिज स्वीप की सरलता जैसा है, लेकिन सीधे ऊपर-नीचे ट्रैकिंग के लिए चलने की दिशा बदलता है.",
   "Vertical sweep": "ऊर्ध्व स्वीप",
@@ -863,11 +849,9 @@ export const hi = {
   "What makes the Bounce path different?": "बाउंस रास्ता अलग कैसे है?",
   "What makes the Circle path different?": "सर्कल रास्ता अलग कैसे है?",
   "What makes the Clover path different?": "क्लोवर रास्ता अलग कैसे है?",
-  "What makes the Corner tour path different?":
-    "कॉर्नर टूर रास्ता अलग कैसे है?",
+  "What makes the Corner tour path different?": "कॉर्नर टूर रास्ता अलग कैसे है?",
   "What makes the Diagonal path different?": "तिरछा रास्ता अलग कैसे है?",
-  "What makes the Diamond loop path different?":
-    "डायमंड लूप रास्ता अलग कैसे है?",
+  "What makes the Diamond loop path different?": "डायमंड लूप रास्ता अलग कैसे है?",
   "What makes the Down-left sweep path different?":
     "नीचे-बाएं स्वीप रास्ता अलग कैसे है?",
   "What makes the Down-right sweep path different?":
@@ -875,17 +859,14 @@ export const hi = {
   "What makes the Edge loop path different?": "किनारा लूप रास्ता अलग कैसे है?",
   "What makes the Ellipse path different?": "दीर्घवृत्त रास्ता अलग कैसे है?",
   "What makes the Figure eight path different?": "फिगर आठ रास्ता अलग कैसे है?",
-  "What makes the Hard turns path different?":
-    "हार्ड टर्न्स रास्ता अलग कैसे है?",
+  "What makes the Hard turns path different?": "हार्ड टर्न्स रास्ता अलग कैसे है?",
   "What makes the Horizontal sweep path different?":
     "क्षैतिज स्वीप रास्ता अलग कैसे है?",
   "What makes the Hourglass path different?": "आवरग्लास रास्ता अलग कैसे है?",
   "What makes the Lissajous path different?": "लिसाजू रास्ता अलग कैसे है?",
   "What makes the Random path different?": "रैंडम रास्ता अलग कैसे है?",
-  "What makes the Stair steps path different?":
-    "सीढ़ी स्टेप्स रास्ता अलग कैसे है?",
-  "What makes the Vertical sweep path different?":
-    "ऊर्ध्व स्वीप रास्ता अलग कैसे है?",
+  "What makes the Stair steps path different?": "सीढ़ी स्टेप्स रास्ता अलग कैसे है?",
+  "What makes the Vertical sweep path different?": "ऊर्ध्व स्वीप रास्ता अलग कैसे है?",
   "What makes the Wave path different?": "वेव रास्ता अलग कैसे है?",
   "What makes the Zigzag path different?": "जिगजैग रास्ता अलग कैसे है?",
   "What settings can I change?": "मैं कौन सी सेटिंग बदल सकता हूं?",
@@ -910,13 +891,11 @@ export const hi = {
   "Which path is best for beginners?":
     "शुरुआती लोगों के लिए कौन सा रास्ता सबसे अच्छा है?",
   "Which settings matter most?": "कौन सी सेटिंग सबसे अहम हैं?",
-  "Which settings should I change first?":
-    "मुझे पहले कौन सी सेटिंग बदलनी चाहिए?",
+  "Which settings should I change first?": "मुझे पहले कौन सी सेटिंग बदलनी चाहिए?",
   Yes: "हां",
   "Yes, but a larger screen gives the moving target more room. A desktop, laptop, or tablet usually feels better for longer paths.":
     "हां, लेकिन बड़ी स्क्रीन चलते लक्ष्य को ज्यादा जगह देती है. लंबे रास्तों के लिए डेस्कटॉप, लैपटॉप या टैबलेट आम तौर पर बेहतर लगता है.",
-  "Yes. BlinkCamp also links to GitHub.":
-    "हां. BlinkCamp भी GitHub लिंक देता है.",
+  "Yes. BlinkCamp also links to GitHub.": "हां. BlinkCamp भी GitHub लिंक देता है.",
   "Yes. BlinkCamp exposes simple speed and size controls.":
     "हां. BlinkCamp सरल गति और आकार कंट्रोल देता है.",
   "Yes. BlinkCamp is also a free browser-based eye training tool.":

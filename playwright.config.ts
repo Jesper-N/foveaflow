@@ -13,21 +13,8 @@ const smokePort = getSmokePort();
 const smokeBaseUrl = `http://127.0.0.1:${smokePort}`;
 
 export default defineConfig({
-  testDir: "./tests/smoke",
-  testMatch: "**/*.playwright.ts",
-  timeout: 30_000,
   expect: {
-    timeout: 5_000,
-  },
-  use: {
-    baseURL: smokeBaseUrl,
-    trace: "retain-on-failure",
-  },
-  webServer: {
-    command: `bunx wrangler dev --ip 127.0.0.1 --port ${smokePort} --log-level error`,
-    url: smokeBaseUrl,
-    reuseExistingServer: false,
-    timeout: 30_000,
+    timeout: 5000,
   },
   projects: [
     {
@@ -39,4 +26,17 @@ export default defineConfig({
       use: { ...devices["Pixel 5"] },
     },
   ],
+  testDir: "./tests/smoke",
+  testMatch: "**/*.playwright.ts",
+  timeout: 30_000,
+  use: {
+    baseURL: smokeBaseUrl,
+    trace: "retain-on-failure",
+  },
+  webServer: {
+    command: `bunx wrangler dev --ip 127.0.0.1 --port ${smokePort} --log-level error`,
+    reuseExistingServer: false,
+    timeout: 30_000,
+    url: smokeBaseUrl,
+  },
 });

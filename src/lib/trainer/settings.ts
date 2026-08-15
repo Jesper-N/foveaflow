@@ -1,9 +1,10 @@
+import { findTrainerRoute } from "$lib/content/trainer-routes";
 import {
   DEFAULT_CALIBRATION,
   pixelsPerSecondToSpeedValue,
   speedToPixelsPerSecond,
-  type Calibration,
 } from "$lib/engine/calibration";
+import type { Calibration } from "$lib/engine/calibration";
 import {
   DEFAULT_BALL_COLOR,
   DEFAULT_LETTER_SCALE,
@@ -11,15 +12,16 @@ import {
   getPreset,
   patternOptions,
   settingsFromPreset,
-  type ExercisePreset,
-  type LetterWeight,
-  type TrainerSettings,
+} from "$lib/engine/presets";
+import type {
+  ExercisePreset,
+  LetterWeight,
+  TrainerSettings,
 } from "$lib/engine/presets";
 import type { SizeProfile, SpeedProfile } from "$lib/engine/profiles";
-import type { StoredSettings } from "$lib/engine/storage";
-import type { PatternId, SpeedUnit, TargetShape } from "$lib/engine/types";
 import { safeStimulusColor } from "$lib/engine/safety";
-import { findTrainerRoute } from "$lib/content/trainer-routes";
+import type { StoredSettings } from "$lib/engine/storage";
+import type { PatternId, SpeedUnit, TargetForm } from "$lib/engine/types";
 
 import {
   canPatternToggleDirection,
@@ -27,111 +29,94 @@ import {
   lilacChaserColorOptions,
   maxSpeedByUnit,
   minSpeedByUnit,
-  shapeOptions,
+  targetFormOptions,
   speedKeyboardStepByUnit,
 } from "./options";
 
 export type CalibrationField = "viewingDistanceCm" | "cssPxPerCm";
 export type TrainerSliderValue = readonly number[] | undefined;
 
-const clamp = (value: number, min: number, max: number) => {
-  return Math.min(max, Math.max(min, value));
-};
+const clamp = (value: number, min: number, max: number) =>
+  Math.min(max, Math.max(min, value));
 
-const isFiniteNumber = (value: unknown): value is number => {
-  return typeof value === "number" && Number.isFinite(value);
-};
-
-const isProfileMultiplier = (value: unknown): value is number => {
-  return isFiniteNumber(value) && value >= 0 && value <= 4;
-};
+const isFiniteNumber = (value: number | undefined): value is number =>
+  value !== undefined && Number.isFinite(value);
 
 export const trainerSettingBounds = {
-  baseRadiusPx: { min: 4, max: 100 },
-  targetCount: { min: 1, max: 6 },
-  distractorCount: { min: 0, max: 10 },
-  distractorBrightness: { min: 0.35, max: 1 },
-  targetOpacity: { min: 0, max: 1 },
-  letterScale: { min: 0.45, max: 1.2 },
-  lilacChaserScale: { min: 0.75, max: 1.25 },
-  viewingDistanceCm: { min: 20, max: 120 },
-  cssPxPerCm: { min: 10, max: 120 },
+  baseRadiusPx: { max: 100, min: 4 },
+  cssPxPerCm: { max: 120, min: 10 },
+  distractorBrightness: { max: 1, min: 0.35 },
+  distractorCount: { max: 10, min: 0 },
+  letterScale: { max: 1.2, min: 0.45 },
+  lilacChaserScale: { max: 1.25, min: 0.75 },
+  targetCount: { max: 6, min: 1 },
+  targetOpacity: { max: 1, min: 0 },
+  viewingDistanceCm: { max: 120, min: 20 },
 } as const;
 
 const storedSettingDefaults = {
   distractorBrightness: 0.7,
-  targetOpacity: 1,
-  targetShape: "circle",
   letterColor: "#000000",
   letterWeight: 600,
-  lilacChaserScale: 1,
   lilacChaserBallColor: "#ff00fe",
+  lilacChaserScale: 1,
+  targetForm: "circle",
+  targetOpacity: 1,
 } satisfies Pick<
   TrainerSettings,
   | "distractorBrightness"
   | "targetOpacity"
-  | "targetShape"
+  | "targetForm"
   | "letterColor"
   | "letterWeight"
   | "lilacChaserScale"
   | "lilacChaserBallColor"
 >;
 
-const isRecord = (value: unknown): value is Record<string, unknown> => {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-};
-
 const patternIdSet: ReadonlySet<string> = new Set(
-  patternOptions.map((option) => option.id),
+  patternOptions.map((option) => option.id)
 );
-const targetShapeSet: ReadonlySet<string> = new Set(
-  shapeOptions.map((option) => option.id),
+const targetFormSet: ReadonlySet<string> = new Set(
+  targetFormOptions.map((option) => option.id)
 );
 const letterWeightSet: ReadonlySet<number> = new Set(
-  letterWeightOptions.map((option) => option.id),
+  letterWeightOptions.map((option) => option.id)
 );
 const lilacChaserBallColorSet: ReadonlySet<string> = new Set(
-  lilacChaserColorOptions.map((option) => option.id),
+  lilacChaserColorOptions.map((option) => option.id)
 );
 
-export const isHexColor = (value: unknown): value is string => {
-  return typeof value === "string" && /^#[0-9a-f]{6}$/i.test(value);
-};
+export const isHexColor = (value: string | undefined): value is string =>
+  value !== undefined && /^#[0-9a-f]{6}$/iu.test(value);
 
-export const isSpeedUnit = (value: string): value is SpeedUnit => {
-  return value === "deg/s" || value === "cm/s" || value === "screen/s";
-};
+export const isSpeedUnit = (value: string): value is SpeedUnit =>
+  value === "deg/s" || value === "cm/s" || value === "screen/s";
 
-export const isPatternId = (value: string): value is PatternId => {
-  return patternIdSet.has(value);
-};
+export const isPatternId = (value: string): value is PatternId =>
+  patternIdSet.has(value);
 
-export const isTargetShape = (value: string): value is TargetShape => {
-  return targetShapeSet.has(value);
-};
+export const isTargetForm = (value: string): value is TargetForm =>
+  targetFormSet.has(value);
 
-export const isLetterWeight = (value: number): value is LetterWeight => {
-  return letterWeightSet.has(value);
-};
+export const isLetterWeight = (value: number): value is LetterWeight =>
+  letterWeightSet.has(value);
 
-export const isLilacChaserBallColor = (value: unknown): value is string => {
-  return typeof value === "string" && lilacChaserBallColorSet.has(value);
-};
+export const isLilacChaserBallColor = (
+  value: string | undefined
+): value is string => value !== undefined && lilacChaserBallColorSet.has(value);
 
 const resolveNumber = (
-  value: unknown,
+  value: number | undefined,
   min: number,
   max: number,
-  fallback: number,
-) => {
-  return isFiniteNumber(value) ? clamp(value, min, max) : fallback;
-};
+  fallback: number
+) => (isFiniteNumber(value) ? clamp(value, min, max) : fallback);
 
 const resolveInteger = (
-  value: unknown,
+  value: number | undefined,
   min: number,
   max: number,
-  fallback: number,
+  fallback: number
 ) => Math.round(resolveNumber(value, min, max, fallback));
 
 const readSliderNumber = (value: TrainerSliderValue) => {
@@ -142,7 +127,7 @@ const readSliderNumber = (value: TrainerSliderValue) => {
 export const resolveSliderNumber = (
   value: TrainerSliderValue,
   min: number,
-  max: number,
+  max: number
 ) => {
   const next = readSliderNumber(value);
   return next === null ? null : clamp(next, min, max);
@@ -151,7 +136,7 @@ export const resolveSliderNumber = (
 export const resolveSliderInteger = (
   value: TrainerSliderValue,
   min: number,
-  max: number,
+  max: number
 ) => {
   const next = resolveSliderNumber(value, min, max);
   return next === null ? null : Math.round(next);
@@ -159,16 +144,14 @@ export const resolveSliderInteger = (
 
 export const resolveSpeedSliderValue = (
   value: TrainerSliderValue,
-  unit: SpeedUnit,
-) => {
-  return resolveSliderNumber(value, minSpeedByUnit[unit], maxSpeedByUnit[unit]);
-};
+  unit: SpeedUnit
+) => resolveSliderNumber(value, minSpeedByUnit[unit], maxSpeedByUnit[unit]);
 
 export const resolveSpeedUnit = (
   speed: TrainerSettings["speed"],
   unit: SpeedUnit,
   arena: { width: number; height: number },
-  calibration: Calibration,
+  calibration: Calibration
 ) => ({
   unit,
   value: clamp(
@@ -176,90 +159,34 @@ export const resolveSpeedUnit = (
       speedToPixelsPerSecond(speed, arena, calibration),
       unit,
       arena,
-      calibration,
+      calibration
     ),
     minSpeedByUnit[unit],
-    maxSpeedByUnit[unit],
+    maxSpeedByUnit[unit]
   ),
 });
 
 export const adjustSpeedBySteps = (
   speed: TrainerSettings["speed"],
-  stepCount: number,
+  stepCount: number
 ) => ({
   ...speed,
   value: clamp(
     speed.value + speedKeyboardStepByUnit[speed.unit] * stepCount,
     minSpeedByUnit[speed.unit],
-    maxSpeedByUnit[speed.unit],
+    maxSpeedByUnit[speed.unit]
   ),
 });
 
-const isSpeedProfile = (profile: unknown): profile is SpeedProfile => {
-  if (!isRecord(profile) || typeof profile.kind !== "string") return false;
-  if (profile.kind === "constant") return true;
-
-  if (profile.kind === "sine") {
-    return (
-      isProfileMultiplier(profile.minMultiplier) &&
-      isProfileMultiplier(profile.maxMultiplier) &&
-      profile.minMultiplier <= profile.maxMultiplier &&
-      isFiniteNumber(profile.periodSec) &&
-      profile.periodSec > 0
-    );
-  }
-
-  if (profile.kind === "steps") {
-    return (
-      Array.isArray(profile.multipliers) &&
-      profile.multipliers.length > 0 &&
-      profile.multipliers.length <= 32 &&
-      profile.multipliers.every(isProfileMultiplier) &&
-      isFiniteNumber(profile.intervalSec) &&
-      profile.intervalSec > 0 &&
-      isFiniteNumber(profile.transitionSec) &&
-      profile.transitionSec >= 0
-    );
-  }
-
-  if (profile.kind === "loopRamp") {
-    return (
-      isProfileMultiplier(profile.fromMultiplier) &&
-      isProfileMultiplier(profile.toMultiplier) &&
-      isFiniteNumber(profile.periodSec) &&
-      profile.periodSec > 0 &&
-      isFiniteNumber(profile.resetSec) &&
-      profile.resetSec >= 0
-    );
-  }
-
-  return false;
-};
-
-const isSizeProfile = (profile: unknown): profile is SizeProfile => {
-  if (!isRecord(profile) || typeof profile.kind !== "string") return false;
-  if (profile.kind === "constant") return true;
-
-  return (
-    profile.kind === "pulse" &&
-    isProfileMultiplier(profile.minMultiplier) &&
-    isProfileMultiplier(profile.maxMultiplier) &&
-    profile.minMultiplier <= profile.maxMultiplier &&
-    isFiniteNumber(profile.periodSec) &&
-    profile.periodSec > 0
-  );
-};
-
 const resolveSpeed = (
-  speed: unknown,
-  fallback: TrainerSettings["speed"],
+  speed: StoredSettings["speed"],
+  fallback: TrainerSettings["speed"]
 ): TrainerSettings["speed"] => {
-  if (!isRecord(speed)) return { ...fallback };
+  if (!speed) {
+    return { ...fallback };
+  }
 
-  const unit =
-    typeof speed.unit === "string" && isSpeedUnit(speed.unit)
-      ? speed.unit
-      : fallback.unit;
+  const { unit } = speed;
 
   return {
     unit,
@@ -267,42 +194,48 @@ const resolveSpeed = (
       speed.value,
       minSpeedByUnit[unit],
       maxSpeedByUnit[unit],
-      fallback.value,
+      fallback.value
     ),
   };
 };
 
-const resolveCalibration = (calibration: unknown): Calibration => {
-  if (!isRecord(calibration)) return DEFAULT_CALIBRATION;
+const resolveCalibration = (
+  calibration: StoredSettings["calibration"]
+): Calibration => {
+  if (!calibration) {
+    return DEFAULT_CALIBRATION;
+  }
 
   return {
-    id: typeof calibration.id === "string" ? calibration.id : "custom",
-    viewingDistanceCm: resolveNumber(
-      calibration.viewingDistanceCm,
-      trainerSettingBounds.viewingDistanceCm.min,
-      trainerSettingBounds.viewingDistanceCm.max,
-      DEFAULT_CALIBRATION.viewingDistanceCm,
-    ),
+    createdAt: isFiniteNumber(calibration.createdAt)
+      ? calibration.createdAt
+      : DEFAULT_CALIBRATION.createdAt,
     cssPxPerCm: resolveNumber(
       calibration.cssPxPerCm,
       trainerSettingBounds.cssPxPerCm.min,
       trainerSettingBounds.cssPxPerCm.max,
-      DEFAULT_CALIBRATION.cssPxPerCm,
+      DEFAULT_CALIBRATION.cssPxPerCm
     ),
-    createdAt: isFiniteNumber(calibration.createdAt)
-      ? calibration.createdAt
-      : DEFAULT_CALIBRATION.createdAt,
+    id: calibration.id,
+    viewingDistanceCm: resolveNumber(
+      calibration.viewingDistanceCm,
+      trainerSettingBounds.viewingDistanceCm.min,
+      trainerSettingBounds.viewingDistanceCm.max,
+      DEFAULT_CALIBRATION.viewingDistanceCm
+    ),
   };
 };
 
-const resolveStoredPreset = (presetId: unknown) => {
-  return getPreset(typeof presetId === "string" ? presetId : firstPreset.id);
-};
+const resolveStoredPreset = (presetId: string | undefined) =>
+  getPreset(presetId ?? firstPreset.id);
 
-const resolveStoredPatternId = (preset: ExercisePreset, patternId: unknown) => {
+const resolveStoredPatternId = (
+  preset: ExercisePreset,
+  patternId: string | undefined
+) => {
   if (
     preset.id === "pursuit" &&
-    typeof patternId === "string" &&
+    patternId !== undefined &&
     isPatternId(patternId) &&
     patternId !== "multipleObjectTracking"
   ) {
@@ -314,67 +247,63 @@ const resolveStoredPatternId = (preset: ExercisePreset, patternId: unknown) => {
 
 const resolveStoredProfiles = (
   preset: ExercisePreset,
-  savedSpeedProfile: unknown,
-  savedSizeProfile: unknown,
+  savedSpeedProfile: SpeedProfile | undefined,
+  savedSizeProfile: SizeProfile | undefined
 ): Pick<TrainerSettings, "speedProfile" | "sizeProfile"> => {
-  const sizeProfile = isSizeProfile(savedSizeProfile)
-    ? savedSizeProfile
-    : preset.sizeProfile;
+  const sizeProfile = savedSizeProfile ?? preset.sizeProfile;
+  let speedProfile = savedSpeedProfile ?? preset.speedProfile;
+
+  if (sizeProfile.kind === "pulse") {
+    speedProfile = { kind: "constant" };
+  }
 
   return {
-    speedProfile:
-      sizeProfile.kind === "pulse"
-        ? { kind: "constant" }
-        : isSpeedProfile(savedSpeedProfile)
-          ? savedSpeedProfile
-          : preset.speedProfile,
     sizeProfile,
+    speedProfile,
   };
 };
 
-const resolveStoredTargetShape = (targetShape: unknown) => {
-  return typeof targetShape === "string" && isTargetShape(targetShape)
-    ? targetShape
-    : storedSettingDefaults.targetShape;
-};
+const resolveStoredTargetForm = (targetForm: string | undefined) =>
+  targetForm !== undefined && isTargetForm(targetForm)
+    ? targetForm
+    : storedSettingDefaults.targetForm;
 
-const resolveStoredLetterWeight = (letterWeight: unknown) => {
-  return isFiniteNumber(letterWeight) && isLetterWeight(letterWeight)
+const resolveStoredLetterWeight = (letterWeight: number | undefined) =>
+  isFiniteNumber(letterWeight) && isLetterWeight(letterWeight)
     ? letterWeight
     : storedSettingDefaults.letterWeight;
-};
 
 const getPreservedSettings = (currentSettings: TrainerSettings) => ({
-  speed: currentSettings.speed,
-  baseRadiusPx: currentSettings.baseRadiusPx,
-  speedProfile: currentSettings.speedProfile,
-  sizeProfile: currentSettings.sizeProfile,
-  targetCount: currentSettings.targetCount,
-  distractorCount: currentSettings.distractorCount,
-  showTrail: currentSettings.showTrail,
   ballColor: currentSettings.ballColor,
+  baseRadiusPx: currentSettings.baseRadiusPx,
   distractorBrightness: currentSettings.distractorBrightness,
-  targetOpacity: currentSettings.targetOpacity,
-  targetShape: currentSettings.targetShape,
-  motionDirection: currentSettings.motionDirection,
-  letterEnabled: currentSettings.letterEnabled,
+  distractorCount: currentSettings.distractorCount,
   letterColor: currentSettings.letterColor,
-  letterWeight: currentSettings.letterWeight,
+  letterEnabled: currentSettings.letterEnabled,
   letterScale: currentSettings.letterScale,
-  lilacChaserScale: currentSettings.lilacChaserScale,
+  letterWeight: currentSettings.letterWeight,
   lilacChaserBallColor: currentSettings.lilacChaserBallColor,
+  lilacChaserScale: currentSettings.lilacChaserScale,
+  motionDirection: currentSettings.motionDirection,
+  showTrail: currentSettings.showTrail,
+  sizeProfile: currentSettings.sizeProfile,
+  speed: currentSettings.speed,
+  speedProfile: currentSettings.speedProfile,
+  targetCount: currentSettings.targetCount,
+  targetForm: currentSettings.targetForm,
+  targetOpacity: currentSettings.targetOpacity,
 });
 
 export const applyRouteToSettings = (
   currentSettings: TrainerSettings,
-  nextSlug: string | undefined,
+  nextSlug: string | undefined
 ) => {
   const route = findTrainerRoute(nextSlug);
   const preset = route ? getPreset(route.mode) : firstPreset;
   const nextSettings = settingsFromPreset(
     preset,
     currentSettings.calibration,
-    getPreservedSettings(currentSettings),
+    getPreservedSettings(currentSettings)
   );
 
   if (route?.mode === "pursuit" && route.patternId) {
@@ -390,13 +319,13 @@ export const applyRouteToSettings = (
 
 export const applyPresetToSettings = (
   currentSettings: TrainerSettings,
-  presetId: string,
+  presetId: string
 ) => {
   const preset = getPreset(presetId);
   const nextSettings = settingsFromPreset(
     preset,
     currentSettings.calibration,
-    getPreservedSettings(currentSettings),
+    getPreservedSettings(currentSettings)
   );
 
   if (preset.id === "mot" && currentSettings.presetId !== "mot") {
@@ -407,7 +336,7 @@ export const applyPresetToSettings = (
 };
 
 export const resetSettingsToPresetDefaults = (
-  currentSettings: TrainerSettings,
+  currentSettings: TrainerSettings
 ) => {
   const preset = getPreset(currentSettings.presetId);
   return settingsFromPreset(preset, DEFAULT_CALIBRATION, {
@@ -419,24 +348,26 @@ export const updateCalibrationField = (
   calibration: Calibration,
   field: CalibrationField,
   value: number,
-  now = Date.now,
+  now = Date.now
 ) => {
-  if (!Number.isFinite(value) || value <= 0) return null;
+  if (!Number.isFinite(value) || value <= 0) {
+    return null;
+  }
   const bounds = trainerSettingBounds[field];
   const createdAt = now();
 
   return {
     ...calibration,
+    createdAt,
     id: `custom-${createdAt}`,
     [field]: clamp(value, bounds.min, bounds.max),
-    createdAt,
   };
 };
 
 export const resetUnsupportedMotionDirection = (
   patternId: PatternId,
   motionDirection: TrainerSettings["motionDirection"],
-  travelPx: number,
+  travelPx: number
 ) => {
   if (canPatternToggleDirection(patternId)) {
     return { motionDirection, travelPx };
@@ -454,69 +385,69 @@ export const resolveStoredSettings = (saved: StoredSettings) => {
   const profiles = resolveStoredProfiles(
     preset,
     saved.speedProfile,
-    saved.sizeProfile,
+    saved.sizeProfile
   );
 
   return settingsFromPreset(preset, resolveCalibration(saved.calibration), {
-    presetId: preset.id,
-    patternId,
-    speed: resolveSpeed(saved.speed, preset.speed),
+    ballColor: isHexColor(saved.ballColor)
+      ? safeStimulusColor(saved.ballColor)
+      : DEFAULT_BALL_COLOR,
     baseRadiusPx: resolveNumber(
       saved.baseRadiusPx,
       trainerSettingBounds.baseRadiusPx.min,
       trainerSettingBounds.baseRadiusPx.max,
-      preset.baseRadiusPx,
+      preset.baseRadiusPx
     ),
-    ...profiles,
-    targetCount: resolveInteger(
-      saved.targetCount,
-      trainerSettingBounds.targetCount.min,
-      trainerSettingBounds.targetCount.max,
-      preset.targetCount,
+    distractorBrightness: resolveNumber(
+      saved.distractorBrightness,
+      trainerSettingBounds.distractorBrightness.min,
+      trainerSettingBounds.distractorBrightness.max,
+      storedSettingDefaults.distractorBrightness
     ),
     distractorCount: resolveInteger(
       saved.distractorCount,
       trainerSettingBounds.distractorCount.min,
       trainerSettingBounds.distractorCount.max,
-      preset.distractorCount,
+      preset.distractorCount
     ),
-    showTrail: saved.showTrail === true,
-    ballColor: isHexColor(saved.ballColor)
-      ? safeStimulusColor(saved.ballColor)
-      : DEFAULT_BALL_COLOR,
-    distractorBrightness: resolveNumber(
-      saved.distractorBrightness,
-      trainerSettingBounds.distractorBrightness.min,
-      trainerSettingBounds.distractorBrightness.max,
-      storedSettingDefaults.distractorBrightness,
-    ),
-    targetOpacity: resolveNumber(
-      saved.targetOpacity,
-      trainerSettingBounds.targetOpacity.min,
-      trainerSettingBounds.targetOpacity.max,
-      storedSettingDefaults.targetOpacity,
-    ),
-    targetShape: resolveStoredTargetShape(saved.targetShape),
-    motionDirection: saved.motionDirection === -1 ? -1 : 1,
-    letterEnabled: saved.letterEnabled === true,
+    ...profiles,
     letterColor: isHexColor(saved.letterColor)
       ? saved.letterColor
       : storedSettingDefaults.letterColor,
-    letterWeight: resolveStoredLetterWeight(saved.letterWeight),
+    letterEnabled: saved.letterEnabled === true,
     letterScale: resolveNumber(
       saved.letterScale,
       trainerSettingBounds.letterScale.min,
       trainerSettingBounds.letterScale.max,
-      DEFAULT_LETTER_SCALE,
+      DEFAULT_LETTER_SCALE
     ),
+    letterWeight: resolveStoredLetterWeight(saved.letterWeight),
+    lilacChaserBallColor: isLilacChaserBallColor(saved.lilacChaserBallColor)
+      ? saved.lilacChaserBallColor
+      : storedSettingDefaults.lilacChaserBallColor,
     lilacChaserScale: resolveNumber(
       saved.lilacChaserScale,
       trainerSettingBounds.lilacChaserScale.min,
       trainerSettingBounds.lilacChaserScale.max,
-      storedSettingDefaults.lilacChaserScale,
+      storedSettingDefaults.lilacChaserScale
     ),
-    lilacChaserBallColor: isLilacChaserBallColor(saved.lilacChaserBallColor)
-      ? saved.lilacChaserBallColor
-      : storedSettingDefaults.lilacChaserBallColor,
+    motionDirection: saved.motionDirection === -1 ? -1 : 1,
+    patternId,
+    presetId: preset.id,
+    showTrail: saved.showTrail === true,
+    speed: resolveSpeed(saved.speed, preset.speed),
+    targetCount: resolveInteger(
+      saved.targetCount,
+      trainerSettingBounds.targetCount.min,
+      trainerSettingBounds.targetCount.max,
+      preset.targetCount
+    ),
+    targetForm: resolveStoredTargetForm(saved.targetForm),
+    targetOpacity: resolveNumber(
+      saved.targetOpacity,
+      trainerSettingBounds.targetOpacity.min,
+      trainerSettingBounds.targetOpacity.max,
+      storedSettingDefaults.targetOpacity
+    ),
   });
 };

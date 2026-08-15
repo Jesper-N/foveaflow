@@ -52,24 +52,20 @@ export const bn = {
     "স্ক্রিনে কাজ করে চোখ ক্লান্ত হলে FoveaFlow কি সাহায্য করতে পারে?",
   "Can FoveaFlow improve eyesight or reaction time?":
     "FoveaFlow কি দৃষ্টিশক্তি বা প্রতিক্রিয়ার সময় উন্নত করতে পারে?",
-  "Can I adjust speed and target size?":
-    "আমি কি গতি ও লক্ষ্যের সাইজ বদলাতে পারি?",
+  "Can I adjust speed and target size?": "আমি কি গতি ও লক্ষ্যের সাইজ বদলাতে পারি?",
   "Can I calibrate the session to my setup?":
     "আমি কি নিজের সেটআপ অনুযায়ী সেশন ক্যালিব্রেট করতে পারি?",
   "Can I change how the target looks?":
     "লক্ষ্যটি দেখতে কেমন হবে, তা কি বদলাতে পারি?",
-  "Can I change paths and motion behavior?":
-    "আমি কি পথ ও চলনের ধরন বদলাতে পারি?",
-  "Can I link straight to a drill?":
-    "আমি কি সরাসরি কোনো ড্রিলের লিংক দিতে পারি?",
+  "Can I change paths and motion behavior?": "আমি কি পথ ও চলনের ধরন বদলাতে পারি?",
+  "Can I link straight to a drill?": "আমি কি সরাসরি কোনো ড্রিলের লিংক দিতে পারি?",
   "Can I start in the browser?": "আমি কি ব্রাউজারেই শুরু করতে পারি?",
   "Can I train with distractors or letters?":
     "আমি কি বিভ্রান্তিকারী বা অক্ষর দিয়ে অনুশীলন করতে পারি?",
   "Can I tune target appearance and calibration?":
     "লক্ষ্যের চেহারা ও ক্যালিব্রেশন কি বদলাতে পারি?",
   "Can I use FoveaFlow on a phone?": "ফোনে কি FoveaFlow ব্যবহার করতে পারি?",
-  "Can I use it free in the browser?":
-    "ব্রাউজারে কি এটি বিনা খরচে ব্যবহার করতে পারি?",
+  "Can I use it free in the browser?": "ব্রাউজারে কি এটি বিনা খরচে ব্যবহার করতে পারি?",
   "Change language": "ভাষা বদলান",
   "Change speed and target size first. They usually have the biggest effect on difficulty and control.":
     "প্রথমে গতি ও লক্ষ্যের সাইজ বদলান। সাধারণত কঠিনতা ও নিয়ন্ত্রণে এগুলোর প্রভাব সবচেয়ে বেশি।",
@@ -143,8 +139,7 @@ export const bn = {
     "তির্যক লম্বা কোণ-থেকে-কোণ চলন ব্যবহার করে, তাই বড় স্ক্রিন এলাকা জুড়ে পরিষ্কারভাবে অনুসরণে জোর পড়ে।",
   Diamond: "ডায়মন্ড",
   "Diamond Loop Smooth Pursuit Drill": "ডায়মন্ড লুপ মসৃণ অনুসরণ ড্রিল",
-  "Diamond Loop Smooth Pursuit Eye Training":
-    "ডায়মন্ড লুপ মসৃণ অনুসরণ চোখের অনুশীলন",
+  "Diamond Loop Smooth Pursuit Eye Training": "ডায়মন্ড লুপ মসৃণ অনুসরণ চোখের অনুশীলন",
   "Diamond Loop combines a simple repeating route with clear corner transitions and sharper shifts than Circle.":
     "ডায়মন্ড লুপ একটি সহজ পুনরাবৃত্ত পথের সঙ্গে পরিষ্কার কোণ বদল ও বৃত্ত-এর চেয়ে তীক্ষ্ণ দিক পরিবর্তন মেশায়।",
   "Diamond loop": "ডায়মন্ড লুপ",
@@ -154,8 +149,7 @@ export const bn = {
   "Distractor color": "বিভ্রান্তিকারীর রং",
   "Distractor color brightness": "বিভ্রান্তিকারীর রঙের উজ্জ্বলতা",
   Distractors: "বিভ্রান্তিকারী",
-  "Do I need an account or app install?":
-    "অ্যাকাউন্ট বা অ্যাপ ইনস্টল কি লাগবে?",
+  "Do I need an account or app install?": "অ্যাকাউন্ট বা অ্যাপ ইনস্টল কি লাগবে?",
   "Do I need an account or install?": "অ্যাকাউন্ট বা ইনস্টল কি লাগবে?",
   "Do not attack, overload, scrape aggressively, or try to gain unauthorized access to the site or its infrastructure.":
     "সাইট বা এর অবকাঠামোয় আক্রমণ করবেন না, অতিরিক্ত চাপ দেবেন না, আক্রমণাত্মকভাবে স্ক্র্যাপ করবেন না, বা অনুমতি ছাড়া প্রবেশের চেষ্টা করবেন না।",
@@ -175,8 +169,7 @@ export const bn = {
   Drill: "ড্রিল",
   Drills: "ড্রিল",
   "Edge Loop Smooth Pursuit Drill": "প্রান্ত লুপ মসৃণ অনুসরণ ড্রিল",
-  "Edge Loop Smooth Pursuit Eye Training":
-    "প্রান্ত লুপ মসৃণ অনুসরণ চোখের অনুশীলন",
+  "Edge Loop Smooth Pursuit Eye Training": "প্রান্ত লুপ মসৃণ অনুসরণ চোখের অনুশীলন",
   "Edge Loop pushes the target around the perimeter, making the drill more spacious and edge-focused than center-heavy loops.":
     "প্রান্ত লুপ লক্ষ্যকে প্রান্তের চারপাশে চালায়, তাই এটি মাঝামাঝি ঘোরার লুপের চেয়ে বেশি খোলা ও প্রান্ত-কেন্দ্রিক লাগে।",
   "Edge loop": "এজ লুপ",
@@ -217,8 +210,6 @@ export const bn = {
     "ব্যক্তিগত তথ্য না পাঠিয়েও FoveaFlow ব্যবহার করা যায়। এটি শিশুদের ব্যক্তিগত তথ্য সংগ্রহের জন্য বানানো নয়।",
   "FoveaFlow does not set advertising cookies. Cloudflare may set security cookies when it needs them to keep the site available and safe.":
     "FoveaFlow বিজ্ঞাপন কুকি সেট করে না। সাইট চালু ও নিরাপদ রাখতে প্রয়োজন হলে Cloudflare নিরাপত্তা কুকি সেট করতে পারে।",
-  "FoveaFlow stores your language preference in local browser storage and in a same-site preference cookie so the correct language can be selected before the app starts. The cookie can last up to 400 days, uses SameSite=Lax, and is marked Secure on HTTPS.":
-    "FoveaFlow আপনার ভাষার পছন্দ ব্রাউজারের স্থানীয় স্টোরেজ এবং একই সাইটের একটি পছন্দের কুকিতে রাখে, যাতে অ্যাপ চালু হওয়ার আগে সঠিক ভাষা নির্বাচন করা যায়। কুকিটি সর্বোচ্চ ৪০০ দিন থাকতে পারে, SameSite=Lax ব্যবহার করে এবং HTTPS-এ Secure হিসেবে চিহ্নিত থাকে।",
   "FoveaFlow eye trainer animation for visual tracking practice":
     "ভিজ্যুয়াল ট্র্যাকিং অনুশীলনের জন্য FoveaFlow চোখের অনুশীলন অ্যানিমেশন",
   "FoveaFlow eye trainer animation for visual tracking practice. Use Pause motion to stop target movement before changing controls.":
@@ -258,6 +249,8 @@ export const bn = {
     "FoveaFlow গতি, সাইজ, আকৃতি, রং, অস্বচ্ছতা, ট্রেইল, পথ, বিভ্রান্তিকারী, অক্ষর ও ডিসপ্লে স্কেলের লোকাল কন্ট্রোল সংরক্ষণ করে।",
   "FoveaFlow stores settings locally in your browser so the app can remember them on the current device. That can include the selected language, mode, motion pattern, speed, target size, color, opacity, trail setting, viewing distance, screen scale, and theme.":
     "FoveaFlow সেটিং আপনার ব্রাউজারে লোকালি রাখে, যাতে এই ডিভাইসে অ্যাপটি সেগুলো মনে রাখতে পারে। এর মধ্যে নির্বাচিত ভাষা, মোড, চলন প্যাটার্ন, গতি, লক্ষ্যের সাইজ, রং, অস্বচ্ছতা, ট্রেইল সেটিং, দেখার দূরত্ব, স্ক্রিন স্কেল ও থিম থাকতে পারে।",
+  "FoveaFlow stores your language preference in local browser storage and in a same-site preference cookie so the correct language can be selected before the app starts. The cookie can last up to 400 days, uses SameSite=Lax, and is marked Secure on HTTPS.":
+    "FoveaFlow আপনার ভাষার পছন্দ ব্রাউজারের স্থানীয় স্টোরেজ এবং একই সাইটের একটি পছন্দের কুকিতে রাখে, যাতে অ্যাপ চালু হওয়ার আগে সঠিক ভাষা নির্বাচন করা যায়। কুকিটি সর্বোচ্চ ৪০০ দিন থাকতে পারে, SameSite=Lax ব্যবহার করে এবং HTTPS-এ Secure হিসেবে চিহ্নিত থাকে।",
   "FoveaFlow vs BlinkCamp": "FoveaFlow বনাম BlinkCamp",
   "FoveaFlow vs EyeTrainer.gg": "FoveaFlow বনাম EyeTrainer.gg",
   "Free access": "বিনা খরচে ব্যবহার",
@@ -280,8 +273,7 @@ export const bn = {
   "Guide FAQ": "গাইড প্রশ্নোত্তর",
   "Guide navigation": "গাইড নেভিগেশন",
   "Hard Turns Smooth Pursuit Drill": "তীক্ষ্ণ মোড় মসৃণ অনুসরণ ড্রিল",
-  "Hard Turns Smooth Pursuit Eye Training":
-    "তীক্ষ্ণ মোড় মসৃণ অনুসরণ চোখের অনুশীলন",
+  "Hard Turns Smooth Pursuit Eye Training": "তীক্ষ্ণ মোড় মসৃণ অনুসরণ চোখের অনুশীলন",
   "Hard Turns is one of the most demanding Smooth Pursuit patterns because the target changes direction abruptly.":
     "তীক্ষ্ণ মোড় সবচেয়ে কঠিন মসৃণ অনুসরণ প্যাটার্নগুলোর একটি, কারণ লক্ষ্য হঠাৎ দিক বদলায়।",
   "Hard turns": "হার্ড টার্নস",
@@ -379,14 +371,12 @@ export const bn = {
   "Lilac chaser illusion": "লাইলাক চেজার বিভ্রম",
   Lissajous: "Lissajous",
   "Lissajous Smooth Pursuit Drill": "Lissajous মসৃণ অনুসরণ ড্রিল",
-  "Lissajous Smooth Pursuit Eye Training":
-    "Lissajous মসৃণ অনুসরণ চোখের অনুশীলন",
+  "Lissajous Smooth Pursuit Eye Training": "Lissajous মসৃণ অনুসরণ চোখের অনুশীলন",
   "Lissajous is one of the more complex flowing patterns because the target moves through a looping path that changes its relationship to the center over time.":
     "Lissajous বেশি জটিল প্রবাহমান প্যাটার্নগুলোর একটি, কারণ লক্ষ্যটি এমন লুপিং পথে চলে যার কেন্দ্রের সঙ্গে সম্পর্ক সময়ের সঙ্গে বদলায়।",
   "Local settings with no account or install.":
     "অ্যাকাউন্ট বা ইনস্টল ছাড়াই লোকাল সেটিং।",
-  "Look only at the black cross in the middle.":
-    "শুধু মাঝের কালো ক্রসের দিকে তাকান।",
+  "Look only at the black cross in the middle.": "শুধু মাঝের কালো ক্রসের দিকে তাকান।",
   "Lower the speed and increase target size so you have more time to settle on each jump.":
     "গতি কমান এবং লক্ষ্যের সাইজ বাড়ান, যাতে প্রতিটি জাম্পে ফোকাস করতে বেশি সময় পান।",
   "Lower the speed, increase target size, and keep the trail visible until you can stay on target comfortably.":
@@ -559,7 +549,6 @@ export const bn = {
   Semibold: "সেমিবোল্ড",
   Session: "সেশন",
   "Settings saved in your browser": "সেটিং আপনার ব্রাউজারে সংরক্ষিত",
-  Shape: "আকৃতি",
   "Shape, color, opacity, trail length, and trail behavior are adjustable.":
     "আকৃতি, রং, অস্বচ্ছতা, ট্রেইলের দৈর্ঘ্য এবং ট্রেইলের আচরণ বদলানো যায়।",
   "Sharpen focus between code, logs, dashboards, terminals, tickets, and multi-monitor work.":
@@ -613,8 +602,7 @@ export const bn = {
     "গতি, লক্ষ্যের সাইজ ও পথ সবচেয়ে গুরুত্বপূর্ণ, কারণ এগুলো দ্রুত কঠিনতা বদলায়।",
   Square: "বর্গ",
   "Stair Steps Smooth Pursuit Drill": "সিঁড়ি ধাপ মসৃণ অনুসরণ ড্রিল",
-  "Stair Steps Smooth Pursuit Eye Training":
-    "সিঁড়ি ধাপ মসৃণ অনুসরণ চোখের অনুশীলন",
+  "Stair Steps Smooth Pursuit Eye Training": "সিঁড়ি ধাপ মসৃণ অনুসরণ চোখের অনুশীলন",
   "Stair Steps creates a mechanical route with discrete directional segments that stays easier to predict than Random or Hard Turns.":
     "সিঁড়ি ধাপ আলাদা দিক-ভাগসহ যান্ত্রিক পথ তৈরি করে, যা এলোমেলো বা তীক্ষ্ণ মোড়-এর চেয়ে সহজে অনুমান করা যায়।",
   "Stair steps": "স্টেয়ার স্টেপস",
@@ -658,6 +646,7 @@ export const bn = {
   "Target acquisition": "লক্ষ্য ধরা",
   "Target appearance, trail display, distractor brightness, letter styling, viewing distance, and screen scale can be tuned.":
     "লক্ষ্যের চেহারা, ট্রেইল দেখা, বিভ্রান্তিকারীর উজ্জ্বলতা, অক্ষরের স্টাইল, দেখার দূরত্ব ও স্ক্রিন স্কেল বদলানো যায়।",
+  "Target form": "আকৃতি",
   "Target opacity": "লক্ষ্যের অস্বচ্ছতা",
   "Target size": "লক্ষ্যের সাইজ",
   Targets: "লক্ষ্য",
@@ -825,8 +814,7 @@ export const bn = {
     "ঢেউ আড়াআড়ি চলনের ওপর পুনরাবৃত্ত ওপর-নিচ ছন্দ যোগ করে। কঠিন কোণের হঠাৎ অনুভূতি ছাড়াই এটি বোঝা যায় এবং মসৃণ থাকে।",
   Weight: "ওজন",
   "What FoveaFlow includes": "FoveaFlow-এ কী আছে",
-  "What does Multiple Distractions train?":
-    "একাধিক বিভ্রান্তি কী অনুশীলন করায়?",
+  "What does Multiple Distractions train?": "একাধিক বিভ্রান্তি কী অনুশীলন করায়?",
   "What does Reaction Jumps train?": "দ্রুত ফোকাস বদল কী অনুশীলন করায়?",
   "What if the effect feels strange or uncomfortable?":
     "প্রভাবটি অদ্ভুত বা অস্বস্তিকর লাগলে কী করব?",
@@ -866,16 +854,13 @@ export const bn = {
   "What makes the Corner tour path different?": "চার কোণ ঘোরা পথ আলাদা কেন?",
   "What makes the Diagonal path different?": "তির্যক পথ আলাদা কেন?",
   "What makes the Diamond loop path different?": "ডায়মন্ড লুপ পথ আলাদা কেন?",
-  "What makes the Down-left sweep path different?":
-    "নিচে-বামে সুইপ পথ আলাদা কেন?",
-  "What makes the Down-right sweep path different?":
-    "নিচে-ডানে সুইপ পথ আলাদা কেন?",
+  "What makes the Down-left sweep path different?": "নিচে-বামে সুইপ পথ আলাদা কেন?",
+  "What makes the Down-right sweep path different?": "নিচে-ডানে সুইপ পথ আলাদা কেন?",
   "What makes the Edge loop path different?": "প্রান্ত লুপ পথ আলাদা কেন?",
   "What makes the Ellipse path different?": "উপবৃত্ত পথ আলাদা কেন?",
   "What makes the Figure eight path different?": "আটের আকৃতি পথ আলাদা কেন?",
   "What makes the Hard turns path different?": "তীক্ষ্ণ মোড় পথ আলাদা কেন?",
-  "What makes the Horizontal sweep path different?":
-    "অনুভূমিক সুইপ পথ আলাদা কেন?",
+  "What makes the Horizontal sweep path different?": "অনুভূমিক সুইপ পথ আলাদা কেন?",
   "What makes the Hourglass path different?": "বালুঘড়ি পথ আলাদা কেন?",
   "What makes the Lissajous path different?": "Lissajous পথ আলাদা কেন?",
   "What makes the Random path different?": "এলোমেলো পথ আলাদা কেন?",
@@ -893,8 +878,7 @@ export const bn = {
   "When should I use this mode?": "এই মোড কখন ব্যবহার করব?",
   "Which drill is best for fixation and edge-of-vision awareness?":
     "ফিক্সেশন ও দৃষ্টির প্রান্তের সচেতনতার জন্য কোন ড্রিল ভালো?",
-  "Which drill is best for quick refocus?":
-    "দ্রুত রিফোকাসের জন্য কোন ড্রিল ভালো?",
+  "Which drill is best for quick refocus?": "দ্রুত রিফোকাসের জন্য কোন ড্রিল ভালো?",
   "Which drill is best for steady tracking?":
     "স্থির ট্র্যাকিংয়ের জন্য কোন ড্রিল ভালো?",
   "Which drill is best when the screen feels busy?":
@@ -908,8 +892,7 @@ export const bn = {
   Yes: "হ্যাঁ",
   "Yes, but a larger screen gives the moving target more room. A desktop, laptop, or tablet usually feels better for longer paths.":
     "হ্যাঁ, তবে বড় স্ক্রিনে চলমান লক্ষ্য বেশি জায়গা পায়। লম্বা পথের জন্য ডেস্কটপ, ল্যাপটপ বা ট্যাবলেট সাধারণত ভালো লাগে।",
-  "Yes. BlinkCamp also links to GitHub.":
-    "হ্যাঁ। BlinkCamp-ও GitHub-এ লিংক দেয়।",
+  "Yes. BlinkCamp also links to GitHub.": "হ্যাঁ। BlinkCamp-ও GitHub-এ লিংক দেয়।",
   "Yes. BlinkCamp exposes simple speed and size controls.":
     "হ্যাঁ। BlinkCamp সহজ গতি ও সাইজ কন্ট্রোল দেখায়।",
   "Yes. BlinkCamp is also a free browser-based eye training tool.":

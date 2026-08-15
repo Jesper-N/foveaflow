@@ -1,12 +1,10 @@
+import type { LegalPageContent } from "./content/legal";
 import { guideMetadata } from "./content/page-copy";
 import { siteMetadata } from "./content/site";
 import type { SupportPage } from "./content/support-pages";
+import { indexableTrainerRoutes } from "./content/trainer-routes";
+import type { TrainerRoute } from "./content/trainer-routes";
 import { audienceNotes, referenceLinks } from "./content/training";
-import {
-  indexableTrainerRoutes,
-  type TrainerRoute,
-} from "./content/trainer-routes";
-import type { LegalPageContent } from "./content/legal";
 
 const defaultSiteUrl = "https://foveaflow.com";
 
@@ -29,20 +27,20 @@ const buildOrganizationStructuredData = (site: URL) => {
   const logoUrl = absoluteUrl("/metadata/android-chrome-192x192.png", site);
 
   return {
-    "@type": "Organization",
     "@id": getOrganizationId(site),
-    name: siteMetadata.name,
+    "@type": "Organization",
     alternateName: siteMetadata.alternateName,
-    url: appUrl,
+    description: siteMetadata.entityDescription,
+    image: imageUrl,
     logo: {
       "@type": "ImageObject",
+      height: 192,
       url: logoUrl,
       width: 192,
-      height: 192,
     },
-    image: imageUrl,
-    description: siteMetadata.entityDescription,
+    name: siteMetadata.name,
     sameAs: siteMetadata.sameAs,
+    url: appUrl,
   };
 };
 
@@ -50,16 +48,16 @@ const buildWebsiteStructuredData = (site: URL) => {
   const appUrl = absoluteUrl("/", site);
 
   return {
-    "@type": "WebSite",
     "@id": `${appUrl}#website`,
-    name: siteMetadata.name,
+    "@type": "WebSite",
     alternateName: siteMetadata.alternateName,
-    url: appUrl,
     description: siteMetadata.shortDescription,
     inLanguage: "en",
+    name: siteMetadata.name,
     publisher: {
       "@id": getOrganizationId(site),
     },
+    url: appUrl,
   };
 };
 
@@ -68,34 +66,18 @@ const buildAppStructuredData = (site: URL) => {
   const imageUrl = absoluteUrl(siteMetadata.imagePath, site);
 
   return {
-    "@type": "WebApplication",
     "@id": getSoftwareId(site),
-    name: siteMetadata.name,
-    url: appUrl,
-    image: imageUrl,
+    "@type": "WebApplication",
     applicationCategory: "HealthApplication",
-    operatingSystem: "Any modern browser",
-    browserRequirements: "Requires JavaScript and a modern browser.",
-    isAccessibleForFree: true,
-    publisher: {
-      "@id": getOrganizationId(site),
-    },
-    creator: {
-      "@id": getOrganizationId(site),
-    },
-    license: siteMetadata.licenseUrl,
-    offers: {
-      "@type": "Offer",
-      price: "0",
-      priceCurrency: "USD",
-      availability: "https://schema.org/InStock",
-      url: absoluteUrl("/pricing.md", site),
-    },
-    description: siteMetadata.description,
     audience: audienceNotes.map((audienceNote) => ({
       "@type": "Audience",
       audienceType: audienceNote.title,
     })),
+    browserRequirements: "Requires JavaScript and a modern browser.",
+    creator: {
+      "@id": getOrganizationId(site),
+    },
+    description: siteMetadata.description,
     featureList: [
       "Smooth Pursuit visual tracking drill",
       "Reaction Jumps quick refocus drill",
@@ -103,11 +85,27 @@ const buildAppStructuredData = (site: URL) => {
       "Lilac Chaser fixation and peripheral awareness drill",
       "Adjustable speed, target size, color, opacity, trail, shape, and path",
     ],
+    image: imageUrl,
+    isAccessibleForFree: true,
+    license: siteMetadata.licenseUrl,
+    name: siteMetadata.name,
+    offers: {
+      "@type": "Offer",
+      availability: "https://schema.org/InStock",
+      price: "0",
+      priceCurrency: "USD",
+      url: absoluteUrl("/pricing.md", site),
+    },
+    operatingSystem: "Any modern browser",
+    publisher: {
+      "@id": getOrganizationId(site),
+    },
     sameAs: siteMetadata.sameAs,
+    url: appUrl,
   };
 };
 
-type WebPageNodeInput = {
+interface WebPageNodeInput {
   site: URL;
   pageUrl: string;
   name: string;
@@ -117,7 +115,7 @@ type WebPageNodeInput = {
   citation?: readonly string[];
   aboutSoftware?: boolean;
   mainEntity?: Record<string, string>;
-};
+}
 
 const buildWebPageNode = ({
   site,
@@ -130,46 +128,44 @@ const buildWebPageNode = ({
   aboutSoftware = true,
   mainEntity,
 }: WebPageNodeInput) => ({
-  "@type": "WebPage",
   "@id": `${pageUrl}#webpage`,
-  name,
-  headline,
-  url: pageUrl,
+  "@type": "WebPage",
+  about: aboutSoftware
+    ? {
+        "@id": getSoftwareId(site),
+      }
+    : undefined,
+  citation,
   description,
-  ...(image ? { image } : {}),
+  headline,
+  image,
   inLanguage: "en",
-  publisher: {
-    "@id": getOrganizationId(site),
-  },
-  ...(citation ? { citation } : {}),
   isPartOf: {
     "@id": `${absoluteUrl("/", site)}#website`,
   },
-  ...(aboutSoftware
-    ? {
-        about: {
-          "@id": getSoftwareId(site),
-        },
-      }
-    : {}),
-  ...(mainEntity ? { mainEntity } : {}),
+  mainEntity,
+  name,
+  publisher: {
+    "@id": getOrganizationId(site),
+  },
+  url: pageUrl,
 });
 
 const buildBreadcrumbNode = (site: URL, pageUrl: string, pageName: string) => ({
-  "@type": "BreadcrumbList",
   "@id": `${pageUrl}#breadcrumb`,
+  "@type": "BreadcrumbList",
   itemListElement: [
     {
       "@type": "ListItem",
-      position: 1,
-      name: siteMetadata.name,
       item: absoluteUrl("/", site),
+      name: siteMetadata.name,
+      position: 1,
     },
     {
       "@type": "ListItem",
-      position: 2,
-      name: pageName,
       item: pageUrl,
+      name: pageName,
+      position: 2,
     },
   ],
 });
@@ -195,16 +191,16 @@ export const buildStructuredData = (site: URL) => {
 
   return buildStructuredGraph(site, [
     buildWebPageNode({
-      site,
-      pageUrl: appUrl,
-      name: siteMetadata.title,
-      headline: siteMetadata.title,
-      description: siteMetadata.description,
-      image: imageUrl,
       aboutSoftware: false,
+      description: siteMetadata.description,
+      headline: siteMetadata.title,
+      image: imageUrl,
       mainEntity: {
         "@id": getSoftwareId(site),
       },
+      name: siteMetadata.title,
+      pageUrl: appUrl,
+      site,
     }),
   ]);
 };
@@ -215,25 +211,25 @@ export const buildGuideStructuredData = (site: URL) => {
 
   return buildPageGraph([
     buildWebPageNode({
-      site,
-      pageUrl: guideUrl,
-      name: guideMetadata.title,
-      headline: guideMetadata.title,
-      description: guideMetadata.description,
-      image: imageUrl,
       citation: referenceLinks.map((referenceLink) => referenceLink.url),
+      description: guideMetadata.description,
+      headline: guideMetadata.title,
+      image: imageUrl,
+      name: guideMetadata.title,
+      pageUrl: guideUrl,
+      site,
     }),
     {
-      "@type": "ItemList",
       "@id": `${guideUrl}#routes`,
-      name: "FoveaFlow practice routes",
+      "@type": "ItemList",
       itemListElement: indexableTrainerRoutes.map((route, index) => ({
         "@type": "ListItem",
-        position: index + 1,
-        name: route.label,
-        url: absoluteUrl(route.path, site),
         description: route.description,
+        name: route.label,
+        position: index + 1,
+        url: absoluteUrl(route.path, site),
       })),
+      name: "FoveaFlow practice routes",
     },
     buildBreadcrumbNode(site, guideUrl, "Guide"),
   ]);
@@ -241,20 +237,20 @@ export const buildGuideStructuredData = (site: URL) => {
 
 export const buildSupportPageStructuredData = (
   page: SupportPage,
-  site: URL,
+  site: URL
 ) => {
   const pageUrl = absoluteUrl(page.path, site);
   const imageUrl = absoluteUrl(siteMetadata.imagePath, site);
 
   return buildPageGraph([
     buildWebPageNode({
-      site,
-      pageUrl,
-      name: page.title,
-      headline: page.heading,
-      description: page.description,
-      image: imageUrl,
       citation: page.sourceLink ? [page.sourceLink.href] : undefined,
+      description: page.description,
+      headline: page.heading,
+      image: imageUrl,
+      name: page.title,
+      pageUrl,
+      site,
     }),
     buildBreadcrumbNode(site, pageUrl, page.heading),
   ]);
@@ -262,19 +258,19 @@ export const buildSupportPageStructuredData = (
 
 export const buildTrainerRouteStructuredData = (
   route: TrainerRoute,
-  site: URL,
+  site: URL
 ) => {
   const routeUrl = absoluteUrl(route.path, site);
   const imageUrl = absoluteUrl(siteMetadata.imagePath, site);
 
   return buildPageGraph([
     buildWebPageNode({
-      site,
-      pageUrl: routeUrl,
-      name: route.title,
-      headline: route.title,
       description: route.description,
+      headline: route.title,
       image: imageUrl,
+      name: route.title,
+      pageUrl: routeUrl,
+      site,
     }),
     buildBreadcrumbNode(site, routeUrl, route.label),
   ]);
@@ -285,11 +281,11 @@ export const buildLegalStructuredData = (page: LegalPageContent, site: URL) => {
 
   return buildPageGraph([
     buildWebPageNode({
-      site,
-      pageUrl,
-      name: page.metaTitle,
-      headline: page.title,
       description: page.description,
+      headline: page.title,
+      name: page.metaTitle,
+      pageUrl,
+      site,
     }),
     buildBreadcrumbNode(site, pageUrl, page.label),
   ]);

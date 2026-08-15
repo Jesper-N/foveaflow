@@ -1,11 +1,6 @@
 # FoveaFlow - Free Online Eye Trainer
 
-[![Astro](https://img.shields.io/badge/Astro-7-ff5d01?logo=astro&logoColor=white)](https://astro.build/)
-[![Svelte](https://img.shields.io/badge/Svelte-5-ff3e00?logo=svelte&logoColor=white)](https://svelte.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-6.0.3-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Bun](https://img.shields.io/badge/Bun-ready-000000?logo=bun&logoColor=white)](https://bun.sh/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.3.2-38bdf8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Astro](https://img.shields.io/badge/Astro-7-ff5d01?logo=astro&logoColor=white)](https://astro.build/) [![Svelte](https://img.shields.io/badge/Svelte-5-ff3e00?logo=svelte&logoColor=white)](https://svelte.dev/) [![TypeScript](https://img.shields.io/badge/TypeScript-6.0.3-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![Bun](https://img.shields.io/badge/Bun-ready-000000?logo=bun&logoColor=white)](https://bun.sh/) [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.3.2-38bdf8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 [FoveaFlow](https://foveaflow.com/) is a free online eye trainer for visual tracking, quick refocus, peripheral awareness, and FPS warmups. It includes Smooth Pursuit paths, Reaction Jumps, Lilac Chaser peripheral focus practice, random motion, and distractor tracking.
 
@@ -65,17 +60,18 @@ http://127.0.0.1:4321
 
 ## Scripts
 
-| Command                 | What it does                                          |
-| ----------------------- | ----------------------------------------------------- |
-| `bun run dev`           | Starts the Astro dev server on `127.0.0.1`.           |
-| `bun run build`         | Builds the production app.                            |
-| `bun run preview`       | Serves the built app locally.                         |
-| `bun run check`         | Runs `astro check`.                                   |
-| `bun run test`          | Runs behavior and engine tests with Bun.              |
-| `bun run test:smoke`    | Builds and runs desktop/mobile browser smoke tests.   |
-| `bun run verify`        | Runs every required pre-deploy quality check.         |
-| `bun run format`        | Formats the whole project with Prettier.              |
-| `bun run format:svelte` | Formats Svelte, Astro, TypeScript, and CSS src files. |
+| Command | What it does |
+| --- | --- |
+| `bun run dev` | Starts the Astro dev server on `127.0.0.1`. |
+| `bun run build` | Builds the production app. |
+| `bun run preview` | Serves the built app locally. |
+| `bun run check` | Runs `astro check`. |
+| `bun run lint` | Checks code and formatting with Ultracite. |
+| `bun run fix` | Applies Ultracite fixes and formats Astro files. |
+| `bun run test` | Runs behavior and engine tests with Bun. |
+| `bun run test:smoke` | Builds and runs desktop/mobile browser smoke tests. |
+| `bun run verify` | Runs every required pre-deploy quality check. |
+| `bun run format` | Formats supported files with Oxfmt and Astro files with Prettier. |
 
 ## Project structure
 

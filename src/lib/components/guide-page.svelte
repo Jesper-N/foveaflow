@@ -1,4 +1,22 @@
 <script lang="ts">
+  import LanguageSelect from "$lib/components/language-select.svelte";
+  import { Badge } from "$lib/components/ui/badge/index.js";
+  import { Button } from "$lib/components/ui/button/index.js";
+  import * as Item from "$lib/components/ui/item/index.js";
+  import { legalPageLinks } from "$lib/content/legal";
+  import { guideFaqItems, guideMetadata } from "$lib/content/page-copy";
+  import { siteMetadata } from "$lib/content/site";
+  import { supportPages } from "$lib/content/support-pages";
+  import { trainerRoutes } from "$lib/content/trainer-routes";
+  import {
+    audienceNotes,
+    referenceLinks,
+    safetyNote,
+    trainingModeGuides,
+    trainingModeNotes,
+  } from "$lib/content/training";
+  import { languageState } from "$lib/i18n/state.svelte";
+  import { t } from "$lib/i18n/translate";
   import ActivityIcon from "@lucide/svelte/icons/activity";
   import ArrowLeftIcon from "@lucide/svelte/icons/arrow-left";
   import BookOpenIcon from "@lucide/svelte/icons/book-open";
@@ -9,36 +27,17 @@
   import ShieldCheckIcon from "@lucide/svelte/icons/shield-check";
   import SlidersHorizontalIcon from "@lucide/svelte/icons/sliders-horizontal";
 
-  import LanguageSelect from "$lib/components/LanguageSelect.svelte";
-  import { Badge } from "$lib/components/ui/badge/index.js";
-  import { Button } from "$lib/components/ui/button/index.js";
-  import * as Item from "$lib/components/ui/item/index.js";
-  import { legalPageLinks } from "$lib/content/legal";
-  import { guideFaqItems, guideMetadata } from "$lib/content/page-copy";
-  import { siteMetadata } from "$lib/content/site";
-  import { supportPages } from "$lib/content/support-pages";
-  import { trainerRoutes } from "$lib/content/trainer-routes";
-  import { languageState } from "$lib/i18n/state.svelte";
-  import { t } from "$lib/i18n/translate";
-  import {
-    audienceNotes,
-    referenceLinks,
-    safetyNote,
-    trainingModeGuides,
-    trainingModeNotes,
-  } from "$lib/content/training";
-
   const featuredRoutes = trainerRoutes.filter((route) =>
     [
       "smooth-pursuit",
       "reaction-jumps",
       "multiple-distractions",
       "lilac-chaser",
-    ].includes(route.slug),
+    ].includes(route.slug)
   );
 
   const patternRoutes = trainerRoutes.filter(
-    (route) => route.mode === "pursuit" && !route.indexable,
+    (route) => route.mode === "pursuit" && !route.indexable
   );
 
   const guideEnterTop = "guide-enter guide-enter-up";
@@ -54,7 +53,7 @@
   let locale = $derived(languageState.locale);
 </script>
 
-<main class="min-h-dvh bg-background text-foreground selection:bg-accent/30">
+<main class="bg-background text-foreground selection:bg-accent/30 min-h-dvh">
   <div class="mx-auto grid w-full max-w-7xl gap-10 px-4 py-5 sm:px-6 lg:px-8">
     <nav
       class={`flex items-center justify-between gap-4 ${guideEnterTop}`}
@@ -72,7 +71,7 @@
       <div class="flex items-center gap-2">
         <Badge
           variant="outline"
-          class="hidden h-8 border-border/80 bg-background/80 px-3 py-0 text-sm text-muted-foreground sm:inline-flex"
+          class="border-border/80 bg-background/80 text-muted-foreground hidden h-8 px-3 py-0 text-sm sm:inline-flex"
         >
           {t(locale, "Updated July 10, 2026")}
         </Badge>
@@ -94,12 +93,12 @@
           {t(locale, "Guide")}
         </Badge>
         <h1
-          class="max-w-[13ch] text-4xl leading-none font-semibold tracking-tight text-foreground md:text-6xl"
+          class="text-foreground max-w-[13ch] text-4xl leading-none font-semibold tracking-tight md:text-6xl"
         >
           {t(locale, guideMetadata.heading)}
         </h1>
         <p
-          class="mt-6 max-w-160 text-base leading-7 text-muted-foreground md:text-lg md:leading-8"
+          class="text-muted-foreground mt-6 max-w-160 text-base leading-7 md:text-lg md:leading-8"
         >
           {t(locale, guideMetadata.summary)}
         </p>
@@ -126,7 +125,7 @@
         >
           <Item.Media
             variant="icon"
-            class="size-10 rounded-lg border bg-muted text-brand-foreground"
+            class="bg-muted text-brand-foreground size-10 rounded-lg border"
           >
             <ActivityIcon class="size-5" />
           </Item.Media>
@@ -137,7 +136,7 @@
             <Item.Description class="line-clamp-none leading-6">
               {t(
                 locale,
-                "Choose a path, set the speed and target style, then use it for a short visual tracking session.",
+                "Choose a path, set the speed and target style, then use it for a short visual tracking session."
               )}
             </Item.Description>
           </Item.Content>
@@ -145,11 +144,11 @@
 
         <Item.Root
           variant="muted"
-          class={`ml-0 border border-border/70 p-5 md:ml-8 ${guideItemSurface}`}
+          class={`border-border/70 ml-0 border p-5 md:ml-8 ${guideItemSurface}`}
         >
           <Item.Media
             variant="icon"
-            class="size-10 rounded-lg border bg-background text-brand-foreground"
+            class="bg-background text-brand-foreground size-10 rounded-lg border"
           >
             <ShieldCheckIcon class="size-5" />
           </Item.Media>
@@ -178,7 +177,7 @@
           <Item.Root variant="outline" class={guideItemSurface}>
             <Item.Media
               variant="icon"
-              class="size-9 rounded-lg border bg-muted text-brand-foreground"
+              class="bg-muted text-brand-foreground size-9 rounded-lg border"
             >
               <CrosshairIcon class="size-4" />
             </Item.Media>
@@ -201,10 +200,10 @@
           {t(locale, "Mode guide")}
         </Badge>
         <h2 class={sectionTitle}>{t(locale, "How each drill works")}</h2>
-        <p class="mt-4 max-w-136 text-base leading-7 text-muted-foreground">
+        <p class="text-muted-foreground mt-4 max-w-136 text-base leading-7">
           {t(
             locale,
-            "Keep your head still unless a drill says otherwise. These modes are about eye movement, attention, and focus, not neck movement.",
+            "Keep your head still unless a drill says otherwise. These modes are about eye movement, attention, and focus, not neck movement."
           )}
         </p>
       </div>
@@ -214,7 +213,7 @@
           <Item.Root variant="outline" class={guideItemSurface}>
             <Item.Media
               variant="icon"
-              class="size-9 rounded-lg border bg-muted text-brand-foreground"
+              class="bg-muted text-brand-foreground size-9 rounded-lg border"
             >
               <CrosshairIcon class="size-4" />
             </Item.Media>
@@ -239,13 +238,13 @@
         <h2 class={sectionTitle}>
           {t(
             locale,
-            "Best use cases for gamers, desk workers, and screen-heavy days",
+            "Best use cases for gamers, desk workers, and screen-heavy days"
           )}
         </h2>
-        <p class="mt-4 max-w-136 text-base leading-7 text-muted-foreground">
+        <p class="text-muted-foreground mt-4 max-w-136 text-base leading-7">
           {t(
             locale,
-            "Use it as a quick visual warmup or active screen break, not as medical care.",
+            "Use it as a quick visual warmup or active screen break, not as medical care."
           )}
         </p>
       </div>
@@ -255,7 +254,7 @@
           <Item.Root variant="outline" class={guideItemSurface}>
             <Item.Media
               variant="icon"
-              class="size-9 rounded-lg border bg-muted text-brand-foreground"
+              class="bg-muted text-brand-foreground size-9 rounded-lg border"
             >
               <ActivityIcon class="size-4" />
             </Item.Media>
@@ -273,14 +272,14 @@
     </section>
 
     <section
-      class={`page-enter-delay-3 grid gap-6 border-t border-border/60 pt-10 md:grid-cols-[1.18fr_0.82fr] md:gap-10 ${guideEnterUp}`}
+      class={`page-enter-delay-3 border-border/60 grid gap-6 border-t pt-10 md:grid-cols-[1.18fr_0.82fr] md:gap-10 ${guideEnterUp}`}
     >
       <div class="grid gap-3">
         {#each featuredRoutes as route (route.slug)}
           <Item.Root variant="outline" class={guideItemSurface}>
             <Item.Media
               variant="icon"
-              class="size-9 rounded-lg border bg-background text-brand-foreground"
+              class="bg-background text-brand-foreground size-9 rounded-lg border"
             >
               <MousePointerIcon class="size-4" />
             </Item.Media>
@@ -316,10 +315,10 @@
         <h2 class={sectionTitle}>
           {t(locale, "Smooth Pursuit pattern routes")}
         </h2>
-        <p class="mt-4 max-w-152 text-base leading-7 text-muted-foreground">
+        <p class="text-muted-foreground mt-4 max-w-152 text-base leading-7">
           {t(
             locale,
-            "Pattern pages start Smooth Pursuit with that path selected. Reaction jumps, Multiple Distractions, and Lilac Chaser have their own direct URLs.",
+            "Pattern pages start Smooth Pursuit with that path selected. Reaction jumps, Multiple Distractions, and Lilac Chaser have their own direct URLs."
           )}
         </p>
         <div class="mt-5 flex flex-wrap gap-2">
@@ -340,10 +339,10 @@
         <h2 class={sectionTitle}>
           {t(locale, "Focused guides for FPS and alternatives")}
         </h2>
-        <p class="mt-4 max-w-136 text-base leading-7 text-muted-foreground">
+        <p class="text-muted-foreground mt-4 max-w-136 text-base leading-7">
           {t(
             locale,
-            "These pages cover the common search paths around eye trainer warmups and browser-based alternatives.",
+            "These pages cover the common search paths around eye trainer warmups and browser-based alternatives."
           )}
         </p>
       </div>
@@ -353,7 +352,7 @@
           <Item.Root variant="outline" class={guideItemSurface}>
             <Item.Media
               variant="icon"
-              class="size-9 rounded-lg border bg-background text-brand-foreground"
+              class="bg-background text-brand-foreground size-9 rounded-lg border"
             >
               <BookOpenIcon class="size-4" />
             </Item.Media>
@@ -391,11 +390,11 @@
       <div class="grid gap-3">
         <Item.Root
           variant="muted"
-          class={`border border-border/70 ${guideItemSurface}`}
+          class={`border-border/70 border ${guideItemSurface}`}
         >
           <Item.Media
             variant="icon"
-            class="size-9 rounded-lg border bg-background text-brand-foreground"
+            class="bg-background text-brand-foreground size-9 rounded-lg border"
           >
             <SlidersHorizontalIcon class="size-4" />
           </Item.Media>
@@ -406,18 +405,18 @@
             <Item.Description class="line-clamp-none leading-6">
               {t(
                 locale,
-                "Speed, size, shape, color, opacity, and trail change the feel of the moving drills. Lilac Chaser has its own ball color and scale controls.",
+                "Speed, size, shape, color, opacity, and trail change the feel of the moving drills. Lilac Chaser has its own ball color and scale controls."
               )}
             </Item.Description>
           </Item.Content>
         </Item.Root>
         <Item.Root
           variant="muted"
-          class={`border border-border/70 ${guideItemSurface}`}
+          class={`border-border/70 border ${guideItemSurface}`}
         >
           <Item.Media
             variant="icon"
-            class="size-9 rounded-lg border bg-background text-brand-foreground"
+            class="bg-background text-brand-foreground size-9 rounded-lg border"
           >
             <ActivityIcon class="size-4" />
           </Item.Media>
@@ -428,7 +427,7 @@
             <Item.Description class="line-clamp-none leading-6">
               {t(
                 locale,
-                "Viewing distance and CSS pixels/cm help speed settings match your display setup more closely.",
+                "Viewing distance and CSS pixels/cm help speed settings match your display setup more closely."
               )}
             </Item.Description>
           </Item.Content>
@@ -495,7 +494,7 @@
     </section>
 
     <footer
-      class={`page-enter-delay-4 flex flex-col gap-3 border-t border-border/60 pt-6 pb-10 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between ${guideEnterUp}`}
+      class={`page-enter-delay-4 border-border/60 text-muted-foreground flex flex-col gap-3 border-t pt-6 pb-10 text-sm sm:flex-row sm:items-center sm:justify-between ${guideEnterUp}`}
     >
       <span>
         {t(locale, "FoveaFlow is free. No account, no paid plan.")}

@@ -1,18 +1,18 @@
-export type Arena = {
+export interface Arena {
   width: number;
   height: number;
-};
+}
 
 export type SpeedUnit = "deg/s" | "cm/s" | "screen/s";
 
-export type SpeedSetting = {
+export interface SpeedSetting {
   unit: SpeedUnit;
   value: number;
-};
+}
 
 export type TargetRole = "target" | "distractor";
 
-export type TargetFrame = {
+export interface TargetFrame {
   x: number;
   y: number;
   radiusPx: number;
@@ -20,10 +20,15 @@ export type TargetFrame = {
   alpha: number;
   visible: boolean;
   role: TargetRole;
-};
+}
 
-export type TargetShape =
-  "circle" | "ring" | "square" | "diamond" | "triangle" | "cross";
+export type TargetForm =
+  | "circle"
+  | "ring"
+  | "square"
+  | "diamond"
+  | "triangle"
+  | "cross";
 
 export type PatternId =
   | "circle"
@@ -49,7 +54,7 @@ export type PatternId =
   | "cornerTour"
   | "multipleObjectTracking";
 
-export type PatternParams = {
+export interface PatternParams {
   radiusPx: number;
   pathMarginPx?: number;
   speedPxPerSec: number;
@@ -58,4 +63,4 @@ export type PatternParams = {
   distractorCount?: number;
   colorA?: string;
   colorB?: string;
-};
+}

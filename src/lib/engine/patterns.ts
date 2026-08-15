@@ -1,11 +1,3 @@
-import type {
-  Arena,
-  PatternId,
-  PatternParams,
-  TargetFrame,
-  TargetRole,
-} from "./types";
-import { createRng, type Rng } from "./random";
 import {
   TAU,
   clamp,
@@ -17,9 +9,17 @@ import {
   resolvePatternBounds,
   sampleClosedCurve,
   sampleClosedPolyline,
-  type PatternPathCacheState,
-  type ScaledTravelState,
 } from "./pattern-paths";
+import type { PatternPathCacheState, ScaledTravelState } from "./pattern-paths";
+import { createRng } from "./random";
+import type { Rng } from "./random";
+import type {
+  Arena,
+  PatternId,
+  PatternParams,
+  TargetFrame,
+  TargetRole,
+} from "./types";
 
 const DEFAULT_TARGET_COLOR = "#76d900";
 const DEFAULT_SECONDARY_COLOR = "#3ddbd9";
@@ -46,27 +46,27 @@ type PatternSamplerState = PatternPathCacheState & {
 
 const createPatternSamplerState = (): PatternSamplerState => ({
   ...createPatternPathCacheState(),
-  primaryTravelState: createScaledTravelState(),
-  xTravelState: createScaledTravelState(),
-  yTravelState: createScaledTravelState(),
-  randomWalkCache: null,
   hardTurnState: null,
   motRandomWalkCache: null,
+  primaryTravelState: createScaledTravelState(),
+  randomWalkCache: null,
+  xTravelState: createScaledTravelState(),
+  yTravelState: createScaledTravelState(),
 });
 
-type PatternSampler = {
+interface PatternSampler {
   sampleInto: (
     frames: TargetFrame[],
     id: PatternId,
     elapsedSec: number,
     arena: Arena,
     params: PatternParams,
-    rng: Rng,
+    rng: Rng
   ) => number;
   reset: () => void;
-};
+}
 
-type RandomWalkState = {
+interface RandomWalkState {
   seed: number;
   x: number;
   y: number;
@@ -76,9 +76,9 @@ type RandomWalkState = {
   nextTurnTravel: number;
   committedTravelPx: number;
   lastSampleTravelPx: number;
-};
+}
 
-type HardTurnState = {
+interface HardTurnState {
   seed: number;
   left: number;
   top: number;
@@ -90,27 +90,27 @@ type HardTurnState = {
   targetY: number;
   nextWaypointIndex: number;
   lastTravelPx: number;
-};
+}
 
-type MotRandomWalkObject = {
+interface MotRandomWalkObject {
   rng: Rng;
   state: RandomWalkState;
   previewState: RandomWalkState;
-};
+}
 
-type RandomWalkCache = {
+interface RandomWalkCache {
   state: RandomWalkState;
   previewState: RandomWalkState;
-};
+}
 
-type MotRandomWalkCache = {
+interface MotRandomWalkCache {
   seed: number;
   objects: MotRandomWalkObject[];
-};
+}
 
 const copyRandomWalkState = (
   target: RandomWalkState,
-  source: RandomWalkState,
+  source: RandomWalkState
 ) => {
   target.seed = source.seed;
   target.x = source.x;
@@ -123,9 +123,8 @@ const copyRandomWalkState = (
   target.lastSampleTravelPx = source.lastSampleTravelPx;
 };
 
-const shortestAngleDelta = (from: number, to: number) => {
-  return Math.atan2(Math.sin(to - from), Math.cos(to - from));
-};
+const shortestAngleDelta = (from: number, to: number) =>
+  Math.atan2(Math.sin(to - from), Math.cos(to - from));
 
 const createHardTurnWaypoint = (
   rng: Rng,
@@ -135,7 +134,7 @@ const createHardTurnWaypoint = (
   left: number,
   top: number,
   right: number,
-  bottom: number,
+  bottom: number
 ) => {
   const width = Math.max(1, right - left);
   const height = Math.max(1, bottom - top);
@@ -157,8 +156,12 @@ const createHardTurnWaypoint = (
     const candidateY = rng.rangeAt(randomIndex + 1, top, bottom);
     const distance = Math.hypot(candidateX - previousX, candidateY - previousY);
 
-    if (distance >= minDistance) return [candidateX, candidateY] as const;
-    if (distance <= bestDistance) continue;
+    if (distance >= minDistance) {
+      return [candidateX, candidateY] as const;
+    }
+    if (distance <= bestDistance) {
+      continue;
+    }
 
     bestX = candidateX;
     bestY = candidateY;
@@ -183,7 +186,7 @@ const createHardTurnState = (
   left: number,
   top: number,
   right: number,
-  bottom: number,
+  bottom: number
 ) => {
   const x = rng.rangeAt(HARD_TURN_RANDOM_OFFSET, left, right);
   const y = rng.rangeAt(HARD_TURN_RANDOM_OFFSET + 1, top, bottom);
@@ -195,21 +198,21 @@ const createHardTurnState = (
     left,
     top,
     right,
-    bottom,
+    bottom
   );
 
   return {
-    seed: rng.seed,
-    left,
-    top,
-    right,
     bottom,
-    x,
-    y,
+    lastTravelPx: travelPx,
+    left,
+    nextWaypointIndex: 2,
+    right,
+    seed: rng.seed,
     targetX,
     targetY,
-    nextWaypointIndex: 2,
-    lastTravelPx: travelPx,
+    top,
+    x,
+    y,
   } satisfies HardTurnState;
 };
 
@@ -221,7 +224,7 @@ const getRayDistanceToBounds = (
   left: number,
   top: number,
   right: number,
-  bottom: number,
+  bottom: number
 ) => {
   let distance = Number.POSITIVE_INFINITY;
 
@@ -244,7 +247,7 @@ const reconcileHardTurnBounds = (
   left: number,
   top: number,
   right: number,
-  bottom: number,
+  bottom: number
 ) => {
   if (
     state.left === left &&
@@ -273,7 +276,7 @@ const setNextHardTurnWaypoint = (
   left: number,
   top: number,
   right: number,
-  bottom: number,
+  bottom: number
 ) => {
   [state.targetX, state.targetY] = createHardTurnWaypoint(
     rng,
@@ -283,7 +286,7 @@ const setNextHardTurnWaypoint = (
     left,
     top,
     right,
-    bottom,
+    bottom
   );
   state.nextWaypointIndex += 1;
 };
@@ -295,7 +298,7 @@ const sampleHardTurnPath = (
   left: number,
   top: number,
   right: number,
-  bottom: number,
+  bottom: number
 ) => {
   const distancePx = Number.isFinite(travelPx) ? Math.max(0, travelPx) : 0;
   let state = samplerState.hardTurnState;
@@ -332,7 +335,7 @@ const sampleHardTurnPath = (
       left,
       top,
       right,
-      bottom,
+      bottom
     );
     if (availableDistance <= Number.EPSILON) {
       setNextHardTurnWaypoint(state, rng, left, top, right, bottom);
@@ -362,19 +365,19 @@ const createRandomWalkState = (
   left: number,
   top: number,
   right: number,
-  bottom: number,
+  bottom: number
 ) => {
   const heading = rng.rangeAt(90_001, 0, TAU);
   return {
-    seed: rng.seed,
-    x: rng.rangeAt(90_002, left, right),
-    y: rng.rangeAt(90_003, top, bottom),
+    committedTravelPx: travelPx,
     heading,
+    lastSampleTravelPx: travelPx,
+    nextTurnTravel: travelPx + rng.rangeAt(90_004, 150, 340),
+    seed: rng.seed,
     targetHeading: heading,
     turnIndex: 0,
-    nextTurnTravel: travelPx + rng.rangeAt(90_004, 150, 340),
-    committedTravelPx: travelPx,
-    lastSampleTravelPx: travelPx,
+    x: rng.rangeAt(90_002, left, right),
+    y: rng.rangeAt(90_003, top, bottom),
   } satisfies RandomWalkState;
 };
 
@@ -385,64 +388,52 @@ const initializeRandomWalk = (
   left: number,
   top: number,
   right: number,
-  bottom: number,
+  bottom: number
 ) => {
   const state = createRandomWalkState(rng, travelPx, left, top, right, bottom);
-  const cache = { state, previewState: { ...state } };
+  const cache = { previewState: { ...state }, state };
   samplerState.randomWalkCache = cache;
   return cache;
 };
 
-const advanceRandomWalk = (
+const confineRandomWalkState = (
   state: RandomWalkState,
-  previewState: RandomWalkState,
-  rng: Rng,
-  travelPx: number,
   left: number,
   top: number,
   right: number,
-  bottom: number,
+  bottom: number
 ) => {
-  confineRandomWalkState(state, left, top, right, bottom);
-  if (!Number.isFinite(travelPx) || travelPx <= state.committedTravelPx) {
-    state.lastSampleTravelPx = travelPx;
-    return state;
+  let reflectedX = false;
+  let reflectedY = false;
+
+  if (right - left < 1) {
+    state.x = (left + right) / 2;
+  } else {
+    while (state.x < left || state.x > right) {
+      state.x =
+        state.x < left ? left + (left - state.x) : right - (state.x - right);
+      reflectedX = !reflectedX;
+    }
   }
 
-  while (state.committedTravelPx + RANDOM_WALK_STEP_PX <= travelPx) {
-    const nextTravelPx = state.committedTravelPx + RANDOM_WALK_STEP_PX;
-    integrateRandomWalkStep(
-      state,
-      rng,
-      nextTravelPx,
-      RANDOM_WALK_STEP_PX,
-      left,
-      top,
-      right,
-      bottom,
-    );
-    state.committedTravelPx = nextTravelPx;
+  if (bottom - top < 1) {
+    state.y = (top + bottom) / 2;
+  } else {
+    while (state.y < top || state.y > bottom) {
+      state.y =
+        state.y < top ? top + (top - state.y) : bottom - (state.y - bottom);
+      reflectedY = !reflectedY;
+    }
   }
 
-  const remainderPx = travelPx - state.committedTravelPx;
-  if (remainderPx <= 0) {
-    state.lastSampleTravelPx = travelPx;
-    return state;
+  if (reflectedX) {
+    state.heading = Math.PI - state.heading;
+    state.targetHeading = state.heading;
   }
-
-  copyRandomWalkState(previewState, state);
-  integrateRandomWalkStep(
-    previewState,
-    rng,
-    travelPx,
-    remainderPx,
-    left,
-    top,
-    right,
-    bottom,
-  );
-  state.lastSampleTravelPx = travelPx;
-  return previewState;
+  if (reflectedY) {
+    state.heading = -state.heading;
+    state.targetHeading = state.heading;
+  }
 };
 
 const integrateRandomWalkStep = (
@@ -453,7 +444,7 @@ const integrateRandomWalkStep = (
   left: number,
   top: number,
   right: number,
-  bottom: number,
+  bottom: number
 ) => {
   if (sampledTravelPx >= state.nextTurnTravel) {
     state.turnIndex += 1;
@@ -490,50 +481,56 @@ const integrateRandomWalkStep = (
   confineRandomWalkState(state, left, top, right, bottom);
 };
 
-const confineRandomWalkState = (
+const advanceRandomWalk = (
   state: RandomWalkState,
+  previewState: RandomWalkState,
+  rng: Rng,
+  travelPx: number,
   left: number,
   top: number,
   right: number,
-  bottom: number,
+  bottom: number
 ) => {
-  let reflectedX = false;
-  let reflectedY = false;
-
-  if (right - left < 1) {
-    state.x = (left + right) / 2;
-  } else {
-    while (state.x < left || state.x > right) {
-      if (state.x < left) {
-        state.x = left + (left - state.x);
-      } else {
-        state.x = right - (state.x - right);
-      }
-      reflectedX = !reflectedX;
-    }
+  confineRandomWalkState(state, left, top, right, bottom);
+  if (!Number.isFinite(travelPx) || travelPx <= state.committedTravelPx) {
+    state.lastSampleTravelPx = travelPx;
+    return state;
   }
 
-  if (bottom - top < 1) {
-    state.y = (top + bottom) / 2;
-  } else {
-    while (state.y < top || state.y > bottom) {
-      if (state.y < top) {
-        state.y = top + (top - state.y);
-      } else {
-        state.y = bottom - (state.y - bottom);
-      }
-      reflectedY = !reflectedY;
-    }
+  while (state.committedTravelPx + RANDOM_WALK_STEP_PX <= travelPx) {
+    const nextTravelPx = state.committedTravelPx + RANDOM_WALK_STEP_PX;
+    integrateRandomWalkStep(
+      state,
+      rng,
+      nextTravelPx,
+      RANDOM_WALK_STEP_PX,
+      left,
+      top,
+      right,
+      bottom
+    );
+    state.committedTravelPx = nextTravelPx;
   }
 
-  if (reflectedX) {
-    state.heading = Math.PI - state.heading;
-    state.targetHeading = state.heading;
+  const remainderPx = travelPx - state.committedTravelPx;
+  if (remainderPx <= 0) {
+    state.lastSampleTravelPx = travelPx;
+    return state;
   }
-  if (reflectedY) {
-    state.heading = -state.heading;
-    state.targetHeading = state.heading;
-  }
+
+  copyRandomWalkState(previewState, state);
+  integrateRandomWalkStep(
+    previewState,
+    rng,
+    travelPx,
+    remainderPx,
+    left,
+    top,
+    right,
+    bottom
+  );
+  state.lastSampleTravelPx = travelPx;
+  return previewState;
 };
 
 const writeTarget = (
@@ -546,18 +543,18 @@ const writeTarget = (
   color = params.colorA ?? DEFAULT_TARGET_COLOR,
   alpha = 1,
   visible = true,
-  role: TargetRole = "target",
+  role: TargetRole = "target"
 ) => {
   let frame = frames[index];
   if (!frame) {
     frame = {
+      alpha,
+      color,
+      radiusPx,
+      role,
+      visible,
       x,
       y,
-      radiusPx,
-      color,
-      alpha,
-      visible,
-      role,
     };
     frames[index] = frame;
     return index + 1;
@@ -581,35 +578,39 @@ const getMotRandomWalkObjects = (
   left: number,
   top: number,
   right: number,
-  bottom: number,
+  bottom: number
 ) => {
   let cache = samplerState.motRandomWalkCache;
   let mustResetCache = !cache || cache.seed !== rng.seed;
   if (cache && !mustResetCache) {
-    for (let index = 0; index < cache.objects.length; index += 1) {
-      if (travelPx >= cache.objects[index].state.lastSampleTravelPx) continue;
+    for (const object of cache.objects) {
+      if (travelPx >= object.state.lastSampleTravelPx) {
+        continue;
+      }
       mustResetCache = true;
       break;
     }
   }
   if (mustResetCache || !cache) {
-    cache = { seed: rng.seed, objects: [] };
+    cache = { objects: [], seed: rng.seed };
     samplerState.motRandomWalkCache = cache;
   }
 
-  if (cache.objects.length > total) cache.objects.length = total;
+  if (cache.objects.length > total) {
+    cache.objects.length = total;
+  }
 
   for (let index = cache.objects.length; index < total; index += 1) {
-    const objectRng = createRng(rng.seed + 120_000 + index * 9_973);
+    const objectRng = createRng(rng.seed + 120_000 + index * 9973);
     const state = createRandomWalkState(
       objectRng,
       travelPx,
       left,
       top,
       right,
-      bottom,
+      bottom
     );
-    cache.objects.push({ rng: objectRng, state, previewState: { ...state } });
+    cache.objects.push({ previewState: { ...state }, rng: objectRng, state });
   }
 
   return cache.objects;
@@ -618,329 +619,63 @@ const getMotRandomWalkObjects = (
 export const getTeleportJumpDistancePx = (
   arena: Arena,
   radiusPx: number,
-  pathMarginPx = 16,
+  pathMarginPx = 16
 ) => {
   const { width, height } = resolvePatternBounds(arena, radiusPx, pathMarginPx);
   return clamp(Math.min(width, height) * 0.55, 420, 820);
 };
 
-const samplePatternInto = (
-  samplerState: PatternSamplerState,
-  frames: TargetFrame[],
-  id: PatternId,
+const resolvePatternMetrics = (
   elapsedSec: number,
   arena: Arena,
-  params: PatternParams,
-  rng: Rng,
-): number => {
+  params: PatternParams
+) => {
   const radiusPx = Number.isFinite(params.radiusPx)
     ? Math.max(1, params.radiusPx)
     : 1;
-  const {
-    left,
-    top,
-    right,
-    bottom,
-    width,
-    height,
-    centerX: cx,
-    centerY: cy,
-    radiusX: rx,
-    radiusY: ry,
-  } = resolvePatternBounds(arena, radiusPx, params.pathMarginPx);
+  const bounds = resolvePatternBounds(arena, radiusPx, params.pathMarginPx);
   const speedPxPerSec = Number.isFinite(params.speedPxPerSec)
     ? Math.max(1, params.speedPxPerSec)
     : 1;
   const requestedTravelPx = Number.isFinite(params.travelPx)
     ? params.travelPx
     : elapsedSec * speedPxPerSec;
-  const travelPx = Number.isFinite(requestedTravelPx) ? requestedTravelPx : 0;
-  const primaryColor = params.colorA ?? DEFAULT_TARGET_COLOR;
-  const secondaryColor = params.colorB ?? DEFAULT_SECONDARY_COLOR;
 
-  if (id === "circle") {
-    const radius = Math.min(rx, ry);
-    const effectiveTravelPx = resolveScaledTravel(
-      samplerState.primaryTravelState,
-      id,
-      `${id}:${radius}`,
-      travelPx,
-      Math.max(1, radius),
-    );
-    const angle = effectiveTravelPx / Math.max(1, radius);
-    return writeTarget(
-      frames,
-      0,
-      cx + Math.cos(angle) * radius,
-      cy + Math.sin(angle) * radius,
-      params,
-      radiusPx,
-      primaryColor,
-    );
-  }
+  return {
+    ...bounds,
+    primaryColor: params.colorA ?? DEFAULT_TARGET_COLOR,
+    radiusPx,
+    secondaryColor: params.colorB ?? DEFAULT_SECONDARY_COLOR,
+    travelPx: Number.isFinite(requestedTravelPx) ? requestedTravelPx : 0,
+  };
+};
 
-  if (id === "ellipse") {
-    const [x, y] = sampleClosedCurve(
-      samplerState,
-      curveCacheKey(id, left, top, right, bottom, 160),
-      travelPx,
-      160,
-      (phase) => {
-        const angle = phase * TAU;
-        return [cx + Math.cos(angle) * rx, cy + Math.sin(angle) * ry];
-      },
-    );
-    return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
-  }
+type PatternMetrics = ReturnType<typeof resolvePatternMetrics>;
 
-  if (id === "figureEight") {
-    const [x, y] = sampleClosedCurve(
-      samplerState,
-      curveCacheKey(id, left, top, right, bottom, 180),
-      travelPx,
-      180,
-      (phase) => {
-        const angle = phase * TAU;
-        return [
-          cx + Math.sin(angle) * rx,
-          cy + Math.sin(angle * 2) * ry * 0.72,
-        ];
-      },
-    );
-    return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
-  }
-
-  if (id === "wave") {
-    const [x, y] = sampleClosedCurve(
-      samplerState,
-      curveCacheKey(id, left, top, right, bottom, 120),
-      travelPx,
-      120,
-      (phase) => {
-        const angle = phase * TAU;
-        return [
-          cx + Math.cos(angle) * rx,
-          cy + Math.sin(angle * 3) * ry * 0.42,
-        ];
-      },
-    );
-    return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
-  }
-
-  if (id === "diagonal") {
-    const xTravelPx = resolveScaledTravel(
-      samplerState.xTravelState,
-      `${id}:x`,
-      `${id}:x:${width}`,
-      travelPx * DIAGONAL_X_RATE * DIAGONAL_SPEED_SCALE,
-      width,
-    );
-    const yTravelPx = resolveScaledTravel(
-      samplerState.yTravelState,
-      `${id}:y`,
-      `${id}:y:${height}`,
-      travelPx * DIAGONAL_Y_RATE * DIAGONAL_SPEED_SCALE,
-      height,
-    );
-    return writeTarget(
-      frames,
-      0,
-      left + pingPong(xTravelPx, width),
-      top + pingPong(yTravelPx, height),
-      params,
-      radiusPx,
-      primaryColor,
-    );
-  }
-
-  if (id === "bounce") {
-    const xTravelPx = resolveScaledTravel(
-      samplerState.xTravelState,
-      `${id}:x`,
-      `${id}:x:${width}`,
-      travelPx * BOUNCE_X_RATE * BOUNCE_SPEED_SCALE,
-      width,
-    );
-    const yTravelPx = resolveScaledTravel(
-      samplerState.yTravelState,
-      `${id}:y`,
-      `${id}:y:${height}`,
-      travelPx * BOUNCE_Y_RATE * BOUNCE_SPEED_SCALE,
-      height,
-    );
-    return writeTarget(
-      frames,
-      0,
-      left + pingPong(xTravelPx + width * 0.18, width),
-      top + pingPong(yTravelPx + height * 0.41, height),
-      params,
-      radiusPx,
-      primaryColor,
-    );
-  }
-
-  if (id === "randomWalk") {
-    let cache = samplerState.randomWalkCache;
-    if (
-      !cache ||
-      cache.state.seed !== rng.seed ||
-      travelPx < cache.state.lastSampleTravelPx
-    ) {
-      cache = initializeRandomWalk(
-        samplerState,
-        rng,
-        travelPx,
-        left,
-        top,
-        right,
-        bottom,
-      );
-    }
-    const sampledState = advanceRandomWalk(
-      cache.state,
-      cache.previewState,
-      rng,
-      travelPx,
-      left,
-      top,
-      right,
-      bottom,
-    );
-
-    return writeTarget(
-      frames,
-      0,
-      sampledState.x,
-      sampledState.y,
-      params,
-      radiusPx,
-      primaryColor,
-    );
-  }
-
-  if (id === "directionChange") {
-    const [x, y] = sampleHardTurnPath(
-      samplerState,
-      rng,
-      travelPx,
-      left,
-      top,
-      right,
-      bottom,
-    );
-
-    return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
-  }
-
-  if (id === "teleport") {
-    const jumpDistancePx = getTeleportJumpDistancePx(
-      arena,
-      radiusPx,
-      params.pathMarginPx,
-    );
-    const effectiveTravelPx = resolveScaledTravel(
-      samplerState.primaryTravelState,
-      id,
-      `${id}:${jumpDistancePx}`,
-      travelPx,
-      jumpDistancePx,
-    );
-    const bucket = Math.floor(effectiveTravelPx / jumpDistancePx);
-    const phase =
-      (effectiveTravelPx - bucket * jumpDistancePx) / jumpDistancePx;
-    return writeTarget(
-      frames,
-      0,
-      rng.rangeAt(bucket * 2, left, right),
-      rng.rangeAt(bucket * 2 + 1, top, bottom),
-      params,
-      radiusPx,
-      primaryColor,
-      phase < 0.08 ? 0.35 : 1,
-    );
-  }
-
-  if (id === "horizontalSweep") {
-    const effectiveTravelPx = resolveScaledTravel(
-      samplerState.primaryTravelState,
-      id,
-      `${id}:${width}`,
-      travelPx,
-      width,
-    );
-    return writeTarget(
-      frames,
-      0,
-      left + pingPong(effectiveTravelPx, width),
-      cy,
-      params,
-      radiusPx,
-      primaryColor,
-    );
-  }
-
-  if (id === "verticalSweep") {
-    const effectiveTravelPx = resolveScaledTravel(
-      samplerState.primaryTravelState,
-      id,
-      `${id}:${height}`,
-      travelPx,
-      height,
-    );
-    return writeTarget(
-      frames,
-      0,
-      cx,
-      top + pingPong(effectiveTravelPx, height),
-      params,
-      radiusPx,
-      primaryColor,
-    );
-  }
-
-  if (id === "downRightSweep") {
-    const diagonalLength = Math.max(1, Math.hypot(width, height));
-    const effectiveTravelPx = resolveScaledTravel(
-      samplerState.primaryTravelState,
-      id,
-      `${id}:${width}:${height}`,
-      travelPx,
-      diagonalLength,
-    );
-    const progress =
-      pingPong(effectiveTravelPx, diagonalLength) / diagonalLength;
-    return writeTarget(
-      frames,
-      0,
-      left + width * progress,
-      top + height * progress,
-      params,
-      radiusPx,
-      primaryColor,
-    );
-  }
-
-  if (id === "downLeftSweep") {
-    const diagonalLength = Math.max(1, Math.hypot(width, height));
-    const effectiveTravelPx = resolveScaledTravel(
-      samplerState.primaryTravelState,
-      id,
-      `${id}:${width}:${height}`,
-      travelPx,
-      diagonalLength,
-    );
-    const progress =
-      pingPong(effectiveTravelPx, diagonalLength) / diagonalLength;
-    return writeTarget(
-      frames,
-      0,
-      right - width * progress,
-      top + height * progress,
-      params,
-      radiusPx,
-      primaryColor,
-    );
-  }
+const sampleSecondaryPatternInto = (
+  samplerState: PatternSamplerState,
+  frames: TargetFrame[],
+  id: PatternId,
+  params: PatternParams,
+  rng: Rng,
+  metrics: PatternMetrics
+): number => {
+  const {
+    bottom,
+    centerX: cx,
+    centerY: cy,
+    height,
+    left,
+    primaryColor,
+    radiusX: rx,
+    radiusY: ry,
+    radiusPx,
+    right,
+    secondaryColor,
+    top,
+    travelPx,
+    width,
+  } = metrics;
 
   if (id === "perimeterLoop") {
     const [x, y] = sampleClosedPolyline(
@@ -949,11 +684,17 @@ const samplePatternInto = (
       travelPx,
       4,
       (index) => {
-        if (index === 0) return [left, top];
-        if (index === 1) return [right, top];
-        if (index === 2) return [right, bottom];
+        if (index === 0) {
+          return [left, top];
+        }
+        if (index === 1) {
+          return [right, top];
+        }
+        if (index === 2) {
+          return [right, bottom];
+        }
         return [left, bottom];
-      },
+      }
     );
     return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
   }
@@ -965,11 +706,17 @@ const samplePatternInto = (
       travelPx,
       4,
       (index) => {
-        if (index === 0) return [cx, top];
-        if (index === 1) return [right, cy];
-        if (index === 2) return [cx, bottom];
+        if (index === 0) {
+          return [cx, top];
+        }
+        if (index === 1) {
+          return [right, cy];
+        }
+        if (index === 2) {
+          return [cx, bottom];
+        }
         return [left, cy];
-      },
+      }
     );
     return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
   }
@@ -987,7 +734,7 @@ const samplePatternInto = (
           cx + Math.cos(angle) * rx * petal,
           cy + Math.sin(angle) * ry * petal,
         ];
-      },
+      }
     );
     return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
   }
@@ -1002,7 +749,7 @@ const samplePatternInto = (
       (index) => [
         index % 2 === 0 ? left : right,
         top + (height * index) / (lanes - 1),
-      ],
+      ]
     );
     return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
   }
@@ -1023,7 +770,7 @@ const samplePatternInto = (
           left + (column * width) / Math.max(1, columns - 1),
           top + (row * height) / Math.max(1, rows - 1),
         ];
-      },
+      }
     );
     return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
   }
@@ -1040,7 +787,7 @@ const samplePatternInto = (
           cx + Math.sin(angle * 3 + Math.PI / 2) * rx,
           cy + Math.sin(angle * 2) * ry,
         ];
-      },
+      }
     );
     return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
   }
@@ -1056,7 +803,7 @@ const samplePatternInto = (
         const vertical = Math.sin(angle);
         const pinch = 0.22 + 0.74 * Math.abs(vertical);
         return [cx + Math.sin(angle * 2) * rx * pinch, cy + vertical * ry];
-      },
+      }
     );
     return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
   }
@@ -1070,11 +817,17 @@ const samplePatternInto = (
       travelPx,
       4,
       (index) => {
-        if (index === 0) return [left, top];
-        if (index === 1) return [right - insetX, top + insetY];
-        if (index === 2) return [right, bottom];
+        if (index === 0) {
+          return [left, top];
+        }
+        if (index === 1) {
+          return [right - insetX, top + insetY];
+        }
+        if (index === 2) {
+          return [right, bottom];
+        }
         return [left + insetX, bottom - insetY];
-      },
+      }
     );
     return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
   }
@@ -1084,7 +837,7 @@ const samplePatternInto = (
     const distractorCount = clamp(
       Math.round(params.distractorCount ?? 5),
       0,
-      20,
+      20
     );
     const total = targetCount + distractorCount;
     const objects = getMotRandomWalkObjects(
@@ -1095,7 +848,7 @@ const samplePatternInto = (
       left,
       top,
       right,
-      bottom,
+      bottom
     );
     let count = 0;
 
@@ -1110,7 +863,7 @@ const samplePatternInto = (
         left,
         top,
         right,
-        bottom,
+        bottom
       );
       count = writeTarget(
         frames,
@@ -1122,21 +875,333 @@ const samplePatternInto = (
         role === "target" ? primaryColor : secondaryColor,
         1,
         true,
-        role,
+        role
       );
     }
 
     return count;
   }
 
-  return samplePatternInto(
+  throw new Error(`Unsupported pattern: ${id}`);
+};
+
+const samplePatternInto = (
+  samplerState: PatternSamplerState,
+  frames: TargetFrame[],
+  id: PatternId,
+  elapsedSec: number,
+  arena: Arena,
+  params: PatternParams,
+  rng: Rng
+): number => {
+  const metrics = resolvePatternMetrics(elapsedSec, arena, params);
+  const {
+    bottom,
+    centerX: cx,
+    centerY: cy,
+    height,
+    left,
+    primaryColor,
+    radiusX: rx,
+    radiusY: ry,
+    radiusPx,
+    right,
+    top,
+    travelPx,
+    width,
+  } = metrics;
+
+  if (id === "circle") {
+    const radius = Math.min(rx, ry);
+    const effectiveTravelPx = resolveScaledTravel(
+      samplerState.primaryTravelState,
+      id,
+      `${id}:${radius}`,
+      travelPx,
+      Math.max(1, radius)
+    );
+    const angle = effectiveTravelPx / Math.max(1, radius);
+    return writeTarget(
+      frames,
+      0,
+      cx + Math.cos(angle) * radius,
+      cy + Math.sin(angle) * radius,
+      params,
+      radiusPx,
+      primaryColor
+    );
+  }
+
+  if (id === "ellipse") {
+    const [x, y] = sampleClosedCurve(
+      samplerState,
+      curveCacheKey(id, left, top, right, bottom, 160),
+      travelPx,
+      160,
+      (phase) => {
+        const angle = phase * TAU;
+        return [cx + Math.cos(angle) * rx, cy + Math.sin(angle) * ry];
+      }
+    );
+    return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
+  }
+
+  if (id === "figureEight") {
+    const [x, y] = sampleClosedCurve(
+      samplerState,
+      curveCacheKey(id, left, top, right, bottom, 180),
+      travelPx,
+      180,
+      (phase) => {
+        const angle = phase * TAU;
+        return [
+          cx + Math.sin(angle) * rx,
+          cy + Math.sin(angle * 2) * ry * 0.72,
+        ];
+      }
+    );
+    return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
+  }
+
+  if (id === "wave") {
+    const [x, y] = sampleClosedCurve(
+      samplerState,
+      curveCacheKey(id, left, top, right, bottom, 120),
+      travelPx,
+      120,
+      (phase) => {
+        const angle = phase * TAU;
+        return [
+          cx + Math.cos(angle) * rx,
+          cy + Math.sin(angle * 3) * ry * 0.42,
+        ];
+      }
+    );
+    return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
+  }
+
+  if (id === "diagonal") {
+    const xTravelPx = resolveScaledTravel(
+      samplerState.xTravelState,
+      `${id}:x`,
+      `${id}:x:${width}`,
+      travelPx * DIAGONAL_X_RATE * DIAGONAL_SPEED_SCALE,
+      width
+    );
+    const yTravelPx = resolveScaledTravel(
+      samplerState.yTravelState,
+      `${id}:y`,
+      `${id}:y:${height}`,
+      travelPx * DIAGONAL_Y_RATE * DIAGONAL_SPEED_SCALE,
+      height
+    );
+    return writeTarget(
+      frames,
+      0,
+      left + pingPong(xTravelPx, width),
+      top + pingPong(yTravelPx, height),
+      params,
+      radiusPx,
+      primaryColor
+    );
+  }
+
+  if (id === "bounce") {
+    const xTravelPx = resolveScaledTravel(
+      samplerState.xTravelState,
+      `${id}:x`,
+      `${id}:x:${width}`,
+      travelPx * BOUNCE_X_RATE * BOUNCE_SPEED_SCALE,
+      width
+    );
+    const yTravelPx = resolveScaledTravel(
+      samplerState.yTravelState,
+      `${id}:y`,
+      `${id}:y:${height}`,
+      travelPx * BOUNCE_Y_RATE * BOUNCE_SPEED_SCALE,
+      height
+    );
+    return writeTarget(
+      frames,
+      0,
+      left + pingPong(xTravelPx + width * 0.18, width),
+      top + pingPong(yTravelPx + height * 0.41, height),
+      params,
+      radiusPx,
+      primaryColor
+    );
+  }
+
+  if (id === "randomWalk") {
+    let cache = samplerState.randomWalkCache;
+    if (
+      !cache ||
+      cache.state.seed !== rng.seed ||
+      travelPx < cache.state.lastSampleTravelPx
+    ) {
+      cache = initializeRandomWalk(
+        samplerState,
+        rng,
+        travelPx,
+        left,
+        top,
+        right,
+        bottom
+      );
+    }
+    const sampledState = advanceRandomWalk(
+      cache.state,
+      cache.previewState,
+      rng,
+      travelPx,
+      left,
+      top,
+      right,
+      bottom
+    );
+
+    return writeTarget(
+      frames,
+      0,
+      sampledState.x,
+      sampledState.y,
+      params,
+      radiusPx,
+      primaryColor
+    );
+  }
+
+  if (id === "directionChange") {
+    const [x, y] = sampleHardTurnPath(
+      samplerState,
+      rng,
+      travelPx,
+      left,
+      top,
+      right,
+      bottom
+    );
+
+    return writeTarget(frames, 0, x, y, params, radiusPx, primaryColor);
+  }
+
+  if (id === "teleport") {
+    const jumpDistancePx = getTeleportJumpDistancePx(
+      arena,
+      radiusPx,
+      params.pathMarginPx
+    );
+    const effectiveTravelPx = resolveScaledTravel(
+      samplerState.primaryTravelState,
+      id,
+      `${id}:${jumpDistancePx}`,
+      travelPx,
+      jumpDistancePx
+    );
+    const bucket = Math.floor(effectiveTravelPx / jumpDistancePx);
+    const phase =
+      (effectiveTravelPx - bucket * jumpDistancePx) / jumpDistancePx;
+    return writeTarget(
+      frames,
+      0,
+      rng.rangeAt(bucket * 2, left, right),
+      rng.rangeAt(bucket * 2 + 1, top, bottom),
+      params,
+      radiusPx,
+      primaryColor,
+      phase < 0.08 ? 0.35 : 1
+    );
+  }
+
+  if (id === "horizontalSweep") {
+    const effectiveTravelPx = resolveScaledTravel(
+      samplerState.primaryTravelState,
+      id,
+      `${id}:${width}`,
+      travelPx,
+      width
+    );
+    return writeTarget(
+      frames,
+      0,
+      left + pingPong(effectiveTravelPx, width),
+      cy,
+      params,
+      radiusPx,
+      primaryColor
+    );
+  }
+
+  if (id === "verticalSweep") {
+    const effectiveTravelPx = resolveScaledTravel(
+      samplerState.primaryTravelState,
+      id,
+      `${id}:${height}`,
+      travelPx,
+      height
+    );
+    return writeTarget(
+      frames,
+      0,
+      cx,
+      top + pingPong(effectiveTravelPx, height),
+      params,
+      radiusPx,
+      primaryColor
+    );
+  }
+
+  if (id === "downRightSweep") {
+    const diagonalLength = Math.max(1, Math.hypot(width, height));
+    const effectiveTravelPx = resolveScaledTravel(
+      samplerState.primaryTravelState,
+      id,
+      `${id}:${width}:${height}`,
+      travelPx,
+      diagonalLength
+    );
+    const progress =
+      pingPong(effectiveTravelPx, diagonalLength) / diagonalLength;
+    return writeTarget(
+      frames,
+      0,
+      left + width * progress,
+      top + height * progress,
+      params,
+      radiusPx,
+      primaryColor
+    );
+  }
+
+  if (id === "downLeftSweep") {
+    const diagonalLength = Math.max(1, Math.hypot(width, height));
+    const effectiveTravelPx = resolveScaledTravel(
+      samplerState.primaryTravelState,
+      id,
+      `${id}:${width}:${height}`,
+      travelPx,
+      diagonalLength
+    );
+    const progress =
+      pingPong(effectiveTravelPx, diagonalLength) / diagonalLength;
+    return writeTarget(
+      frames,
+      0,
+      right - width * progress,
+      top + height * progress,
+      params,
+      radiusPx,
+      primaryColor
+    );
+  }
+
+  return sampleSecondaryPatternInto(
     samplerState,
     frames,
-    "ellipse",
-    elapsedSec,
-    arena,
+    id,
     params,
     rng,
+    metrics
   );
 };
 
@@ -1144,10 +1209,10 @@ export const createPatternSampler = (): PatternSampler => {
   let state = createPatternSamplerState();
 
   return {
-    sampleInto: (frames, id, elapsedSec, arena, params, rng) =>
-      samplePatternInto(state, frames, id, elapsedSec, arena, params, rng),
     reset: () => {
       state = createPatternSamplerState();
     },
+    sampleInto: (frames, id, elapsedSec, arena, params, rng) =>
+      samplePatternInto(state, frames, id, elapsedSec, arena, params, rng),
   };
 };

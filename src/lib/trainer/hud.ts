@@ -1,7 +1,7 @@
-export type HudBounds = {
+export interface HudBounds {
   left: number;
   right: number;
-};
+}
 
 type HudPointerIntent = "none" | "reveal" | "hide";
 
@@ -11,46 +11,45 @@ export const getHudInteractionOpen = (
   headerPresetSelectOpen: boolean,
   headerPatternSelectOpen: boolean,
   headerLilacChaserColorSelectOpen: boolean,
-  headerLanguageSelectOpen: boolean,
-) => {
-  return (
-    panelOpen ||
-    guidePopoverOpen ||
-    headerPresetSelectOpen ||
-    headerPatternSelectOpen ||
-    headerLilacChaserColorSelectOpen ||
-    headerLanguageSelectOpen
-  );
-};
+  headerLanguageSelectOpen: boolean
+) =>
+  panelOpen ||
+  guidePopoverOpen ||
+  headerPresetSelectOpen ||
+  headerPatternSelectOpen ||
+  headerLilacChaserColorSelectOpen ||
+  headerLanguageSelectOpen;
 
 export const getHudHidden = (
   hudAutoHideReady: boolean,
   hudVisible: boolean,
-  hudInteractionOpen: boolean,
-) => {
-  return hudAutoHideReady && !hudVisible && !hudInteractionOpen;
-};
+  hudInteractionOpen: boolean
+) => hudAutoHideReady && !hudVisible && !hudInteractionOpen;
 
 export const canAutoHideHud = (
   hudAutoHideReady: boolean,
-  hudInteractionOpen: boolean,
-) => {
-  return hudAutoHideReady && !hudInteractionOpen;
-};
+  hudInteractionOpen: boolean
+) => hudAutoHideReady && !hudInteractionOpen;
 
 export const getHudPointerIntent = (
   pointerType: string,
   hudAutoHideReady: boolean,
   clientX: number,
   clientY: number,
-  hudBounds: HudBounds | null | undefined,
+  hudBounds: HudBounds | null | undefined
 ): HudPointerIntent => {
-  if (!hudAutoHideReady || pointerType === "touch") return "none";
+  if (!hudAutoHideReady || pointerType === "touch") {
+    return "none";
+  }
 
   const isOverHudWidth =
     hudBounds && clientX >= hudBounds.left && clientX <= hudBounds.right;
 
-  if (clientY <= 96 && isOverHudWidth) return "reveal";
-  if (clientY > 160) return "hide";
+  if (clientY <= 96 && isOverHudWidth) {
+    return "reveal";
+  }
+  if (clientY > 160) {
+    return "hide";
+  }
   return "none";
 };

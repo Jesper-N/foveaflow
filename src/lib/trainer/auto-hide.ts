@@ -14,7 +14,9 @@ export const createHudAutoHideTimer = ({
   let timeout: TimeoutHandle;
 
   const clear = () => {
-    if (timeout === undefined) return;
+    if (timeout === undefined) {
+      return;
+    }
     window.clearTimeout(timeout);
     timeout = undefined;
   };
@@ -25,7 +27,9 @@ export const createHudAutoHideTimer = ({
     setVisible(true);
     timeout = window.setTimeout(() => {
       setReady(true);
-      if (!isInteractionOpen()) setVisible(false);
+      if (!isInteractionOpen()) {
+        setVisible(false);
+      }
     }, delayMs);
   };
 
@@ -43,7 +47,9 @@ export const createCursorAutoHideTimer = ({
   let deadline = 0;
 
   const clear = () => {
-    if (timeout === undefined) return;
+    if (timeout === undefined) {
+      return;
+    }
     window.clearTimeout(timeout);
     timeout = undefined;
     deadline = 0;
@@ -52,7 +58,9 @@ export const createCursorAutoHideTimer = ({
   const start = () => {
     setHidden(false);
     deadline = performance.now() + delayMs;
-    if (timeout !== undefined) return;
+    if (timeout !== undefined) {
+      return;
+    }
 
     const hideAfterIdle = () => {
       const remainingDelayMs = deadline - performance.now();

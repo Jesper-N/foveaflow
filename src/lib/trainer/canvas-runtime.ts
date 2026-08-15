@@ -3,52 +3,50 @@ import { resolveCanvasLayout } from "$lib/engine/canvas";
 import type { TrainerSettings } from "$lib/engine/presets";
 import { createRng, createSessionSeed } from "$lib/engine/random";
 import type { Arena, PatternId } from "$lib/engine/types";
-import {
-  createTrainerFrameSampler,
-  type TrainerFrameInput,
-} from "$lib/trainer/frame-sampler";
-import { advanceMotionTick, type MotionState } from "$lib/trainer/motion";
+import { createTrainerFrameSampler } from "$lib/trainer/frame-sampler";
+import type { TrainerFrameInput } from "$lib/trainer/frame-sampler";
+import { advanceMotionTick } from "$lib/trainer/motion";
+import type { MotionState } from "$lib/trainer/motion";
 import {
   applyCanvasBackground,
   drawLilacChaserFrame,
   drawTargetFrame,
   getCanvasTheme,
   getLilacChaserHiddenIndex,
-  type CanvasColorMode,
-  type CanvasTheme,
 } from "$lib/trainer/rendering";
+import type { CanvasColorMode, CanvasTheme } from "$lib/trainer/rendering";
 import { resetUnsupportedMotionDirection } from "$lib/trainer/settings";
 import { getTargetVisualExtentPx } from "$lib/trainer/target-geometry";
 
-type TrainerCanvasState = {
+interface TrainerCanvasState {
   settings: TrainerSettings;
   motionPaused: boolean;
   canToggleDirection: boolean;
   isLilacChaserMode: boolean;
   safeBallColor: string;
   distractorColor: string;
-};
+}
 
-type TrainerCanvasRuntimeOptions = {
+interface TrainerCanvasRuntimeOptions {
   getState: () => TrainerCanvasState;
   getColorMode: () => CanvasColorMode;
-};
+}
 
-type DrawFrameOptions = {
+interface DrawFrameOptions {
   clearTrail?: boolean;
-};
+}
 
-type DirtyBounds = {
+interface DirtyBounds {
   x: number;
   y: number;
   width: number;
   height: number;
-};
+}
 
 const TRAIL_TILE_SIZE_PX = 128;
 const TRAIL_TILE_MAX_AGE = 20;
 
-type TrainerCanvasRuntime = {
+interface TrainerCanvasRuntime {
   attachCanvas: (node: HTMLCanvasElement) => () => void;
   drawFrame: (options?: DrawFrameOptions) => void;
   getArena: () => Arena;
@@ -56,16 +54,19 @@ type TrainerCanvasRuntime = {
   invalidateLilacChaserFrame: () => void;
   normalizeMotionDirection: (
     patternId: PatternId,
-    motionDirection: TrainerSettings["motionDirection"],
+    motionDirection: TrainerSettings["motionDirection"]
   ) => TrainerSettings["motionDirection"];
   redrawForTheme: (colorMode: CanvasColorMode) => void;
   refreshBaseSpeed: () => void;
   resetMotion: () => void;
   resetPatternState: () => void;
   syncPlayback: () => void;
-};
+}
 
-const initialArena = (): Arena => ({ width: 1, height: 1 });
+const initialArena = (): Arena => ({ height: 1, width: 1 });
+
+const shouldAnimateMotion = (state: TrainerCanvasState) =>
+  !state.motionPaused && !globalThis.document?.hidden;
 
 export const createTrainerCanvasRuntime = ({
   getState,
@@ -92,20 +93,20 @@ export const createTrainerCanvasRuntime = ({
   let trailTileAges = new Uint8Array(1);
   const pathMarginPx = 16;
   const motionState: MotionState = {
-    lastTimestamp: 0,
     elapsedSec: 0,
+    lastTimestamp: 0,
     travelPx: 0,
   };
   const frameInput: TrainerFrameInput = {
-    settings: getState().settings,
     arena,
-    elapsedSec: 0,
-    travelPx: 0,
-    safeBallColor: "",
     distractorColor: "",
+    elapsedSec: 0,
     pathMarginPx,
     rng,
+    safeBallColor: "",
     seed,
+    settings: getState().settings,
+    travelPx: 0,
   };
 
   const refreshBaseSpeed = () => {
@@ -113,7 +114,7 @@ export const createTrainerCanvasRuntime = ({
     baseSpeedPxPerSec = speedToPixelsPerSecond(
       settings.speed,
       arena,
-      settings.calibration,
+      settings.calibration
     );
   };
 
@@ -134,7 +135,7 @@ export const createTrainerCanvasRuntime = ({
 
   const drawCurrentLilacChaserFrame = (
     ctx: CanvasRenderingContext2D,
-    settings: TrainerSettings,
+    settings: TrainerSettings
   ) => {
     const hiddenIndex = getLilacChaserHiddenIndex(motionState.elapsedSec);
     lastLilacChaserHiddenIndex = hiddenIndex;
@@ -144,7 +145,7 @@ export const createTrainerCanvasRuntime = ({
       arena,
       settings.lilacChaserScale,
       settings.lilacChaserBallColor,
-      hiddenIndex,
+      hiddenIndex
     );
     dirtyBounds.length = 0;
     lastFrameWasLilacChaser = true;
@@ -157,8 +158,7 @@ export const createTrainerCanvasRuntime = ({
   };
 
   const clearDirtyBounds = (ctx: CanvasRenderingContext2D) => {
-    for (let index = 0; index < dirtyBounds.length; index += 1) {
-      const bounds = dirtyBounds[index];
+    for (const bounds of dirtyBounds) {
       ctx.clearRect(bounds.x, bounds.y, bounds.width, bounds.height);
     }
   };
@@ -169,7 +169,9 @@ export const createTrainerCanvasRuntime = ({
     ctx.globalAlpha = alpha;
     for (let index = 0; index < trailTileAges.length; index += 1) {
       const age = trailTileAges[index];
-      if (age === 0) continue;
+      if (age === 0) {
+        continue;
+      }
 
       const column = index % trailTileColumns;
       const row = Math.floor(index / trailTileColumns);
@@ -190,20 +192,19 @@ export const createTrainerCanvasRuntime = ({
   };
 
   const markTrailTiles = () => {
-    for (let index = 0; index < dirtyBounds.length; index += 1) {
-      const bounds = dirtyBounds[index];
+    for (const bounds of dirtyBounds) {
       const firstColumn = Math.max(
         0,
-        Math.floor(bounds.x / TRAIL_TILE_SIZE_PX),
+        Math.floor(bounds.x / TRAIL_TILE_SIZE_PX)
       );
       const lastColumn = Math.min(
         trailTileColumns - 1,
-        Math.floor((bounds.x + bounds.width - 1) / TRAIL_TILE_SIZE_PX),
+        Math.floor((bounds.x + bounds.width - 1) / TRAIL_TILE_SIZE_PX)
       );
       const firstRow = Math.max(0, Math.floor(bounds.y / TRAIL_TILE_SIZE_PX));
       const lastRow = Math.min(
         trailTileRows - 1,
-        Math.floor((bounds.y + bounds.height - 1) / TRAIL_TILE_SIZE_PX),
+        Math.floor((bounds.y + bounds.height - 1) / TRAIL_TILE_SIZE_PX)
       );
 
       for (let row = firstRow; row <= lastRow; row += 1) {
@@ -223,28 +224,30 @@ export const createTrainerCanvasRuntime = ({
 
   const storeDirtyBounds = (
     frameSample: ReturnType<typeof frameSampler.sample>,
-    settings: TrainerSettings,
+    settings: TrainerSettings
   ) => {
     let dirtyCount = 0;
     for (let index = 0; index < frameSample.count; index += 1) {
       const frame = frameSample.frames[index];
-      if (!frame.visible || frame.alpha * settings.targetOpacity <= 0) continue;
+      if (!frame.visible || frame.alpha * settings.targetOpacity <= 0) {
+        continue;
+      }
 
-      const shapeExtent = getTargetVisualExtentPx(
+      const targetFormExtent = getTargetVisualExtentPx(
         frame.radiusPx,
-        settings.targetShape,
+        settings.targetForm
       );
       const letterExtent = settings.letterEnabled
         ? frame.radiusPx * settings.letterScale
         : 0;
-      const extent = Math.max(shapeExtent, letterExtent) + 3;
+      const extent = Math.max(targetFormExtent, letterExtent) + 3;
       const left = Math.floor(frame.x - extent);
       const top = Math.floor(frame.y - extent);
       const right = Math.ceil(frame.x + extent);
       const bottom = Math.ceil(frame.y + extent);
       let bounds = dirtyBounds[dirtyCount];
       if (!bounds) {
-        bounds = { x: left, y: top, width: 0, height: 0 };
+        bounds = { height: 0, width: 0, x: left, y: top };
         dirtyBounds[dirtyCount] = bounds;
       }
       bounds.x = left;
@@ -257,7 +260,9 @@ export const createTrainerCanvasRuntime = ({
   };
 
   const renderFrame = (state: TrainerCanvasState, clearTrail: boolean) => {
-    if (!canvas || !context || !canvasTheme) return;
+    if (!canvas || !context || !canvasTheme) {
+      return;
+    }
 
     if (state.isLilacChaserMode) {
       drawCurrentLilacChaserFrame(context, state.settings);
@@ -290,11 +295,13 @@ export const createTrainerCanvasRuntime = ({
         frameSample.frames[index],
         index,
         state.settings,
-        frameSample.letterContext,
+        frameSample.letterContext
       );
     }
     storeDirtyBounds(frameSample, state.settings);
-    if (showTrail) markTrailTiles();
+    if (showTrail) {
+      markTrailTiles();
+    }
     lastFrameWasLilacChaser = false;
     lastFrameUsedTrail = showTrail;
   };
@@ -304,19 +311,23 @@ export const createTrainerCanvasRuntime = ({
   };
 
   const syncCanvasBackground = () => {
-    if (!canvas || !canvasTheme) return;
+    if (!canvas || !canvasTheme) {
+      return;
+    }
     applyCanvasBackground(canvas, arena, canvasTheme);
   };
 
   const resizeCanvas = (entries?: ResizeObserverEntry[]) => {
-    if (!canvas || !context) return;
+    if (!canvas || !context) {
+      return;
+    }
 
     const observedRect = entries?.[0]?.contentRect;
     const rect = observedRect ?? canvas.getBoundingClientRect();
     const layout = resolveCanvasLayout(
       rect.width,
       rect.height,
-      window.devicePixelRatio,
+      window.devicePixelRatio
     );
     const nextArena = layout.arena;
     const arenaChanged =
@@ -326,7 +337,9 @@ export const createTrainerCanvasRuntime = ({
     const backingStoreChanged =
       canvas.width !== layout.canvasWidth ||
       canvas.height !== layout.canvasHeight;
-    if (canvas.width !== layout.canvasWidth) canvas.width = layout.canvasWidth;
+    if (canvas.width !== layout.canvasWidth) {
+      canvas.width = layout.canvasWidth;
+    }
     if (canvas.height !== layout.canvasHeight) {
       canvas.height = layout.canvasHeight;
     }
@@ -343,17 +356,18 @@ export const createTrainerCanvasRuntime = ({
     drawFrame();
   };
 
-  const shouldAnimateMotion = (state: TrainerCanvasState) =>
-    !state.motionPaused && !document.hidden;
-
   const stopLoop = () => {
-    if (motionFrame !== 0) cancelAnimationFrame(motionFrame);
+    if (motionFrame !== 0) {
+      cancelAnimationFrame(motionFrame);
+    }
     motionFrame = 0;
     motionState.lastTimestamp = 0;
   };
 
   const shouldDrawTickFrame = (isLilacChaserMode: boolean) => {
-    if (!isLilacChaserMode) return true;
+    if (!isLilacChaserMode) {
+      return true;
+    }
     return (
       getLilacChaserHiddenIndex(motionState.elapsedSec) !==
       lastLilacChaserHiddenIndex
@@ -373,7 +387,7 @@ export const createTrainerCanvasRuntime = ({
       baseSpeedPxPerSec,
       state.settings.speedProfile,
       state.canToggleDirection,
-      state.settings.motionDirection,
+      state.settings.motionDirection
     );
     if (shouldDrawTickFrame(state.isLilacChaserMode)) {
       renderFrame(state, false);
@@ -382,7 +396,9 @@ export const createTrainerCanvasRuntime = ({
   };
 
   const startLoop = () => {
-    if (!shouldAnimateMotion(getState())) return;
+    if (!shouldAnimateMotion(getState())) {
+      return;
+    }
     stopLoop();
     motionState.lastTimestamp = performance.now();
     motionFrame = requestAnimationFrame(tick);
@@ -406,12 +422,18 @@ export const createTrainerCanvasRuntime = ({
   };
 
   const redrawForTheme = (colorMode: CanvasColorMode) => {
-    if (!canvas) return;
-    if (themeFrame !== 0) cancelAnimationFrame(themeFrame);
+    if (!canvas) {
+      return;
+    }
+    if (themeFrame !== 0) {
+      cancelAnimationFrame(themeFrame);
+    }
 
     themeFrame = requestAnimationFrame(() => {
       themeFrame = 0;
-      if (!canvas) return;
+      if (!canvas) {
+        return;
+      }
       canvasTheme = getCanvasTheme(colorMode);
       syncCanvasBackground();
       drawFrame();
@@ -420,12 +442,12 @@ export const createTrainerCanvasRuntime = ({
 
   const normalizeMotionDirection = (
     patternId: PatternId,
-    motionDirection: TrainerSettings["motionDirection"],
+    motionDirection: TrainerSettings["motionDirection"]
   ) => {
     const directionState = resetUnsupportedMotionDirection(
       patternId,
       motionDirection,
-      motionState.travelPx,
+      motionState.travelPx
     );
     motionState.travelPx = directionState.travelPx;
     return directionState.motionDirection;
@@ -440,10 +462,14 @@ export const createTrainerCanvasRuntime = ({
   };
 
   const detachCanvas = (expectedCanvas?: HTMLCanvasElement) => {
-    if (expectedCanvas && canvas !== expectedCanvas) return;
+    if (expectedCanvas && canvas !== expectedCanvas) {
+      return;
+    }
 
     stopLoop();
-    if (themeFrame !== 0) cancelAnimationFrame(themeFrame);
+    if (themeFrame !== 0) {
+      cancelAnimationFrame(themeFrame);
+    }
     themeFrame = 0;
     resizeObserver?.disconnect();
     resizeObserver = null;

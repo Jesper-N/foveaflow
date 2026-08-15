@@ -1,7 +1,5 @@
 <script lang="ts">
-  import type { Snippet } from "svelte";
-
-  import TrainerLetterControls from "$lib/components/trainer/TrainerLetterControls.svelte";
+  import TrainerLetterControls from "$lib/components/trainer/trainer-letter-controls.svelte";
   import * as Field from "$lib/components/ui/field/index.js";
   import { Input } from "$lib/components/ui/input/index.js";
   import * as Select from "$lib/components/ui/select/index.js";
@@ -9,17 +7,16 @@
   import type { TrainerSettings } from "$lib/engine/presets";
   import { languageState } from "$lib/i18n/state.svelte";
   import { t } from "$lib/i18n/translate";
-  import { getShapeName, shapeOptions } from "$lib/trainer/options";
-  import {
-    trainerSettingBounds,
-    type TrainerSliderValue,
-  } from "$lib/trainer/settings";
+  import { getTargetFormName, targetFormOptions } from "$lib/trainer/options";
+  import { trainerSettingBounds } from "$lib/trainer/settings";
+  import type { TrainerSliderValue } from "$lib/trainer/settings";
+  import type { Snippet } from "svelte";
 
-  type Props = {
+  interface Props {
     settings: TrainerSettings;
     isMotMode: boolean;
     handleColorInput: (event: Event) => void;
-    handleShapeChange: (value: string) => void;
+    handleTargetFormChange: (value: string) => void;
     handleLetterColorInput: (event: Event) => void;
     handleLetterWeightChange: (value: string) => void;
     sizeSliderValue: () => number[];
@@ -35,13 +32,13 @@
     letterScaleSliderValue: () => number[];
     setLetterScaleSliderValue: (value: TrainerSliderValue) => void;
     sliderRow: Snippet<[string, string]>;
-  };
+  }
 
   let {
     settings = $bindable(),
     isMotMode,
     handleColorInput,
-    handleShapeChange,
+    handleTargetFormChange,
     handleLetterColorInput,
     handleLetterWeightChange,
     sizeSliderValue,
@@ -60,8 +57,8 @@
   }: Props = $props();
 
   let locale = $derived(languageState.locale);
-  let currentShapeName = $derived(
-    t(locale, getShapeName(settings.targetShape)),
+  let currentTargetFormName = $derived(
+    t(locale, getTargetFormName(settings.targetForm))
   );
 </script>
 
@@ -80,7 +77,7 @@
     <Field.Field>
       {@render sliderRow(
         t(locale, "Distractors"),
-        String(settings.distractorCount),
+        String(settings.distractorCount)
       )}
       <Slider
         bind:value={distractorCountSliderValue, setDistractorCountSliderValue}
@@ -95,7 +92,7 @@
 
 <Field.Field>
   <label
-    class="flex h-11 min-w-0 cursor-pointer items-center gap-3 rounded-full border bg-input/50 px-3 transition-[color,box-shadow,background-color] hover:ring-4 hover:ring-ring/30 focus-within:ring-3 focus-within:ring-foreground"
+    class="bg-input/50 hover:ring-ring/30 focus-within:ring-foreground flex h-11 min-w-0 cursor-pointer items-center gap-3 rounded-full border px-3 transition-[color,box-shadow,background-color] focus-within:ring-3 hover:ring-4"
     for="trainer-color"
   >
     <svg
@@ -105,7 +102,7 @@
     >
       <circle cx="12" cy="12" r="12" fill={settings.ballColor} />
     </svg>
-    <span class="min-w-0 truncate font-sans text-sm uppercase text-foreground">
+    <span class="text-foreground min-w-0 truncate font-sans text-sm uppercase">
       {settings.ballColor}
     </span>
     <Input
@@ -123,7 +120,7 @@
   <Field.Field>
     {@render sliderRow(
       t(locale, "Distractor color"),
-      `${Math.round(settings.distractorBrightness * 100)}%`,
+      `${Math.round(settings.distractorBrightness * 100)}%`
     )}
     <Slider
       bind:value={
@@ -140,7 +137,7 @@
 <Field.Field>
   {@render sliderRow(
     t(locale, "Opacity"),
-    `${Math.round(settings.targetOpacity * 100)}%`,
+    `${Math.round(settings.targetOpacity * 100)}%`
   )}
   <Slider
     bind:value={opacitySliderValue, setOpacitySliderValue}
@@ -152,22 +149,22 @@
 </Field.Field>
 
 <Field.Field>
-  <Field.Label for="trainer-shape">{t(locale, "Shape")}</Field.Label>
+  <Field.Label for="trainer-shape">{t(locale, "Target form")}</Field.Label>
   <Select.Root
     type="single"
-    value={settings.targetShape}
-    onValueChange={handleShapeChange}
+    value={settings.targetForm}
+    onValueChange={handleTargetFormChange}
   >
     <Select.Trigger
       id="trainer-shape"
       class="w-full"
-      aria-label={t(locale, "Shape")}
+      aria-label={t(locale, "Target form")}
     >
-      {currentShapeName}
+      {currentTargetFormName}
     </Select.Trigger>
     <Select.Content>
       <Select.Group>
-        {#each shapeOptions as option (option.id)}
+        {#each targetFormOptions as option (option.id)}
           <Select.Item value={option.id}>{t(locale, option.name)}</Select.Item>
         {/each}
       </Select.Group>
@@ -178,7 +175,7 @@
 <Field.Field>
   {@render sliderRow(
     t(locale, "Size"),
-    `${Math.round(settings.baseRadiusPx)} px`,
+    `${Math.round(settings.baseRadiusPx)} px`
   )}
   <Slider
     bind:value={sizeSliderValue, setSizeSliderValue}

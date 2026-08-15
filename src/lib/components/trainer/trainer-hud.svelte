@@ -1,22 +1,17 @@
 <script lang="ts">
-  import type { Attachment } from "svelte/attachments";
-  import ArrowLeftRightIcon from "@lucide/svelte/icons/arrow-left-right";
-  import BookOpenIcon from "@lucide/svelte/icons/book-open";
-  import PauseIcon from "@lucide/svelte/icons/pause";
-  import PlayIcon from "@lucide/svelte/icons/play";
-  import SettingsIcon from "@lucide/svelte/icons/settings-2";
-
-  import LanguageSelect from "$lib/components/LanguageSelect.svelte";
-  import ModePathPreview from "$lib/components/ModePathPreview.svelte";
-  import PatternPathPreview from "$lib/components/PatternPathPreview.svelte";
-  import TrainerPatternSelectGroups from "$lib/components/trainer/TrainerPatternSelectGroups.svelte";
+  import LanguageSelect from "$lib/components/language-select.svelte";
+  import ModePathPreview from "$lib/components/mode-path-preview.svelte";
+  import PatternPathPreview from "$lib/components/pattern-path-preview.svelte";
+  import TrainerPatternSelectGroups from "$lib/components/trainer/trainer-pattern-select-groups.svelte";
   import { Button } from "$lib/components/ui/button/index.js";
   import * as Select from "$lib/components/ui/select/index.js";
   import { Slider } from "$lib/components/ui/slider/index.js";
   import { siteMetadata } from "$lib/content/site";
+  import { exercisePresets } from "$lib/engine/presets";
+  import type { TrainerSettings } from "$lib/engine/presets";
   import { languageState } from "$lib/i18n/state.svelte";
   import { t } from "$lib/i18n/translate";
-  import { exercisePresets, type TrainerSettings } from "$lib/engine/presets";
+  import type { TrainerHudActions } from "$lib/trainer/control-actions";
   import {
     getLilacChaserColorName,
     getPatternName,
@@ -28,9 +23,14 @@
     speedSliderStepByUnit,
   } from "$lib/trainer/options";
   import { trainerSettingBounds } from "$lib/trainer/settings";
-  import type { TrainerHudActions } from "$lib/trainer/control-actions";
+  import ArrowLeftRightIcon from "@lucide/svelte/icons/arrow-left-right";
+  import BookOpenIcon from "@lucide/svelte/icons/book-open";
+  import PauseIcon from "@lucide/svelte/icons/pause";
+  import PlayIcon from "@lucide/svelte/icons/play";
+  import SettingsIcon from "@lucide/svelte/icons/settings-2";
+  import type { Attachment } from "svelte/attachments";
 
-  type Props = {
+  interface Props {
     attachHudShell: Attachment<HTMLDivElement>;
     hudHidden: boolean;
     hudContentWidth: number | null;
@@ -51,7 +51,7 @@
     guideButtonTitle: string;
     patternSelectContentClass: string;
     actions: TrainerHudActions;
-  };
+  }
 
   let {
     attachHudShell,
@@ -79,10 +79,10 @@
   let locale = $derived(languageState.locale);
   let currentPresetName = $derived(t(locale, getPresetName(settings.presetId)));
   let currentPatternName = $derived(
-    t(locale, getPatternName(settings.patternId)),
+    t(locale, getPatternName(settings.patternId))
   );
   let currentLilacChaserColorName = $derived(
-    t(locale, getLilacChaserColorName(settings.lilacChaserBallColor)),
+    t(locale, getLilacChaserColorName(settings.lilacChaserBallColor))
   );
   let sizeLabel = $derived(t(locale, "Size"));
   let speedLabel = $derived(t(locale, "Speed"));
@@ -96,7 +96,7 @@
 
   const syncHudInteraction = () => {
     actions.setHudInteractionActive(
-      pointerInside || pointerDown || focusInside,
+      pointerInside || pointerDown || focusInside
     );
   };
 
@@ -149,7 +149,9 @@
     node.addEventListener("focusout", handleFocusOut);
 
     return () => {
-      if (hudElement === node) hudElement = null;
+      if (hudElement === node) {
+        hudElement = null;
+      }
       node.removeEventListener("pointerenter", handlePointerEnter);
       node.removeEventListener("pointerleave", handlePointerLeave);
       node.removeEventListener("pointerdown", handlePointerDown);
@@ -165,11 +167,13 @@
       event.currentTarget.matches(":focus-visible");
     instantReveal = shouldTransferFocus;
     actions.revealHud();
-    if (!shouldTransferFocus) return;
+    if (!shouldTransferFocus) {
+      return;
+    }
 
     requestAnimationFrame(() => {
       const focusTarget = hudElement?.querySelector<HTMLElement>(
-        "[data-hud-focus-target]",
+        "[data-hud-focus-target]"
       );
       if (!focusTarget) {
         instantReveal = false;
@@ -186,7 +190,9 @@
   };
 
   const handleRevealPointerEnter = (event: PointerEvent) => {
-    if (event.pointerType === "touch") return;
+    if (event.pointerType === "touch") {
+      return;
+    }
     actions.revealHudTemporarily();
   };
 </script>
@@ -216,7 +222,7 @@
         <span class="flex min-w-0 items-center gap-2">
           <svg
             viewBox="0 0 12 12"
-            class="size-3 shrink-0 rounded-full border border-border/60"
+            class="border-border/60 size-3 shrink-0 rounded-full border"
             aria-hidden="true"
           >
             <circle cx="6" cy="6" r="6" fill={option.id} />
@@ -231,14 +237,14 @@
 {#if hudHidden}
   <button
     type="button"
-    class="trainer-hud-peek absolute left-1/2 top-0 z-30 flex h-10 w-full items-start justify-center rounded-b-full pt-2 outline-hidden focus-visible:ring-3 focus-visible:ring-foreground sm:w-32"
+    class="trainer-hud-peek focus-visible:ring-foreground absolute top-0 left-1/2 z-30 flex h-10 w-full items-start justify-center rounded-b-full pt-2 outline-hidden focus-visible:ring-3 sm:w-32"
     aria-label={t(locale, "Reveal controls")}
     onpointerenter={handleRevealPointerEnter}
     onpointerdown={actions.revealHudTemporarily}
     onfocus={handleRevealFocus}
   >
     <span
-      class="h-1 w-16 rounded-full bg-accent/70 shadow-[0_0_16px_rgba(118,217,0,0.22)]"
+      class="bg-accent/70 h-1 w-16 rounded-full shadow-[0_0_16px_rgba(118,217,0,0.22)]"
       aria-hidden="true"
     ></span>
   </button>
@@ -253,7 +259,7 @@
   data-nosnippet
 >
   <header
-    class="trainer-hud min-h-12 max-w-full overflow-hidden rounded-[2rem] border bg-popover/90 px-4 py-2 text-popover-foreground shadow-[0_18px_44px_-34px_rgba(20,24,22,0.42)] backdrop-blur-md 2xl:py-2.5"
+    class="trainer-hud bg-popover/90 text-popover-foreground min-h-12 max-w-full overflow-hidden rounded-[2rem] border px-4 py-2 shadow-[0_18px_44px_-34px_rgba(20,24,22,0.42)] backdrop-blur-md 2xl:py-2.5"
     style:width={hudContentWidth === null
       ? undefined
       : `calc(${hudContentWidth}px + 2rem + 2px)`}
@@ -263,11 +269,11 @@
     <div {@attach attachHudContentSizer} class="flex w-max items-center gap-2">
       <div class="flex shrink-0 items-center gap-2 max-[359px]:hidden">
         <div
-          class="m-0 flex shrink-0 items-center text-base font-semibold tracking-tight text-foreground"
+          class="text-foreground m-0 flex shrink-0 items-center text-base font-semibold tracking-tight"
         >
           <a
             href="/"
-            class="flex shrink-0 items-center gap-2 rounded-2xl outline-hidden transition-colors hover:text-foreground/85 focus-visible:ring-3 focus-visible:ring-foreground"
+            class="hover:text-foreground/85 focus-visible:ring-foreground flex shrink-0 items-center gap-2 rounded-2xl outline-hidden transition-colors focus-visible:ring-3"
             aria-label={t(locale, `${siteMetadata.name} home`)}
           >
             <img
@@ -354,7 +360,7 @@
               >
                 <svg
                   viewBox="0 0 12 12"
-                  class="size-4 shrink-0 rounded-full border border-border/60"
+                  class="border-border/60 size-4 shrink-0 rounded-full border"
                   aria-hidden="true"
                 >
                   <circle
@@ -377,7 +383,7 @@
       </div>
 
       <div
-        class="hidden h-8 w-px shrink-0 bg-border/80 md:block"
+        class="bg-border/80 hidden h-8 w-px shrink-0 md:block"
         aria-hidden="true"
       ></div>
 
@@ -437,10 +443,10 @@
       {#if !isLilacChaserMode}
         <div class="hidden shrink-0 items-center gap-2 overflow-hidden xl:flex">
           <div
-            class="grid h-9 grid-cols-[auto_5.5rem_auto] items-center gap-3 rounded-full border bg-muted/60 px-3"
+            class="bg-muted/60 grid h-9 grid-cols-[auto_5.5rem_auto] items-center gap-3 rounded-full border px-3"
           >
             <span
-              class="min-w-0 max-w-20 truncate text-xs font-medium text-muted-foreground"
+              class="text-muted-foreground max-w-20 min-w-0 truncate text-xs font-medium"
               title={sizeLabel}
             >
               {sizeLabel}
@@ -461,10 +467,10 @@
           </div>
 
           <div
-            class="grid h-9 grid-cols-[auto_5.5rem_auto] items-center gap-3 rounded-full border bg-muted/60 px-3"
+            class="bg-muted/60 grid h-9 grid-cols-[auto_5.5rem_auto] items-center gap-3 rounded-full border px-3"
           >
             <span
-              class="min-w-0 max-w-20 truncate text-xs font-medium text-muted-foreground"
+              class="text-muted-foreground max-w-20 min-w-0 truncate text-xs font-medium"
               title={speedLabel}
             >
               {speedLabel}
@@ -481,7 +487,7 @@
               class="w-[4.5ch] text-center text-xs font-semibold tabular-nums"
             >
               {settings.speed.value.toFixed(
-                speedDecimalPlacesByUnit[settings.speed.unit],
+                speedDecimalPlacesByUnit[settings.speed.unit]
               )}
             </span>
           </div>
@@ -508,10 +514,10 @@
             </Select.Content>
           </Select.Root>
           <div
-            class="grid h-9 grid-cols-[auto_5.5rem_auto] items-center gap-3 rounded-full border bg-muted/60 px-3"
+            class="bg-muted/60 grid h-9 grid-cols-[auto_5.5rem_auto] items-center gap-3 rounded-full border px-3"
           >
             <span
-              class="min-w-0 max-w-20 truncate text-xs font-medium text-muted-foreground"
+              class="text-muted-foreground max-w-20 min-w-0 truncate text-xs font-medium"
               title={scaleLabel}
             >
               {scaleLabel}
@@ -537,7 +543,7 @@
       {/if}
 
       <div
-        class="hidden h-8 w-px shrink-0 bg-border/80 md:block"
+        class="bg-border/80 hidden h-8 w-px shrink-0 md:block"
         aria-hidden="true"
       ></div>
 

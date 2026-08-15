@@ -21,19 +21,19 @@ export type TrainerShortcutEvent = Pick<
   | "repeat"
 >;
 
-const shortcutActionsByKey: Readonly<Record<string, TrainerShortcutAction>> = {
-  " ": "toggleMotion",
-  Spacebar: "toggleMotion",
-  ArrowUp: "increaseTargetSize",
-  ArrowDown: "decreaseTargetSize",
-  ArrowLeft: "decreaseSpeed",
-  ArrowRight: "increaseSpeed",
-  d: "toggleTheme",
-  p: "openPatternSelect",
-  m: "openModeSelect",
-  s: "openSettingsDialog",
-  g: "openGuideDialog",
-};
+const shortcutActionsByKey = new Map<string, TrainerShortcutAction>([
+  [" ", "toggleMotion"],
+  ["ArrowDown", "decreaseTargetSize"],
+  ["ArrowLeft", "decreaseSpeed"],
+  ["ArrowRight", "increaseSpeed"],
+  ["ArrowUp", "increaseTargetSize"],
+  ["Spacebar", "toggleMotion"],
+  ["d", "toggleTheme"],
+  ["g", "openGuideDialog"],
+  ["m", "openModeSelect"],
+  ["p", "openPatternSelect"],
+  ["s", "openSettingsDialog"],
+]);
 
 const repeatableShortcutActions = new Set<TrainerShortcutAction>([
   "increaseTargetSize",
@@ -73,7 +73,7 @@ const shortcutCaptureSelector = [
 ].join(",");
 
 export const getTrainerShortcutAction = (
-  event: TrainerShortcutEvent,
+  event: TrainerShortcutEvent
 ): TrainerShortcutAction | null => {
   if (
     event.defaultPrevented ||
@@ -87,18 +87,23 @@ export const getTrainerShortcutAction = (
 
   const shortcutKey =
     event.key.length === 1 ? event.key.toLowerCase() : event.key;
-  const action = shortcutActionsByKey[shortcutKey];
-  if (!action) return null;
-  if (event.repeat && !repeatableShortcutActions.has(action)) return null;
+  const action = shortcutActionsByKey.get(shortcutKey);
+  if (!action) {
+    return null;
+  }
+  if (event.repeat && !repeatableShortcutActions.has(action)) {
+    return null;
+  }
 
   return action;
 };
 
 export const isTrainerShortcutCapturedByTarget = (
   target: EventTarget | null,
-  action?: TrainerShortcutAction,
+  action?: TrainerShortcutAction
 ) => {
-  if (typeof Element === "undefined" || !(target instanceof Element)) {
+  const ElementConstructor = globalThis.Element;
+  if (!ElementConstructor || !(target instanceof ElementConstructor)) {
     return false;
   }
 

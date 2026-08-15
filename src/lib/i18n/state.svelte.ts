@@ -3,8 +3,8 @@ import {
   getLanguageOption,
   getResolvedLocale,
   setResolvedLocale,
-  type AppLocale,
 } from "$lib/i18n/locales";
+import type { AppLocale } from "$lib/i18n/locales";
 import { loadDictionary } from "$lib/i18n/translate";
 
 class LanguageState {
@@ -15,9 +15,11 @@ class LanguageState {
   private requestId = 0;
 
   init() {
-    if (this.initialized) return this.initPromise ?? Promise.resolve();
+    if (this.initialized) {
+      return this.initPromise ?? Promise.resolve();
+    }
     this.initialized = true;
-    this.initPromise = this.apply(getResolvedLocale(), false);
+    this.initPromise = this.initialize();
     return this.initPromise;
   }
 
@@ -26,7 +28,7 @@ class LanguageState {
   }
 
   private async apply(locale: AppLocale, persist: boolean) {
-    const requestId = ++this.requestId;
+    const requestId = (this.requestId += 1);
 
     try {
       await loadDictionary(locale);
@@ -39,24 +41,34 @@ class LanguageState {
       return;
     }
 
-    if (requestId !== this.requestId) return;
+    if (requestId !== this.requestId) {
+      return;
+    }
 
     this.locale = locale;
     this.ready = true;
     this.syncDocument();
 
     if (persist) {
-      setResolvedLocale(locale);
+      await setResolvedLocale(locale);
     }
   }
 
+  private async initialize() {
+    const locale = await getResolvedLocale();
+    await this.apply(locale, false);
+  }
+
   private syncDocument() {
-    if (typeof document === "undefined") return;
+    const browserDocument = globalThis.document;
+    if (!browserDocument) {
+      return;
+    }
 
     const option = getLanguageOption(this.locale);
-    document.documentElement.lang = option.locale;
-    document.documentElement.dir = option.direction;
-    delete document.documentElement.dataset.i18nPending;
+    browserDocument.documentElement.lang = option.locale;
+    browserDocument.documentElement.dir = option.direction;
+    delete browserDocument.documentElement.dataset.i18nPending;
   }
 }
 

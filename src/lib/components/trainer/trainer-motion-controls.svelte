@@ -1,6 +1,4 @@
 <script lang="ts">
-  import type { Snippet } from "svelte";
-
   import * as Field from "$lib/components/ui/field/index.js";
   import * as Select from "$lib/components/ui/select/index.js";
   import { Slider } from "$lib/components/ui/slider/index.js";
@@ -14,6 +12,7 @@
     speedSliderStepByUnit,
   } from "$lib/trainer/options";
   import type { TrainerSliderValue } from "$lib/trainer/settings";
+  import type { Snippet } from "svelte";
 
   let {
     settings,
@@ -35,7 +34,7 @@
 <Field.Field>
   {@render sliderRow(
     t(locale, "Speed"),
-    `${settings.speed.value.toFixed(speedDecimalPlacesByUnit[settings.speed.unit])} ${settings.speed.unit}`,
+    `${settings.speed.value.toFixed(speedDecimalPlacesByUnit[settings.speed.unit])} ${settings.speed.unit}`
   )}
   <Slider
     bind:value={speedSliderValue, setSpeedSliderValue}

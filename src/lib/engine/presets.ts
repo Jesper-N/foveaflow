@@ -1,11 +1,11 @@
 import type { Calibration } from "./calibration";
 import type { SizeProfile, SpeedProfile } from "./profiles";
-import type { PatternId, SpeedSetting, TargetShape } from "./types";
+import type { PatternId, SpeedSetting, TargetForm } from "./types";
 
 export type TrainingMode = "pursuit" | "reactionTime" | "mot" | "lilacChaser";
 export type LetterWeight = 400 | 500 | 600 | 700 | 800;
 
-export type ExercisePreset = {
+export interface ExercisePreset {
   id: TrainingMode;
   name: string;
   patternId: PatternId;
@@ -17,9 +17,9 @@ export type ExercisePreset = {
   distractorCount: number;
   colorA: string;
   colorB: string;
-};
+}
 
-export type TrainerSettings = {
+export interface TrainerSettings {
   presetId: TrainingMode;
   patternId: PatternId;
   speed: SpeedSetting;
@@ -32,7 +32,7 @@ export type TrainerSettings = {
   ballColor: string;
   distractorBrightness: number;
   targetOpacity: number;
-  targetShape: TargetShape;
+  targetForm: TargetForm;
   motionDirection: 1 | -1;
   letterEnabled: boolean;
   letterColor: string;
@@ -41,67 +41,67 @@ export type TrainerSettings = {
   lilacChaserScale: number;
   lilacChaserBallColor: string;
   calibration: Calibration;
-};
+}
 
 export const DEFAULT_BALL_COLOR = "#76d900";
 export const DEFAULT_LETTER_SCALE = 0.5;
 
 export const exercisePresets = [
   {
+    baseRadiusPx: 35,
+    colorA: "#f5c842",
+    colorB: "#3ddbd9",
+    distractorCount: 0,
     id: "pursuit",
     name: "Smooth Pursuit",
     patternId: "randomWalk",
-    speed: { unit: "deg/s", value: 20 },
-    baseRadiusPx: 35,
-    speedProfile: { kind: "constant" },
     sizeProfile: { kind: "constant" },
+    speed: { unit: "deg/s", value: 20 },
+    speedProfile: { kind: "constant" },
     targetCount: 1,
-    distractorCount: 0,
-    colorA: "#f5c842",
-    colorB: "#3ddbd9",
   },
   {
+    baseRadiusPx: 35,
+    colorA: "#f5c842",
+    colorB: "#3ddbd9",
+    distractorCount: 0,
     id: "reactionTime",
     name: "Reaction jumps",
     patternId: "teleport",
-    speed: { unit: "deg/s", value: 20 },
-    baseRadiusPx: 35,
-    speedProfile: { kind: "constant" },
     sizeProfile: { kind: "constant" },
+    speed: { unit: "deg/s", value: 20 },
+    speedProfile: { kind: "constant" },
     targetCount: 1,
-    distractorCount: 0,
-    colorA: "#f5c842",
-    colorB: "#3ddbd9",
   },
   {
+    baseRadiusPx: 35,
+    colorA: "#3ddbd9",
+    colorB: "#f5c842",
+    distractorCount: 5,
     id: "mot",
     name: "Multiple Distractions",
     patternId: "multipleObjectTracking",
-    speed: { unit: "deg/s", value: 20 },
-    baseRadiusPx: 35,
-    speedProfile: { kind: "constant" },
     sizeProfile: { kind: "constant" },
+    speed: { unit: "deg/s", value: 20 },
+    speedProfile: { kind: "constant" },
     targetCount: 1,
-    distractorCount: 5,
-    colorA: "#3ddbd9",
-    colorB: "#f5c842",
   },
   {
+    baseRadiusPx: 35,
+    colorA: "#f65ac2",
+    colorB: "#111111",
+    distractorCount: 0,
     id: "lilacChaser",
     name: "Lilac Chaser",
     patternId: "circle",
-    speed: { unit: "deg/s", value: 20 },
-    baseRadiusPx: 35,
-    speedProfile: { kind: "constant" },
     sizeProfile: { kind: "constant" },
+    speed: { unit: "deg/s", value: 20 },
+    speedProfile: { kind: "constant" },
     targetCount: 1,
-    distractorCount: 0,
-    colorA: "#f65ac2",
-    colorB: "#111111",
   },
 ] satisfies ExercisePreset[];
 
-export const patternOptions: Array<{ id: PatternId; name: string }> = [
+export const patternOptions: { id: PatternId; name: string }[] = [
   { id: "randomWalk", name: "Random" },
   { id: "circle", name: "Circle" },
   { id: "ellipse", name: "Ellipse" },
@@ -125,37 +125,36 @@ export const patternOptions: Array<{ id: PatternId; name: string }> = [
   { id: "multipleObjectTracking", name: "Multiple object tracking" },
 ];
 
-export const firstPreset = exercisePresets[0];
+export const [firstPreset] = exercisePresets;
 
-export const getPreset = (id: string) => {
-  return exercisePresets.find((preset) => preset.id === id) ?? firstPreset;
-};
+export const getPreset = (id: string) =>
+  exercisePresets.find((preset) => preset.id === id) ?? firstPreset;
 
 export const settingsFromPreset = (
   preset: ExercisePreset,
   calibration: Calibration,
-  overrides: Partial<TrainerSettings> = {},
+  overrides: Partial<TrainerSettings> = {}
 ): TrainerSettings => ({
-  presetId: preset.id,
-  patternId: preset.patternId,
-  speed: { ...preset.speed },
-  baseRadiusPx: preset.baseRadiusPx,
-  speedProfile: { ...preset.speedProfile },
-  sizeProfile: { ...preset.sizeProfile },
-  targetCount: preset.targetCount,
-  distractorCount: preset.distractorCount,
-  showTrail: false,
   ballColor: DEFAULT_BALL_COLOR,
-  distractorBrightness: 0.7,
-  targetOpacity: 1,
-  targetShape: "circle",
-  motionDirection: 1,
-  letterEnabled: false,
-  letterColor: "#000000",
-  letterWeight: 600,
-  letterScale: DEFAULT_LETTER_SCALE,
-  lilacChaserScale: 1,
-  lilacChaserBallColor: "#ff00fe",
+  baseRadiusPx: preset.baseRadiusPx,
   calibration,
+  distractorBrightness: 0.7,
+  distractorCount: preset.distractorCount,
+  letterColor: "#000000",
+  letterEnabled: false,
+  letterScale: DEFAULT_LETTER_SCALE,
+  letterWeight: 600,
+  lilacChaserBallColor: "#ff00fe",
+  lilacChaserScale: 1,
+  motionDirection: 1,
+  patternId: preset.patternId,
+  presetId: preset.id,
+  showTrail: false,
+  sizeProfile: { ...preset.sizeProfile },
+  speed: { ...preset.speed },
+  speedProfile: { ...preset.speedProfile },
+  targetCount: preset.targetCount,
+  targetForm: "circle",
+  targetOpacity: 1,
   ...overrides,
 });

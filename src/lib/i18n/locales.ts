@@ -4,74 +4,74 @@ export const localeCookieName = "PARAGLIDE_LOCALE";
 
 export const languageOptions = [
   {
-    locale: "en",
+    direction: "ltr",
     flag: "🇺🇸",
     label: "English",
+    locale: "en",
     nativeLabel: "English",
-    direction: "ltr",
   },
   {
-    locale: "zh-CN",
+    direction: "ltr",
     flag: "🇨🇳",
     label: "Chinese (Simplified)",
+    locale: "zh-CN",
     nativeLabel: "简体中文",
-    direction: "ltr",
   },
   {
-    locale: "zh-HK",
+    direction: "ltr",
     flag: "🇭🇰",
     label: "Chinese (Traditional)",
+    locale: "zh-HK",
     nativeLabel: "繁體中文",
-    direction: "ltr",
   },
   {
-    locale: "pt-BR",
+    direction: "ltr",
     flag: "🇧🇷",
     label: "Portuguese (Brazil)",
+    locale: "pt-BR",
     nativeLabel: "Português do Brasil",
-    direction: "ltr",
   },
   {
-    locale: "es-419",
+    direction: "ltr",
     flag: "🇦🇷",
     label: "Spanish",
+    locale: "es-419",
     nativeLabel: "Español",
-    direction: "ltr",
   },
   {
-    locale: "fr",
+    direction: "ltr",
     flag: "🇫🇷",
     label: "French",
+    locale: "fr",
     nativeLabel: "Français",
-    direction: "ltr",
   },
   {
-    locale: "bn",
+    direction: "ltr",
     flag: "🇧🇩",
     label: "Bengali",
+    locale: "bn",
     nativeLabel: "বাংলা",
-    direction: "ltr",
   },
   {
-    locale: "hi",
+    direction: "ltr",
     flag: "🇮🇳",
     label: "Hindi",
+    locale: "hi",
     nativeLabel: "हिन्दी",
-    direction: "ltr",
   },
   {
-    locale: "fil",
+    direction: "ltr",
     flag: "🇵🇭",
     label: "Filipino",
+    locale: "fil",
     nativeLabel: "Filipino",
-    direction: "ltr",
   },
   {
-    locale: "de",
+    direction: "ltr",
     flag: "🇩🇪",
     label: "German",
+    locale: "de",
     nativeLabel: "Deutsch",
-    direction: "ltr",
   },
 ] as const satisfies readonly {
   locale: string;
@@ -85,7 +85,7 @@ export type LanguageOption = (typeof languageOptions)[number];
 export type AppLocale = LanguageOption["locale"];
 
 const supportedLocaleSet: ReadonlySet<string> = new Set(
-  languageOptions.map(({ locale }) => locale),
+  languageOptions.map(({ locale }) => locale)
 );
 
 export const isAppLocale = (value: string): value is AppLocale =>
@@ -95,25 +95,29 @@ export const getLanguageOption = (locale: AppLocale): LanguageOption =>
   languageOptions.find((option) => option.locale === locale) ??
   languageOptions[0];
 
-export const localeAliases: Readonly<Record<string, AppLocale>> = {
+export const localeAliases = {
+  bn: "bn",
+  de: "de",
   en: "en",
+  es: "es-419",
+  fil: "fil",
+  fr: "fr",
+  hi: "hi",
+  pt: "pt-BR",
+  "pt-br": "pt-BR",
+  tl: "fil",
   zh: "zh-CN",
   "zh-cn": "zh-CN",
   "zh-hans": "zh-CN",
+  "zh-hant": "zh-HK",
   "zh-hk": "zh-HK",
   "zh-mo": "zh-HK",
   "zh-tw": "zh-HK",
-  "zh-hant": "zh-HK",
-  pt: "pt-BR",
-  "pt-br": "pt-BR",
-  es: "es-419",
-  fr: "fr",
-  bn: "bn",
-  hi: "hi",
-  fil: "fil",
-  tl: "fil",
-  de: "de",
-};
+} as const satisfies Readonly<Record<string, AppLocale>>;
+
+const localeAliasMap = new Map<string, AppLocale>(
+  Object.entries(localeAliases)
+);
 
 export const localePrefixAliases = [
   ["en-", "en"],
@@ -131,16 +135,22 @@ export const localePrefixAliases = [
 ] as const satisfies readonly (readonly [string, AppLocale])[];
 
 const resolveSupportedLocale = (
-  value: string | null | undefined,
+  value: string | null | undefined
 ): AppLocale | null => {
-  if (!value) return null;
+  if (!value) {
+    return null;
+  }
 
-  const locale = value.replace(/_/g, "-");
-  if (isAppLocale(locale)) return locale;
+  const locale = value.replaceAll("_", "-");
+  if (isAppLocale(locale)) {
+    return locale;
+  }
 
   const lower = locale.toLowerCase();
-  const alias = localeAliases[lower];
-  if (alias) return alias;
+  const alias = localeAliasMap.get(lower);
+  if (alias) {
+    return alias;
+  }
 
   return (
     localePrefixAliases.find(([prefix]) => lower.startsWith(prefix))?.[1] ??
@@ -148,68 +158,79 @@ const resolveSupportedLocale = (
   );
 };
 
-const readCookieLocale = () => {
-  if (typeof document === "undefined") return null;
-
-  const prefix = `${localeCookieName}=`;
-  const value = document.cookie
-    .split(";")
-    .map((cookie) => cookie.trim())
-    .find((cookie) => cookie.startsWith(prefix))
-    ?.slice(prefix.length);
-
-  if (!value) return null;
+const readCookieLocale = async () => {
+  const browserCookieStore = globalThis.cookieStore;
+  if (!browserCookieStore) {
+    return null;
+  }
 
   try {
-    return decodeURIComponent(value);
+    const cookie = await browserCookieStore.get(localeCookieName);
+    return cookie?.value ?? null;
   } catch {
     return null;
   }
 };
 
 const readLocalStorageLocale = () => {
-  if (typeof window === "undefined") return null;
-
   try {
-    return window.localStorage.getItem(localeCookieName);
+    return globalThis.localStorage?.getItem(localeCookieName) ?? null;
   } catch {
     return null;
   }
 };
 
 const readPreferredLocale = (): AppLocale | null => {
-  if (typeof navigator === "undefined") return null;
+  const browserNavigator = globalThis.navigator;
+  if (!browserNavigator) {
+    return null;
+  }
 
   const preferredLanguages = [
-    ...(navigator.languages ?? []),
-    navigator.language,
+    ...(browserNavigator.languages ?? []),
+    browserNavigator.language,
   ];
   for (const language of preferredLanguages) {
     const locale = resolveSupportedLocale(language);
-    if (locale) return locale;
+    if (locale) {
+      return locale;
+    }
   }
 
   return null;
 };
 
-export const getResolvedLocale = (): AppLocale =>
-  resolveSupportedLocale(readCookieLocale()) ??
+export const getResolvedLocale = async (): Promise<AppLocale> =>
+  resolveSupportedLocale(await readCookieLocale()) ??
   resolveSupportedLocale(readLocalStorageLocale()) ??
   readPreferredLocale() ??
   defaultLocale;
 
-export const setResolvedLocale = (locale: AppLocale) => {
-  if (typeof window === "undefined") return;
+export const setResolvedLocale = async (locale: AppLocale) => {
+  const browserWindow = globalThis.window;
+  if (!browserWindow) {
+    return;
+  }
 
   try {
-    window.localStorage.setItem(localeCookieName, locale);
+    browserWindow.localStorage.setItem(localeCookieName, locale);
   } catch {
     // Storage can be blocked by browser privacy settings.
   }
 
+  const browserCookieStore = globalThis.cookieStore;
+  if (!browserCookieStore) {
+    return;
+  }
+
   try {
-    const secure = window.location.protocol === "https:" ? "; Secure" : "";
-    document.cookie = `${localeCookieName}=${encodeURIComponent(locale)}; Path=/; Max-Age=${localeCookieMaxAge}; SameSite=Lax${secure}`;
+    await browserCookieStore.set({
+      expires: Date.now() + localeCookieMaxAge * 1000,
+      name: localeCookieName,
+      path: "/",
+      sameSite: "lax",
+      value: locale,
+    });
   } catch {
     // Cookie writes can be blocked independently of local storage.
   }

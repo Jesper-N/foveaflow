@@ -1,15 +1,15 @@
 <script lang="ts">
-  import type { Snippet } from "svelte";
-
-  import ModePathPreview from "$lib/components/ModePathPreview.svelte";
-  import TrainerPatternSelectGroups from "$lib/components/trainer/TrainerPatternSelectGroups.svelte";
+  import ModePathPreview from "$lib/components/mode-path-preview.svelte";
+  import TrainerPatternSelectGroups from "$lib/components/trainer/trainer-pattern-select-groups.svelte";
   import * as Field from "$lib/components/ui/field/index.js";
   import * as Select from "$lib/components/ui/select/index.js";
   import { Slider } from "$lib/components/ui/slider/index.js";
-  import { exercisePresets, type TrainerSettings } from "$lib/engine/presets";
+  import { exercisePresets } from "$lib/engine/presets";
+  import type { TrainerSettings } from "$lib/engine/presets";
   import { languageState } from "$lib/i18n/state.svelte";
   import { t } from "$lib/i18n/translate";
-  import { behaviorOptions, type BehaviorId } from "$lib/trainer/behavior";
+  import { behaviorOptions } from "$lib/trainer/behavior";
+  import type { BehaviorId } from "$lib/trainer/behavior";
   import {
     getBehaviorName,
     getLilacChaserColorName,
@@ -17,10 +17,9 @@
     getPresetName,
     lilacChaserColorOptions,
   } from "$lib/trainer/options";
-  import {
-    trainerSettingBounds,
-    type TrainerSliderValue,
-  } from "$lib/trainer/settings";
+  import { trainerSettingBounds } from "$lib/trainer/settings";
+  import type { TrainerSliderValue } from "$lib/trainer/settings";
+  import type { Snippet } from "svelte";
 
   let {
     settings,
@@ -51,11 +50,11 @@
   let locale = $derived(languageState.locale);
   let currentPresetName = $derived(t(locale, getPresetName(settings.presetId)));
   let currentPatternName = $derived(
-    t(locale, getPatternName(settings.patternId)),
+    t(locale, getPatternName(settings.patternId))
   );
   let currentBehaviorName = $derived(t(locale, getBehaviorName(behaviorValue)));
   let currentLilacChaserColorName = $derived(
-    t(locale, getLilacChaserColorName(settings.lilacChaserBallColor)),
+    t(locale, getLilacChaserColorName(settings.lilacChaserBallColor))
   );
 </script>
 
@@ -152,7 +151,7 @@
         <span class="flex min-w-0 items-center gap-2">
           <svg
             viewBox="0 0 12 12"
-            class="size-3 shrink-0 rounded-full border border-border/60"
+            class="border-border/60 size-3 shrink-0 rounded-full border"
             aria-hidden="true"
           >
             <circle cx="6" cy="6" r="6" fill={settings.lilacChaserBallColor} />
@@ -169,7 +168,7 @@
               <span class="flex min-w-0 items-center gap-2">
                 <svg
                   viewBox="0 0 12 12"
-                  class="size-3 shrink-0 rounded-full border border-border/60"
+                  class="border-border/60 size-3 shrink-0 rounded-full border"
                   aria-hidden="true"
                 >
                   <circle cx="6" cy="6" r="6" fill={option.id} />
@@ -185,7 +184,7 @@
   <Field.Field>
     {@render sliderRow(
       t(locale, "Scale"),
-      `${settings.lilacChaserScale.toFixed(2)}x`,
+      `${settings.lilacChaserScale.toFixed(2)}x`
     )}
     <Slider
       bind:value={lilacChaserScaleSliderValue, setLilacChaserScaleSliderValue}

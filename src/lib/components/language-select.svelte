@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-
   import * as Select from "$lib/components/ui/select/index.js";
   import {
     getLanguageOption,
@@ -10,6 +8,7 @@
   import { languageState } from "$lib/i18n/state.svelte";
   import { t } from "$lib/i18n/translate";
   import { cn } from "$lib/utils.js";
+  import { onMount } from "svelte";
 
   let {
     class: className,
@@ -40,11 +39,13 @@
   let selectedLanguage = $derived(getLanguageOption(languageState.locale));
   let triggerSize = $derived(showSelectedName ? size : "icon");
   let triggerVariant = $derived(
-    variant ?? (showSelectedName ? "default" : "outline"),
+    variant ?? (showSelectedName ? "default" : "outline")
   );
 
   const handleLanguageChange = (value: string) => {
-    if (isAppLocale(value)) languageState.set(value);
+    if (isAppLocale(value)) {
+      languageState.set(value);
+    }
   };
 </script>
 
@@ -65,7 +66,7 @@
         collapseNameOnSmall &&
         "max-sm:size-9 max-sm:min-w-0 max-sm:justify-center max-sm:gap-0 max-sm:p-0 max-sm:[&>svg:last-child]:hidden",
       triggerClass,
-      className,
+      className
     )}
     aria-label={`${t(languageState.locale, "Change language")}: ${selectedLanguage.label}`}
     title={`${t(languageState.locale, "Language")}: ${selectedLanguage.label}`}
@@ -89,7 +90,7 @@
             <span aria-hidden="true">{option.flag}</span>
             <span class="truncate">{option.nativeLabel}</span>
             {#if option.nativeLabel !== option.label}
-              <span class="truncate text-muted-foreground">{option.label}</span>
+              <span class="text-muted-foreground truncate">{option.label}</span>
             {/if}
           </span>
         </Select.Item>

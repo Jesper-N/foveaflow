@@ -1,20 +1,24 @@
 <script lang="ts">
-  import { onMount, tick as flushSvelte, untrack } from "svelte";
-  import type { Attachment } from "svelte/attachments";
-  import { ModeWatcher, mode, setMode } from "mode-watcher";
-
-  import TrainerControlsDialog from "$lib/components/trainer/TrainerControlsDialog.svelte";
-  import TrainerGuidePopover from "$lib/components/trainer/TrainerGuidePopover.svelte";
-  import TrainerHud from "$lib/components/trainer/TrainerHud.svelte";
-  import { DEFAULT_CALIBRATION } from "$lib/engine/calibration";
-  import {
-    firstPreset,
-    settingsFromPreset,
-    type TrainerSettings,
-  } from "$lib/engine/presets";
-  import { darkenHexColor, safeStimulusColor } from "$lib/engine/safety";
+  import TrainerControlsDialog from "$lib/components/trainer/trainer-controls-dialog.svelte";
+  import TrainerGuidePopover from "$lib/components/trainer/trainer-guide-popover.svelte";
+  import TrainerHud from "$lib/components/trainer/trainer-hud.svelte";
   import { homepageSeoContent } from "$lib/content/page-copy";
   import { siteMetadata } from "$lib/content/site";
+  import {
+    findTrainerRoute,
+    getRouteSlugFromPath,
+    getTrainerRoute,
+  } from "$lib/content/trainer-routes";
+  import { getTrainingModeGuide } from "$lib/content/training";
+  import { DEFAULT_CALIBRATION } from "$lib/engine/calibration";
+  import { firstPreset, settingsFromPreset } from "$lib/engine/presets";
+  import type { TrainerSettings } from "$lib/engine/presets";
+  import { darkenHexColor, safeStimulusColor } from "$lib/engine/safety";
+  import {
+    createDebouncedSettingsSaver,
+    loadSettings,
+  } from "$lib/engine/storage";
+  import type { PatternId, SpeedUnit } from "$lib/engine/types";
   import { languageState } from "$lib/i18n/state.svelte";
   import { t } from "$lib/i18n/translate";
   import {
@@ -22,16 +26,32 @@
     buildTrainerRouteStructuredData,
   } from "$lib/seo";
   import {
-    findTrainerRoute,
-    getRouteSlugFromPath,
-    getTrainerRoute,
-  } from "$lib/content/trainer-routes";
-  import { getTrainingModeGuide } from "$lib/content/training";
+    createCursorAutoHideTimer,
+    createHudAutoHideTimer,
+  } from "$lib/trainer/auto-hide";
   import {
-    createDebouncedSettingsSaver,
-    loadSettings,
-  } from "$lib/engine/storage";
-  import type { PatternId, SpeedUnit } from "$lib/engine/types";
+    createBehaviorProfiles,
+    getBehaviorId,
+    isBehaviorId,
+  } from "$lib/trainer/behavior";
+  import type { BehaviorId } from "$lib/trainer/behavior";
+  import { createTrainerCanvasRuntime } from "$lib/trainer/canvas-runtime";
+  import type {
+    TrainerDialogActions,
+    TrainerHudActions,
+  } from "$lib/trainer/control-actions";
+  import {
+    canAutoHideHud,
+    getHudHidden,
+    getHudInteractionOpen,
+    getHudPointerIntent,
+  } from "$lib/trainer/hud";
+  import type { HudBounds } from "$lib/trainer/hud";
+  import {
+    getTrainerShortcutAction,
+    isTrainerShortcutCapturedByTarget,
+  } from "$lib/trainer/keyboard";
+  import type { TrainerShortcutAction } from "$lib/trainer/keyboard";
   import {
     canPatternToggleDirection,
     getAvailableControlSections,
@@ -39,42 +59,9 @@
     guideUseCasesByMode,
     homepageGuideUseCases,
     resolveControlSection,
-    type ControlSectionId,
   } from "$lib/trainer/options";
-  import {
-    createBehaviorProfiles,
-    getBehaviorId,
-    isBehaviorId,
-    type BehaviorId,
-  } from "$lib/trainer/behavior";
-  import {
-    canAutoHideHud,
-    getHudHidden,
-    getHudInteractionOpen,
-    getHudPointerIntent,
-    type HudBounds,
-  } from "$lib/trainer/hud";
-  import type {
-    TrainerDialogActions,
-    TrainerHudActions,
-  } from "$lib/trainer/control-actions";
-  import {
-    getTrainerShortcutAction,
-    isTrainerShortcutCapturedByTarget,
-    type TrainerShortcutAction,
-  } from "$lib/trainer/keyboard";
-  import {
-    createCursorAutoHideTimer,
-    createHudAutoHideTimer,
-  } from "$lib/trainer/auto-hide";
-  import {
-    desktopHeaderQuery,
-    focusHeaderSelectTriggerFromShortcut,
-    getHeaderSelectOpenState,
-    runTrainerShortcutAction,
-    shortcutPrioritySurfaceSelector,
-    type HeaderShortcutSelect,
-  } from "$lib/trainer/shortcut-runner";
+  import type { ControlSectionId } from "$lib/trainer/options";
+  import type { CanvasColorMode } from "$lib/trainer/rendering";
   import {
     adjustSpeedBySteps,
     applyPresetToSettings,
@@ -84,7 +71,7 @@
     isLilacChaserBallColor,
     isPatternId,
     isSpeedUnit,
-    isTargetShape,
+    isTargetForm,
     resolveSliderInteger,
     resolveSliderNumber,
     resolveSpeedSliderValue,
@@ -93,11 +80,22 @@
     resolveStoredSettings,
     trainerSettingBounds,
     updateCalibrationField,
-    type CalibrationField,
-    type TrainerSliderValue,
   } from "$lib/trainer/settings";
-  import { createTrainerCanvasRuntime } from "$lib/trainer/canvas-runtime";
-  import type { CanvasColorMode } from "$lib/trainer/rendering";
+  import type {
+    CalibrationField,
+    TrainerSliderValue,
+  } from "$lib/trainer/settings";
+  import {
+    desktopHeaderQuery,
+    focusHeaderSelectTriggerFromShortcut,
+    getHeaderSelectOpenState,
+    runTrainerShortcutAction,
+    shortcutPrioritySurfaceSelector,
+  } from "$lib/trainer/shortcut-runner";
+  import type { HeaderShortcutSelect } from "$lib/trainer/shortcut-runner";
+  import { ModeWatcher, mode, setMode } from "mode-watcher";
+  import { onMount, tick as flushSvelte, untrack } from "svelte";
+  import type { Attachment } from "svelte/attachments";
 
   let { routeSlug = "" }: { routeSlug?: string } = $props();
 
@@ -107,8 +105,8 @@
   let settings = $state<TrainerSettings>(
     applyRouteToSettings(
       settingsFromPreset(firstPreset, DEFAULT_CALIBRATION),
-      untrack(() => routeSlug),
-    ),
+      untrack(() => routeSlug)
+    )
   );
   let currentRouteSlug = $state(untrack(() => routeSlug));
   let panelOpen = $state(false);
@@ -131,20 +129,23 @@
   let desktopLilacChaserColorSelectOpen = $state(false);
   let languageSelectOpen = $state(false);
   let headerPresetSelectOpen = $derived(
-    mobilePresetSelectOpen || desktopPresetSelectOpen,
+    mobilePresetSelectOpen || desktopPresetSelectOpen
   );
   let headerPatternSelectOpen = $derived(
-    mobilePatternSelectOpen || desktopPatternSelectOpen,
+    mobilePatternSelectOpen || desktopPatternSelectOpen
   );
   let headerLilacChaserColorSelectOpen = $derived(
-    mobileLilacChaserColorSelectOpen || desktopLilacChaserColorSelectOpen,
+    mobileLilacChaserColorSelectOpen || desktopLilacChaserColorSelectOpen
   );
   let colorMode = $derived.by<CanvasColorMode>(() => {
     const nextMode = mode.current;
-    if (nextMode === "light" || nextMode === "dark") return nextMode;
+    if (nextMode === "light" || nextMode === "dark") {
+      return nextMode;
+    }
 
-    return typeof document !== "undefined" &&
-      !document.documentElement.classList.contains("dark")
+    const browserDocument = globalThis.document;
+    return browserDocument &&
+      !browserDocument.documentElement.classList.contains("dark")
       ? "light"
       : "dark";
   });
@@ -155,67 +156,63 @@
   let activeRoute = $derived(findTrainerRoute(currentRouteSlug));
   let pageSeoContent = $derived(activeRoute?.seoContent ?? homepageSeoContent);
   let activeGuideRoute = $derived(
-    getTrainerRoute(settings.presetId, settings.patternId),
+    getTrainerRoute(settings.presetId, settings.patternId)
   );
   let guideSeoContent = $derived(
     activeRoute
       ? (activeGuideRoute?.seoContent ?? pageSeoContent)
-      : pageSeoContent,
+      : pageSeoContent
   );
   let canToggleDirection = $derived(
-    canPatternToggleDirection(settings.patternId),
+    canPatternToggleDirection(settings.patternId)
   );
   let motionDirectionLabel = $derived(
-    settings.motionDirection === 1
-      ? t(locale, "forward")
-      : t(locale, "reverse"),
+    settings.motionDirection === 1 ? t(locale, "forward") : t(locale, "reverse")
   );
   let motionDirectionToggleLabel = $derived(
     settings.motionDirection === 1
       ? t(locale, "Reverse motion direction")
-      : t(locale, "Use forward motion direction"),
+      : t(locale, "Use forward motion direction")
   );
   let distractorColor = $derived(
-    darkenHexColor(safeBallColor, settings.distractorBrightness),
+    darkenHexColor(safeBallColor, settings.distractorBrightness)
   );
   let isMotMode = $derived(settings.presetId === "mot");
   let isLilacChaserMode = $derived(settings.presetId === "lilacChaser");
   let availableControlSections = $derived(
-    getAvailableControlSections(isLilacChaserMode),
+    getAvailableControlSections(isLilacChaserMode)
   );
   let localizedControlSections = $derived(
     availableControlSections.map((section) => ({
       ...section,
       label: t(locale, section.label),
-    })),
+    }))
   );
   let currentControlSection = $derived(
-    resolveControlSection(activeControlSection, availableControlSections),
+    resolveControlSection(activeControlSection, availableControlSections)
   );
   let currentControlSectionLabel = $derived(
     t(
       locale,
-      getControlSectionLabel(currentControlSection, availableControlSections),
-    ),
+      getControlSectionLabel(currentControlSection, availableControlSections)
+    )
   );
   let activeTrainingModeGuide = $derived(
-    getTrainingModeGuide(settings.presetId),
+    getTrainingModeGuide(settings.presetId)
   );
   let guideUseCases = $derived(
-    activeRoute
-      ? guideUseCasesByMode[settings.presetId]
-      : homepageGuideUseCases,
+    activeRoute ? guideUseCasesByMode[settings.presetId] : homepageGuideUseCases
   );
   let isDarkMode = $derived(colorMode === "dark");
   const canvasRuntime = createTrainerCanvasRuntime({
     getColorMode: () => colorMode,
     getState: () => ({
-      settings,
-      motionPaused,
       canToggleDirection,
-      isLilacChaserMode,
-      safeBallColor,
       distractorColor,
+      isLilacChaserMode,
+      motionPaused,
+      safeBallColor,
+      settings,
     }),
   });
   const {
@@ -235,7 +232,7 @@
     untrack(() => attachCanvas(node));
 
   let behaviorValue = $derived(
-    getBehaviorId(settings.speedProfile, settings.sizeProfile),
+    getBehaviorId(settings.speedProfile, settings.sizeProfile)
   );
   let hudInteractionOpen = $derived(
     hudElementInteractionActive ||
@@ -245,21 +242,21 @@
         headerPresetSelectOpen,
         headerPatternSelectOpen,
         headerLilacChaserColorSelectOpen,
-        languageSelectOpen,
-      ),
+        languageSelectOpen
+      )
   );
   let hudHidden = $derived(
-    getHudHidden(hudAutoHideReady, hudVisible, hudInteractionOpen),
+    getHudHidden(hudAutoHideReady, hudVisible, hudInteractionOpen)
   );
   const hudAutoHideTimer = createHudAutoHideTimer({
     delayMs: hudAutoHideDelayMs,
+    isInteractionOpen: () => hudInteractionOpen,
     setReady: (ready) => {
       hudAutoHideReady = ready;
     },
     setVisible: (visible) => {
       hudVisible = visible;
     },
-    isInteractionOpen: () => hudInteractionOpen,
   });
   const cursorAutoHideTimer = createCursorAutoHideTimer({
     delayMs: cursorHideDelayMs,
@@ -270,8 +267,82 @@
   let hudShell: HTMLDivElement | undefined;
   const settingsSaver = createDebouncedSettingsSaver();
 
+  const setMetaContent = (selector: string, content: string) => {
+    document.head
+      .querySelector<HTMLMetaElement>(selector)
+      ?.setAttribute("content", content);
+  };
+
+  const getBrowserRouteSlug = () =>
+    getRouteSlugFromPath(window.location.pathname);
+
+  const syncDocumentRouteMetadata = (path: string) => {
+    const route = findTrainerRoute(getRouteSlugFromPath(path));
+    const title = route?.title ?? siteMetadata.title;
+    const description = route?.description ?? siteMetadata.description;
+    const siteOrigin = new URL(window.location.origin);
+    const canonicalUrl = new URL(route?.path ?? "/", siteOrigin).toString();
+    const robots =
+      route?.indexable === false
+        ? "noindex,follow"
+        : "index,follow,max-image-preview:large";
+
+    document.title = title;
+    document.head
+      .querySelector<HTMLLinkElement>('link[rel="canonical"]')
+      ?.setAttribute("href", canonicalUrl);
+    setMetaContent('meta[name="description"]', description);
+    setMetaContent('meta[name="robots"]', robots);
+    setMetaContent('meta[property="og:title"]', title);
+    setMetaContent('meta[property="og:description"]', description);
+    setMetaContent('meta[property="og:url"]', canonicalUrl);
+    setMetaContent('meta[name="twitter:title"]', title);
+    setMetaContent('meta[name="twitter:description"]', description);
+
+    let structuredData: ReturnType<typeof buildStructuredData> | undefined =
+      buildStructuredData(siteOrigin);
+    if (route) {
+      structuredData = route.indexable
+        ? buildTrainerRouteStructuredData(route, siteOrigin)
+        : undefined;
+    }
+
+    let structuredDataElement = document.head.querySelector<HTMLScriptElement>(
+      "script[data-seo-structured-data]"
+    );
+    if (!structuredData) {
+      structuredDataElement?.remove();
+      return;
+    }
+    if (!structuredDataElement) {
+      structuredDataElement = document.createElement("script");
+      structuredDataElement.type = "application/ld+json";
+      structuredDataElement.dataset.seoStructuredData = "";
+      document.head.append(structuredDataElement);
+    }
+    structuredDataElement.textContent = JSON.stringify(structuredData);
+  };
+
+  const resetDirectionForFixedPatterns = (patternId: PatternId) => {
+    settings.motionDirection = normalizeMotionDirection(
+      patternId,
+      settings.motionDirection
+    );
+  };
+
+  const setMotionPaused = (paused: boolean) => {
+    motionPaused = paused;
+    syncPlayback();
+  };
+
+  const revealHud = () => {
+    hudVisible = true;
+  };
+
   $effect(() => {
-    if (!storageReady) return;
+    if (!storageReady) {
+      return;
+    }
     settingsSaver.schedule($state.snapshot(settings));
   });
 
@@ -296,24 +367,31 @@
 
   onMount(() => {
     let mounted = true;
+    const startHudWhenLanguageReady = async () => {
+      await languageState.init();
+      if (mounted) {
+        hudAutoHideTimer.start();
+      }
+    };
     const savedSettings = loadSettings();
     syncSettingsFromBrowserRoute(
-      savedSettings ? resolveStoredSettings(savedSettings) : settings,
+      savedSettings ? resolveStoredSettings(savedSettings) : settings
     );
 
     storageReady = true;
-    void languageState.init().then(() => {
-      if (!mounted) return;
-      hudAutoHideTimer.start();
-    });
+    void startHudWhenLanguageReady();
     cursorAutoHideTimer.start();
 
     const reduceMotionQuery = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
+      "(prefers-reduced-motion: reduce)"
     );
-    if (reduceMotionQuery.matches) setMotionPaused(true);
+    if (reduceMotionQuery.matches) {
+      setMotionPaused(true);
+    }
     const handleReduceMotionChange = (event: MediaQueryListEvent) => {
-      if (event.matches) setMotionPaused(true);
+      if (event.matches) {
+        setMotionPaused(true);
+      }
     };
     reduceMotionQuery.addEventListener("change", handleReduceMotionChange);
 
@@ -357,8 +435,12 @@
     window.addEventListener("resize", updateBounds);
 
     return () => {
-      if (hudShell === node) hudShell = undefined;
-      if (!hudShell) hudBounds = null;
+      if (hudShell === node) {
+        hudShell = undefined;
+      }
+      if (!hudShell) {
+        hudBounds = null;
+      }
       cancelAnimationFrame(measurementFrame);
       resizeObserver.disconnect();
       window.removeEventListener("resize", updateBounds);
@@ -368,24 +450,30 @@
   const applySliderNumber = (
     value: TrainerSliderValue,
     bounds: { min: number; max: number },
-    applyValue: (value: number) => void,
+    applyValue: (value: number) => void
   ) => {
     const next = resolveSliderNumber(value, bounds.min, bounds.max);
-    if (next !== null) applyValue(next);
+    if (next !== null) {
+      applyValue(next);
+    }
   };
 
   const applySliderInteger = (
     value: TrainerSliderValue,
     bounds: { min: number; max: number },
-    applyValue: (value: number) => void,
+    applyValue: (value: number) => void
   ) => {
     const next = resolveSliderInteger(value, bounds.min, bounds.max);
-    if (next !== null) applyValue(next);
+    if (next !== null) {
+      applyValue(next);
+    }
   };
 
   const setSpeedSliderValue = (value: TrainerSliderValue) => {
     const next = resolveSpeedSliderValue(value, settings.speed.unit);
-    if (next === null) return;
+    if (next === null) {
+      return;
+    }
 
     settings.speed = {
       ...settings.speed,
@@ -408,7 +496,9 @@
     applySliderNumber(value, trainerSettingBounds.lilacChaserScale, (next) => {
       settings.lilacChaserScale = next;
       invalidateLilacChaserFrame();
-      if (isLilacChaserMode) drawFrame();
+      if (isLilacChaserMode) {
+        drawFrame();
+      }
     });
   };
 
@@ -444,7 +534,7 @@
       trainerSettingBounds.distractorBrightness,
       (next) => {
         settings.distractorBrightness = next;
-      },
+      }
     );
   };
 
@@ -456,24 +546,14 @@
     });
   };
 
-  const setMotionPaused = (paused: boolean) => {
-    motionPaused = paused;
-    syncPlayback();
-  };
-
   const toggleMotionPaused = () => {
     setMotionPaused(!motionPaused);
   };
 
-  const resetDirectionForFixedPatterns = (patternId: PatternId) => {
-    settings.motionDirection = normalizeMotionDirection(
-      patternId,
-      settings.motionDirection,
-    );
-  };
-
   const toggleMotionDirection = () => {
-    if (!canToggleDirection) return;
+    if (!canToggleDirection) {
+      return;
+    }
     settings.motionDirection = settings.motionDirection === 1 ? -1 : 1;
     drawFrame();
   };
@@ -493,59 +573,6 @@
     resetDirectionForFixedPatterns(settings.patternId);
     refreshBaseSpeed();
     drawFrame({ clearTrail: true });
-  };
-
-  const getBrowserRouteSlug = () => {
-    return getRouteSlugFromPath(window.location.pathname);
-  };
-
-  const syncDocumentRouteMetadata = (path: string) => {
-    const route = findTrainerRoute(getRouteSlugFromPath(path));
-    const title = route?.title ?? siteMetadata.title;
-    const description = route?.description ?? siteMetadata.description;
-    const siteOrigin = new URL(window.location.origin);
-    const canonicalUrl = new URL(route?.path ?? "/", siteOrigin).toString();
-    const robots =
-      route?.indexable === false
-        ? "noindex,follow"
-        : "index,follow,max-image-preview:large";
-    const setMetaContent = (selector: string, content: string) => {
-      document.head
-        .querySelector<HTMLMetaElement>(selector)
-        ?.setAttribute("content", content);
-    };
-
-    document.title = title;
-    document.head
-      .querySelector<HTMLLinkElement>('link[rel="canonical"]')
-      ?.setAttribute("href", canonicalUrl);
-    setMetaContent('meta[name="description"]', description);
-    setMetaContent('meta[name="robots"]', robots);
-    setMetaContent('meta[property="og:title"]', title);
-    setMetaContent('meta[property="og:description"]', description);
-    setMetaContent('meta[property="og:url"]', canonicalUrl);
-    setMetaContent('meta[name="twitter:title"]', title);
-    setMetaContent('meta[name="twitter:description"]', description);
-
-    const structuredData = route
-      ? route.indexable
-        ? buildTrainerRouteStructuredData(route, siteOrigin)
-        : undefined
-      : buildStructuredData(siteOrigin);
-    let structuredDataElement = document.head.querySelector<HTMLScriptElement>(
-      "script[data-seo-structured-data]",
-    );
-    if (!structuredData) {
-      structuredDataElement?.remove();
-      return;
-    }
-    if (!structuredDataElement) {
-      structuredDataElement = document.createElement("script");
-      structuredDataElement.type = "application/ld+json";
-      structuredDataElement.dataset.seoStructuredData = "";
-      document.head.append(structuredDataElement);
-    }
-    structuredDataElement.textContent = JSON.stringify(structuredData);
   };
 
   const setBrowserPath = (path: string) => {
@@ -569,7 +596,9 @@
 
   const handleGuidePopoverToggle = (event: ToggleEvent) => {
     guidePopoverOpen = event.newState === "open";
-    if (guidePopoverOpen) revealHud();
+    if (guidePopoverOpen) {
+      revealHud();
+    }
   };
 
   const setActiveControlSection = (section: ControlSectionId) => {
@@ -580,16 +609,14 @@
     openGuideFaqQuestion = openGuideFaqQuestion === question ? null : question;
   };
 
-  const revealHud = () => {
-    hudVisible = true;
-  };
-
   const revealHudTemporarily = () => {
     hudAutoHideTimer.start();
   };
 
   const setHudInteractionActive = (active: boolean) => {
-    if (hudElementInteractionActive === active) return;
+    if (hudElementInteractionActive === active) {
+      return;
+    }
     hudElementInteractionActive = active;
 
     if (active) {
@@ -607,36 +634,50 @@
   };
 
   const hideHud = () => {
-    if (!canAutoHideHud(hudAutoHideReady, hudInteractionOpen)) return;
+    if (!canAutoHideHud(hudAutoHideReady, hudInteractionOpen)) {
+      return;
+    }
     hudVisible = false;
   };
 
   const handleHeaderPresetOpenChange = (open: boolean) => {
-    if (open) revealHud();
+    if (open) {
+      revealHud();
+    }
   };
 
   const handleHeaderPatternOpenChange = (open: boolean) => {
-    if (open) revealHud();
+    if (open) {
+      revealHud();
+    }
   };
 
   const handleHeaderLilacChaserColorOpenChange = (open: boolean) => {
-    if (open) revealHud();
+    if (open) {
+      revealHud();
+    }
   };
 
   const handleHeaderLanguageOpenChange = (open: boolean) => {
-    if (open) revealHud();
+    if (open) {
+      revealHud();
+    }
   };
 
   const handleWindowPointerMove = (event: PointerEvent) => {
-    if (event.pointerType !== "touch") cursorAutoHideTimer.start();
-    if (!hudAutoHideReady || event.pointerType === "touch") return;
+    if (event.pointerType !== "touch") {
+      cursorAutoHideTimer.start();
+    }
+    if (!hudAutoHideReady || event.pointerType === "touch") {
+      return;
+    }
 
     const pointerIntent = getHudPointerIntent(
       event.pointerType,
       hudAutoHideReady,
       event.clientX,
       event.clientY,
-      hudBounds,
+      hudBounds
     );
 
     if (pointerIntent === "reveal") {
@@ -644,7 +685,9 @@
       return;
     }
 
-    if (pointerIntent === "hide") hideHud();
+    if (pointerIntent === "hide") {
+      hideHud();
+    }
   };
 
   const setPattern = (patternId: PatternId) => {
@@ -659,7 +702,7 @@
       settings.speed,
       unit,
       getArena(),
-      settings.calibration,
+      settings.calibration
     );
     refreshBaseSpeed();
   };
@@ -672,7 +715,9 @@
 
   const handleColorInput = (event: Event) => {
     const target = event.currentTarget;
-    if (!(target instanceof HTMLInputElement)) return;
+    if (!(target instanceof HTMLInputElement)) {
+      return;
+    }
     settings.ballColor = safeStimulusColor(target.value);
   };
 
@@ -687,13 +732,17 @@
   const patternSelectContentClass =
     "max-h-[min(65dvh,26rem)] overscroll-contain";
 
-  const handleShapeChange = (value: string) => {
-    if (isTargetShape(value)) settings.targetShape = value;
+  const handleTargetFormChange = (value: string) => {
+    if (isTargetForm(value)) {
+      settings.targetForm = value;
+    }
   };
 
   const handleLetterWeightChange = (value: string) => {
     const weight = Number(value);
-    if (isLetterWeight(weight)) settings.letterWeight = weight;
+    if (isLetterWeight(weight)) {
+      settings.letterWeight = weight;
+    }
   };
 
   const handleThemeCheckedChange = (checked: boolean) => {
@@ -708,33 +757,42 @@
 
   const openHeaderSelectFromShortcut = (select: HeaderShortcutSelect) => {
     const useDesktopSelect = window.matchMedia(desktopHeaderQuery).matches;
-    const openState = getHeaderSelectOpenState(select, useDesktopSelect);
+    const {
+      desktopLilacChaserColorSelectOpen: nextDesktopLilacChaserColorSelectOpen,
+      desktopPatternSelectOpen: nextDesktopPatternSelectOpen,
+      desktopPresetSelectOpen: nextDesktopPresetSelectOpen,
+      mobileLilacChaserColorSelectOpen: nextMobileLilacChaserColorSelectOpen,
+      mobilePatternSelectOpen: nextMobilePatternSelectOpen,
+      mobilePresetSelectOpen: nextMobilePresetSelectOpen,
+    } = getHeaderSelectOpenState(select, useDesktopSelect);
     revealHud();
 
-    mobilePresetSelectOpen = openState.mobilePresetSelectOpen;
-    desktopPresetSelectOpen = openState.desktopPresetSelectOpen;
-    mobilePatternSelectOpen = openState.mobilePatternSelectOpen;
-    desktopPatternSelectOpen = openState.desktopPatternSelectOpen;
-    mobileLilacChaserColorSelectOpen =
-      openState.mobileLilacChaserColorSelectOpen;
-    desktopLilacChaserColorSelectOpen =
-      openState.desktopLilacChaserColorSelectOpen;
+    mobilePresetSelectOpen = nextMobilePresetSelectOpen;
+    desktopPresetSelectOpen = nextDesktopPresetSelectOpen;
+    mobilePatternSelectOpen = nextMobilePatternSelectOpen;
+    desktopPatternSelectOpen = nextDesktopPatternSelectOpen;
+    mobileLilacChaserColorSelectOpen = nextMobileLilacChaserColorSelectOpen;
+    desktopLilacChaserColorSelectOpen = nextDesktopLilacChaserColorSelectOpen;
 
     void focusHeaderSelectTriggerFromShortcut({
+      flushSvelte,
       select,
       useDesktopSelect,
-      flushSvelte,
     });
   };
 
   const openGuideDialog = () => {
-    const guidePopover = document.getElementById("trainer-guide-popover");
-    if (!(guidePopover instanceof HTMLElement)) return false;
+    const guidePopover = document.querySelector("#trainer-guide-popover");
+    if (!(guidePopover instanceof HTMLElement)) {
+      return false;
+    }
 
     revealHud();
-    if (guidePopover.matches(":popover-open")) return true;
+    if (guidePopover.matches(":popover-open")) {
+      return true;
+    }
 
-    if (typeof guidePopover.showPopover === "function") {
+    if (guidePopover.showPopover) {
       guidePopover.showPopover();
       return true;
     }
@@ -742,37 +800,39 @@
     return false;
   };
 
-  const hasPriorityKeyboardSurface = () => {
-    return (
-      panelOpen ||
-      guidePopoverOpen ||
-      headerPresetSelectOpen ||
-      headerPatternSelectOpen ||
-      headerLilacChaserColorSelectOpen ||
-      languageSelectOpen ||
-      Boolean(document.querySelector(shortcutPrioritySurfaceSelector))
-    );
-  };
+  const hasPriorityKeyboardSurface = () =>
+    panelOpen ||
+    guidePopoverOpen ||
+    headerPresetSelectOpen ||
+    headerPatternSelectOpen ||
+    headerLilacChaserColorSelectOpen ||
+    languageSelectOpen ||
+    Boolean(document.querySelector(shortcutPrioritySurfaceSelector));
 
-  const runTrainerShortcut = (action: TrainerShortcutAction) => {
-    return runTrainerShortcutAction(action, {
-      hasPriorityKeyboardSurface,
-      toggleMotionPaused,
-      adjustTargetSize,
+  const runTrainerShortcut = (action: TrainerShortcutAction) =>
+    runTrainerShortcutAction(action, {
       adjustSpeed,
-      toggleTheme: () => setMode(isDarkMode ? "light" : "dark"),
+      adjustTargetSize,
       canOpenPatternSelect: () => settings.presetId === "pursuit",
-      openHeaderSelect: openHeaderSelectFromShortcut,
+      hasPriorityKeyboardSurface,
       openControlsPanel,
       openGuideDialog,
+      openHeaderSelect: openHeaderSelectFromShortcut,
+      toggleMotionPaused,
+      toggleTheme: () => setMode(isDarkMode ? "light" : "dark"),
     });
-  };
 
   const handleWindowKeydown = (event: KeyboardEvent) => {
     const action = getTrainerShortcutAction(event);
-    if (!action) return;
-    if (isTrainerShortcutCapturedByTarget(event.target, action)) return;
-    if (!runTrainerShortcut(action)) return;
+    if (!action) {
+      return;
+    }
+    if (isTrainerShortcutCapturedByTarget(event.target, action)) {
+      return;
+    }
+    if (!runTrainerShortcut(action)) {
+      return;
+    }
 
     event.preventDefault();
   };
@@ -783,121 +843,137 @@
   };
 
   const handlePatternChange = (value: string) => {
-    if (!isPatternId(value)) return;
+    if (!isPatternId(value)) {
+      return;
+    }
     setPattern(value);
     syncBrowserPath();
   };
 
   const handleSpeedUnitChange = (value: string) => {
-    if (isSpeedUnit(value)) setSpeedUnit(value);
+    if (isSpeedUnit(value)) {
+      setSpeedUnit(value);
+    }
   };
 
   const handleBehaviorChange = (value: string) => {
-    if (isBehaviorId(value)) setBehavior(value);
+    if (isBehaviorId(value)) {
+      setBehavior(value);
+    }
   };
 
   const handleLilacChaserColorChange = (value: string) => {
-    if (!isLilacChaserBallColor(value)) return;
+    if (!isLilacChaserBallColor(value)) {
+      return;
+    }
     settings.lilacChaserBallColor = value;
     invalidateLilacChaserFrame();
-    if (isLilacChaserMode) drawFrame();
+    if (isLilacChaserMode) {
+      drawFrame();
+    }
   };
 
   const handleCalibrationInput = (event: Event, field: CalibrationField) => {
     const target = event.currentTarget;
-    if (!(target instanceof HTMLInputElement)) return;
+    if (!(target instanceof HTMLInputElement)) {
+      return;
+    }
     const nextCalibration = updateCalibrationField(
       settings.calibration,
       field,
-      Number(target.value),
+      Number(target.value)
     );
-    if (!nextCalibration) return;
+    if (!nextCalibration) {
+      return;
+    }
 
     settings.calibration = nextCalibration;
     refreshBaseSpeed();
   };
 
   const hudActions: TrainerHudActions = {
-    handlePresetChange,
-    handleHeaderPresetOpenChange,
-    handlePatternChange,
-    handleHeaderPatternOpenChange,
-    handleLilacChaserColorChange,
-    handleHeaderLilacChaserColorOpenChange,
     handleHeaderLanguageOpenChange,
-    sizeSlider: {
-      value: sizeSliderValue,
-      set: setSizeSliderValue,
-    },
-    speedSlider: {
-      value: speedSliderValue,
-      set: setSpeedSliderValue,
-    },
+    handleHeaderLilacChaserColorOpenChange,
+    handleHeaderPatternOpenChange,
+    handleHeaderPresetOpenChange,
+    handleLilacChaserColorChange,
+    handlePatternChange,
+    handlePresetChange,
     lilacChaserScaleSlider: {
-      value: lilacChaserScaleSliderValue,
       set: setLilacChaserScaleSliderValue,
+      value: lilacChaserScaleSliderValue,
     },
-    toggleMotionPaused,
-    toggleMotionDirection,
+    openControlsPanel,
     revealHud,
     revealHudTemporarily,
     setHudInteractionActive,
-    openControlsPanel,
+    sizeSlider: {
+      set: setSizeSliderValue,
+      value: sizeSliderValue,
+    },
+    speedSlider: {
+      set: setSpeedSliderValue,
+      value: speedSliderValue,
+    },
+    toggleMotionDirection,
+    toggleMotionPaused,
   };
 
   const dialogActions: TrainerDialogActions = {
-    onControlSectionChange: setActiveControlSection,
-    handlePresetChange,
-    handlePatternChange,
-    handleBehaviorChange,
-    handleLilacChaserColorChange,
-    handleShapeChange,
-    handleLetterWeightChange,
-    handleThemeCheckedChange,
-    handleSpeedUnitChange,
-    handleColorInput,
-    handleLetterColorInput,
-    handleCalibrationInput,
-    speedSlider: {
-      value: speedSliderValue,
-      set: setSpeedSliderValue,
-    },
-    sizeSlider: {
-      value: sizeSliderValue,
-      set: setSizeSliderValue,
-    },
-    lilacChaserScaleSlider: {
-      value: lilacChaserScaleSliderValue,
-      set: setLilacChaserScaleSliderValue,
-    },
-    opacitySlider: {
-      value: opacitySliderValue,
-      set: setOpacitySliderValue,
-    },
-    targetCountSlider: {
-      value: targetCountSliderValue,
-      set: setTargetCountSliderValue,
+    distractorBrightnessSlider: {
+      set: setDistractorBrightnessSliderValue,
+      value: distractorBrightnessSliderValue,
     },
     distractorCountSlider: {
-      value: distractorCountSliderValue,
       set: setDistractorCountSliderValue,
+      value: distractorCountSliderValue,
     },
-    distractorBrightnessSlider: {
-      value: distractorBrightnessSliderValue,
-      set: setDistractorBrightnessSliderValue,
-    },
+    handleBehaviorChange,
+    handleCalibrationInput,
+    handleColorInput,
+    handleLetterColorInput,
+    handleLetterWeightChange,
+    handleLilacChaserColorChange,
+    handlePatternChange,
+    handlePresetChange,
+    handleSpeedUnitChange,
+    handleTargetFormChange,
+    handleThemeCheckedChange,
     letterScaleSlider: {
-      value: letterScaleSliderValue,
       set: setLetterScaleSliderValue,
+      value: letterScaleSliderValue,
     },
-    toggleMotionPaused,
-    toggleMotionDirection,
+    lilacChaserScaleSlider: {
+      set: setLilacChaserScaleSliderValue,
+      value: lilacChaserScaleSliderValue,
+    },
+    onControlSectionChange: setActiveControlSection,
+    opacitySlider: {
+      set: setOpacitySliderValue,
+      value: opacitySliderValue,
+    },
     resetSettings,
+    sizeSlider: {
+      set: setSizeSliderValue,
+      value: sizeSliderValue,
+    },
+    speedSlider: {
+      set: setSpeedSliderValue,
+      value: speedSliderValue,
+    },
+    targetCountSlider: {
+      set: setTargetCountSliderValue,
+      value: targetCountSliderValue,
+    },
+    toggleMotionDirection,
+    toggleMotionPaused,
   };
 
   $effect(() => {
     const pausedFrameSettings = $state.snapshot(settings);
-    if (!untrack(() => motionPaused)) return;
+    if (!untrack(() => motionPaused)) {
+      return;
+    }
 
     void pausedFrameSettings;
     untrack(() => drawFrame({ clearTrail: true }));
@@ -918,7 +994,7 @@
 <svelte:document onvisibilitychange={handleVisibilityChange} />
 
 <main
-  class="trainer-stage relative h-dvh w-dvw overflow-hidden bg-background text-foreground"
+  class="trainer-stage bg-background text-foreground relative h-dvh w-dvw overflow-hidden"
   data-cursor-hidden={cursorHidden}
   aria-label={t(locale, "FoveaFlow eye trainer app")}
 >
@@ -926,7 +1002,7 @@
   <p id="trainer-canvas-description" class="sr-only">
     {t(
       locale,
-      "FoveaFlow eye trainer animation for visual tracking practice. Use Pause motion to stop target movement before changing controls.",
+      "FoveaFlow eye trainer animation for visual tracking practice. Use Pause motion to stop target movement before changing controls."
     )}
   </p>
   <p id="trainer-motion-status" class="sr-only" aria-live="polite">
@@ -938,10 +1014,10 @@
 
   <canvas
     {@attach attachCanvasOnce}
-    class="absolute inset-0 h-full w-full touch-none bg-background"
+    class="bg-background absolute inset-0 h-full w-full touch-none"
     aria-label={t(
       locale,
-      "FoveaFlow eye trainer animation for visual tracking practice",
+      "FoveaFlow eye trainer animation for visual tracking practice"
     )}
     aria-describedby="trainer-canvas-description trainer-motion-status"
   ></canvas>

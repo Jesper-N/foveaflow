@@ -1,24 +1,21 @@
 ---
 import "../styles/global.css";
-import NoscriptFallback from "../lib/components/NoscriptFallback.astro";
-import SeoHead from "../lib/components/SeoHead.astro";
-import TrainerApp from "../lib/components/TrainerApp.svelte";
-import {
-  trainerRoutes,
-  type TrainerRoute,
-} from "../lib/content/trainer-routes";
+import NoscriptFallback from "../lib/components/noscript-fallback.astro";
+import SeoHead from "../lib/components/seo-head.astro";
+import TrainerApp from "../lib/components/trainer-app.svelte";
+import { trainerRoutes } from "../lib/content/trainer-routes";
+import type { TrainerRoute } from "../lib/content/trainer-routes";
 import { buildTrainerRouteStructuredData, getSiteOrigin } from "../lib/seo";
 
 interface Props {
   route: TrainerRoute;
 }
 
-export const getStaticPaths = () => {
-  return trainerRoutes.map((route) => ({
-    params: { trainerRoute: route.slug },
+export const getStaticPaths = () =>
+  trainerRoutes.map((route) => ({
+    params: { trainerroute: route.slug },
     props: { route },
   }));
-};
 
 const { route } = Astro.props;
 

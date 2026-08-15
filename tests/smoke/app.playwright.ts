@@ -8,13 +8,15 @@ const trainingModes = [
 ] as const;
 
 test.beforeEach(async ({ context, baseURL }) => {
-  if (!baseURL) throw new Error("Playwright baseURL is required.");
+  if (!baseURL) {
+    throw new Error("Playwright baseURL is required.");
+  }
 
   await context.addCookies([
     {
       name: "PARAGLIDE_LOCALE",
-      value: "en",
       url: baseURL,
+      value: "en",
     },
   ]);
 });
@@ -26,30 +28,30 @@ for (const mode of trainingModes) {
     await page.goto(mode.path);
 
     await expect(
-      page.getByRole("main", { name: /eye trainer app/i }),
+      page.getByRole("main", { name: /eye trainer app/iu })
     ).toBeVisible();
     const selectedDesktopMode = page
-      .getByRole("button", { name: "Drill", exact: true })
-      .filter({ hasText: new RegExp(mode.name, "i") });
+      .getByRole("button", { exact: true, name: "Drill" })
+      .filter({ hasText: new RegExp(mode.name, "iu") });
     const selectedMobileMode = page.getByRole("button", {
-      name: new RegExp(`^Drill: ${mode.name}$`, "i"),
+      name: new RegExp(`^Drill: ${mode.name}$`, "iu"),
     });
     await expect(selectedDesktopMode.or(selectedMobileMode)).toBeVisible();
     await expect(
-      page.getByRole("button", { name: "Pause motion" }),
+      page.getByRole("button", { name: "Pause motion" })
     ).toBeVisible();
 
     const canvas = page.locator("canvas");
     await expect(canvas).toBeVisible();
     const initialFrame = await canvas.evaluate((element: HTMLCanvasElement) =>
-      element.toDataURL(),
+      element.toDataURL()
     );
 
     await expect
       .poll(
         () =>
           canvas.evaluate((element: HTMLCanvasElement) => element.toDataURL()),
-        { timeout: 3_000 },
+        { timeout: 3000 }
       )
       .not.toBe(initialFrame);
 

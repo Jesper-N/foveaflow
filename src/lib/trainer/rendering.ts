@@ -1,12 +1,12 @@
-import type { TrainerSettings } from "$lib/engine/presets";
-import type { Arena, TargetFrame, TargetShape } from "$lib/engine/types";
 import {
   getLetterBucket,
   getLetterForBucket,
   getReactionLetterBucket,
 } from "$lib/engine/letters";
+import type { TrainerSettings } from "$lib/engine/presets";
+import type { Arena, TargetFrame, TargetForm } from "$lib/engine/types";
 
-import { letterScaleByShape } from "./options";
+import { letterScaleByTargetForm } from "./options";
 
 const FULL_CIRCLE_RADIANS = Math.PI * 2;
 const LILAC_CHASER_DOT_COUNT = 12;
@@ -25,22 +25,22 @@ const LILAC_CHASER_UNIT_POINTS = Array.from(
     const angle =
       -Math.PI / 2 + (index / LILAC_CHASER_DOT_COUNT) * FULL_CIRCLE_RADIANS;
     return [Math.cos(angle), Math.sin(angle)] as const;
-  },
+  }
 );
 
-export type CanvasTheme = {
+export interface CanvasTheme {
   grid: string;
   trailFadeAlpha: number;
-};
+}
 
 export type CanvasColorMode = "light" | "dark";
 
-type LetterContext = {
+interface LetterContext {
   elapsedSec: number;
   travelPx: number;
   seed: number;
   reactionJumpDistancePx: number;
-};
+}
 
 export const getCanvasTheme = (colorMode: CanvasColorMode): CanvasTheme =>
   colorMode === "dark"
@@ -59,7 +59,7 @@ const getGuideGridStep = (arena: Arena) =>
 export const applyCanvasBackground = (
   node: HTMLCanvasElement,
   arena: Arena,
-  theme: CanvasTheme,
+  theme: CanvasTheme
 ) => {
   const step = getGuideGridStep(arena);
   node.style.backgroundImage = [
@@ -69,20 +69,17 @@ export const applyCanvasBackground = (
   node.style.backgroundSize = `${step}px ${step}px`;
 };
 
-export const getLilacChaserOuterRadiusPx = (arena: Arena, scale: number) => {
-  return (
-    Math.min(arena.width, arena.height) *
-    (LILAC_CHASER_ORBIT_RATIO + LILAC_CHASER_DOT_RATIO) *
-    scale
-  );
-};
+export const getLilacChaserOuterRadiusPx = (arena: Arena, scale: number) =>
+  Math.min(arena.width, arena.height) *
+  (LILAC_CHASER_ORBIT_RATIO + LILAC_CHASER_DOT_RATIO) *
+  scale;
 
 export const drawLilacChaserFrame = (
   ctx: CanvasRenderingContext2D,
   arena: Arena,
   scale: number,
   ballColor: string,
-  hiddenIndex: number,
+  hiddenIndex: number
 ) => {
   const centerX = arena.width / 2;
   const centerY = arena.height / 2;
@@ -96,7 +93,9 @@ export const drawLilacChaserFrame = (
 
   ctx.fillStyle = ballColor;
   for (let index = 0; index < LILAC_CHASER_DOT_COUNT; index += 1) {
-    if (index === hiddenIndex) continue;
+    if (index === hiddenIndex) {
+      continue;
+    }
     const point = LILAC_CHASER_UNIT_POINTS[index];
     const x = centerX + point[0] * orbitRadius;
     const y = centerY + point[1] * orbitRadius;
@@ -116,17 +115,14 @@ export const drawLilacChaserFrame = (
   ctx.stroke();
 };
 
-export const getLilacChaserHiddenIndex = (elapsedSec: number) => {
-  return (
-    Math.floor(elapsedSec / LILAC_CHASER_STEP_SEC) % LILAC_CHASER_DOT_COUNT
-  );
-};
+export const getLilacChaserHiddenIndex = (elapsedSec: number) =>
+  Math.floor(elapsedSec / LILAC_CHASER_STEP_SEC) % LILAC_CHASER_DOT_COUNT;
 
 const getLetterFontSize = (
   radiusPx: number,
-  shape: TargetShape,
-  letterScale: number,
-) => Math.max(6, radiusPx * letterScaleByShape[shape] * letterScale);
+  targetForm: TargetForm,
+  letterScale: number
+) => Math.max(6, radiusPx * letterScaleByTargetForm[targetForm] * letterScale);
 
 const drawLetterGlyph = (
   ctx: CanvasRenderingContext2D,
@@ -134,13 +130,13 @@ const drawLetterGlyph = (
   frame: TargetFrame,
   settings: Pick<
     TrainerSettings,
-    "letterColor" | "letterWeight" | "letterScale" | "targetShape"
-  >,
+    "letterColor" | "letterWeight" | "letterScale" | "targetForm"
+  >
 ) => {
   const fontSize = getLetterFontSize(
     frame.radiusPx,
-    settings.targetShape,
-    settings.letterScale,
+    settings.targetForm,
+    settings.letterScale
   );
   ctx.save();
   ctx.fillStyle = settings.letterColor;
@@ -155,7 +151,7 @@ const drawLetterGlyph = (
 const getFrameLetter = (
   settings: Pick<TrainerSettings, "presetId">,
   index: number,
-  { elapsedSec, travelPx, seed, reactionJumpDistancePx }: LetterContext,
+  { elapsedSec, travelPx, seed, reactionJumpDistancePx }: LetterContext
 ) => {
   if (settings.presetId === "reactionTime") {
     const bucket = getReactionLetterBucket(travelPx, reactionJumpDistancePx);
@@ -165,69 +161,21 @@ const getFrameLetter = (
   return getLetterForBucket(seed, index, getLetterBucket(elapsedSec));
 };
 
-export const drawTargetFrame = (
-  ctx: CanvasRenderingContext2D,
-  frame: TargetFrame,
-  index: number,
-  settings: TrainerSettings,
-  letterContext: LetterContext,
-) => {
-  if (!frame.visible) return;
-
-  const alpha = frame.alpha * settings.targetOpacity;
-  if (alpha <= 0) return;
-
-  if (!settings.letterEnabled) {
-    drawTargetShape(ctx, frame, settings.targetShape, alpha);
-    return;
-  }
-
-  ctx.save();
-  ctx.globalAlpha = alpha;
-  ctx.fillStyle = frame.color;
-  drawStimulusShape(
-    ctx,
-    frame.x,
-    frame.y,
-    frame.radiusPx,
-    settings.targetShape,
-  );
-  drawLetterGlyph(
-    ctx,
-    getFrameLetter(settings, index, letterContext),
-    frame,
-    settings,
-  );
-  ctx.restore();
-};
-
-const drawTargetShape = (
-  ctx: CanvasRenderingContext2D,
-  frame: TargetFrame,
-  shape: TargetShape,
-  alpha: number,
-) => {
-  if (alpha !== 1) ctx.globalAlpha = alpha;
-  ctx.fillStyle = frame.color;
-  drawStimulusShape(ctx, frame.x, frame.y, frame.radiusPx, shape);
-  if (alpha !== 1) ctx.globalAlpha = 1;
-};
-
-const drawStimulusShape = (
+const drawStimulusForm = (
   ctx: CanvasRenderingContext2D,
   x: number,
   y: number,
   radiusPx: number,
-  shape: TargetShape,
+  targetForm: TargetForm
 ) => {
-  if (shape === "square") {
+  if (targetForm === "square") {
     ctx.fillRect(x - radiusPx, y - radiusPx, radiusPx * 2, radiusPx * 2);
     return;
   }
 
   ctx.beginPath();
 
-  if (shape === "diamond") {
+  if (targetForm === "diamond") {
     ctx.moveTo(x, y - radiusPx * 1.25);
     ctx.lineTo(x + radiusPx * 1.25, y);
     ctx.lineTo(x, y + radiusPx * 1.25);
@@ -237,7 +185,7 @@ const drawStimulusShape = (
     return;
   }
 
-  if (shape === "triangle") {
+  if (targetForm === "triangle") {
     ctx.moveTo(x, y - radiusPx * 1.25);
     ctx.lineTo(x + radiusPx * 1.15, y + radiusPx);
     ctx.lineTo(x - radiusPx * 1.15, y + radiusPx);
@@ -246,7 +194,7 @@ const drawStimulusShape = (
     return;
   }
 
-  if (shape === "cross") {
+  if (targetForm === "cross") {
     ctx.lineWidth = Math.max(3, radiusPx * 0.45);
     ctx.lineCap = "round";
     ctx.strokeStyle = ctx.fillStyle;
@@ -259,7 +207,7 @@ const drawStimulusShape = (
   }
 
   ctx.arc(x, y, radiusPx, 0, FULL_CIRCLE_RADIANS);
-  if (shape === "ring") {
+  if (targetForm === "ring") {
     ctx.lineWidth = Math.max(3, radiusPx * 0.28);
     ctx.strokeStyle = ctx.fillStyle;
     ctx.stroke();
@@ -267,4 +215,54 @@ const drawStimulusShape = (
   }
 
   ctx.fill();
+};
+
+const drawTargetForm = (
+  ctx: CanvasRenderingContext2D,
+  frame: TargetFrame,
+  targetForm: TargetForm,
+  alpha: number
+) => {
+  if (alpha !== 1) {
+    ctx.globalAlpha = alpha;
+  }
+  ctx.fillStyle = frame.color;
+  drawStimulusForm(ctx, frame.x, frame.y, frame.radiusPx, targetForm);
+  if (alpha !== 1) {
+    ctx.globalAlpha = 1;
+  }
+};
+
+export const drawTargetFrame = (
+  ctx: CanvasRenderingContext2D,
+  frame: TargetFrame,
+  index: number,
+  settings: TrainerSettings,
+  letterContext: LetterContext
+) => {
+  if (!frame.visible) {
+    return;
+  }
+
+  const alpha = frame.alpha * settings.targetOpacity;
+  if (alpha <= 0) {
+    return;
+  }
+
+  if (!settings.letterEnabled) {
+    drawTargetForm(ctx, frame, settings.targetForm, alpha);
+    return;
+  }
+
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = frame.color;
+  drawStimulusForm(ctx, frame.x, frame.y, frame.radiusPx, settings.targetForm);
+  drawLetterGlyph(
+    ctx,
+    getFrameLetter(settings, index, letterContext),
+    frame,
+    settings
+  );
+  ctx.restore();
 };

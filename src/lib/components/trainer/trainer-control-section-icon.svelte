@@ -1,13 +1,12 @@
 <script lang="ts">
+  import type { ControlIconId } from "$lib/trainer/options";
   import ActivityIcon from "@lucide/svelte/icons/activity";
+  import TargetIcon from "@lucide/svelte/icons/crosshair";
   import EyeIcon from "@lucide/svelte/icons/eye";
   import MoonIcon from "@lucide/svelte/icons/moon";
   import RotateCcwIcon from "@lucide/svelte/icons/rotate-ccw";
   import SettingsIcon from "@lucide/svelte/icons/settings-2";
   import SunIcon from "@lucide/svelte/icons/sun";
-  import TargetIcon from "@lucide/svelte/icons/crosshair";
-
-  import type { ControlIconId } from "$lib/trainer/options";
 
   let {
     icon,

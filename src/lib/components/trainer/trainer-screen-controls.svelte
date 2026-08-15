@@ -5,10 +5,8 @@
   import type { TrainerSettings } from "$lib/engine/presets";
   import { languageState } from "$lib/i18n/state.svelte";
   import { t } from "$lib/i18n/translate";
-  import {
-    trainerSettingBounds,
-    type CalibrationField,
-  } from "$lib/trainer/settings";
+  import { trainerSettingBounds } from "$lib/trainer/settings";
+  import type { CalibrationField } from "$lib/trainer/settings";
 
   let {
     settings = $bindable(),
@@ -21,7 +19,9 @@
   } = $props();
 
   const handleShowTrailChange = (checked: boolean) => {
-    if (!canToggleDirection) return;
+    if (!canToggleDirection) {
+      return;
+    }
     settings.showTrail = checked;
   };
 
