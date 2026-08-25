@@ -93,14 +93,14 @@ const structuredData = buildStructuredData(siteOrigin);
             content: [
               {
                 json: {
-                  apiCatalog: new URL(
-                    "/.well-known/api-catalog",
-                    window.location.origin,
-                  ).toString(),
                   app: new URL("/", window.location.origin).toString(),
                   guide: new URL("/guide/", window.location.origin).toString(),
                   llms: new URL("/llms.txt", window.location.origin).toString(),
                   note: "FoveaFlow is practice software, not medical advice, diagnosis, treatment, vision therapy, or a medical device.",
+                  sitemap: new URL(
+                    "/sitemap.xml",
+                    window.location.origin,
+                  ).toString(),
                 },
                 type: "json",
               },

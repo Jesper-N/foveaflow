@@ -1,7 +1,11 @@
-import type { APIRoute } from "astro";
+import type { APIRoute, GetStaticPaths } from "astro";
 
 import { buildAgentSkillMarkdown } from "../../../../lib/agent-discovery";
 import { getSiteOrigin } from "../../../../lib/seo";
+
+export const getStaticPaths = (() => [
+  { params: { skillfile: "SKILL.md" } },
+]) satisfies GetStaticPaths;
 
 export const prerender = true;
 

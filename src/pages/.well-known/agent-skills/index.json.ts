@@ -2,7 +2,7 @@ import type { APIRoute } from "astro";
 
 import {
   buildAgentSkillsIndexJson,
-  stringifyDiscoveryJson,
+  stringifyAgentSkillsIndex,
 } from "../../../lib/agent-discovery";
 import { getSiteOrigin } from "../../../lib/seo";
 
@@ -10,7 +10,7 @@ export const prerender = true;
 
 export const GET: APIRoute = (context) =>
   new Response(
-    stringifyDiscoveryJson(
+    stringifyAgentSkillsIndex(
       buildAgentSkillsIndexJson(getSiteOrigin(context.site))
     ),
     {

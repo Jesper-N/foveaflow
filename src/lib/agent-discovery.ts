@@ -1,128 +1,10 @@
 import { createHash } from "node:crypto";
 
-import { siteMetadata } from "./content/site";
 import { absoluteUrl } from "./seo";
 
 const agentSkillName = "foveaflow";
 const agentSkillDescription =
-  "Use when helping users understand or navigate FoveaFlow's public eye training app, safety positioning, or discovery resources.";
-
-export const buildHealthJson = (site: URL) => ({
-  name: siteMetadata.name,
-  status: "ok",
-  url: absoluteUrl("/", site),
-});
-
-export const buildOpenApiJson = (site: URL) => ({
-  info: {
-    description:
-      "Public, unauthenticated metadata endpoints for FoveaFlow agent and search discovery.",
-    title: `${siteMetadata.name} public discovery endpoints`,
-    version: "1.0.0",
-  },
-  openapi: "3.1.0",
-  paths: {
-    "/health.json": {
-      get: {
-        responses: {
-          "200": {
-            content: {
-              "application/json": {
-                schema: {
-                  properties: {
-                    name: { type: "string" },
-                    status: { type: "string" },
-                    url: { format: "uri", type: "string" },
-                  },
-                  required: ["status", "name", "url"],
-                  type: "object",
-                },
-              },
-            },
-            description: "The site is available.",
-          },
-        },
-        summary: "Read site health metadata",
-      },
-    },
-    "/llms.txt": {
-      get: {
-        responses: {
-          "200": {
-            content: {
-              "text/plain": {
-                schema: { type: "string" },
-              },
-            },
-            description: "Plain-text summary and public route index.",
-          },
-        },
-        summary: "Read the agent-focused site summary",
-      },
-    },
-    "/robots.txt": {
-      get: {
-        responses: {
-          "200": {
-            content: {
-              "text/plain": {
-                schema: { type: "string" },
-              },
-            },
-            description: "Crawler directives and AI content usage signals.",
-          },
-        },
-        summary: "Read crawler and Content Signal preferences",
-      },
-    },
-    "/sitemap.xml": {
-      get: {
-        responses: {
-          "200": {
-            content: {
-              "application/xml": {
-                schema: { type: "string" },
-              },
-            },
-            description: "XML sitemap for public FoveaFlow pages.",
-          },
-        },
-        summary: "Read the public sitemap",
-      },
-    },
-  },
-  servers: [{ url: absoluteUrl("/", site).replace(/\/$/u, "") }],
-});
-
-export const buildApiCatalogJson = (site: URL) => ({
-  linkset: [
-    {
-      anchor: absoluteUrl("/", site),
-      "service-desc": [
-        {
-          href: absoluteUrl("/.well-known/openapi.json", site),
-          type: "application/vnd.oai.openapi+json",
-        },
-      ],
-      "service-doc": [
-        {
-          href: absoluteUrl("/llms.txt", site),
-          type: "text/plain",
-        },
-        {
-          href: absoluteUrl("/guide/", site),
-          type: "text/html",
-        },
-      ],
-      status: [
-        {
-          href: absoluteUrl("/health.json", site),
-          type: "application/json",
-        },
-      ],
-    },
-  ],
-});
+  "Use when helping users choose a FoveaFlow drill, understand its controls, or find its guide and safety notes.";
 
 export const buildAgentSkillMarkdown = (site: URL) =>
   [
@@ -133,7 +15,7 @@ export const buildAgentSkillMarkdown = (site: URL) =>
     "",
     "# FoveaFlow Agent Skill",
     "",
-    "Use this skill when helping a user understand or navigate FoveaFlow, a free browser-based visual tracking and focus practice app.",
+    "Use this skill when a user needs help choosing a FoveaFlow drill, setting its controls, or finding the app's safety notes.",
     "",
     "## Capabilities",
     "",
@@ -147,8 +29,7 @@ export const buildAgentSkillMarkdown = (site: URL) =>
     `- App: ${absoluteUrl("/", site)}`,
     `- Guide: ${absoluteUrl("/guide/", site)}`,
     `- Agent summary: ${absoluteUrl("/llms.txt", site)}`,
-    `- API catalog: ${absoluteUrl("/.well-known/api-catalog", site)}`,
-    `- OpenAPI description: ${absoluteUrl("/.well-known/openapi.json", site)}`,
+    `- Sitemap: ${absoluteUrl("/sitemap.xml", site)}`,
     "",
   ].join("\n");
 
@@ -170,11 +51,6 @@ export const buildAgentSkillsIndexJson = (site: URL) => {
   };
 };
 
-type DiscoveryJson =
-  | ReturnType<typeof buildAgentSkillsIndexJson>
-  | ReturnType<typeof buildApiCatalogJson>
-  | ReturnType<typeof buildHealthJson>
-  | ReturnType<typeof buildOpenApiJson>;
-
-export const stringifyDiscoveryJson = (value: DiscoveryJson) =>
-  JSON.stringify(value, null, 2);
+export const stringifyAgentSkillsIndex = (
+  value: ReturnType<typeof buildAgentSkillsIndexJson>
+) => JSON.stringify(value, null, 2);
