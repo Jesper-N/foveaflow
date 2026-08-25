@@ -993,12 +993,12 @@
 />
 <svelte:document onvisibilitychange={handleVisibilityChange} />
 
+<h1 class="sr-only">{t(locale, pageSeoContent.heading)}</h1>
 <main
   class="trainer-stage bg-background text-foreground relative h-dvh w-dvw overflow-hidden"
   data-cursor-hidden={cursorHidden}
   aria-label={t(locale, "FoveaFlow eye trainer app")}
 >
-  <h1 class="sr-only">{t(locale, pageSeoContent.heading)}</h1>
   <p id="trainer-canvas-description" class="sr-only">
     {t(
       locale,
