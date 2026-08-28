@@ -1,15 +1,14 @@
 <script lang="ts">
+  import TrainerGuideHomepageContent from "$lib/components/trainer/trainer-guide-homepage-content.svelte";
   import { Button } from "$lib/components/ui/button/index.js";
   import { legalPageLinks } from "$lib/content/legal";
   import type { PageSeoContent } from "$lib/content/page-copy";
   import { homepageSeoContent } from "$lib/content/page-copy";
   import { siteMetadata } from "$lib/content/site";
-  import { trainingModeNotes } from "$lib/content/training";
   import type { TrainingModeGuide } from "$lib/content/training";
   import { languageState } from "$lib/i18n/state.svelte";
   import { t } from "$lib/i18n/translate";
   import BookOpenIcon from "@lucide/svelte/icons/book-open";
-  import TargetIcon from "@lucide/svelte/icons/crosshair";
   import ExternalLinkIcon from "@lucide/svelte/icons/external-link";
   import FileTextIcon from "@lucide/svelte/icons/file-text";
   import ShieldCheckIcon from "@lucide/svelte/icons/shield-check";
@@ -44,6 +43,17 @@
     }
 
     requestAnimationFrame(() => closeButtonElement?.focus());
+  };
+
+  const handleFaqClick = (event: MouseEvent) => {
+    const { currentTarget } = event;
+    if (!(currentTarget instanceof HTMLButtonElement)) {
+      return;
+    }
+    const { question } = currentTarget.dataset;
+    if (question) {
+      toggleGuideFaq(question);
+    }
   };
 </script>
 
@@ -115,89 +125,7 @@
 
   {@render closeButton()}
 
-  <div
-    class="mt-6 grid items-start gap-8 lg:grid-cols-[minmax(0,0.96fr)_minmax(0,1.18fr)_minmax(16rem,0.82fr)]"
-  >
-    <section
-      class="guide-enter guide-enter-delay-1 border-border/40 grid gap-5 border-t pt-6"
-      aria-label={t(locale, "FoveaFlow overview")}
-    >
-      <h3 class="text-foreground text-base font-semibold">
-        {t(locale, "Overview")}
-      </h3>
-
-      <div
-        class="text-muted-foreground grid gap-4 text-sm leading-6 text-pretty sm:text-[0.95rem] sm:leading-7"
-      >
-        {#each homepageSeoContent.body as paragraph (paragraph)}
-          <p class="max-w-[58ch]">{t(locale, paragraph)}</p>
-        {/each}
-      </div>
-    </section>
-
-    <section
-      class="guide-enter guide-enter-delay-2 border-border/40 border-t pt-6"
-      aria-labelledby="homepage-guide-drills"
-    >
-      <h3
-        id="homepage-guide-drills"
-        class="text-foreground text-base font-semibold"
-      >
-        {t(locale, "Drills")}
-      </h3>
-      <ul class="mt-6 grid gap-5">
-        {#each trainingModeNotes as trainingModeNote (trainingModeNote.title)}
-          <li class="grid grid-cols-[2.25rem_1fr] gap-4">
-            <span
-              class="bg-accent/12 text-brand-foreground flex size-8 items-center justify-center rounded-full shadow-[inset_0_0_0_1px_rgba(118,217,0,0.14)]"
-              aria-hidden="true"
-            >
-              <TargetIcon class="size-4" />
-            </span>
-            <span class="text-muted-foreground pt-1 leading-6 text-pretty">
-              <span class="text-foreground font-semibold">
-                {t(locale, trainingModeNote.title)}:
-              </span>
-              {t(locale, trainingModeNote.body)}
-            </span>
-          </li>
-        {/each}
-      </ul>
-    </section>
-
-    <aside
-      class="guide-enter guide-enter-delay-3 border-border/40 border-t pt-6"
-    >
-      <h3 class="text-foreground text-base font-semibold">
-        {t(locale, "Safety")}
-      </h3>
-      <p class="text-muted-foreground mt-6 text-sm leading-6 text-pretty">
-        {t(locale, homepageSeoContent.trustNote)}
-      </p>
-
-      <div
-        class="mt-6 flex flex-wrap gap-2"
-        aria-label={`${t(locale, "Best uses for")} ${siteMetadata.name}`}
-      >
-        {#each guideUseCases as useCase (useCase)}
-          <span
-            class="border-border/40 bg-muted/35 text-muted-foreground rounded-full border px-3 py-1 text-xs font-medium"
-          >
-            {t(locale, useCase)}
-          </span>
-        {/each}
-      </div>
-
-      <Button
-        href="/guide/"
-        size="lg"
-        class="guide-enter guide-enter-delay-4 mt-6 w-full"
-      >
-        <BookOpenIcon data-icon="inline-start" />
-        <span>{t(locale, "Read the full guide")}</span>
-      </Button>
-    </aside>
-  </div>
+  <TrainerGuideHomepageContent {guideUseCases} {locale} />
 {/snippet}
 
 {#snippet routeContent()}
@@ -307,7 +235,8 @@
               class="text-foreground hover:text-foreground/90 focus-visible:ring-foreground flex min-h-10 w-full cursor-pointer items-center justify-between gap-3 text-left text-sm font-semibold outline-hidden transition-colors duration-150 ease-out focus-visible:ring-3"
               aria-expanded={faqOpen}
               aria-controls={`trainer-guide-faq-answer-${index}`}
-              onclick={() => toggleGuideFaq(faqItem.question)}
+              data-question={faqItem.question}
+              onclick={handleFaqClick}
             >
               <span>{t(locale, faqItem.question)}</span>
               <span

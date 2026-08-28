@@ -11,3 +11,4 @@ test-results/
 !.dev.vars.example
 .env*
 !.env.example
+.svelte-doctor/*

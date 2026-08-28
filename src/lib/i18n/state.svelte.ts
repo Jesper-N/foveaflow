@@ -28,7 +28,8 @@ class LanguageState {
   }
 
   private async apply(locale: AppLocale, persist: boolean) {
-    const requestId = (this.requestId += 1);
+    this.requestId += 1;
+    const { requestId } = this;
 
     try {
       await loadDictionary(locale);

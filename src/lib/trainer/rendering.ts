@@ -69,7 +69,7 @@ export const applyCanvasBackground = (
   node.style.backgroundSize = `${step}px ${step}px`;
 };
 
-export const getLilacChaserOuterRadiusPx = (arena: Arena, scale: number) =>
+const getLilacChaserOuterRadiusPx = (arena: Arena, scale: number) =>
   Math.min(arena.width, arena.height) *
   (LILAC_CHASER_ORBIT_RATIO + LILAC_CHASER_DOT_RATIO) *
   scale;
