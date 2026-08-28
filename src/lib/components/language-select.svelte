@@ -8,7 +8,6 @@
   import { languageState } from "$lib/i18n/state.svelte";
   import { t } from "$lib/i18n/translate";
   import { cn } from "$lib/utils.js";
-  import { onMount } from "svelte";
 
   let {
     class: className,
@@ -32,7 +31,7 @@
     variant?: "default" | "outline";
   } = $props();
 
-  onMount(() => {
+  $effect(() => {
     void languageState.init();
   });
 

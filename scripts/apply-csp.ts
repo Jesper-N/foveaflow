@@ -104,4 +104,6 @@ const updatedHeaders = headers.replace(
 if (headers !== updatedHeaders) {
   writeFileSync(headersPath, updatedHeaders);
 }
-console.log(`Applied CSP with ${scriptHashes.length} script hash(es).`);
+process.stdout.write(
+  `Applied CSP with ${scriptHashes.length} script hash(es).\n`
+);

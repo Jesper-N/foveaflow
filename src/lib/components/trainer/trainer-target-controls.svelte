@@ -91,7 +91,7 @@
 {/if}
 
 <Field.Field>
-  <label
+  <Field.Label
     class="bg-input/50 hover:ring-ring/30 focus-within:ring-foreground flex h-11 min-w-0 cursor-pointer items-center gap-3 rounded-full border px-3 transition-[color,box-shadow,background-color] focus-within:ring-3 hover:ring-4"
     for="trainer-color"
   >
@@ -113,7 +113,7 @@
       oninput={handleColorInput}
       aria-label={t(locale, "Ball color")}
     />
-  </label>
+  </Field.Label>
 </Field.Field>
 
 {#if isMotMode}

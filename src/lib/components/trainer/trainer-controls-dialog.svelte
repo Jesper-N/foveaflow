@@ -62,6 +62,20 @@
         ?.focus();
     });
   };
+
+  const handleSectionClick = (event: MouseEvent) => {
+    const { currentTarget } = event;
+    if (!(currentTarget instanceof HTMLButtonElement)) {
+      return;
+    }
+    const { controlSection } = currentTarget.dataset;
+    const section = availableControlSections.find(
+      ({ id }) => id === controlSection
+    );
+    if (section) {
+      actions.onControlSectionChange(section.id);
+    }
+  };
 </script>
 
 {#snippet sliderRow(label: string, valueLabel: string)}
@@ -83,7 +97,7 @@
     class={compact ? "shrink-0" : "w-full justify-start"}
     data-control-section={section.id}
     aria-pressed={currentControlSection === section.id}
-    onclick={() => actions.onControlSectionChange(section.id)}
+    onclick={handleSectionClick}
   >
     <span data-icon="inline-start" class="grid place-items-center">
       <TrainerControlSectionIcon icon={section.icon} {colorMode} />

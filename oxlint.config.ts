@@ -9,5 +9,7 @@ export default defineConfig({
   ignorePatterns: [...core.ignorePatterns, "src/lib/components/ui/**"],
   rules: {
     "anti-slop/no-runtime-typeof": "error",
+    complexity: ["error", { max: 80 }],
+    "no-control-regex": "off",
   },
 });

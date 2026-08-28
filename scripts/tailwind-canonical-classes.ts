@@ -69,7 +69,8 @@ const strings = (text: string) => {
       continue;
     }
 
-    const start = (i += 1);
+    i += 1;
+    const start = i;
     for (; i < text.length; i += 1) {
       if (text[i] === "\\") {
         i += 1;
@@ -212,13 +213,13 @@ for (const source of sources) {
 }
 
 if (edits.length === 0) {
-  console.log("No suggestCanonicalClasses diagnostics found.");
+  process.stdout.write("No suggestCanonicalClasses diagnostics found.\n");
   process.exit(0);
 }
 
 for (const edit of edits) {
   const file = path.relative(root, edit.file).split(path.sep).join("/");
-  console.log(`${file} ${edit.from} -> ${edit.to}`);
+  process.stdout.write(`${file} ${edit.from} -> ${edit.to}\n`);
 }
 
 process.exit(1);

@@ -25,6 +25,14 @@
     settings.showTrail = checked;
   };
 
+  const handleViewingDistanceInput = (event: Event) => {
+    handleCalibrationInput(event, "viewingDistanceCm");
+  };
+
+  const handleCssPixelsPerCmInput = (event: Event) => {
+    handleCalibrationInput(event, "cssPxPerCm");
+  };
+
   let locale = $derived(languageState.locale);
 </script>
 
@@ -39,7 +47,7 @@
       min={trainerSettingBounds.viewingDistanceCm.min}
       max={trainerSettingBounds.viewingDistanceCm.max}
       value={settings.calibration.viewingDistanceCm}
-      oninput={(event) => handleCalibrationInput(event, "viewingDistanceCm")}
+      oninput={handleViewingDistanceInput}
     />
   </Field.Field>
   <Field.Field>
@@ -53,7 +61,7 @@
       max={trainerSettingBounds.cssPxPerCm.max}
       step="0.1"
       value={settings.calibration.cssPxPerCm}
-      oninput={(event) => handleCalibrationInput(event, "cssPxPerCm")}
+      oninput={handleCssPixelsPerCmInput}
     />
   </Field.Field>
 </div>
