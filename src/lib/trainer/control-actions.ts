@@ -11,12 +11,9 @@ interface SliderBinding {
 
 export interface TrainerHudActions {
   handlePresetChange: (value: string) => void;
-  handleHeaderPresetOpenChange: (open: boolean) => void;
+  handleHeaderSelectOpenChange: (open: boolean) => void;
   handlePatternChange: (value: string) => void;
-  handleHeaderPatternOpenChange: (open: boolean) => void;
   handleLilacChaserColorChange: (value: string) => void;
-  handleHeaderLilacChaserColorOpenChange: (open: boolean) => void;
-  handleHeaderLanguageOpenChange: (open: boolean) => void;
   sizeSlider: SliderBinding;
   speedSlider: SliderBinding;
   lilacChaserScaleSlider: SliderBinding;

@@ -67,7 +67,7 @@
     type="single"
     value={settings.presetId}
     onValueChange={actions.handlePresetChange}
-    onOpenChange={actions.handleHeaderPresetOpenChange}
+    onOpenChange={actions.handleHeaderSelectOpenChange}
   >
     <Select.Trigger
       data-trainer-shortcut-select="mobile-mode"
@@ -90,7 +90,7 @@
         type="single"
         value={settings.patternId}
         onValueChange={actions.handlePatternChange}
-        onOpenChange={actions.handleHeaderPatternOpenChange}
+        onOpenChange={actions.handleHeaderSelectOpenChange}
       >
         <Select.Trigger
           data-trainer-shortcut-select="mobile-pattern"
@@ -115,7 +115,7 @@
         type="single"
         value={settings.lilacChaserBallColor}
         onValueChange={actions.handleLilacChaserColorChange}
-        onOpenChange={actions.handleHeaderLilacChaserColorOpenChange}
+        onOpenChange={actions.handleHeaderSelectOpenChange}
       >
         <Select.Trigger
           class="size-9 justify-center rounded-full p-0 [&>svg:last-child]:hidden"
@@ -152,7 +152,7 @@
     type="single"
     value={settings.presetId}
     onValueChange={actions.handlePresetChange}
-    onOpenChange={actions.handleHeaderPresetOpenChange}
+    onOpenChange={actions.handleHeaderSelectOpenChange}
   >
     <Select.Trigger
       data-trainer-shortcut-select="desktop-mode"
@@ -180,7 +180,7 @@
         type="single"
         value={settings.patternId}
         onValueChange={actions.handlePatternChange}
-        onOpenChange={actions.handleHeaderPatternOpenChange}
+        onOpenChange={actions.handleHeaderSelectOpenChange}
       >
         <Select.Trigger
           data-trainer-shortcut-select="desktop-pattern"

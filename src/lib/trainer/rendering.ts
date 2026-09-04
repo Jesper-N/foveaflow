@@ -250,54 +250,6 @@ const drawStimulusForm = (
   ctx.fill();
 };
 
-const drawTargetForm = (
-  ctx: CanvasRenderingContext2D,
-  frame: TargetFrame,
-  targetForm: TargetForm,
-  alpha: number
-) => {
-  if (alpha !== 1) {
-    ctx.globalAlpha = alpha;
-  }
-  ctx.fillStyle = frame.color;
-  drawStimulusForm(ctx, frame.x, frame.y, frame.radiusPx, targetForm);
-  if (alpha !== 1) {
-    ctx.globalAlpha = 1;
-  }
-};
-
-const drawTargetFrame = (
-  ctx: CanvasRenderingContext2D,
-  frame: TargetFrame,
-  index: number,
-  settings: TrainerSettings,
-  letterContext: LetterContext
-) => {
-  if (!frame.visible) {
-    return;
-  }
-
-  const alpha = frame.alpha * settings.targetOpacity;
-  if (alpha <= 0) {
-    return;
-  }
-
-  if (!settings.letterEnabled) {
-    drawTargetForm(ctx, frame, settings.targetForm, alpha);
-    return;
-  }
-
-  ctx.globalAlpha = alpha;
-  ctx.fillStyle = frame.color;
-  drawStimulusForm(ctx, frame.x, frame.y, frame.radiusPx, settings.targetForm);
-  drawLetterGlyph(
-    ctx,
-    getFrameLetter(settings, index, letterContext),
-    frame,
-    settings
-  );
-};
-
 export const drawTargetFrames = (
   ctx: CanvasRenderingContext2D,
   frames: TargetFrame[],
@@ -305,15 +257,35 @@ export const drawTargetFrames = (
   settings: TrainerSettings,
   letterContext: LetterContext
 ) => {
-  if (settings.letterEnabled) {
+  const { letterEnabled, targetOpacity, targetForm } = settings;
+  if (letterEnabled) {
     ctx.save();
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
   }
   for (let index = 0; index < count; index += 1) {
-    drawTargetFrame(ctx, frames[index], index, settings, letterContext);
+    const frame = frames[index];
+    const alpha = frame.alpha * targetOpacity;
+    if (!frame.visible || alpha <= 0) {
+      continue;
+    }
+    if (letterEnabled || alpha !== 1) {
+      ctx.globalAlpha = alpha;
+    }
+    ctx.fillStyle = frame.color;
+    drawStimulusForm(ctx, frame.x, frame.y, frame.radiusPx, targetForm);
+    if (letterEnabled) {
+      drawLetterGlyph(
+        ctx,
+        getFrameLetter(settings, index, letterContext),
+        frame,
+        settings
+      );
+    } else if (alpha !== 1) {
+      ctx.globalAlpha = 1;
+    }
   }
-  if (settings.letterEnabled) {
+  if (letterEnabled) {
     ctx.restore();
   }
 };

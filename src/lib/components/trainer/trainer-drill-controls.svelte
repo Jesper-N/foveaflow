@@ -10,6 +10,7 @@
   import { t } from "$lib/i18n/translate";
   import { behaviorOptions } from "$lib/trainer/behavior";
   import type { BehaviorId } from "$lib/trainer/behavior";
+  import type { TrainerDialogActions } from "$lib/trainer/control-actions";
   import {
     getBehaviorName,
     getLilacChaserColorName,
@@ -18,32 +19,21 @@
     lilacChaserColorOptions,
   } from "$lib/trainer/options";
   import { trainerSettingBounds } from "$lib/trainer/settings";
-  import type { TrainerSliderValue } from "$lib/trainer/settings";
   import type { Snippet } from "svelte";
 
   let {
+    actions,
     settings,
     isLilacChaserMode,
     behaviorValue,
     patternSelectContentClass,
-    handlePresetChange,
-    handlePatternChange,
-    handleBehaviorChange,
-    handleLilacChaserColorChange,
-    lilacChaserScaleSliderValue,
-    setLilacChaserScaleSliderValue,
     sliderRow,
   }: {
+    actions: TrainerDialogActions;
     settings: TrainerSettings;
     isLilacChaserMode: boolean;
     behaviorValue: BehaviorId;
     patternSelectContentClass: string;
-    handlePresetChange: (value: string) => void;
-    handlePatternChange: (value: string) => void;
-    handleBehaviorChange: (value: string) => void;
-    handleLilacChaserColorChange: (value: string) => void;
-    lilacChaserScaleSliderValue: () => number[];
-    setLilacChaserScaleSliderValue: (value: TrainerSliderValue) => void;
     sliderRow: Snippet<[string, string]>;
   } = $props();
 
@@ -63,7 +53,7 @@
   <Select.Root
     type="single"
     value={settings.presetId}
-    onValueChange={handlePresetChange}
+    onValueChange={actions.handlePresetChange}
   >
     <Select.Trigger
       id="trainer-mode"
@@ -93,7 +83,7 @@
     <Select.Root
       type="single"
       value={settings.patternId}
-      onValueChange={handlePatternChange}
+      onValueChange={actions.handlePatternChange}
     >
       <Select.Trigger
         id="trainer-pattern"
@@ -115,7 +105,7 @@
     <Select.Root
       type="single"
       value={behaviorValue}
-      onValueChange={handleBehaviorChange}
+      onValueChange={actions.handleBehaviorChange}
     >
       <Select.Trigger
         id="trainer-behavior"
@@ -141,7 +131,7 @@
     <Select.Root
       type="single"
       value={settings.lilacChaserBallColor}
-      onValueChange={handleLilacChaserColorChange}
+      onValueChange={actions.handleLilacChaserColorChange}
     >
       <Select.Trigger
         id="lilac-chaser-color"
@@ -187,7 +177,9 @@
       `${settings.lilacChaserScale.toFixed(2)}x`
     )}
     <Slider
-      bind:value={lilacChaserScaleSliderValue, setLilacChaserScaleSliderValue}
+      bind:value={
+        actions.lilacChaserScaleSlider.value, actions.lilacChaserScaleSlider.set
+      }
       min={trainerSettingBounds.lilacChaserScale.min}
       max={trainerSettingBounds.lilacChaserScale.max}
       step={0.05}

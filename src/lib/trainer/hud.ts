@@ -5,32 +5,6 @@ export interface HudBounds {
 
 type HudPointerIntent = "none" | "reveal" | "hide";
 
-export const getHudInteractionOpen = (
-  panelOpen: boolean,
-  guidePopoverOpen: boolean,
-  headerPresetSelectOpen: boolean,
-  headerPatternSelectOpen: boolean,
-  headerLilacChaserColorSelectOpen: boolean,
-  headerLanguageSelectOpen: boolean
-) =>
-  panelOpen ||
-  guidePopoverOpen ||
-  headerPresetSelectOpen ||
-  headerPatternSelectOpen ||
-  headerLilacChaserColorSelectOpen ||
-  headerLanguageSelectOpen;
-
-export const getHudHidden = (
-  hudAutoHideReady: boolean,
-  hudVisible: boolean,
-  hudInteractionOpen: boolean
-) => hudAutoHideReady && !hudVisible && !hudInteractionOpen;
-
-export const canAutoHideHud = (
-  hudAutoHideReady: boolean,
-  hudInteractionOpen: boolean
-) => hudAutoHideReady && !hudInteractionOpen;
-
 export const getHudPointerIntent = (
   pointerType: string,
   hudAutoHideReady: boolean,

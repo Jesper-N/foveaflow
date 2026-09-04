@@ -2,9 +2,9 @@
   import LanguageSelect from "$lib/components/language-select.svelte";
   import { Button } from "$lib/components/ui/button/index.js";
   import { Switch } from "$lib/components/ui/switch/index.js";
-  import type { TrainerSettings } from "$lib/engine/presets";
   import { languageState } from "$lib/i18n/state.svelte";
   import { t } from "$lib/i18n/translate";
+  import type { TrainerDialogActions } from "$lib/trainer/control-actions";
   import ArrowLeftRightIcon from "@lucide/svelte/icons/arrow-left-right";
   import LanguagesIcon from "@lucide/svelte/icons/languages";
   import MoonIcon from "@lucide/svelte/icons/moon";
@@ -13,23 +13,17 @@
   import SunIcon from "@lucide/svelte/icons/sun";
 
   let {
-    settings,
+    actions,
     motionPaused,
     motionDirectionLabel,
     canToggleDirection,
     isDarkMode,
-    toggleMotionPaused,
-    toggleMotionDirection,
-    handleThemeCheckedChange,
   }: {
-    settings: TrainerSettings;
+    actions: TrainerDialogActions;
     motionPaused: boolean;
     motionDirectionLabel: string;
     canToggleDirection: boolean;
     isDarkMode: boolean;
-    toggleMotionPaused: () => void;
-    toggleMotionDirection: () => void;
-    handleThemeCheckedChange: (checked: boolean) => void;
   } = $props();
 
   let locale = $derived(languageState.locale);
@@ -49,7 +43,7 @@
       variant="outline"
       size="sm"
       aria-describedby="trainer-motion-status"
-      onclick={toggleMotionPaused}
+      onclick={actions.toggleMotionPaused}
     >
       {motionPaused ? t(locale, "Resume") : t(locale, "Pause")}
     </Button>
@@ -67,7 +61,7 @@
       size="sm"
       aria-describedby="trainer-motion-status"
       disabled={!canToggleDirection}
-      onclick={toggleMotionDirection}
+      onclick={actions.toggleMotionDirection}
     >
       {motionDirectionLabel}
     </Button>
@@ -86,7 +80,7 @@
     </div>
     <Switch
       checked={isDarkMode}
-      onCheckedChange={handleThemeCheckedChange}
+      onCheckedChange={actions.handleThemeCheckedChange}
       aria-label={t(locale, "Use dark theme")}
     />
   </div>

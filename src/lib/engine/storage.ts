@@ -92,44 +92,18 @@ export type StoredSettings = z.infer<typeof storedSettingsSchema>;
 
 type TimerId = ReturnType<typeof setTimeout>;
 
-const getBrowserStorage = () => {
+export const loadSettings = (): StoredSettings | null => {
   try {
-    return globalThis.localStorage ?? null;
-  } catch {
-    return null;
-  }
-};
-
-const parseJson = (value: string | null): StoredSettings | null => {
-  if (!value) {
-    return null;
-  }
-  try {
-    return storedSettingsSchema.parse(JSON.parse(value));
-  } catch {
-    return null;
-  }
-};
-
-export const loadSettings = () => {
-  const storage = getBrowserStorage();
-  if (!storage) {
-    return null;
-  }
-  try {
-    return parseJson(storage.getItem(SETTINGS_KEY));
+    const value = globalThis.localStorage?.getItem(SETTINGS_KEY);
+    return value ? storedSettingsSchema.parse(JSON.parse(value)) : null;
   } catch {
     return null;
   }
 };
 
 const saveSettings = (settings: TrainerSettings) => {
-  const storage = getBrowserStorage();
-  if (!storage) {
-    return;
-  }
   try {
-    storage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+    globalThis.localStorage?.setItem(SETTINGS_KEY, JSON.stringify(settings));
   } catch {
     // Storage can be blocked by browser privacy settings.
   }

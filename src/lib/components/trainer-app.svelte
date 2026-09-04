@@ -64,15 +64,23 @@
       motionPaused={controller.motionPaused}
       motionDirectionToggleLabel={controller.motionDirectionToggleLabel}
       canToggleDirection={controller.canToggleDirection}
-      bind:mobilePresetSelectOpen={controller.mobilePresetSelectOpen}
-      bind:mobilePatternSelectOpen={controller.mobilePatternSelectOpen}
-      bind:mobileLilacChaserColorSelectOpen={
-        controller.mobileLilacChaserColorSelectOpen
+      bind:mobilePresetSelectOpen={
+        controller.headerSelects.mobilePresetSelectOpen
       }
-      bind:desktopPresetSelectOpen={controller.desktopPresetSelectOpen}
-      bind:desktopPatternSelectOpen={controller.desktopPatternSelectOpen}
+      bind:mobilePatternSelectOpen={
+        controller.headerSelects.mobilePatternSelectOpen
+      }
+      bind:mobileLilacChaserColorSelectOpen={
+        controller.headerSelects.mobileLilacChaserColorSelectOpen
+      }
+      bind:desktopPresetSelectOpen={
+        controller.headerSelects.desktopPresetSelectOpen
+      }
+      bind:desktopPatternSelectOpen={
+        controller.headerSelects.desktopPatternSelectOpen
+      }
       bind:desktopLilacChaserColorSelectOpen={
-        controller.desktopLilacChaserColorSelectOpen
+        controller.headerSelects.desktopLilacChaserColorSelectOpen
       }
       bind:languageSelectOpen={controller.languageSelectOpen}
       guideButtonLabel={controller.activeRoute

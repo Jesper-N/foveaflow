@@ -5,17 +5,17 @@
   import type { TrainerSettings } from "$lib/engine/presets";
   import { languageState } from "$lib/i18n/state.svelte";
   import { t } from "$lib/i18n/translate";
+  import type { TrainerDialogActions } from "$lib/trainer/control-actions";
   import { trainerSettingBounds } from "$lib/trainer/settings";
-  import type { CalibrationField } from "$lib/trainer/settings";
 
   let {
+    actions,
     settings = $bindable(),
     canToggleDirection,
-    handleCalibrationInput,
   }: {
+    actions: TrainerDialogActions;
     settings: TrainerSettings;
     canToggleDirection: boolean;
-    handleCalibrationInput: (event: Event, field: CalibrationField) => void;
   } = $props();
 
   const handleShowTrailChange = (checked: boolean) => {
@@ -26,11 +26,11 @@
   };
 
   const handleViewingDistanceInput = (event: Event) => {
-    handleCalibrationInput(event, "viewingDistanceCm");
+    actions.handleCalibrationInput(event, "viewingDistanceCm");
   };
 
   const handleCssPixelsPerCmInput = (event: Event) => {
-    handleCalibrationInput(event, "cssPxPerCm");
+    actions.handleCalibrationInput(event, "cssPxPerCm");
   };
 
   let locale = $derived(languageState.locale);

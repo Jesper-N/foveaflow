@@ -318,7 +318,7 @@
 
         <LanguageSelect
           bind:open={languageSelectOpen}
-          onOpenChange={actions.handleHeaderLanguageOpenChange}
+          onOpenChange={actions.handleHeaderSelectOpenChange}
         />
       </nav>
     </div>
