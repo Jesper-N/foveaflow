@@ -94,11 +94,18 @@ const expectTrainer = async (
   await expectAnimation(page);
 };
 
-const choose = async (page: Page, select: "mode" | "pattern", name: string) => {
-  await page
-    .locator(`[data-trainer-shortcut-select$="-${select}"]:visible`)
-    .click();
-  await page.getByRole("option", { exact: true, name }).click();
+const choose = async (
+  page: Page,
+  select: "mode" | "pattern",
+  name: string,
+  hasTouch: boolean
+) => {
+  const action = hasTouch ? "tap" : "click";
+  const trigger = page.locator(
+    `[data-trainer-shortcut-select$="-${select}"]:visible`
+  );
+  await trigger[action]();
+  await page.getByRole("option", { exact: true, name })[action]();
   await expect(page.locator('[data-slot="select-content"]')).toHaveCount(0);
 };
 
@@ -162,6 +169,7 @@ const menuChoices = [
 for (const choice of menuChoices) {
   test(`menu navigation: ${choice.select} / ${choice.name}`, async ({
     page,
+    hasTouch,
   }) => {
     const route = getTrainerRoute(choice.mode, choice.patternId);
     if (!route) {
@@ -176,7 +184,7 @@ for (const choice of menuChoices) {
     await expect(
       page.getByRole("button", { exact: true, name: "Pause motion" })
     ).toBeVisible();
-    await choose(page, choice.select, choice.name);
+    await choose(page, choice.select, choice.name, hasTouch);
     await expect(page).toHaveURL(new RegExp(`${route.path}$`, "u"));
     await expectTrainer(page, choice.mode, choice.patternId);
   });
@@ -212,6 +220,7 @@ test("pause freezes the canvas and resume restarts motion", async ({
 
 test("settings redraw, survive reload, and reset through the controls", async ({
   page,
+  hasTouch,
 }) => {
   await openPage(page, "/circle/");
   await expectTrainer(page, "pursuit", "circle");
@@ -255,7 +264,7 @@ test("settings redraw, survive reload, and reset through the controls", async ({
       targetForm: initial.targetForm,
     });
   await page.keyboard.press("Escape");
-  await choose(page, "mode", "Multiple Distractions");
+  await choose(page, "mode", "Multiple Distractions", hasTouch);
   await page.getByRole("button", { name: "Open controls" }).click();
   await adjustSlider(page, "Targets", "ArrowRight");
   await adjustSlider(page, "Distractors", "ArrowLeft");
