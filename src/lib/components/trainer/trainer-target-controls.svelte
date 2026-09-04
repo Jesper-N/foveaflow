@@ -7,52 +7,22 @@
   import type { TrainerSettings } from "$lib/engine/presets";
   import { languageState } from "$lib/i18n/state.svelte";
   import { t } from "$lib/i18n/translate";
+  import type { TrainerDialogActions } from "$lib/trainer/control-actions";
   import { getTargetFormName, targetFormOptions } from "$lib/trainer/options";
   import { trainerSettingBounds } from "$lib/trainer/settings";
-  import type { TrainerSliderValue } from "$lib/trainer/settings";
   import type { Snippet } from "svelte";
 
   interface Props {
+    actions: TrainerDialogActions;
     settings: TrainerSettings;
     isMotMode: boolean;
-    handleColorInput: (event: Event) => void;
-    handleTargetFormChange: (value: string) => void;
-    handleLetterColorInput: (event: Event) => void;
-    handleLetterWeightChange: (value: string) => void;
-    sizeSliderValue: () => number[];
-    setSizeSliderValue: (value: TrainerSliderValue) => void;
-    opacitySliderValue: () => number[];
-    setOpacitySliderValue: (value: TrainerSliderValue) => void;
-    targetCountSliderValue: () => number[];
-    setTargetCountSliderValue: (value: TrainerSliderValue) => void;
-    distractorCountSliderValue: () => number[];
-    setDistractorCountSliderValue: (value: TrainerSliderValue) => void;
-    distractorBrightnessSliderValue: () => number[];
-    setDistractorBrightnessSliderValue: (value: TrainerSliderValue) => void;
-    letterScaleSliderValue: () => number[];
-    setLetterScaleSliderValue: (value: TrainerSliderValue) => void;
     sliderRow: Snippet<[string, string]>;
   }
 
   let {
+    actions,
     settings = $bindable(),
     isMotMode,
-    handleColorInput,
-    handleTargetFormChange,
-    handleLetterColorInput,
-    handleLetterWeightChange,
-    sizeSliderValue,
-    setSizeSliderValue,
-    opacitySliderValue,
-    setOpacitySliderValue,
-    targetCountSliderValue,
-    setTargetCountSliderValue,
-    distractorCountSliderValue,
-    setDistractorCountSliderValue,
-    distractorBrightnessSliderValue,
-    setDistractorBrightnessSliderValue,
-    letterScaleSliderValue,
-    setLetterScaleSliderValue,
     sliderRow,
   }: Props = $props();
 
@@ -67,7 +37,9 @@
     <Field.Field>
       {@render sliderRow(t(locale, "Targets"), String(settings.targetCount))}
       <Slider
-        bind:value={targetCountSliderValue, setTargetCountSliderValue}
+        bind:value={
+          actions.targetCountSlider.value, actions.targetCountSlider.set
+        }
         min={trainerSettingBounds.targetCount.min}
         max={trainerSettingBounds.targetCount.max}
         step={1}
@@ -80,7 +52,9 @@
         String(settings.distractorCount)
       )}
       <Slider
-        bind:value={distractorCountSliderValue, setDistractorCountSliderValue}
+        bind:value={
+          actions.distractorCountSlider.value, actions.distractorCountSlider.set
+        }
         min={trainerSettingBounds.distractorCount.min}
         max={trainerSettingBounds.distractorCount.max}
         step={1}
@@ -110,7 +84,7 @@
       class="sr-only"
       type="color"
       value={settings.ballColor}
-      oninput={handleColorInput}
+      oninput={actions.handleColorInput}
       aria-label={t(locale, "Ball color")}
     />
   </Field.Label>
@@ -124,7 +98,8 @@
     )}
     <Slider
       bind:value={
-        distractorBrightnessSliderValue, setDistractorBrightnessSliderValue
+        actions.distractorBrightnessSlider.value,
+        actions.distractorBrightnessSlider.set
       }
       min={trainerSettingBounds.distractorBrightness.min}
       max={trainerSettingBounds.distractorBrightness.max}
@@ -140,7 +115,7 @@
     `${Math.round(settings.targetOpacity * 100)}%`
   )}
   <Slider
-    bind:value={opacitySliderValue, setOpacitySliderValue}
+    bind:value={actions.opacitySlider.value, actions.opacitySlider.set}
     min={trainerSettingBounds.targetOpacity.min}
     max={trainerSettingBounds.targetOpacity.max}
     step={0.01}
@@ -153,7 +128,7 @@
   <Select.Root
     type="single"
     value={settings.targetForm}
-    onValueChange={handleTargetFormChange}
+    onValueChange={actions.handleTargetFormChange}
   >
     <Select.Trigger
       id="trainer-shape"
@@ -178,7 +153,7 @@
     `${Math.round(settings.baseRadiusPx)} px`
   )}
   <Slider
-    bind:value={sizeSliderValue, setSizeSliderValue}
+    bind:value={actions.sizeSlider.value, actions.sizeSlider.set}
     min={trainerSettingBounds.baseRadiusPx.min}
     max={trainerSettingBounds.baseRadiusPx.max}
     step={1}
@@ -186,11 +161,4 @@
   />
 </Field.Field>
 
-<TrainerLetterControls
-  bind:settings
-  {handleLetterColorInput}
-  {handleLetterWeightChange}
-  {letterScaleSliderValue}
-  {setLetterScaleSliderValue}
-  {sliderRow}
-/>
+<TrainerLetterControls bind:settings {actions} {sliderRow} />

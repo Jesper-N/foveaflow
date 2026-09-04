@@ -5,26 +5,22 @@
   import type { TrainerSettings } from "$lib/engine/presets";
   import { languageState } from "$lib/i18n/state.svelte";
   import { t } from "$lib/i18n/translate";
+  import type { TrainerDialogActions } from "$lib/trainer/control-actions";
   import {
     maxSpeedByUnit,
     minSpeedByUnit,
     speedDecimalPlacesByUnit,
     speedSliderStepByUnit,
   } from "$lib/trainer/options";
-  import type { TrainerSliderValue } from "$lib/trainer/settings";
   import type { Snippet } from "svelte";
 
   let {
+    actions,
     settings,
-    speedSliderValue,
-    setSpeedSliderValue,
-    handleSpeedUnitChange,
     sliderRow,
   }: {
+    actions: TrainerDialogActions;
     settings: TrainerSettings;
-    speedSliderValue: () => number[];
-    setSpeedSliderValue: (value: TrainerSliderValue) => void;
-    handleSpeedUnitChange: (value: string) => void;
     sliderRow: Snippet<[string, string]>;
   } = $props();
 
@@ -37,7 +33,7 @@
     `${settings.speed.value.toFixed(speedDecimalPlacesByUnit[settings.speed.unit])} ${settings.speed.unit}`
   )}
   <Slider
-    bind:value={speedSliderValue, setSpeedSliderValue}
+    bind:value={actions.speedSlider.value, actions.speedSlider.set}
     min={minSpeedByUnit[settings.speed.unit]}
     max={maxSpeedByUnit[settings.speed.unit]}
     step={speedSliderStepByUnit[settings.speed.unit]}
@@ -50,7 +46,7 @@
   <Select.Root
     type="single"
     value={settings.speed.unit}
-    onValueChange={handleSpeedUnitChange}
+    onValueChange={actions.handleSpeedUnitChange}
   >
     <Select.Trigger
       id="trainer-speed-unit"

@@ -83,23 +83,6 @@ const lilacChaserControlSections = controlSections.filter(
 export const getAvailableControlSections = (isLilacChaserMode: boolean) =>
   isLilacChaserMode ? lilacChaserControlSections : controlSections;
 
-export const resolveControlSection = (
-  activeSection: ControlSectionId,
-  availableSections: readonly ControlSection[]
-): ControlSectionId => {
-  const fallback = availableSections[0]?.id ?? "session";
-  return availableSections.some((section) => section.id === activeSection)
-    ? activeSection
-    : fallback;
-};
-
-export const getControlSectionLabel = (
-  sectionId: ControlSectionId,
-  availableSections: readonly ControlSection[]
-) =>
-  availableSections.find((section) => section.id === sectionId)?.label ??
-  "Controls";
-
 const getOptionName = (
   options: readonly { id: string | number; name: string }[],
   id: string | number
@@ -179,12 +162,11 @@ const pursuitPatternOptions = patternOptions.filter(
   (option) => option.id !== "multipleObjectTracking"
 );
 
-const unpredictivePatternIds = [
+const unpredictivePatternIdSet = new Set<PatternId>([
   "randomWalk",
   "directionChange",
-] as const satisfies readonly PatternId[];
-
-const fixedDirectionPatternIds = [
+]);
+const fixedDirectionPatternIdSet = new Set<PatternId>([
   "randomWalk",
   "directionChange",
   "diagonal",
@@ -193,31 +175,21 @@ const fixedDirectionPatternIds = [
   "verticalSweep",
   "downRightSweep",
   "downLeftSweep",
-] as const satisfies readonly PatternId[];
+]);
 
-const unpredictivePatternIdSet: ReadonlySet<PatternId> = new Set(
-  unpredictivePatternIds
-);
 const pursuitPatternIdSet: ReadonlySet<PatternId> = new Set(
   pursuitPatternOptions.map((option) => option.id)
 );
-const fixedDirectionPatternIdSet: ReadonlySet<PatternId> = new Set(
-  fixedDirectionPatternIds
-);
-
-const isUnpredictivePattern = (patternId: PatternId) =>
-  unpredictivePatternIdSet.has(patternId);
-
 export const canPatternToggleDirection = (patternId: PatternId) =>
   pursuitPatternIdSet.has(patternId) &&
   !fixedDirectionPatternIdSet.has(patternId);
 
 export const unpredictivePatternOptions = pursuitPatternOptions.filter(
-  (option) => isUnpredictivePattern(option.id)
+  (option) => unpredictivePatternIdSet.has(option.id)
 );
 
 export const predictivePatternOptions = pursuitPatternOptions.filter(
-  (option) => !isUnpredictivePattern(option.id)
+  (option) => !unpredictivePatternIdSet.has(option.id)
 );
 
 export const lilacChaserColorOptions = [

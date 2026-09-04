@@ -1,3 +1,4 @@
+import { resolvePatternBounds } from "$lib/engine/pattern-paths";
 import {
   createPatternSampler,
   getTeleportJumpDistancePx,
@@ -112,9 +113,7 @@ export const createTrainerFrameSampler = () => {
       letterContext.seed = seed;
       if (settings.presetId === "reactionTime") {
         letterContext.reactionJumpDistancePx = getTeleportJumpDistancePx(
-          arena,
-          radiusPx,
-          params.pathMarginPx
+          resolvePatternBounds(arena, radiusPx, params.pathMarginPx)
         );
       }
 

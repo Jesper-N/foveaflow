@@ -18,7 +18,6 @@ import type {
   LetterWeight,
   TrainerSettings,
 } from "$lib/engine/presets";
-import type { SizeProfile, SpeedProfile } from "$lib/engine/profiles";
 import { safeStimulusColor } from "$lib/engine/safety";
 import type { StoredSettings } from "$lib/engine/storage";
 import type { PatternId, SpeedUnit, TargetForm } from "$lib/engine/types";
@@ -95,11 +94,12 @@ export const isSpeedUnit = (value: string): value is SpeedUnit =>
 export const isPatternId = (value: string): value is PatternId =>
   patternIdSet.has(value);
 
-export const isTargetForm = (value: string): value is TargetForm =>
-  targetFormSet.has(value);
+export const isTargetForm = (value: string | undefined): value is TargetForm =>
+  value !== undefined && targetFormSet.has(value);
 
-export const isLetterWeight = (value: number): value is LetterWeight =>
-  letterWeightSet.has(value);
+export const isLetterWeight = (
+  value: number | undefined
+): value is LetterWeight => value !== undefined && letterWeightSet.has(value);
 
 export const isLilacChaserBallColor = (
   value: string | undefined
@@ -107,30 +107,23 @@ export const isLilacChaserBallColor = (
 
 const resolveNumber = (
   value: number | undefined,
-  min: number,
-  max: number,
+  { min, max }: { min: number; max: number },
   fallback: number
 ) => (isFiniteNumber(value) ? clamp(value, min, max) : fallback);
 
 const resolveInteger = (
   value: number | undefined,
-  min: number,
-  max: number,
+  bounds: { min: number; max: number },
   fallback: number
-) => Math.round(resolveNumber(value, min, max, fallback));
-
-const readSliderNumber = (value: TrainerSliderValue) => {
-  const next = value?.[0];
-  return isFiniteNumber(next) ? next : null;
-};
+) => Math.round(resolveNumber(value, bounds, fallback));
 
 export const resolveSliderNumber = (
   value: TrainerSliderValue,
   min: number,
   max: number
 ) => {
-  const next = readSliderNumber(value);
-  return next === null ? null : clamp(next, min, max);
+  const next = value?.[0];
+  return isFiniteNumber(next) ? clamp(next, min, max) : null;
 };
 
 export const resolveSliderInteger = (
@@ -192,8 +185,7 @@ const resolveSpeed = (
     unit,
     value: resolveNumber(
       speed.value,
-      minSpeedByUnit[unit],
-      maxSpeedByUnit[unit],
+      { max: maxSpeedByUnit[unit], min: minSpeedByUnit[unit] },
       fallback.value
     ),
   };
@@ -212,22 +204,17 @@ const resolveCalibration = (
       : DEFAULT_CALIBRATION.createdAt,
     cssPxPerCm: resolveNumber(
       calibration.cssPxPerCm,
-      trainerSettingBounds.cssPxPerCm.min,
-      trainerSettingBounds.cssPxPerCm.max,
+      trainerSettingBounds.cssPxPerCm,
       DEFAULT_CALIBRATION.cssPxPerCm
     ),
     id: calibration.id,
     viewingDistanceCm: resolveNumber(
       calibration.viewingDistanceCm,
-      trainerSettingBounds.viewingDistanceCm.min,
-      trainerSettingBounds.viewingDistanceCm.max,
+      trainerSettingBounds.viewingDistanceCm,
       DEFAULT_CALIBRATION.viewingDistanceCm
     ),
   };
 };
-
-const resolveStoredPreset = (presetId: string | undefined) =>
-  getPreset(presetId ?? firstPreset.id);
 
 const resolveStoredPatternId = (
   preset: ExercisePreset,
@@ -245,91 +232,34 @@ const resolveStoredPatternId = (
   return preset.patternId;
 };
 
-const resolveStoredProfiles = (
-  preset: ExercisePreset,
-  savedSpeedProfile: SpeedProfile | undefined,
-  savedSizeProfile: SizeProfile | undefined
-): Pick<TrainerSettings, "speedProfile" | "sizeProfile"> => {
-  const sizeProfile = savedSizeProfile ?? preset.sizeProfile;
-  let speedProfile = savedSpeedProfile ?? preset.speedProfile;
-
-  if (sizeProfile.kind === "pulse") {
-    speedProfile = { kind: "constant" };
-  }
-
+export const applyPresetToSettings = (
+  currentSettings: TrainerSettings,
+  presetId: string
+): TrainerSettings => {
+  const preset = getPreset(presetId);
   return {
-    sizeProfile,
-    speedProfile,
+    ...currentSettings,
+    distractorCount:
+      preset.id === "mot" && currentSettings.presetId !== "mot"
+        ? preset.distractorCount
+        : currentSettings.distractorCount,
+    patternId: preset.patternId,
+    presetId: preset.id,
   };
 };
-
-const resolveStoredTargetForm = (targetForm: string | undefined) =>
-  targetForm !== undefined && isTargetForm(targetForm)
-    ? targetForm
-    : storedSettingDefaults.targetForm;
-
-const resolveStoredLetterWeight = (letterWeight: number | undefined) =>
-  isFiniteNumber(letterWeight) && isLetterWeight(letterWeight)
-    ? letterWeight
-    : storedSettingDefaults.letterWeight;
-
-const getPreservedSettings = (currentSettings: TrainerSettings) => ({
-  ballColor: currentSettings.ballColor,
-  baseRadiusPx: currentSettings.baseRadiusPx,
-  distractorBrightness: currentSettings.distractorBrightness,
-  distractorCount: currentSettings.distractorCount,
-  letterColor: currentSettings.letterColor,
-  letterEnabled: currentSettings.letterEnabled,
-  letterScale: currentSettings.letterScale,
-  letterWeight: currentSettings.letterWeight,
-  lilacChaserBallColor: currentSettings.lilacChaserBallColor,
-  lilacChaserScale: currentSettings.lilacChaserScale,
-  motionDirection: currentSettings.motionDirection,
-  showTrail: currentSettings.showTrail,
-  sizeProfile: currentSettings.sizeProfile,
-  speed: currentSettings.speed,
-  speedProfile: currentSettings.speedProfile,
-  targetCount: currentSettings.targetCount,
-  targetForm: currentSettings.targetForm,
-  targetOpacity: currentSettings.targetOpacity,
-});
 
 export const applyRouteToSettings = (
   currentSettings: TrainerSettings,
   nextSlug: string | undefined
 ) => {
   const route = findTrainerRoute(nextSlug);
-  const preset = route ? getPreset(route.mode) : firstPreset;
-  const nextSettings = settingsFromPreset(
-    preset,
-    currentSettings.calibration,
-    getPreservedSettings(currentSettings)
+  const nextSettings = applyPresetToSettings(
+    currentSettings,
+    route?.mode ?? firstPreset.id
   );
 
   if (route?.mode === "pursuit" && route.patternId) {
     nextSettings.patternId = route.patternId;
-  }
-
-  if (preset.id === "mot" && currentSettings.presetId !== "mot") {
-    nextSettings.distractorCount = preset.distractorCount;
-  }
-
-  return nextSettings;
-};
-
-export const applyPresetToSettings = (
-  currentSettings: TrainerSettings,
-  presetId: string
-) => {
-  const preset = getPreset(presetId);
-  const nextSettings = settingsFromPreset(
-    preset,
-    currentSettings.calibration,
-    getPreservedSettings(currentSettings)
-  );
-
-  if (preset.id === "mot" && currentSettings.presetId !== "mot") {
-    nextSettings.distractorCount = preset.distractorCount;
   }
 
   return nextSettings;
@@ -380,13 +310,9 @@ export const resetUnsupportedMotionDirection = (
 };
 
 export const resolveStoredSettings = (saved: StoredSettings) => {
-  const preset = resolveStoredPreset(saved.presetId);
+  const preset = getPreset(saved.presetId ?? firstPreset.id);
   const patternId = resolveStoredPatternId(preset, saved.patternId);
-  const profiles = resolveStoredProfiles(
-    preset,
-    saved.speedProfile,
-    saved.sizeProfile
-  );
+  const sizeProfile = saved.sizeProfile ?? preset.sizeProfile;
 
   return settingsFromPreset(preset, resolveCalibration(saved.calibration), {
     ballColor: isHexColor(saved.ballColor)
@@ -394,59 +320,60 @@ export const resolveStoredSettings = (saved: StoredSettings) => {
       : DEFAULT_BALL_COLOR,
     baseRadiusPx: resolveNumber(
       saved.baseRadiusPx,
-      trainerSettingBounds.baseRadiusPx.min,
-      trainerSettingBounds.baseRadiusPx.max,
+      trainerSettingBounds.baseRadiusPx,
       preset.baseRadiusPx
     ),
     distractorBrightness: resolveNumber(
       saved.distractorBrightness,
-      trainerSettingBounds.distractorBrightness.min,
-      trainerSettingBounds.distractorBrightness.max,
+      trainerSettingBounds.distractorBrightness,
       storedSettingDefaults.distractorBrightness
     ),
     distractorCount: resolveInteger(
       saved.distractorCount,
-      trainerSettingBounds.distractorCount.min,
-      trainerSettingBounds.distractorCount.max,
+      trainerSettingBounds.distractorCount,
       preset.distractorCount
     ),
-    ...profiles,
     letterColor: isHexColor(saved.letterColor)
       ? saved.letterColor
       : storedSettingDefaults.letterColor,
     letterEnabled: saved.letterEnabled === true,
     letterScale: resolveNumber(
       saved.letterScale,
-      trainerSettingBounds.letterScale.min,
-      trainerSettingBounds.letterScale.max,
+      trainerSettingBounds.letterScale,
       DEFAULT_LETTER_SCALE
     ),
-    letterWeight: resolveStoredLetterWeight(saved.letterWeight),
+    letterWeight: isLetterWeight(saved.letterWeight)
+      ? saved.letterWeight
+      : storedSettingDefaults.letterWeight,
     lilacChaserBallColor: isLilacChaserBallColor(saved.lilacChaserBallColor)
       ? saved.lilacChaserBallColor
       : storedSettingDefaults.lilacChaserBallColor,
     lilacChaserScale: resolveNumber(
       saved.lilacChaserScale,
-      trainerSettingBounds.lilacChaserScale.min,
-      trainerSettingBounds.lilacChaserScale.max,
+      trainerSettingBounds.lilacChaserScale,
       storedSettingDefaults.lilacChaserScale
     ),
     motionDirection: saved.motionDirection === -1 ? -1 : 1,
     patternId,
     presetId: preset.id,
     showTrail: saved.showTrail === true,
+    sizeProfile,
     speed: resolveSpeed(saved.speed, preset.speed),
+    speedProfile:
+      sizeProfile.kind === "pulse"
+        ? { kind: "constant" }
+        : (saved.speedProfile ?? preset.speedProfile),
     targetCount: resolveInteger(
       saved.targetCount,
-      trainerSettingBounds.targetCount.min,
-      trainerSettingBounds.targetCount.max,
+      trainerSettingBounds.targetCount,
       preset.targetCount
     ),
-    targetForm: resolveStoredTargetForm(saved.targetForm),
+    targetForm: isTargetForm(saved.targetForm)
+      ? saved.targetForm
+      : storedSettingDefaults.targetForm,
     targetOpacity: resolveNumber(
       saved.targetOpacity,
-      trainerSettingBounds.targetOpacity.min,
-      trainerSettingBounds.targetOpacity.max,
+      trainerSettingBounds.targetOpacity,
       storedSettingDefaults.targetOpacity
     ),
   });

@@ -167,70 +167,35 @@
             <section class="grid gap-6">
               {#if currentControlSection === "session"}
                 <TrainerSessionControls
-                  {settings}
+                  {actions}
                   {motionPaused}
                   {motionDirectionLabel}
                   {canToggleDirection}
                   {isDarkMode}
-                  toggleMotionPaused={actions.toggleMotionPaused}
-                  toggleMotionDirection={actions.toggleMotionDirection}
-                  handleThemeCheckedChange={actions.handleThemeCheckedChange}
                 />
               {:else if currentControlSection === "drill"}
                 <TrainerDrillControls
+                  {actions}
                   {settings}
                   {isLilacChaserMode}
                   {behaviorValue}
                   {patternSelectContentClass}
-                  handlePresetChange={actions.handlePresetChange}
-                  handlePatternChange={actions.handlePatternChange}
-                  handleBehaviorChange={actions.handleBehaviorChange}
-                  handleLilacChaserColorChange={actions.handleLilacChaserColorChange}
-                  lilacChaserScaleSliderValue={actions.lilacChaserScaleSlider
-                    .value}
-                  setLilacChaserScaleSliderValue={actions.lilacChaserScaleSlider
-                    .set}
                   {sliderRow}
                 />
               {:else if currentControlSection === "targets"}
                 <TrainerTargetControls
+                  {actions}
                   bind:settings
                   {isMotMode}
-                  handleColorInput={actions.handleColorInput}
-                  handleTargetFormChange={actions.handleTargetFormChange}
-                  handleLetterColorInput={actions.handleLetterColorInput}
-                  handleLetterWeightChange={actions.handleLetterWeightChange}
-                  sizeSliderValue={actions.sizeSlider.value}
-                  setSizeSliderValue={actions.sizeSlider.set}
-                  opacitySliderValue={actions.opacitySlider.value}
-                  setOpacitySliderValue={actions.opacitySlider.set}
-                  targetCountSliderValue={actions.targetCountSlider.value}
-                  setTargetCountSliderValue={actions.targetCountSlider.set}
-                  distractorCountSliderValue={actions.distractorCountSlider
-                    .value}
-                  setDistractorCountSliderValue={actions.distractorCountSlider
-                    .set}
-                  distractorBrightnessSliderValue={actions
-                    .distractorBrightnessSlider.value}
-                  setDistractorBrightnessSliderValue={actions
-                    .distractorBrightnessSlider.set}
-                  letterScaleSliderValue={actions.letterScaleSlider.value}
-                  setLetterScaleSliderValue={actions.letterScaleSlider.set}
                   {sliderRow}
                 />
               {:else if currentControlSection === "motion"}
-                <TrainerMotionControls
-                  {settings}
-                  speedSliderValue={actions.speedSlider.value}
-                  setSpeedSliderValue={actions.speedSlider.set}
-                  handleSpeedUnitChange={actions.handleSpeedUnitChange}
-                  {sliderRow}
-                />
+                <TrainerMotionControls {actions} {settings} {sliderRow} />
               {:else if currentControlSection === "screen"}
                 <TrainerScreenControls
+                  {actions}
                   bind:settings
                   {canToggleDirection}
-                  handleCalibrationInput={actions.handleCalibrationInput}
                 />
               {:else}
                 <p class="text-muted-foreground text-sm leading-6">

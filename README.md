@@ -39,7 +39,7 @@ It runs without an account or install. The app keeps the canvas full screen, giv
 
 Requirements:
 
-- Bun `1.3.14`
+- Bun `1.4.1`
 - Node.js `>=22.12.0` (`.node-version` selects Node.js 24 LTS)
 
 Install dependencies:
@@ -70,9 +70,10 @@ http://127.0.0.1:4321
 | `bun run check` | Runs `astro check`. |
 | `bun run lint` | Checks code and formatting with Ultracite. |
 | `bun run fix` | Applies Ultracite fixes and formats Astro files. |
-| `bun run test` | Runs behavior and engine tests with Bun. |
-| `bun run test:smoke` | Builds and runs desktop/mobile browser smoke tests. |
+| `bun run test` | Builds production assets and runs the release browser tests. |
+| `bun run test:release` | Same release suite as `bun run test`. |
 | `bun run verify` | Runs every required pre-deploy quality check. |
+| `bun run prepush` | Runs the full verification before pushing. |
 | `bun run format` | Formats supported files with Oxfmt and Astro files with Prettier. |
 
 ## Project structure
@@ -84,19 +85,23 @@ src/lib/trainer/           Trainer UI state, rendering, and settings helpers
 src/lib/engine/            Training patterns, profiles, safety, storage
 src/styles/                Global styles and Tailwind setup
 public/metadata/           Generated icons and social images
-tests/smoke/               Desktop and mobile browser smoke tests
+tests/release.playwright.ts Desktop and mobile release checks
 ```
 
 ## Quality checks
 
-Run the same checks before shipping changes:
+Install the test browser and enable the Git pre-push hook once per clone:
 
 ```bash
-bun run format:svelte
-bun run verify
+bunx playwright install chromium
+git config core.hooksPath .githooks
 ```
 
-Use `bun run format:svelte` when you only need to format source files after Svelte, Astro, TypeScript, or CSS edits.
+Every push then runs `bun run prepush`: lint, formatting, types, Tailwind diagnostics, the production build, browser tests, and dependency audit. GitHub Actions runs the same verification before deploying.
+
+The release suite opens every trainer route and public page on desktop and mobile Chromium. It selects every mode and pattern through the menus, checks canvas animation, pause/resume, settings updates, persistence, and reset. Browser errors and failed site resources fail the run. Failure screenshots and traces are saved in `test-results/`.
+
+Run `bun run test:release` for browser checks alone, or `bun run prepush` for the full gate. Set `TEST_PORT` if the default port `4323` is occupied.
 
 ## Safety note
 

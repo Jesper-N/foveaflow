@@ -101,24 +101,15 @@ const behaviorProfilesById = {
   },
 } satisfies Record<BehaviorId, BehaviorProfiles>;
 
-const cloneSpeedProfile = (profile: SpeedProfile): SpeedProfile => {
-  if (profile.kind === "steps") {
-    return { ...profile, multipliers: [...profile.multipliers] };
-  }
-
-  return { ...profile };
-};
-
-const cloneSizeProfile = (profile: SizeProfile): SizeProfile => ({
-  ...profile,
-});
-
 export const createBehaviorProfiles = (
   behavior: BehaviorId
 ): BehaviorProfiles => {
-  const profiles = behaviorProfilesById[behavior];
+  const { sizeProfile, speedProfile } = behaviorProfilesById[behavior];
   return {
-    sizeProfile: cloneSizeProfile(profiles.sizeProfile),
-    speedProfile: cloneSpeedProfile(profiles.speedProfile),
+    sizeProfile: { ...sizeProfile },
+    speedProfile:
+      speedProfile.kind === "steps"
+        ? { ...speedProfile, multipliers: [...speedProfile.multipliers] }
+        : { ...speedProfile },
   };
 };

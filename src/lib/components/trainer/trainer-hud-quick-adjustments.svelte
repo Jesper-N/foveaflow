@@ -92,7 +92,7 @@
       type="single"
       value={settings.lilacChaserBallColor}
       onValueChange={actions.handleLilacChaserColorChange}
-      onOpenChange={actions.handleHeaderLilacChaserColorOpenChange}
+      onOpenChange={actions.handleHeaderSelectOpenChange}
     >
       <Select.Trigger
         class="w-36 overflow-hidden lg:w-40"

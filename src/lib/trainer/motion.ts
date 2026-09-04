@@ -8,19 +8,6 @@ export interface MotionState {
   travelPx: number;
 }
 
-const getMotionDeltaSec = (timestamp: number, lastTimestamp: number) => {
-  if (lastTimestamp <= 0) {
-    return 0;
-  }
-  const deltaMs = Math.min(80, Math.max(0, timestamp - lastTimestamp));
-  return deltaMs / 1000;
-};
-
-const getMotionDirectionMultiplier = (
-  canToggleDirection: boolean,
-  motionDirection: TrainerSettings["motionDirection"]
-) => (canToggleDirection ? motionDirection : 1);
-
 export const advanceMotionTick = (
   state: MotionState,
   timestamp: number,
@@ -29,11 +16,11 @@ export const advanceMotionTick = (
   canToggleDirection: boolean,
   motionDirection: TrainerSettings["motionDirection"]
 ) => {
-  const deltaSec = getMotionDeltaSec(timestamp, state.lastTimestamp);
-  const directionMultiplier = getMotionDirectionMultiplier(
-    canToggleDirection,
-    motionDirection
-  );
+  const deltaSec =
+    state.lastTimestamp <= 0
+      ? 0
+      : Math.min(80, Math.max(0, timestamp - state.lastTimestamp)) / 1000;
+  const directionMultiplier = canToggleDirection ? motionDirection : 1;
   const nextElapsedSec = state.elapsedSec + deltaSec;
   const distancePx = integrateSpeedProfile(
     speedProfile,

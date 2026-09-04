@@ -14,7 +14,7 @@ import {
   createDebouncedSettingsSaver,
   loadSettings,
 } from "$lib/engine/storage";
-import type { PatternId, SpeedUnit } from "$lib/engine/types";
+import type { PatternId } from "$lib/engine/types";
 import { languageState } from "$lib/i18n/state.svelte";
 import { t } from "$lib/i18n/translate";
 import { buildStructuredData, buildTrainerRouteStructuredData } from "$lib/seo";
@@ -27,18 +27,12 @@ import {
   getBehaviorId,
   isBehaviorId,
 } from "$lib/trainer/behavior";
-import type { BehaviorId } from "$lib/trainer/behavior";
 import { createTrainerCanvasRuntime } from "$lib/trainer/canvas-runtime";
 import type {
   TrainerDialogActions,
   TrainerHudActions,
 } from "$lib/trainer/control-actions";
-import {
-  canAutoHideHud,
-  getHudHidden,
-  getHudInteractionOpen,
-  getHudPointerIntent,
-} from "$lib/trainer/hud";
+import { getHudPointerIntent } from "$lib/trainer/hud";
 import type { HudBounds } from "$lib/trainer/hud";
 import {
   getTrainerShortcutAction,
@@ -48,10 +42,8 @@ import type { TrainerShortcutAction } from "$lib/trainer/keyboard";
 import {
   canPatternToggleDirection,
   getAvailableControlSections,
-  getControlSectionLabel,
   guideUseCasesByMode,
   homepageGuideUseCases,
-  resolveControlSection,
 } from "$lib/trainer/options";
 import type { ControlSectionId } from "$lib/trainer/options";
 import type { CanvasColorMode } from "$lib/trainer/rendering";
@@ -112,9 +104,6 @@ const applySliderNumber = (
   }
 };
 
-const getBrowserRouteSlug = () =>
-  getRouteSlugFromPath(window.location.pathname);
-
 const handleThemeCheckedChange = (checked: boolean) => {
   setMode(checked ? "dark" : "light");
 };
@@ -148,21 +137,20 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
   let hudVisible = $state(true);
   let hudElementInteractionActive = $state(false);
   let cursorHidden = $state(false);
-  let mobilePresetSelectOpen = $state(false);
-  let mobilePatternSelectOpen = $state(false);
-  let mobileLilacChaserColorSelectOpen = $state(false);
-  let desktopPresetSelectOpen = $state(false);
-  let desktopPatternSelectOpen = $state(false);
-  let desktopLilacChaserColorSelectOpen = $state(false);
+  const headerSelects = $state({
+    desktopLilacChaserColorSelectOpen: false,
+    desktopPatternSelectOpen: false,
+    desktopPresetSelectOpen: false,
+    mobileLilacChaserColorSelectOpen: false,
+    mobilePatternSelectOpen: false,
+    mobilePresetSelectOpen: false,
+  });
   let languageSelectOpen = $state(false);
-  const headerPresetSelectOpen = $derived(
-    mobilePresetSelectOpen || desktopPresetSelectOpen
-  );
-  const headerPatternSelectOpen = $derived(
-    mobilePatternSelectOpen || desktopPatternSelectOpen
-  );
-  const headerLilacChaserColorSelectOpen = $derived(
-    mobileLilacChaserColorSelectOpen || desktopLilacChaserColorSelectOpen
+  const overlayOpen = $derived(
+    panelOpen ||
+      guidePopoverOpen ||
+      languageSelectOpen ||
+      Object.values(headerSelects).some(Boolean)
   );
   const colorMode = $derived.by<CanvasColorMode>(() => {
     const nextMode = mode.current;
@@ -208,29 +196,16 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
   );
   const isMotMode = $derived(settings.presetId === "mot");
   const isLilacChaserMode = $derived(settings.presetId === "lilacChaser");
-  const availableControlSections = $derived(
-    getAvailableControlSections(isLilacChaserMode)
-  );
   const localizedControlSections = $derived(
-    availableControlSections.map((section) => ({
+    getAvailableControlSections(isLilacChaserMode).map((section) => ({
       ...section,
       label: t(locale, section.label),
     }))
   );
   const currentControlSection = $derived(
-    resolveControlSection(activeControlSection, availableControlSections)
-  );
-  const currentControlSectionLabel = $derived(
-    t(
-      locale,
-      getControlSectionLabel(
-        resolveControlSection(
-          activeControlSection,
-          getAvailableControlSections(settings.presetId === "lilacChaser")
-        ),
-        getAvailableControlSections(settings.presetId === "lilacChaser")
-      )
-    )
+    localizedControlSections.find(
+      (section) => section.id === activeControlSection
+    ) ?? localizedControlSections[0]
   );
   const activeTrainingModeGuide = $derived(
     getTrainingModeGuide(settings.presetId)
@@ -239,13 +214,14 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     activeRoute ? guideUseCasesByMode[settings.presetId] : homepageGuideUseCases
   );
   const isDarkMode = $derived(colorMode === "dark");
+  const settingsSnapshot = $derived($state.snapshot(settings));
   const canvasState = $derived({
     canToggleDirection,
     distractorColor,
     isLilacChaserMode,
     motionPaused,
     safeBallColor,
-    settings: $state.snapshot(settings),
+    settings: settingsSnapshot,
   });
   const canvasRuntime = createTrainerCanvasRuntime({
     getColorMode: () => colorMode,
@@ -271,18 +247,10 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     getBehaviorId(settings.speedProfile, settings.sizeProfile)
   );
   const hudInteractionOpen = $derived(
-    hudElementInteractionActive ||
-      getHudInteractionOpen(
-        panelOpen,
-        guidePopoverOpen,
-        headerPresetSelectOpen,
-        headerPatternSelectOpen,
-        headerLilacChaserColorSelectOpen,
-        languageSelectOpen
-      )
+    hudElementInteractionActive || overlayOpen
   );
   const hudHidden = $derived(
-    getHudHidden(hudAutoHideReady, hudVisible, hudInteractionOpen)
+    hudAutoHideReady && !hudVisible && !hudInteractionOpen
   );
   const hudAutoHideTimer = createHudAutoHideTimer({
     delayMs: hudAutoHideDelayMs,
@@ -372,11 +340,11 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     if (!storageReady) {
       return;
     }
-    settingsSaver.schedule($state.snapshot(settings));
+    settingsSaver.schedule(settingsSnapshot);
   });
 
   const syncSettingsFromBrowserRoute = (baseSettings = settings) => {
-    const browserRouteSlug = getBrowserRouteSlug();
+    const browserRouteSlug = getRouteSlugFromPath(window.location.pathname);
     currentRouteSlug = browserRouteSlug;
     settings = applyRouteToSettings(baseSettings, browserRouteSlug);
     resetPatternState();
@@ -388,10 +356,6 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
   const handlePopState = () => {
     syncSettingsFromBrowserRoute();
     drawFrame({ clearTrail: true });
-  };
-
-  const flushSettings = () => {
-    settingsSaver.flush();
   };
 
   const attachTrainer: Attachment<HTMLElement> = () =>
@@ -513,50 +477,6 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     });
   };
 
-  const opacitySliderValue = () => [settings.targetOpacity];
-
-  const setOpacitySliderValue = (value: TrainerSliderValue) => {
-    applySliderNumber(value, trainerSettingBounds.targetOpacity, (next) => {
-      settings.targetOpacity = next;
-    });
-  };
-
-  const targetCountSliderValue = () => [settings.targetCount];
-
-  const setTargetCountSliderValue = (value: TrainerSliderValue) => {
-    applySliderInteger(value, trainerSettingBounds.targetCount, (next) => {
-      settings.targetCount = next;
-    });
-  };
-
-  const distractorCountSliderValue = () => [settings.distractorCount];
-
-  const setDistractorCountSliderValue = (value: TrainerSliderValue) => {
-    applySliderInteger(value, trainerSettingBounds.distractorCount, (next) => {
-      settings.distractorCount = next;
-    });
-  };
-
-  const distractorBrightnessSliderValue = () => [settings.distractorBrightness];
-
-  const setDistractorBrightnessSliderValue = (value: TrainerSliderValue) => {
-    applySliderNumber(
-      value,
-      trainerSettingBounds.distractorBrightness,
-      (next) => {
-        settings.distractorBrightness = next;
-      }
-    );
-  };
-
-  const letterScaleSliderValue = () => [settings.letterScale];
-
-  const setLetterScaleSliderValue = (value: TrainerSliderValue) => {
-    applySliderNumber(value, trainerSettingBounds.letterScale, (next) => {
-      settings.letterScale = next;
-    });
-  };
-
   const toggleMotionPaused = () => {
     setMotionPaused(!motionPaused);
   };
@@ -578,25 +498,14 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     refreshBaseSpeed();
   };
 
-  const applyPreset = (presetId: string) => {
-    settings = applyPresetToSettings(settings, presetId);
-    resetPatternState();
-    resetDirectionForFixedPatterns(settings.patternId);
-    refreshBaseSpeed();
-    drawFrame({ clearTrail: true });
-  };
-
-  const setBrowserPath = (path: string) => {
+  const syncBrowserPath = () => {
+    const route = getTrainerRoute(settings.presetId, settings.patternId);
+    const path = route?.path ?? "/";
     currentRouteSlug = getRouteSlugFromPath(path);
     if (window.location.pathname !== path) {
       window.history.pushState({}, "", path);
     }
     syncDocumentRouteMetadata(path);
-  };
-
-  const syncBrowserPath = () => {
-    const route = getTrainerRoute(settings.presetId, settings.patternId);
-    setBrowserPath(route?.path ?? "/");
   };
 
   const resetSettings = () => {
@@ -612,16 +521,8 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     }
   };
 
-  const setActiveControlSection = (section: ControlSectionId) => {
-    activeControlSection = section;
-  };
-
   const toggleGuideFaq = (question: string) => {
     openGuideFaqQuestion = openGuideFaqQuestion === question ? null : question;
-  };
-
-  const revealHudTemporarily = () => {
-    hudAutoHideTimer.start();
   };
 
   const setHudInteractionActive = (active: boolean) => {
@@ -645,31 +546,13 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
   };
 
   const hideHud = () => {
-    if (!canAutoHideHud(hudAutoHideReady, hudInteractionOpen)) {
+    if (!hudAutoHideReady || hudInteractionOpen) {
       return;
     }
     hudVisible = false;
   };
 
-  const handleHeaderPresetOpenChange = (open: boolean) => {
-    if (open) {
-      revealHud();
-    }
-  };
-
-  const handleHeaderPatternOpenChange = (open: boolean) => {
-    if (open) {
-      revealHud();
-    }
-  };
-
-  const handleHeaderLilacChaserColorOpenChange = (open: boolean) => {
-    if (open) {
-      revealHud();
-    }
-  };
-
-  const handleHeaderLanguageOpenChange = (open: boolean) => {
+  const handleHeaderSelectOpenChange = (open: boolean) => {
     if (open) {
       revealHud();
     }
@@ -699,29 +582,6 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     if (pointerIntent === "hide") {
       hideHud();
     }
-  };
-
-  const setPattern = (patternId: PatternId) => {
-    settings.patternId = patternId;
-    resetPatternState();
-    resetDirectionForFixedPatterns(patternId);
-    drawFrame({ clearTrail: true });
-  };
-
-  const setSpeedUnit = (unit: SpeedUnit) => {
-    settings.speed = resolveSpeedUnit(
-      settings.speed,
-      unit,
-      getArena(),
-      settings.calibration
-    );
-    refreshBaseSpeed();
-  };
-
-  const setBehavior = (behavior: BehaviorId) => {
-    const { speedProfile, sizeProfile } = createBehaviorProfiles(behavior);
-    settings.speedProfile = speedProfile;
-    settings.sizeProfile = sizeProfile;
   };
 
   const handleColorInput = (event: Event) => {
@@ -764,22 +624,11 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
 
   const openHeaderSelectFromShortcut = (select: HeaderShortcutSelect) => {
     const useDesktopSelect = window.matchMedia(desktopHeaderQuery).matches;
-    const {
-      desktopLilacChaserColorSelectOpen: nextDesktopLilacChaserColorSelectOpen,
-      desktopPatternSelectOpen: nextDesktopPatternSelectOpen,
-      desktopPresetSelectOpen: nextDesktopPresetSelectOpen,
-      mobileLilacChaserColorSelectOpen: nextMobileLilacChaserColorSelectOpen,
-      mobilePatternSelectOpen: nextMobilePatternSelectOpen,
-      mobilePresetSelectOpen: nextMobilePresetSelectOpen,
-    } = getHeaderSelectOpenState(select, useDesktopSelect);
+    Object.assign(
+      headerSelects,
+      getHeaderSelectOpenState(select, useDesktopSelect)
+    );
     revealHud();
-
-    mobilePresetSelectOpen = nextMobilePresetSelectOpen;
-    desktopPresetSelectOpen = nextDesktopPresetSelectOpen;
-    mobilePatternSelectOpen = nextMobilePatternSelectOpen;
-    desktopPatternSelectOpen = nextDesktopPatternSelectOpen;
-    mobileLilacChaserColorSelectOpen = nextMobileLilacChaserColorSelectOpen;
-    desktopLilacChaserColorSelectOpen = nextDesktopLilacChaserColorSelectOpen;
 
     void focusHeaderSelectTriggerFromShortcut({
       flushSvelte,
@@ -808,12 +657,7 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
   };
 
   const hasPriorityKeyboardSurface = () =>
-    panelOpen ||
-    guidePopoverOpen ||
-    headerPresetSelectOpen ||
-    headerPatternSelectOpen ||
-    headerLilacChaserColorSelectOpen ||
-    languageSelectOpen ||
+    overlayOpen ||
     Boolean(document.querySelector(shortcutPrioritySurfaceSelector));
 
   const runTrainerShortcut = (action: TrainerShortcutAction) =>
@@ -845,7 +689,11 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
   };
 
   const handlePresetChange = (value: string) => {
-    applyPreset(value);
+    settings = applyPresetToSettings(settings, value);
+    resetPatternState();
+    resetDirectionForFixedPatterns(settings.patternId);
+    refreshBaseSpeed();
+    drawFrame({ clearTrail: true });
     syncBrowserPath();
   };
 
@@ -853,20 +701,33 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     if (!isPatternId(value)) {
       return;
     }
-    setPattern(value);
+    settings.patternId = value;
+    resetPatternState();
+    resetDirectionForFixedPatterns(value);
+    drawFrame({ clearTrail: true });
     syncBrowserPath();
   };
 
   const handleSpeedUnitChange = (value: string) => {
-    if (isSpeedUnit(value)) {
-      setSpeedUnit(value);
+    if (!isSpeedUnit(value)) {
+      return;
     }
+    settings.speed = resolveSpeedUnit(
+      settings.speed,
+      value,
+      getArena(),
+      settings.calibration
+    );
+    refreshBaseSpeed();
   };
 
   const handleBehaviorChange = (value: string) => {
-    if (isBehaviorId(value)) {
-      setBehavior(value);
+    if (!isBehaviorId(value)) {
+      return;
     }
+    const { speedProfile, sizeProfile } = createBehaviorProfiles(value);
+    settings.speedProfile = speedProfile;
+    settings.sizeProfile = sizeProfile;
   };
 
   const handleLilacChaserColorChange = (value: string) => {
@@ -899,10 +760,7 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
   };
 
   const hudActions: TrainerHudActions = {
-    handleHeaderLanguageOpenChange,
-    handleHeaderLilacChaserColorOpenChange,
-    handleHeaderPatternOpenChange,
-    handleHeaderPresetOpenChange,
+    handleHeaderSelectOpenChange,
     handleLilacChaserColorChange,
     handlePatternChange,
     handlePresetChange,
@@ -912,7 +770,7 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     },
     openControlsPanel,
     revealHud,
-    revealHudTemporarily,
+    revealHudTemporarily: hudAutoHideTimer.start,
     setHudInteractionActive,
     sizeSlider: {
       set: setSizeSliderValue,
@@ -928,12 +786,28 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
 
   const dialogActions: TrainerDialogActions = {
     distractorBrightnessSlider: {
-      set: setDistractorBrightnessSliderValue,
-      value: distractorBrightnessSliderValue,
+      set: (value) => {
+        applySliderNumber(
+          value,
+          trainerSettingBounds.distractorBrightness,
+          (next) => {
+            settings.distractorBrightness = next;
+          }
+        );
+      },
+      value: () => [settings.distractorBrightness],
     },
     distractorCountSlider: {
-      set: setDistractorCountSliderValue,
-      value: distractorCountSliderValue,
+      set: (value) => {
+        applySliderInteger(
+          value,
+          trainerSettingBounds.distractorCount,
+          (next) => {
+            settings.distractorCount = next;
+          }
+        );
+      },
+      value: () => [settings.distractorCount],
     },
     handleBehaviorChange,
     handleCalibrationInput,
@@ -947,30 +821,35 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     handleTargetFormChange,
     handleThemeCheckedChange,
     letterScaleSlider: {
-      set: setLetterScaleSliderValue,
-      value: letterScaleSliderValue,
+      set: (value) => {
+        applySliderNumber(value, trainerSettingBounds.letterScale, (next) => {
+          settings.letterScale = next;
+        });
+      },
+      value: () => [settings.letterScale],
     },
-    lilacChaserScaleSlider: {
-      set: setLilacChaserScaleSliderValue,
-      value: lilacChaserScaleSliderValue,
+    lilacChaserScaleSlider: hudActions.lilacChaserScaleSlider,
+    onControlSectionChange: (section) => {
+      activeControlSection = section;
     },
-    onControlSectionChange: setActiveControlSection,
     opacitySlider: {
-      set: setOpacitySliderValue,
-      value: opacitySliderValue,
+      set: (value) => {
+        applySliderNumber(value, trainerSettingBounds.targetOpacity, (next) => {
+          settings.targetOpacity = next;
+        });
+      },
+      value: () => [settings.targetOpacity],
     },
     resetSettings,
-    sizeSlider: {
-      set: setSizeSliderValue,
-      value: sizeSliderValue,
-    },
-    speedSlider: {
-      set: setSpeedSliderValue,
-      value: speedSliderValue,
-    },
+    sizeSlider: hudActions.sizeSlider,
+    speedSlider: hudActions.speedSlider,
     targetCountSlider: {
-      set: setTargetCountSliderValue,
-      value: targetCountSliderValue,
+      set: (value) => {
+        applySliderInteger(value, trainerSettingBounds.targetCount, (next) => {
+          settings.targetCount = next;
+        });
+      },
+      value: () => [settings.targetCount],
     },
     toggleMotionDirection,
     toggleMotionPaused,
@@ -981,8 +860,7 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
       return;
     }
 
-    const pausedFrameSettings = $state.snapshot(settings);
-    void pausedFrameSettings;
+    void settingsSnapshot;
     untrack(() => drawFrame({ clearTrail: true }));
   });
 
@@ -1011,34 +889,16 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
       return colorMode;
     },
     get currentControlSection() {
-      return currentControlSection;
+      return currentControlSection.id;
     },
     get currentControlSectionLabel() {
-      return currentControlSectionLabel;
+      return currentControlSection.label;
     },
     get cursorHidden() {
       return cursorHidden;
     },
-    get desktopLilacChaserColorSelectOpen() {
-      return desktopLilacChaserColorSelectOpen;
-    },
-    set desktopLilacChaserColorSelectOpen(open: boolean) {
-      desktopLilacChaserColorSelectOpen = open;
-    },
-    get desktopPatternSelectOpen() {
-      return desktopPatternSelectOpen;
-    },
-    set desktopPatternSelectOpen(open: boolean) {
-      desktopPatternSelectOpen = open;
-    },
-    get desktopPresetSelectOpen() {
-      return desktopPresetSelectOpen;
-    },
-    set desktopPresetSelectOpen(open: boolean) {
-      desktopPresetSelectOpen = open;
-    },
     dialogActions,
-    flushSettings,
+    flushSettings: settingsSaver.flush,
     get guideSeoContent() {
       return guideSeoContent;
     },
@@ -1050,6 +910,7 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     handleVisibilityChange,
     handleWindowKeydown,
     handleWindowPointerMove,
+    headerSelects,
     hudActions,
     get hudContentWidth() {
       return hudContentWidth;
@@ -1080,24 +941,6 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     },
     get localizedControlSections() {
       return localizedControlSections;
-    },
-    get mobileLilacChaserColorSelectOpen() {
-      return mobileLilacChaserColorSelectOpen;
-    },
-    set mobileLilacChaserColorSelectOpen(open: boolean) {
-      mobileLilacChaserColorSelectOpen = open;
-    },
-    get mobilePatternSelectOpen() {
-      return mobilePatternSelectOpen;
-    },
-    set mobilePatternSelectOpen(open: boolean) {
-      mobilePatternSelectOpen = open;
-    },
-    get mobilePresetSelectOpen() {
-      return mobilePresetSelectOpen;
-    },
-    set mobilePresetSelectOpen(open: boolean) {
-      mobilePresetSelectOpen = open;
     },
     get motionDirectionLabel() {
       return motionDirectionLabel;

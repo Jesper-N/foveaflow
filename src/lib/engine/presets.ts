@@ -15,8 +15,6 @@ export interface ExercisePreset {
   sizeProfile: SizeProfile;
   targetCount: number;
   distractorCount: number;
-  colorA: string;
-  colorB: string;
 }
 
 export interface TrainerSettings {
@@ -49,8 +47,6 @@ export const DEFAULT_LETTER_SCALE = 0.5;
 export const exercisePresets = [
   {
     baseRadiusPx: 35,
-    colorA: "#f5c842",
-    colorB: "#3ddbd9",
     distractorCount: 0,
     id: "pursuit",
     name: "Smooth Pursuit",
@@ -62,8 +58,6 @@ export const exercisePresets = [
   },
   {
     baseRadiusPx: 35,
-    colorA: "#f5c842",
-    colorB: "#3ddbd9",
     distractorCount: 0,
     id: "reactionTime",
     name: "Reaction jumps",
@@ -75,8 +69,6 @@ export const exercisePresets = [
   },
   {
     baseRadiusPx: 35,
-    colorA: "#3ddbd9",
-    colorB: "#f5c842",
     distractorCount: 5,
     id: "mot",
     name: "Multiple Distractions",
@@ -88,8 +80,6 @@ export const exercisePresets = [
   },
   {
     baseRadiusPx: 35,
-    colorA: "#f65ac2",
-    colorB: "#111111",
     distractorCount: 0,
     id: "lilacChaser",
     name: "Lilac Chaser",

@@ -7,27 +7,21 @@
   import type { TrainerSettings } from "$lib/engine/presets";
   import { languageState } from "$lib/i18n/state.svelte";
   import { t } from "$lib/i18n/translate";
+  import type { TrainerDialogActions } from "$lib/trainer/control-actions";
   import {
     getLetterWeightName,
     letterWeightOptions,
   } from "$lib/trainer/options";
   import { trainerSettingBounds } from "$lib/trainer/settings";
-  import type { TrainerSliderValue } from "$lib/trainer/settings";
   import type { Snippet } from "svelte";
 
   let {
+    actions,
     settings = $bindable(),
-    handleLetterColorInput,
-    handleLetterWeightChange,
-    letterScaleSliderValue,
-    setLetterScaleSliderValue,
     sliderRow,
   }: {
+    actions: TrainerDialogActions;
     settings: TrainerSettings;
-    handleLetterColorInput: (event: Event) => void;
-    handleLetterWeightChange: (value: string) => void;
-    letterScaleSliderValue: () => number[];
-    setLetterScaleSliderValue: (value: TrainerSliderValue) => void;
     sliderRow: Snippet<[string, string]>;
   } = $props();
 
@@ -85,7 +79,7 @@
         class="sr-only"
         type="color"
         value={settings.letterColor}
-        oninput={handleLetterColorInput}
+        oninput={actions.handleLetterColorInput}
         aria-label={t(locale, "Letter color")}
       />
     </label>
@@ -96,7 +90,7 @@
     <Select.Root
       type="single"
       value={String(settings.letterWeight)}
-      onValueChange={handleLetterWeightChange}
+      onValueChange={actions.handleLetterWeightChange}
     >
       <Select.Trigger
         id="trainer-letter-weight"
@@ -123,7 +117,9 @@
       `${Math.round(settings.letterScale * 100)}%`
     )}
     <Slider
-      bind:value={letterScaleSliderValue, setLetterScaleSliderValue}
+      bind:value={
+        actions.letterScaleSlider.value, actions.letterScaleSlider.set
+      }
       min={trainerSettingBounds.letterScale.min}
       max={trainerSettingBounds.letterScale.max}
       step={0.01}

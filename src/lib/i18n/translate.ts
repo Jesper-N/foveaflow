@@ -7,61 +7,43 @@ type TranslatedLocale = Exclude<AppLocale, typeof defaultLocale>;
 
 const dictionaries = new Map<TranslatedLocale, ReadonlyMap<string, string>>();
 
-const loadBn = async () => {
-  const module = await import("$lib/i18n/dictionaries/bn");
-  return module.bn;
-};
-
-const loadDe = async () => {
-  const module = await import("$lib/i18n/dictionaries/de");
-  return module.de;
-};
-
-const loadEs419 = async () => {
-  const module = await import("$lib/i18n/dictionaries/es-419");
-  return module.es419;
-};
-
-const loadFil = async () => {
-  const module = await import("$lib/i18n/dictionaries/fil");
-  return module.fil;
-};
-
-const loadFr = async () => {
-  const module = await import("$lib/i18n/dictionaries/fr");
-  return module.fr;
-};
-
-const loadHi = async () => {
-  const module = await import("$lib/i18n/dictionaries/hi");
-  return module.hi;
-};
-
-const loadPtBr = async () => {
-  const module = await import("$lib/i18n/dictionaries/pt-br");
-  return module.ptBR;
-};
-
-const loadZhCn = async () => {
-  const module = await import("$lib/i18n/dictionaries/zh-cn");
-  return module.zhCN;
-};
-
-const loadZhHk = async () => {
-  const module = await import("$lib/i18n/dictionaries/zh-hk");
-  return module.zhHK;
-};
-
 const dictionaryLoaders = {
-  bn: loadBn,
-  de: loadDe,
-  "es-419": loadEs419,
-  fil: loadFil,
-  fr: loadFr,
-  hi: loadHi,
-  "pt-BR": loadPtBr,
-  "zh-CN": loadZhCn,
-  "zh-HK": loadZhHk,
+  bn: async () => {
+    const { bn } = await import("$lib/i18n/dictionaries/bn");
+    return bn;
+  },
+  de: async () => {
+    const { de } = await import("$lib/i18n/dictionaries/de");
+    return de;
+  },
+  "es-419": async () => {
+    const { es419 } = await import("$lib/i18n/dictionaries/es-419");
+    return es419;
+  },
+  fil: async () => {
+    const { fil } = await import("$lib/i18n/dictionaries/fil");
+    return fil;
+  },
+  fr: async () => {
+    const { fr } = await import("$lib/i18n/dictionaries/fr");
+    return fr;
+  },
+  hi: async () => {
+    const { hi } = await import("$lib/i18n/dictionaries/hi");
+    return hi;
+  },
+  "pt-BR": async () => {
+    const { ptBR } = await import("$lib/i18n/dictionaries/pt-br");
+    return ptBR;
+  },
+  "zh-CN": async () => {
+    const { zhCN } = await import("$lib/i18n/dictionaries/zh-cn");
+    return zhCN;
+  },
+  "zh-HK": async () => {
+    const { zhHK } = await import("$lib/i18n/dictionaries/zh-hk");
+    return zhHK;
+  },
 } satisfies Record<TranslatedLocale, () => Promise<Dictionary>>;
 
 const dictionaryPromises = new Map<TranslatedLocale, Promise<Dictionary>>();

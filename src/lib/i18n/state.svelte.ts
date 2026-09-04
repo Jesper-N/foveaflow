@@ -10,16 +10,11 @@ import { loadDictionary } from "$lib/i18n/translate";
 class LanguageState {
   locale = $state<AppLocale>(defaultLocale);
   ready = $state(false);
-  private initialized = false;
   private initPromise: Promise<void> | null = null;
   private requestId = 0;
 
   init() {
-    if (this.initialized) {
-      return this.initPromise ?? Promise.resolve();
-    }
-    this.initialized = true;
-    this.initPromise = this.initialize();
+    this.initPromise ??= this.initialize();
     return this.initPromise;
   }
 
