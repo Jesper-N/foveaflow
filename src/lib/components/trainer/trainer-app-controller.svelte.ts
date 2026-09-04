@@ -239,16 +239,17 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     activeRoute ? guideUseCasesByMode[settings.presetId] : homepageGuideUseCases
   );
   const isDarkMode = $derived(colorMode === "dark");
+  const canvasState = $derived({
+    canToggleDirection,
+    distractorColor,
+    isLilacChaserMode,
+    motionPaused,
+    safeBallColor,
+    settings: $state.snapshot(settings),
+  });
   const canvasRuntime = createTrainerCanvasRuntime({
     getColorMode: () => colorMode,
-    getState: () => ({
-      canToggleDirection,
-      distractorColor,
-      isLilacChaserMode,
-      motionPaused,
-      safeBallColor,
-      settings,
-    }),
+    getState: () => canvasState,
   });
   const {
     attachCanvas,
@@ -976,11 +977,11 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
   };
 
   $effect(() => {
-    const pausedFrameSettings = $state.snapshot(settings);
     if (!motionPaused) {
       return;
     }
 
+    const pausedFrameSettings = $state.snapshot(settings);
     void pausedFrameSettings;
     untrack(() => drawFrame({ clearTrail: true }));
   });

@@ -3,6 +3,15 @@ import type { Arena, PatternId } from "./types";
 export const TAU = Math.PI * 2;
 
 export interface PatternPathCacheState {
+  keyCache: {
+    id: PatternId;
+    left: number;
+    top: number;
+    right: number;
+    bottom: number;
+    samples: number;
+    key: string;
+  } | null;
   cachedCurve: CurvePath | null;
   cachedPolyline: CurvePath | null;
   curveTravelState: ScaledTravelState;
@@ -11,15 +20,17 @@ export interface PatternPathCacheState {
 
 export interface ScaledTravelState {
   identity: string;
-  geometryKey: string;
+  geometryKey: string | number;
   unitLength: number;
   offset: number;
 }
 
 interface CurvePath {
+  identity: string;
   key: string;
   points: [number, number][];
   lengths: number[];
+  cumulativeLengths: number[];
   totalLength: number;
 }
 
@@ -34,13 +45,14 @@ export const createPatternPathCacheState = (): PatternPathCacheState => ({
   cachedCurve: null,
   cachedPolyline: null,
   curveTravelState: createScaledTravelState(),
+  keyCache: null,
   polylineTravelState: createScaledTravelState(),
 });
 
 export const resolveScaledTravel = (
   state: ScaledTravelState,
   identity: string,
-  geometryKey: string,
+  geometryKey: string | number,
   travelPx: number,
   unitLength: number
 ) => {
@@ -87,14 +99,42 @@ export const pingPong = (value: number, length: number) => {
 };
 
 export const curveCacheKey = (
+  state: PatternPathCacheState,
   id: PatternId,
   left: number,
   top: number,
   right: number,
   bottom: number,
   samples: number
-) =>
-  `${id}:${Math.round(left)}:${Math.round(top)}:${Math.round(right)}:${Math.round(bottom)}:${samples}`;
+) => {
+  let cache = state.keyCache;
+  if (
+    !cache ||
+    cache.id !== id ||
+    cache.left !== left ||
+    cache.top !== top ||
+    cache.right !== right ||
+    cache.bottom !== bottom ||
+    cache.samples !== samples
+  ) {
+    cache = {
+      bottom,
+      id,
+      key: `${id}:${Math.round(left)}:${Math.round(top)}:${Math.round(right)}:${Math.round(bottom)}:${samples}`,
+      left,
+      right,
+      samples,
+      top,
+    };
+    state.keyCache = cache;
+  }
+  return cache.key;
+};
+
+const getPathIdentity = (key: string) => {
+  const separatorIndex = key.indexOf(":");
+  return separatorIndex === -1 ? key : key.slice(0, separatorIndex);
+};
 
 export const resolvePatternBounds = (
   arena: Arena,
@@ -132,6 +172,7 @@ const buildClosedCurve = (
 ): CurvePath => {
   const points: [number, number][] = [];
   const lengths: number[] = [];
+  const cumulativeLengths: number[] = [];
   let totalLength = 0;
 
   for (let index = 0; index <= samples; index += 1) {
@@ -144,9 +185,17 @@ const buildClosedCurve = (
     const length = Math.hypot(end[0] - start[0], end[1] - start[1]);
     lengths.push(length);
     totalLength += length;
+    cumulativeLengths.push(totalLength);
   }
 
-  return { key, lengths, points, totalLength };
+  return {
+    cumulativeLengths,
+    identity: getPathIdentity(key),
+    key,
+    lengths,
+    points,
+    totalLength,
+  };
 };
 
 const resolveCurveTravel = (
@@ -200,32 +249,32 @@ const resolveCurveTravel = (
   return safeTravelPx + state.offset;
 };
 
-const getPathIdentity = (key: string) => {
-  const separatorIndex = key.indexOf(":");
-  return separatorIndex === -1 ? key : key.slice(0, separatorIndex);
-};
-
 const sampleCurvePath = (path: CurvePath, travelPx: number) => {
   if (path.totalLength <= 0) {
     return path.points[0];
   }
 
-  let remaining = positiveModulo(travelPx, path.totalLength);
-  for (let index = 0; index < path.lengths.length; index += 1) {
-    const length = path.lengths[index];
-    if (remaining <= length) {
-      const start = path.points[index];
-      const end = path.points[index + 1];
-      const progress = length <= 0 ? 0 : remaining / length;
-      return [
-        start[0] + (end[0] - start[0]) * progress,
-        start[1] + (end[1] - start[1]) * progress,
-      ] satisfies [number, number];
+  const distance = positiveModulo(travelPx, path.totalLength);
+  let low = 0;
+  let high = path.cumulativeLengths.length - 1;
+  while (low < high) {
+    const middle = Math.floor((low + high) / 2);
+    if (distance <= path.cumulativeLengths[middle]) {
+      high = middle;
+    } else {
+      low = middle + 1;
     }
-    remaining -= length;
   }
 
-  return path.points[0];
+  const length = path.lengths[low];
+  const segmentStart = low === 0 ? 0 : path.cumulativeLengths[low - 1];
+  const progress = length <= 0 ? 0 : (distance - segmentStart) / length;
+  const start = path.points[low];
+  const end = path.points[low + 1];
+  return [
+    start[0] + (end[0] - start[0]) * progress,
+    start[1] + (end[1] - start[1]) * progress,
+  ] satisfies [number, number];
 };
 
 export const sampleClosedCurve = (
@@ -242,7 +291,7 @@ export const sampleClosedCurve = (
       : buildClosedCurve(key, samples, pointAt);
   const effectiveTravelPx = resolveCurveTravel(
     state.curveTravelState,
-    getPathIdentity(key),
+    path.identity,
     key,
     travelPx,
     previousPath,
@@ -259,6 +308,7 @@ const buildClosedPolyline = (
 ): CurvePath => {
   const points: [number, number][] = [];
   const lengths: number[] = [];
+  const cumulativeLengths: number[] = [];
   let totalLength = 0;
 
   for (let index = 0; index < pointCount; index += 1) {
@@ -267,7 +317,14 @@ const buildClosedPolyline = (
 
   if (points.length === 0) {
     points.push([0, 0]);
-    return { key, lengths, points, totalLength };
+    return {
+      cumulativeLengths,
+      identity: getPathIdentity(key),
+      key,
+      lengths,
+      points,
+      totalLength,
+    };
   }
 
   points.push(points[0]);
@@ -278,9 +335,17 @@ const buildClosedPolyline = (
     const length = Math.hypot(end[0] - start[0], end[1] - start[1]);
     lengths.push(length);
     totalLength += length;
+    cumulativeLengths.push(totalLength);
   }
 
-  return { key, lengths, points, totalLength };
+  return {
+    cumulativeLengths,
+    identity: getPathIdentity(key),
+    key,
+    lengths,
+    points,
+    totalLength,
+  };
 };
 
 export const sampleClosedPolyline = (
@@ -297,7 +362,7 @@ export const sampleClosedPolyline = (
       : buildClosedPolyline(key, pointCount, pointAt);
   const effectiveTravelPx = resolveCurveTravel(
     state.polylineTravelState,
-    getPathIdentity(key),
+    path.identity,
     key,
     travelPx,
     previousPath,

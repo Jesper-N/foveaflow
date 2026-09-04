@@ -10,7 +10,7 @@ import { letterScaleByTargetForm } from "./options";
 
 const FULL_CIRCLE_RADIANS = Math.PI * 2;
 const LILAC_CHASER_DOT_COUNT = 12;
-const LILAC_CHASER_STEP_SEC = 0.1;
+export const LILAC_CHASER_STEP_SEC = 0.1;
 const LILAC_CHASER_ORBIT_RATIO = 0.3381;
 const LILAC_CHASER_DOT_RATIO = 0.0399;
 const LILAC_CHASER_CROSS_ARM_RATIO = 0.0132;
@@ -79,7 +79,9 @@ export const drawLilacChaserFrame = (
   arena: Arena,
   scale: number,
   ballColor: string,
-  hiddenIndex: number
+  hiddenIndex: number,
+  previousHiddenIndex = -1,
+  pixelScale = 1
 ) => {
   const centerX = arena.width / 2;
   const centerY = arena.height / 2;
@@ -87,6 +89,39 @@ export const drawLilacChaserFrame = (
   const dotRadius = minSide * LILAC_CHASER_DOT_RATIO * scale;
   const orbitRadius = getLilacChaserOuterRadiusPx(arena, scale) - dotRadius;
   const crossRadius = minSide * LILAC_CHASER_CROSS_ARM_RATIO * scale;
+
+  if (previousHiddenIndex >= 0) {
+    if (previousHiddenIndex === hiddenIndex) {
+      return;
+    }
+    const previousPoint = LILAC_CHASER_UNIT_POINTS[previousHiddenIndex];
+    ctx.fillStyle = ballColor;
+    ctx.beginPath();
+    ctx.arc(
+      centerX + previousPoint[0] * orbitRadius,
+      centerY + previousPoint[1] * orbitRadius,
+      dotRadius,
+      0,
+      FULL_CIRCLE_RADIANS
+    );
+    ctx.fill();
+
+    const hiddenPoint = LILAC_CHASER_UNIT_POINTS[hiddenIndex];
+    const extent = dotRadius + 2;
+    const hiddenX = centerX + hiddenPoint[0] * orbitRadius;
+    const hiddenY = centerY + hiddenPoint[1] * orbitRadius;
+    const left = Math.floor((hiddenX - extent) * pixelScale);
+    const top = Math.floor((hiddenY - extent) * pixelScale);
+    const right = Math.ceil((hiddenX + extent) * pixelScale);
+    const bottom = Math.ceil((hiddenY + extent) * pixelScale);
+    // Fractional erase edges blend with the background and leave rounding seams.
+    ctx.save();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.fillStyle = LILAC_CHASER_THEME.background;
+    ctx.fillRect(left, top, right - left, bottom - top);
+    ctx.restore();
+    return;
+  }
 
   ctx.fillStyle = LILAC_CHASER_THEME.background;
   ctx.fillRect(0, 0, arena.width, arena.height);
@@ -138,17 +173,15 @@ const drawLetterGlyph = (
     settings.targetForm,
     settings.letterScale
   );
-  ctx.save();
   ctx.fillStyle = settings.letterColor;
-  ctx.font = `${settings.letterWeight} ${fontSize}px Inter, Arial, sans-serif`;
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.translate(frame.x, frame.y + fontSize * 0.04);
-  ctx.fillText(letter, 0, 0);
-  ctx.restore();
+  const font = `${settings.letterWeight} ${fontSize}px Inter, Arial, sans-serif`;
+  if (ctx.font !== font) {
+    ctx.font = font;
+  }
+  ctx.fillText(letter, frame.x, frame.y + fontSize * 0.04);
 };
 
-const getFrameLetter = (
+export const getFrameLetter = (
   settings: Pick<TrainerSettings, "presetId">,
   index: number,
   { elapsedSec, travelPx, seed, reactionJumpDistancePx }: LetterContext
@@ -233,7 +266,7 @@ const drawTargetForm = (
   }
 };
 
-export const drawTargetFrame = (
+const drawTargetFrame = (
   ctx: CanvasRenderingContext2D,
   frame: TargetFrame,
   index: number,
@@ -254,7 +287,6 @@ export const drawTargetFrame = (
     return;
   }
 
-  ctx.save();
   ctx.globalAlpha = alpha;
   ctx.fillStyle = frame.color;
   drawStimulusForm(ctx, frame.x, frame.y, frame.radiusPx, settings.targetForm);
@@ -264,5 +296,24 @@ export const drawTargetFrame = (
     frame,
     settings
   );
-  ctx.restore();
+};
+
+export const drawTargetFrames = (
+  ctx: CanvasRenderingContext2D,
+  frames: TargetFrame[],
+  count: number,
+  settings: TrainerSettings,
+  letterContext: LetterContext
+) => {
+  if (settings.letterEnabled) {
+    ctx.save();
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+  }
+  for (let index = 0; index < count; index += 1) {
+    drawTargetFrame(ctx, frames[index], index, settings, letterContext);
+  }
+  if (settings.letterEnabled) {
+    ctx.restore();
+  }
 };
