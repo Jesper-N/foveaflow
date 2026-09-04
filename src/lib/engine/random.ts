@@ -17,26 +17,25 @@ const RANDOM_OFFSET = 1_234_567;
 export const createSessionSeed = (random = Math.random) =>
   Math.floor(random() * 2_147_483_646) + 1;
 
-const seededRandom = (seed: number, index: number) => {
+const seededRandom = (seedOffset: number, index: number) => {
   const normalizedIndex = Number.isFinite(index)
     ? Math.trunc(Math.abs(index)) % RANDOM_MODULUS
     : 0;
   const value =
-    (normalizeSeed(seed) * SEED_MULTIPLIER +
-      normalizedIndex * INDEX_MULTIPLIER +
-      RANDOM_OFFSET) %
-    RANDOM_MODULUS;
+    (seedOffset + normalizedIndex * INDEX_MULTIPLIER) % RANDOM_MODULUS;
   const squared = (value * value) % RANDOM_MODULUS;
   const cubed = (squared * value) % RANDOM_MODULUS;
   return cubed / RANDOM_MODULUS;
 };
 
 export const createRng = (seed: number): Rng => {
-  const randomAt = (index: number) => seededRandom(seed, index);
+  const normalizedSeed = normalizeSeed(seed);
+  const seedOffset = normalizedSeed * SEED_MULTIPLIER + RANDOM_OFFSET;
+  const randomAt = (index: number) => seededRandom(seedOffset, index);
 
   return {
     randomAt,
     rangeAt: (index, min, max) => min + (max - min) * randomAt(index),
-    seed: normalizeSeed(seed),
+    seed: normalizedSeed,
   };
 };

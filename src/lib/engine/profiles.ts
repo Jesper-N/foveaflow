@@ -164,6 +164,50 @@ const integrateStepsMultiplier = (
   );
 };
 
+const integrateStepsRange = (
+  profile: Extract<SpeedProfile, { kind: "steps" }>,
+  startSec: number,
+  endSec: number
+) => {
+  const { multipliers } = profile;
+  const intervalSec = Math.max(0.1, profile.intervalSec);
+  const startBucket = Math.floor(startSec / intervalSec);
+  if (
+    multipliers.length > 0 &&
+    profile.intervalSec > 0 &&
+    startBucket === Math.floor(endSec / intervalSec)
+  ) {
+    const index = startBucket % multipliers.length;
+    const current = multipliers[index] ?? 1;
+    const next = multipliers[(index + 1) % multipliers.length] ?? current;
+    const transitionSec = Math.min(
+      Math.max(0, profile.transitionSec),
+      intervalSec
+    );
+    const bucketStart = startBucket * intervalSec;
+    return (
+      integrateStepBucket(
+        current,
+        next,
+        endSec - bucketStart,
+        intervalSec,
+        transitionSec
+      ) -
+      integrateStepBucket(
+        current,
+        next,
+        startSec - bucketStart,
+        intervalSec,
+        transitionSec
+      )
+    );
+  }
+  return (
+    integrateStepsMultiplier(profile, endSec) -
+    integrateStepsMultiplier(profile, startSec)
+  );
+};
+
 const integrateLoopRampCycle = (
   profile: Extract<SpeedProfile, { kind: "loopRamp" }>,
   elapsedSec: number
@@ -205,29 +249,6 @@ const integrateLoopRampMultiplier = (
   );
 };
 
-const integrateProfileMultiplier = (
-  profile: SpeedProfile,
-  elapsedSec: number
-) => {
-  switch (profile.kind) {
-    case "constant": {
-      return elapsedSec;
-    }
-    case "sine": {
-      return integrateSineMultiplier(profile, elapsedSec);
-    }
-    case "steps": {
-      return integrateStepsMultiplier(profile, elapsedSec);
-    }
-    case "loopRamp": {
-      return integrateLoopRampMultiplier(profile, elapsedSec);
-    }
-    default: {
-      throw new Error("Unsupported speed profile.");
-    }
-  }
-};
-
 export const integrateSpeedProfile = (
   profile: SpeedProfile,
   fromSec: number,
@@ -245,10 +266,33 @@ export const integrateSpeedProfile = (
   const startSec = Math.max(0, Math.min(fromSec, toSec));
   const endSec = Math.max(0, Math.max(fromSec, toSec));
   const direction = toSec < fromSec ? -1 : 1;
-  const distancePx =
-    Math.max(0, basePxPerSec) *
-    (integrateProfileMultiplier(profile, endSec) -
-      integrateProfileMultiplier(profile, startSec));
+  let multiplierIntegral: number;
+  switch (profile.kind) {
+    case "constant": {
+      multiplierIntegral = endSec - startSec;
+      break;
+    }
+    case "sine": {
+      multiplierIntegral =
+        integrateSineMultiplier(profile, endSec) -
+        integrateSineMultiplier(profile, startSec);
+      break;
+    }
+    case "steps": {
+      multiplierIntegral = integrateStepsRange(profile, startSec, endSec);
+      break;
+    }
+    case "loopRamp": {
+      multiplierIntegral =
+        integrateLoopRampMultiplier(profile, endSec) -
+        integrateLoopRampMultiplier(profile, startSec);
+      break;
+    }
+    default: {
+      throw new Error("Unsupported speed profile.");
+    }
+  }
+  const distancePx = Math.max(0, basePxPerSec) * multiplierIntegral;
   return distancePx * direction;
 };
 

@@ -35,7 +35,21 @@ const BOUNCE_Y_RATE = 0.67;
 const BOUNCE_SPEED_SCALE = 1 / Math.hypot(BOUNCE_X_RATE, BOUNCE_Y_RATE);
 const RANDOM_WALK_STEP_PX = 5;
 
+type PatternMetrics = ReturnType<typeof resolvePatternBounds> & {
+  diagonalLength: number;
+  primaryColor: string;
+  radiusPx: number;
+  secondaryColor: string;
+  travelPx: number;
+};
+
 type PatternSamplerState = PatternPathCacheState & {
+  metricsCache: {
+    width: number;
+    height: number;
+    margin: number;
+    metrics: PatternMetrics;
+  } | null;
   primaryTravelState: ScaledTravelState;
   xTravelState: ScaledTravelState;
   yTravelState: ScaledTravelState;
@@ -47,6 +61,7 @@ type PatternSamplerState = PatternPathCacheState & {
 const createPatternSamplerState = (): PatternSamplerState => ({
   ...createPatternPathCacheState(),
   hardTurnState: null,
+  metricsCache: null,
   motRandomWalkCache: null,
   primaryTravelState: createScaledTravelState(),
   randomWalkCache: null,
@@ -123,8 +138,12 @@ const copyRandomWalkState = (
   target.lastSampleTravelPx = source.lastSampleTravelPx;
 };
 
-const shortestAngleDelta = (from: number, to: number) =>
-  Math.atan2(Math.sin(to - from), Math.cos(to - from));
+const shortestAngleDelta = (from: number, to: number) => {
+  const delta = to - from;
+  return delta > -Math.PI && delta < Math.PI
+    ? delta
+    : Math.atan2(Math.sin(delta), Math.cos(delta));
+};
 
 const createHardTurnWaypoint = (
   rng: Rng,
@@ -626,6 +645,7 @@ export const getTeleportJumpDistancePx = (
 };
 
 const resolvePatternMetrics = (
+  state: PatternSamplerState,
   elapsedSec: number,
   arena: Arena,
   params: PatternParams
@@ -633,7 +653,30 @@ const resolvePatternMetrics = (
   const radiusPx = Number.isFinite(params.radiusPx)
     ? Math.max(1, params.radiusPx)
     : 1;
-  const bounds = resolvePatternBounds(arena, radiusPx, params.pathMarginPx);
+  const margin = Math.max(params.pathMarginPx ?? 16, radiusPx + 8);
+  let cache = state.metricsCache;
+  if (
+    !cache ||
+    cache.width !== arena.width ||
+    cache.height !== arena.height ||
+    cache.margin !== margin
+  ) {
+    const bounds = resolvePatternBounds(arena, radiusPx, params.pathMarginPx);
+    cache = {
+      height: arena.height,
+      margin,
+      metrics: {
+        ...bounds,
+        diagonalLength: Math.max(1, Math.hypot(bounds.width, bounds.height)),
+        primaryColor: DEFAULT_TARGET_COLOR,
+        radiusPx,
+        secondaryColor: DEFAULT_SECONDARY_COLOR,
+        travelPx: 0,
+      },
+      width: arena.width,
+    };
+    state.metricsCache = cache;
+  }
   const speedPxPerSec = Number.isFinite(params.speedPxPerSec)
     ? Math.max(1, params.speedPxPerSec)
     : 1;
@@ -641,16 +684,13 @@ const resolvePatternMetrics = (
     ? params.travelPx
     : elapsedSec * speedPxPerSec;
 
-  return {
-    ...bounds,
-    primaryColor: params.colorA ?? DEFAULT_TARGET_COLOR,
-    radiusPx,
-    secondaryColor: params.colorB ?? DEFAULT_SECONDARY_COLOR,
-    travelPx: Number.isFinite(requestedTravelPx) ? requestedTravelPx : 0,
-  };
+  const { metrics } = cache;
+  metrics.primaryColor = params.colorA ?? DEFAULT_TARGET_COLOR;
+  metrics.radiusPx = radiusPx;
+  metrics.secondaryColor = params.colorB ?? DEFAULT_SECONDARY_COLOR;
+  metrics.travelPx = Number.isFinite(requestedTravelPx) ? requestedTravelPx : 0;
+  return metrics;
 };
-
-type PatternMetrics = ReturnType<typeof resolvePatternMetrics>;
 
 const sampleSecondaryPatternInto = (
   samplerState: PatternSamplerState,
@@ -680,7 +720,7 @@ const sampleSecondaryPatternInto = (
   if (id === "perimeterLoop") {
     const [x, y] = sampleClosedPolyline(
       samplerState,
-      curveCacheKey(id, left, top, right, bottom, 4),
+      curveCacheKey(samplerState, id, left, top, right, bottom, 4),
       travelPx,
       4,
       (index) => {
@@ -702,7 +742,7 @@ const sampleSecondaryPatternInto = (
   if (id === "diamondLoop") {
     const [x, y] = sampleClosedPolyline(
       samplerState,
-      curveCacheKey(id, left, top, right, bottom, 4),
+      curveCacheKey(samplerState, id, left, top, right, bottom, 4),
       travelPx,
       4,
       (index) => {
@@ -724,7 +764,7 @@ const sampleSecondaryPatternInto = (
   if (id === "clover") {
     const [x, y] = sampleClosedCurve(
       samplerState,
-      curveCacheKey(id, left, top, right, bottom, 160),
+      curveCacheKey(samplerState, id, left, top, right, bottom, 160),
       travelPx,
       160,
       (phase) => {
@@ -743,7 +783,7 @@ const sampleSecondaryPatternInto = (
     const lanes = 5;
     const [x, y] = sampleClosedPolyline(
       samplerState,
-      curveCacheKey(id, left, top, right, bottom, lanes),
+      curveCacheKey(samplerState, id, left, top, right, bottom, lanes),
       travelPx,
       lanes,
       (index) => [
@@ -760,7 +800,7 @@ const sampleSecondaryPatternInto = (
     const pointCount = rows * columns;
     const [x, y] = sampleClosedPolyline(
       samplerState,
-      curveCacheKey(id, left, top, right, bottom, pointCount),
+      curveCacheKey(samplerState, id, left, top, right, bottom, pointCount),
       travelPx,
       pointCount,
       (index) => {
@@ -778,7 +818,7 @@ const sampleSecondaryPatternInto = (
   if (id === "lissajous") {
     const [x, y] = sampleClosedCurve(
       samplerState,
-      curveCacheKey(id, left, top, right, bottom, 180),
+      curveCacheKey(samplerState, id, left, top, right, bottom, 180),
       travelPx,
       180,
       (phase) => {
@@ -795,7 +835,7 @@ const sampleSecondaryPatternInto = (
   if (id === "hourglass") {
     const [x, y] = sampleClosedCurve(
       samplerState,
-      curveCacheKey(id, left, top, right, bottom, 160),
+      curveCacheKey(samplerState, id, left, top, right, bottom, 160),
       travelPx,
       160,
       (phase) => {
@@ -813,7 +853,7 @@ const sampleSecondaryPatternInto = (
     const insetY = height * 0.18;
     const [x, y] = sampleClosedPolyline(
       samplerState,
-      curveCacheKey(id, left, top, right, bottom, 4),
+      curveCacheKey(samplerState, id, left, top, right, bottom, 4),
       travelPx,
       4,
       (index) => {
@@ -894,7 +934,12 @@ const samplePatternInto = (
   params: PatternParams,
   rng: Rng
 ): number => {
-  const metrics = resolvePatternMetrics(elapsedSec, arena, params);
+  const metrics = resolvePatternMetrics(
+    samplerState,
+    elapsedSec,
+    arena,
+    params
+  );
   const {
     bottom,
     centerX: cx,
@@ -916,7 +961,7 @@ const samplePatternInto = (
     const effectiveTravelPx = resolveScaledTravel(
       samplerState.primaryTravelState,
       id,
-      `${id}:${radius}`,
+      radius,
       travelPx,
       Math.max(1, radius)
     );
@@ -935,7 +980,7 @@ const samplePatternInto = (
   if (id === "ellipse") {
     const [x, y] = sampleClosedCurve(
       samplerState,
-      curveCacheKey(id, left, top, right, bottom, 160),
+      curveCacheKey(samplerState, id, left, top, right, bottom, 160),
       travelPx,
       160,
       (phase) => {
@@ -949,7 +994,7 @@ const samplePatternInto = (
   if (id === "figureEight") {
     const [x, y] = sampleClosedCurve(
       samplerState,
-      curveCacheKey(id, left, top, right, bottom, 180),
+      curveCacheKey(samplerState, id, left, top, right, bottom, 180),
       travelPx,
       180,
       (phase) => {
@@ -966,7 +1011,7 @@ const samplePatternInto = (
   if (id === "wave") {
     const [x, y] = sampleClosedCurve(
       samplerState,
-      curveCacheKey(id, left, top, right, bottom, 120),
+      curveCacheKey(samplerState, id, left, top, right, bottom, 120),
       travelPx,
       120,
       (phase) => {
@@ -984,14 +1029,14 @@ const samplePatternInto = (
     const xTravelPx = resolveScaledTravel(
       samplerState.xTravelState,
       `${id}:x`,
-      `${id}:x:${width}`,
+      width,
       travelPx * DIAGONAL_X_RATE * DIAGONAL_SPEED_SCALE,
       width
     );
     const yTravelPx = resolveScaledTravel(
       samplerState.yTravelState,
       `${id}:y`,
-      `${id}:y:${height}`,
+      height,
       travelPx * DIAGONAL_Y_RATE * DIAGONAL_SPEED_SCALE,
       height
     );
@@ -1010,14 +1055,14 @@ const samplePatternInto = (
     const xTravelPx = resolveScaledTravel(
       samplerState.xTravelState,
       `${id}:x`,
-      `${id}:x:${width}`,
+      width,
       travelPx * BOUNCE_X_RATE * BOUNCE_SPEED_SCALE,
       width
     );
     const yTravelPx = resolveScaledTravel(
       samplerState.yTravelState,
       `${id}:y`,
-      `${id}:y:${height}`,
+      height,
       travelPx * BOUNCE_Y_RATE * BOUNCE_SPEED_SCALE,
       height
     );
@@ -1094,7 +1139,7 @@ const samplePatternInto = (
     const effectiveTravelPx = resolveScaledTravel(
       samplerState.primaryTravelState,
       id,
-      `${id}:${jumpDistancePx}`,
+      jumpDistancePx,
       travelPx,
       jumpDistancePx
     );
@@ -1117,7 +1162,7 @@ const samplePatternInto = (
     const effectiveTravelPx = resolveScaledTravel(
       samplerState.primaryTravelState,
       id,
-      `${id}:${width}`,
+      width,
       travelPx,
       width
     );
@@ -1136,7 +1181,7 @@ const samplePatternInto = (
     const effectiveTravelPx = resolveScaledTravel(
       samplerState.primaryTravelState,
       id,
-      `${id}:${height}`,
+      height,
       travelPx,
       height
     );
@@ -1152,11 +1197,11 @@ const samplePatternInto = (
   }
 
   if (id === "downRightSweep") {
-    const diagonalLength = Math.max(1, Math.hypot(width, height));
+    const { diagonalLength } = metrics;
     const effectiveTravelPx = resolveScaledTravel(
       samplerState.primaryTravelState,
       id,
-      `${id}:${width}:${height}`,
+      diagonalLength,
       travelPx,
       diagonalLength
     );
@@ -1174,11 +1219,11 @@ const samplePatternInto = (
   }
 
   if (id === "downLeftSweep") {
-    const diagonalLength = Math.max(1, Math.hypot(width, height));
+    const { diagonalLength } = metrics;
     const effectiveTravelPx = resolveScaledTravel(
       samplerState.primaryTravelState,
       id,
-      `${id}:${width}:${height}`,
+      diagonalLength,
       travelPx,
       diagonalLength
     );

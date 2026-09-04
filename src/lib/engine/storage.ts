@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod/mini";
 
 import type { Calibration } from "./calibration";
 import type { TrainerSettings } from "./presets";
@@ -6,7 +6,7 @@ import type { SizeProfile, SpeedProfile } from "./profiles";
 
 const SETTINGS_KEY = "foveaflow.settings.v2";
 
-const profileMultiplierSchema = z.number().min(0).max(4);
+const profileMultiplierSchema = z.number().check(z.minimum(0), z.maximum(4));
 const orderedMultipliers = <
   T extends { minMultiplier: number; maxMultiplier: number },
 >(
@@ -20,23 +20,25 @@ const speedProfileSchema = z.discriminatedUnion("kind", [
       kind: z.literal("sine"),
       maxMultiplier: profileMultiplierSchema,
       minMultiplier: profileMultiplierSchema,
-      periodSec: z.number().positive(),
+      periodSec: z.number().check(z.positive()),
     })
-    .refine(orderedMultipliers),
+    .check(z.refine(orderedMultipliers)),
   z.object({
-    intervalSec: z.number().positive(),
+    intervalSec: z.number().check(z.positive()),
     kind: z.literal("steps"),
-    multipliers: z.array(profileMultiplierSchema).min(1).max(32),
-    transitionSec: z.number().min(0),
+    multipliers: z
+      .array(profileMultiplierSchema)
+      .check(z.minLength(1), z.maxLength(32)),
+    transitionSec: z.number().check(z.minimum(0)),
   }),
   z.object({
     fromMultiplier: profileMultiplierSchema,
     kind: z.literal("loopRamp"),
-    periodSec: z.number().positive(),
-    resetSec: z.number().min(0),
+    periodSec: z.number().check(z.positive()),
+    resetSec: z.number().check(z.minimum(0)),
     toMultiplier: profileMultiplierSchema,
   }),
-]) satisfies z.ZodType<SpeedProfile>;
+]) satisfies z.ZodMiniType<SpeedProfile>;
 
 const sizeProfileSchema = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("constant") }),
@@ -45,46 +47,46 @@ const sizeProfileSchema = z.discriminatedUnion("kind", [
       kind: z.literal("pulse"),
       maxMultiplier: profileMultiplierSchema,
       minMultiplier: profileMultiplierSchema,
-      periodSec: z.number().positive(),
+      periodSec: z.number().check(z.positive()),
     })
-    .refine(orderedMultipliers),
-]) satisfies z.ZodType<SizeProfile>;
+    .check(z.refine(orderedMultipliers)),
+]) satisfies z.ZodMiniType<SizeProfile>;
 
 const calibrationSchema = z.object({
   createdAt: z.number(),
   cssPxPerCm: z.number(),
   id: z.string(),
   viewingDistanceCm: z.number(),
-}) satisfies z.ZodType<Calibration>;
+}) satisfies z.ZodMiniType<Calibration>;
 
-const storedSettingsSchema = z.object({
-  ballColor: z.string().optional(),
-  baseRadiusPx: z.number().optional(),
-  calibration: calibrationSchema.optional(),
-  distractorBrightness: z.number().optional(),
-  distractorCount: z.number().optional(),
-  letterColor: z.string().optional(),
-  letterEnabled: z.boolean().optional(),
-  letterScale: z.number().optional(),
-  letterWeight: z.number().optional(),
-  lilacChaserBallColor: z.string().optional(),
-  lilacChaserScale: z.number().optional(),
-  motionDirection: z.union([z.literal(-1), z.literal(1)]).optional(),
-  patternId: z.string().optional(),
-  presetId: z.string().optional(),
-  showTrail: z.boolean().optional(),
-  sizeProfile: sizeProfileSchema.optional(),
-  speed: z
-    .object({
+const storedSettingsSchema = z.partial(
+  z.object({
+    ballColor: z.string(),
+    baseRadiusPx: z.number(),
+    calibration: calibrationSchema,
+    distractorBrightness: z.number(),
+    distractorCount: z.number(),
+    letterColor: z.string(),
+    letterEnabled: z.boolean(),
+    letterScale: z.number(),
+    letterWeight: z.number(),
+    lilacChaserBallColor: z.string(),
+    lilacChaserScale: z.number(),
+    motionDirection: z.union([z.literal(-1), z.literal(1)]),
+    patternId: z.string(),
+    presetId: z.string(),
+    showTrail: z.boolean(),
+    sizeProfile: sizeProfileSchema,
+    speed: z.object({
       unit: z.enum(["cm/s", "deg/s", "screen/s"]),
       value: z.number(),
-    })
-    .optional(),
-  speedProfile: speedProfileSchema.optional(),
-  targetCount: z.number().optional(),
-  targetForm: z.string().optional(),
-  targetOpacity: z.number().optional(),
-});
+    }),
+    speedProfile: speedProfileSchema,
+    targetCount: z.number(),
+    targetForm: z.string(),
+    targetOpacity: z.number(),
+  })
+);
 
 export type StoredSettings = z.infer<typeof storedSettingsSchema>;
 

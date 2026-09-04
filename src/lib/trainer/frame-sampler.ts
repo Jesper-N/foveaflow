@@ -52,6 +52,8 @@ export const createTrainerFrameSampler = () => {
     seed: 0,
     travelPx: 0,
   };
+  // The result and its target buffer are borrowed until the next sample.
+  const sample: TrainerFrameSample = { count: 0, frames, letterContext };
 
   return {
     reset() {
@@ -116,7 +118,8 @@ export const createTrainerFrameSampler = () => {
         );
       }
 
-      return { count, frames, letterContext };
+      sample.count = count;
+      return sample;
     },
   };
 };
