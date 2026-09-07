@@ -1,5 +1,6 @@
 <script lang="ts">
   import TrainerHudColorSelectOptions from "$lib/components/trainer/trainer-hud-color-select-options.svelte";
+  import * as Field from "$lib/components/ui/field/index.js";
   import * as Select from "$lib/components/ui/select/index.js";
   import { Slider } from "$lib/components/ui/slider/index.js";
   import type { TrainerSettings } from "$lib/engine/presets";
@@ -10,7 +11,6 @@
     getLilacChaserColorName,
     maxSpeedByUnit,
     minSpeedByUnit,
-    speedDecimalPlacesByUnit,
     speedSliderStepByUnit,
   } from "$lib/trainer/options";
   import { trainerSettingBounds } from "$lib/trainer/settings";
@@ -20,13 +20,13 @@
     isLilacChaserMode,
     actions,
     locale,
-    desktopLilacChaserColorSelectOpen = $bindable(),
+    lilacChaserColorSelectOpen = $bindable(),
   }: {
     settings: TrainerSettings;
     isLilacChaserMode: boolean;
     actions: TrainerHudActions;
     locale: AppLocale;
-    desktopLilacChaserColorSelectOpen: boolean;
+    lilacChaserColorSelectOpen: boolean;
   } = $props();
 
   let currentLilacChaserColorName = $derived(
@@ -38,12 +38,12 @@
 </script>
 
 {#if !isLilacChaserMode}
-  <div class="hidden shrink-0 items-center gap-2 overflow-hidden xl:flex">
-    <div
-      class="bg-muted/60 grid h-9 grid-cols-[auto_5.5rem_auto] items-center gap-3 rounded-full border px-3"
+  <Field.FieldGroup class="grid min-w-0 grid-cols-2 gap-5 px-1">
+    <Field.Field
+      class="grid min-w-0 grid-cols-[1fr_auto] items-center gap-x-2 gap-y-0"
     >
       <span
-        class="text-muted-foreground max-w-20 min-w-0 truncate text-xs font-medium"
+        class="text-muted-foreground min-w-0 truncate text-xs font-medium"
         title={sizeLabel}
       >
         {sizeLabel}
@@ -54,18 +54,18 @@
         max={trainerSettingBounds.baseRadiusPx.max}
         step={1}
         aria-label={t(locale, "Header target size")}
-        class="w-full"
+        class="col-span-2 row-start-2 min-h-11 w-full"
       />
-      <span class="w-[3ch] text-center text-xs font-semibold tabular-nums">
+      <span class="col-start-2 row-start-1 text-xs font-medium tabular-nums">
         {Math.round(settings.baseRadiusPx)}
       </span>
-    </div>
+    </Field.Field>
 
-    <div
-      class="bg-muted/60 grid h-9 grid-cols-[auto_5.5rem_auto] items-center gap-3 rounded-full border px-3"
+    <Field.Field
+      class="grid min-w-0 grid-cols-[1fr_auto] items-center gap-x-2 gap-y-0"
     >
       <span
-        class="text-muted-foreground max-w-20 min-w-0 truncate text-xs font-medium"
+        class="text-muted-foreground min-w-0 truncate text-xs font-medium"
         title={speedLabel}
       >
         {speedLabel}
@@ -76,41 +76,54 @@
         max={maxSpeedByUnit[settings.speed.unit]}
         step={speedSliderStepByUnit[settings.speed.unit]}
         aria-label={t(locale, "Header target speed")}
-        class="w-full"
+        class="col-span-2 row-start-2 min-h-11 w-full"
       />
-      <span class="w-[4.5ch] text-center text-xs font-semibold tabular-nums">
-        {settings.speed.value.toFixed(
-          speedDecimalPlacesByUnit[settings.speed.unit]
-        )}
+      <span class="col-start-2 row-start-1 text-xs font-medium tabular-nums">
+        {Math.round(settings.speed.value)}
       </span>
-    </div>
-  </div>
+    </Field.Field>
+  </Field.FieldGroup>
 {:else}
-  <div class="hidden shrink-0 items-center gap-2 overflow-hidden xl:flex">
-    <Select.Root
-      bind:open={desktopLilacChaserColorSelectOpen}
-      type="single"
-      value={settings.lilacChaserBallColor}
-      onValueChange={actions.handleLilacChaserColorChange}
-      onOpenChange={actions.handleHeaderSelectOpenChange}
-    >
-      <Select.Trigger
-        class="w-36 overflow-hidden lg:w-40"
-        aria-label={t(locale, "Lilac Chaser ball color")}
+  <Field.FieldGroup class="grid min-w-0 grid-cols-2 items-start gap-5 px-1">
+    <Field.Field class="gap-1">
+      <span class="text-muted-foreground text-xs font-medium"
+        >{t(locale, "Ball color")}</span
       >
-        <span class="min-w-0 truncate">
-          {currentLilacChaserColorName}
-        </span>
-      </Select.Trigger>
-      <Select.Content>
-        <TrainerHudColorSelectOptions {locale} />
-      </Select.Content>
-    </Select.Root>
-    <div
-      class="bg-muted/60 grid h-9 grid-cols-[auto_5.5rem_auto] items-center gap-3 rounded-full border px-3"
+      <Select.Root
+        bind:open={lilacChaserColorSelectOpen}
+        type="single"
+        value={settings.lilacChaserBallColor}
+        onValueChange={actions.handleLilacChaserColorChange}
+        onOpenChange={actions.handleHeaderSelectOpenChange}
+      >
+        <Select.Trigger
+          class="min-h-11 w-full min-w-0 overflow-hidden rounded-xl px-2.5"
+          aria-label={t(locale, "Lilac Chaser ball color")}
+        >
+          <span class="flex min-w-0 items-center gap-2">
+            <svg viewBox="0 0 12 12" class="size-3 shrink-0" aria-hidden="true">
+              <circle
+                cx="6"
+                cy="6"
+                r="5"
+                fill={settings.lilacChaserBallColor}
+              />
+            </svg>
+            <span class="truncate text-xs">
+              {currentLilacChaserColorName}
+            </span>
+          </span>
+        </Select.Trigger>
+        <Select.Content class="trainer-island-theme">
+          <TrainerHudColorSelectOptions {locale} />
+        </Select.Content>
+      </Select.Root>
+    </Field.Field>
+    <Field.Field
+      class="grid min-w-0 grid-cols-[1fr_auto] items-center gap-x-2 gap-y-0"
     >
       <span
-        class="text-muted-foreground max-w-20 min-w-0 truncate text-xs font-medium"
+        class="text-muted-foreground min-w-0 truncate text-xs font-medium"
         title={scaleLabel}
       >
         {scaleLabel}
@@ -124,11 +137,11 @@
         max={trainerSettingBounds.lilacChaserScale.max}
         step={0.05}
         aria-label={t(locale, "Lilac Chaser scale")}
-        class="w-full"
+        class="col-span-2 row-start-2 min-h-12 w-full"
       />
-      <span class="w-[4.5ch] text-center text-xs font-semibold tabular-nums">
+      <span class="col-start-2 row-start-1 text-xs font-medium tabular-nums">
         {settings.lilacChaserScale.toFixed(2)}x
       </span>
-    </div>
-  </div>
+    </Field.Field>
+  </Field.FieldGroup>
 {/if}

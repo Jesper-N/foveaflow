@@ -21,7 +21,7 @@ export const createHudAutoHideTimer = ({
     timeout = undefined;
   };
 
-  const start = () => {
+  const start = (durationMs = delayMs) => {
     clear();
     setReady(false);
     setVisible(true);
@@ -30,7 +30,7 @@ export const createHudAutoHideTimer = ({
       if (!isInteractionOpen()) {
         setVisible(false);
       }
-    }, delayMs);
+    }, durationMs);
   };
 
   return { clear, start };

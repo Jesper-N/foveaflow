@@ -1,4 +1,5 @@
 <script lang="ts">
+  import "./guide-motion.css";
   import LanguageSelect from "$lib/components/language-select.svelte";
   import { Badge } from "$lib/components/ui/badge/index.js";
   import { Button } from "$lib/components/ui/button/index.js";

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import "../resize-transition.css";
   import TrainerControlSectionIcon from "$lib/components/trainer/trainer-control-section-icon.svelte";
   import TrainerDrillControls from "$lib/components/trainer/trainer-drill-controls.svelte";
   import TrainerMotionControls from "$lib/components/trainer/trainer-motion-controls.svelte";

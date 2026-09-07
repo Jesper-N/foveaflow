@@ -1,4 +1,7 @@
 <script lang="ts">
+  import "../guide-motion.css";
+  import "../resize-transition.css";
+  import "./trainer-guide-popover.css";
   import TrainerGuideHomepageContent from "$lib/components/trainer/trainer-guide-homepage-content.svelte";
   import { Button } from "$lib/components/ui/button/index.js";
   import { legalPageLinks } from "$lib/content/legal";
@@ -294,7 +297,7 @@
   id="trainer-guide-popover"
   popover="auto"
   role="dialog"
-  class="native-dialog-popover t-resize native-guide-popover bg-popover text-popover-foreground ring-foreground/5 animation-duration-[100ms] dark:ring-foreground/10 relative rounded-4xl p-6 text-sm shadow-xl ring-1 outline-hidden sm:p-8"
+  class="trainer-guide-popover t-resize bg-popover text-popover-foreground ring-foreground/5 animation-duration-[100ms] dark:ring-foreground/10 relative rounded-4xl p-6 text-sm shadow-xl ring-1 outline-hidden sm:p-8"
   aria-labelledby="trainer-guide-popover-title"
   ontoggle={handlePopoverToggle}
 >

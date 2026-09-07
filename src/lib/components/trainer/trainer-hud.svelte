@@ -1,13 +1,16 @@
 <script lang="ts">
+  import "./trainer-hud.css";
   import LanguageSelect from "$lib/components/language-select.svelte";
   import TrainerHudModeSelects from "$lib/components/trainer/trainer-hud-mode-selects.svelte";
   import TrainerHudQuickAdjustments from "$lib/components/trainer/trainer-hud-quick-adjustments.svelte";
-  import { Button } from "$lib/components/ui/button/index.js";
+  import { buttonVariants } from "$lib/components/ui/button/index.js";
+  import * as Tooltip from "$lib/components/ui/tooltip/index.js";
   import { siteMetadata } from "$lib/content/site";
   import type { TrainerSettings } from "$lib/engine/presets";
   import { languageState } from "$lib/i18n/state.svelte";
   import { t } from "$lib/i18n/translate";
   import type { TrainerHudActions } from "$lib/trainer/control-actions";
+  import { cn } from "$lib/utils.js";
   import ArrowLeftRightIcon from "@lucide/svelte/icons/arrow-left-right";
   import BookOpenIcon from "@lucide/svelte/icons/book-open";
   import PauseIcon from "@lucide/svelte/icons/pause";
@@ -18,19 +21,14 @@
   interface Props {
     attachHudShell: Attachment<HTMLDivElement>;
     hudHidden: boolean;
-    hudContentWidth: number | null;
-    attachHudContentSizer: Attachment<HTMLDivElement>;
     settings: TrainerSettings;
     isLilacChaserMode: boolean;
     motionPaused: boolean;
     motionDirectionToggleLabel: string;
     canToggleDirection: boolean;
-    mobilePresetSelectOpen: boolean;
-    mobilePatternSelectOpen: boolean;
-    mobileLilacChaserColorSelectOpen: boolean;
-    desktopPresetSelectOpen: boolean;
-    desktopPatternSelectOpen: boolean;
-    desktopLilacChaserColorSelectOpen: boolean;
+    presetSelectOpen: boolean;
+    patternSelectOpen: boolean;
+    lilacChaserColorSelectOpen: boolean;
     languageSelectOpen: boolean;
     guideButtonLabel: string;
     guideButtonTitle: string;
@@ -41,19 +39,14 @@
   let {
     attachHudShell,
     hudHidden,
-    hudContentWidth,
-    attachHudContentSizer,
     settings,
     isLilacChaserMode,
     motionPaused,
     motionDirectionToggleLabel,
     canToggleDirection,
-    mobilePresetSelectOpen = $bindable(),
-    mobilePatternSelectOpen = $bindable(),
-    mobileLilacChaserColorSelectOpen = $bindable(),
-    desktopPresetSelectOpen = $bindable(),
-    desktopPatternSelectOpen = $bindable(),
-    desktopLilacChaserColorSelectOpen = $bindable(),
+    presetSelectOpen = $bindable(),
+    patternSelectOpen = $bindable(),
+    lilacChaserColorSelectOpen = $bindable(),
     languageSelectOpen = $bindable(),
     guideButtonLabel,
     guideButtonTitle,
@@ -62,6 +55,9 @@
   }: Props = $props();
 
   let locale = $derived(languageState.locale);
+  let playbackLabel = $derived(
+    motionPaused ? t(locale, "Resume motion") : t(locale, "Pause motion")
+  );
 
   let pointerInside = false;
   let pointerDown = false;
@@ -75,7 +71,10 @@
     );
   };
 
-  const handlePointerEnter = () => {
+  const handlePointerEnter = (event: PointerEvent) => {
+    if (event.pointerType === "touch") {
+      return;
+    }
     pointerInside = true;
     syncHudInteraction();
   };
@@ -90,8 +89,33 @@
     syncHudInteraction();
   };
 
-  const handlePointerEnd = () => {
+  const isPointerOverHud = (event: PointerEvent) => {
+    if (event.pointerType === "touch" || !hudElement || hudHidden) {
+      return false;
+    }
+    const bounds = hudElement.getBoundingClientRect();
+    return (
+      event.clientX >= bounds.left &&
+      event.clientX <= bounds.right &&
+      event.clientY >= bounds.top &&
+      event.clientY <= bounds.bottom
+    );
+  };
+
+  const handlePointerEnd = (event: PointerEvent) => {
     pointerDown = false;
+    pointerInside = event.type !== "pointercancel" && isPointerOverHud(event);
+    syncHudInteraction();
+  };
+
+  const handleWindowPointerMove = (event: PointerEvent) => {
+    if (
+      !pointerInside ||
+      (event.target instanceof Node && hudElement?.contains(event.target))
+    ) {
+      return;
+    }
+    pointerInside = isPointerOverHud(event);
     syncHudInteraction();
   };
 
@@ -115,6 +139,11 @@
     syncHudInteraction();
   };
 
+  const handleKeyDown = () => {
+    focusInside = true;
+    syncHudInteraction();
+  };
+
   const attachHudInteraction: Attachment<HTMLDivElement> = (node) => {
     hudElement = node;
     node.addEventListener("pointerenter", handlePointerEnter);
@@ -122,6 +151,7 @@
     node.addEventListener("pointerdown", handlePointerDown);
     node.addEventListener("focusin", handleFocusIn);
     node.addEventListener("focusout", handleFocusOut);
+    node.addEventListener("keydown", handleKeyDown);
 
     return () => {
       if (hudElement === node) {
@@ -132,6 +162,7 @@
       node.removeEventListener("pointerdown", handlePointerDown);
       node.removeEventListener("focusin", handleFocusIn);
       node.removeEventListener("focusout", handleFocusOut);
+      node.removeEventListener("keydown", handleKeyDown);
       actions.setHudInteractionActive(false);
     };
   };
@@ -168,11 +199,20 @@
     if (event.pointerType === "touch") {
       return;
     }
-    actions.revealHudTemporarily();
+    actions.revealHud();
+  };
+
+  const handleRevealPointerDown = (event: PointerEvent) => {
+    if (event.pointerType === "touch") {
+      actions.revealHudTemporarily();
+      return;
+    }
+    actions.revealHud();
   };
 </script>
 
 <svelte:window
+  onpointermove={handleWindowPointerMove}
   onpointerup={handlePointerEnd}
   onpointercancel={handlePointerEnd}
 />
@@ -180,147 +220,176 @@
 {#if hudHidden}
   <button
     type="button"
-    class="trainer-hud-peek focus-visible:ring-foreground absolute top-0 left-1/2 z-30 flex h-10 w-full items-start justify-center rounded-b-full pt-2 outline-hidden focus-visible:ring-3 sm:w-32"
+    class="trainer-hud-peek focus-visible:ring-foreground absolute left-1/2 z-30 h-12 w-36 -translate-x-1/2 rounded-full outline-hidden focus-visible:ring-3"
     aria-label={t(locale, "Reveal controls")}
+    aria-controls="trainer-island"
+    aria-expanded="false"
     onpointerenter={handleRevealPointerEnter}
-    onpointerdown={actions.revealHudTemporarily}
+    onpointerdown={handleRevealPointerDown}
     onfocus={handleRevealFocus}
   >
-    <span
-      class="bg-accent/70 h-1 w-16 rounded-full shadow-[0_0_16px_rgba(118,217,0,0.22)]"
-      aria-hidden="true"
-    ></span>
+    <span class="sr-only">{t(locale, "Reveal controls")}</span>
   </button>
 {/if}
 
 <div
   {@attach attachHudShell}
   {@attach attachHudInteraction}
-  class="trainer-hud-shell absolute top-3 left-1/2 z-20 max-w-[calc(100dvw-1.5rem)] -translate-x-1/2 sm:top-4"
+  class="trainer-hud-shell trainer-island-theme absolute left-1/2 z-20 -translate-x-1/2"
   data-hidden={hudHidden}
   data-instant-reveal={instantReveal}
   data-nosnippet
 >
   <header
-    class="trainer-hud bg-popover/90 text-popover-foreground min-h-12 max-w-full overflow-hidden rounded-[2rem] border px-4 py-2 shadow-[0_18px_44px_-34px_rgba(20,24,22,0.42)] backdrop-blur-md 2xl:py-2.5"
-    style:width={hudContentWidth === null
-      ? undefined
-      : `calc(${hudContentWidth}px + 2rem + 2px)`}
+    id="trainer-island"
+    class="trainer-hud text-foreground relative isolate"
     inert={hudHidden}
   >
-    <div {@attach attachHudContentSizer} class="flex w-max items-center gap-2">
-      <div class="flex shrink-0 items-center gap-2 max-[359px]:hidden">
-        <div
-          class="text-foreground m-0 flex shrink-0 items-center text-base font-semibold tracking-tight"
+    <div class="trainer-island-content flex flex-col gap-4 p-4 sm:p-5">
+      <div
+        class="flex flex-col items-stretch gap-1 min-[360px]:flex-row min-[360px]:items-center min-[360px]:justify-between min-[380px]:gap-2"
+      >
+        <a
+          href="/"
+          class="focus-visible:ring-foreground flex h-11 shrink-0 items-center justify-center rounded-xl text-base font-semibold tracking-tight outline-hidden focus-visible:ring-3 min-[360px]:justify-start min-[480px]:text-xl"
+          aria-label={t(locale, `${siteMetadata.name} home`)}
         >
-          <a
-            href="/"
-            class="hover:text-foreground/85 focus-visible:ring-foreground flex shrink-0 items-center gap-2 rounded-2xl outline-hidden transition-colors focus-visible:ring-3"
-            aria-label={t(locale, `${siteMetadata.name} home`)}
-          >
-            <img
-              src="/metadata/favicon-96x96.png"
-              alt=""
-              aria-hidden="true"
-              width="28"
-              height="28"
-              class="size-7 object-contain dark:hidden"
+          <span>{siteMetadata.name}</span>
+        </a>
+
+        <nav
+          class="flex shrink-0 items-center justify-center min-[360px]:justify-start"
+          aria-label={t(locale, "App actions")}
+        >
+          <Tooltip.Provider delayDuration={450} skipDelayDuration={300}>
+            <Tooltip.Root disabled={hudHidden}>
+              <Tooltip.Trigger
+                data-hud-focus-target
+                data-slot="button"
+                class={cn(
+                  buttonVariants({ variant: "default", size: "icon" }),
+                  "size-11"
+                )}
+                aria-label={playbackLabel}
+                aria-describedby="trainer-motion-status"
+                onclick={actions.toggleMotionPaused}
+              >
+                {#if motionPaused}
+                  <PlayIcon />
+                {:else}
+                  <PauseIcon />
+                {/if}
+              </Tooltip.Trigger>
+              <Tooltip.Content
+                side="bottom"
+                sideOffset={6}
+                class="trainer-island-theme">{playbackLabel}</Tooltip.Content
+              >
+            </Tooltip.Root>
+
+            <div
+              class="trainer-island-direction"
+              data-visible={canToggleDirection}
+              inert={!canToggleDirection}
+            >
+              <Tooltip.Root disabled={hudHidden || !canToggleDirection}>
+                <Tooltip.Trigger
+                  data-slot="button"
+                  class={cn(
+                    buttonVariants({ variant: "ghost", size: "icon" }),
+                    "size-11"
+                  )}
+                  aria-label={motionDirectionToggleLabel}
+                  aria-describedby="trainer-motion-status"
+                  disabled={!canToggleDirection}
+                  onclick={actions.toggleMotionDirection}
+                >
+                  <ArrowLeftRightIcon />
+                </Tooltip.Trigger>
+                <Tooltip.Content
+                  side="bottom"
+                  sideOffset={6}
+                  class="trainer-island-theme"
+                  >{motionDirectionToggleLabel}</Tooltip.Content
+                >
+              </Tooltip.Root>
+            </div>
+
+            <Tooltip.Root disabled={hudHidden}>
+              <Tooltip.Trigger
+                data-slot="button"
+                class={cn(
+                  buttonVariants({ variant: "ghost", size: "icon" }),
+                  "size-11"
+                )}
+                aria-label={guideButtonLabel}
+                popovertarget="trainer-guide-popover"
+                onclick={actions.revealHud}
+              >
+                <BookOpenIcon />
+              </Tooltip.Trigger>
+              <Tooltip.Content
+                side="bottom"
+                sideOffset={6}
+                class="trainer-island-theme">{guideButtonTitle}</Tooltip.Content
+              >
+            </Tooltip.Root>
+
+            <Tooltip.Root disabled={hudHidden}>
+              <Tooltip.Trigger
+                data-slot="button"
+                class={cn(
+                  buttonVariants({ variant: "ghost", size: "icon" }),
+                  "size-11"
+                )}
+                aria-label={t(locale, "Open controls")}
+                onclick={actions.openControlsPanel}
+              >
+                <SettingsIcon />
+              </Tooltip.Trigger>
+              <Tooltip.Content
+                side="bottom"
+                sideOffset={6}
+                class="trainer-island-theme"
+                >{t(locale, "Open controls")}</Tooltip.Content
+              >
+            </Tooltip.Root>
+
+            <LanguageSelect
+              showFlag={false}
+              showTooltip
+              tooltipDisabled={hudHidden}
+              triggerClass="min-h-11 min-w-11 border-transparent bg-transparent hover:bg-muted"
+              contentClass="trainer-island-theme"
+              variant="default"
+              bind:open={languageSelectOpen}
+              onOpenChange={actions.handleHeaderSelectOpenChange}
             />
-            <img
-              src="/metadata/favicon-light-96x96.png"
-              alt=""
-              aria-hidden="true"
-              width="28"
-              height="28"
-              class="hidden size-7 object-contain dark:block"
-            />
-            <span class="sr-only xl:not-sr-only">{siteMetadata.name}</span>
-          </a>
-        </div>
+          </Tooltip.Provider>
+        </nav>
       </div>
 
       <TrainerHudModeSelects
         {settings}
-        {isLilacChaserMode}
         {patternSelectContentClass}
         {actions}
         {locale}
-        bind:mobilePresetSelectOpen
-        bind:mobilePatternSelectOpen
-        bind:mobileLilacChaserColorSelectOpen
-        bind:desktopPresetSelectOpen
-        bind:desktopPatternSelectOpen
+        bind:presetSelectOpen
+        bind:patternSelectOpen
       />
-      <TrainerHudQuickAdjustments
-        {settings}
-        {isLilacChaserMode}
-        {actions}
-        {locale}
-        bind:desktopLilacChaserColorSelectOpen
-      />
-      <div
-        class="bg-border/80 hidden h-8 w-px shrink-0 md:block"
-        aria-hidden="true"
-      ></div>
-
-      <nav
-        class="flex shrink-0 items-center gap-2"
-        aria-label={t(locale, "App actions")}
-      >
-        <Button
-          data-hud-focus-target
-          variant="outline"
-          size="icon"
-          aria-label={motionPaused
-            ? t(locale, "Resume motion")
-            : t(locale, "Pause motion")}
-          aria-describedby="trainer-motion-status"
-          onclick={actions.toggleMotionPaused}
-        >
-          {#if motionPaused}
-            <PlayIcon />
-          {:else}
-            <PauseIcon />
-          {/if}
-        </Button>
-
-        <Button
-          class="hidden sm:inline-flex"
-          variant="outline"
-          size="icon"
-          aria-label={motionDirectionToggleLabel}
-          aria-describedby="trainer-motion-status"
-          disabled={!canToggleDirection}
-          onclick={actions.toggleMotionDirection}
-        >
-          <ArrowLeftRightIcon />
-        </Button>
-
-        <Button
-          variant="outline"
-          size="icon"
-          aria-label={guideButtonLabel}
-          title={guideButtonTitle}
-          popovertarget="trainer-guide-popover"
-          onclick={actions.revealHud}
-        >
-          <BookOpenIcon />
-        </Button>
-
-        <Button
-          variant="outline"
-          size="icon"
-          aria-label={t(locale, "Open controls")}
-          onclick={actions.openControlsPanel}
-        >
-          <SettingsIcon />
-        </Button>
-
-        <LanguageSelect
-          bind:open={languageSelectOpen}
-          onOpenChange={actions.handleHeaderSelectOpenChange}
-        />
-      </nav>
+      <div class="min-h-17">
+        {#key isLilacChaserMode}
+          <div class="trainer-island-adjustments">
+            <TrainerHudQuickAdjustments
+              {settings}
+              {isLilacChaserMode}
+              {actions}
+              {locale}
+              bind:lilacChaserColorSelectOpen
+            />
+          </div>
+        {/key}
+      </div>
     </div>
   </header>
 </div>

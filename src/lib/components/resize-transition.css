@@ -1,0 +1,14 @@
+@layer components {
+  .t-resize {
+    transition-property: width, height;
+    transition-duration: 300ms;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: width, height;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .t-resize {
+      transition: none;
+      will-change: auto;
+    }
+  }
+}

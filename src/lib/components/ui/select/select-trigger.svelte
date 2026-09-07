@@ -4,7 +4,7 @@
   import ChevronDownIcon from "@lucide/svelte/icons/chevron-down";
 
   type SelectTriggerVariant = "default" | "outline";
-  type SelectTriggerSize = "sm" | "default" | "icon";
+  type SelectTriggerSize = "sm" | "default" | "icon" | "field";
 
   let {
     ref = $bindable(null),
@@ -29,6 +29,8 @@
     variant === "default" && "border-transparent bg-input/50",
     variant === "outline" &&
       "border-border bg-background hover:bg-muted hover:text-foreground dark:hover:bg-input/30 aria-expanded:bg-muted aria-expanded:text-foreground dark:bg-transparent",
+    size === "field" &&
+      "relative h-auto min-h-16 w-full min-w-0 items-start rounded-2xl px-3 py-2.5 sm:px-4 [&>svg:last-child]:absolute [&>svg:last-child]:top-3 [&>svg:last-child]:right-3",
     className,
   )}
   {...restProps}

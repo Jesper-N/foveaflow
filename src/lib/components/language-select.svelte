@@ -1,5 +1,6 @@
 <script lang="ts">
   import * as Select from "$lib/components/ui/select/index.js";
+  import * as Tooltip from "$lib/components/ui/tooltip/index.js";
   import {
     getLanguageOption,
     isAppLocale,
@@ -8,6 +9,8 @@
   import { languageState } from "$lib/i18n/state.svelte";
   import { t } from "$lib/i18n/translate";
   import { cn } from "$lib/utils.js";
+  import LanguagesIcon from "@lucide/svelte/icons/languages";
+  import type { HTMLButtonAttributes } from "svelte/elements";
 
   let {
     class: className,
@@ -16,6 +19,9 @@
     open = $bindable(false),
     onOpenChange,
     showSelectedName = false,
+    showFlag = true,
+    showTooltip = false,
+    tooltipDisabled = false,
     collapseNameOnSmall = false,
     size = "default",
     variant,
@@ -26,6 +32,9 @@
     open?: boolean;
     onOpenChange?: (open: boolean) => void;
     showSelectedName?: boolean;
+    showFlag?: boolean;
+    showTooltip?: boolean;
+    tooltipDisabled?: boolean;
     collapseNameOnSmall?: boolean;
     size?: "sm" | "default";
     variant?: "default" | "outline";
@@ -48,14 +57,9 @@
   };
 </script>
 
-<Select.Root
-  bind:open
-  type="single"
-  value={languageState.locale}
-  onValueChange={handleLanguageChange}
-  {onOpenChange}
->
+{#snippet languageTrigger(props: HTMLButtonAttributes = {})}
   <Select.Trigger
+    {...props}
     size={triggerSize}
     variant={triggerVariant}
     class={cn(
@@ -68,9 +72,15 @@
       className
     )}
     aria-label={`${t(languageState.locale, "Change language")}: ${selectedLanguage.label}`}
-    title={`${t(languageState.locale, "Language")}: ${selectedLanguage.label}`}
+    title={showTooltip
+      ? undefined
+      : `${t(languageState.locale, "Language")}: ${selectedLanguage.label}`}
   >
-    <span aria-hidden="true">{selectedLanguage.flag}</span>
+    {#if showFlag}
+      <span aria-hidden="true">{selectedLanguage.flag}</span>
+    {:else}
+      <LanguagesIcon />
+    {/if}
     {#if showSelectedName}
       <span
         class={cn("min-w-0 truncate", collapseNameOnSmall && "max-sm:sr-only")}
@@ -81,7 +91,35 @@
       <span class="sr-only">{selectedLanguage.label}</span>
     {/if}
   </Select.Trigger>
-  <Select.Content class={cn("max-h-[min(75dvh,22rem)]", contentClass)}>
+{/snippet}
+
+<Select.Root
+  bind:open
+  type="single"
+  value={languageState.locale}
+  onValueChange={handleLanguageChange}
+  {onOpenChange}
+>
+  {#if showTooltip}
+    <Tooltip.Root disabled={open || tooltipDisabled}>
+      <Tooltip.Trigger>
+        {#snippet child({ props })}
+          {@render languageTrigger(props)}
+        {/snippet}
+      </Tooltip.Trigger>
+      <Tooltip.Content side="bottom" sideOffset={6} class={contentClass}>
+        {t(languageState.locale, "Language")}
+      </Tooltip.Content>
+    </Tooltip.Root>
+  {:else}
+    {@render languageTrigger()}
+  {/if}
+  <Select.Content
+    class={cn(
+      "max-h-[min(75dvh,22rem)] max-w-[calc(100dvw-1.5rem)]",
+      contentClass
+    )}
+  >
     <Select.Group>
       {#each languageOptions as option (option.locale)}
         <Select.Item value={option.locale}>
@@ -89,7 +127,9 @@
             <span aria-hidden="true">{option.flag}</span>
             <span class="truncate">{option.nativeLabel}</span>
             {#if option.nativeLabel !== option.label}
-              <span class="text-muted-foreground truncate">{option.label}</span>
+              <span class="text-muted-foreground hidden truncate sm:inline"
+                >{option.label}</span
+              >
             {/if}
           </span>
         </Select.Item>

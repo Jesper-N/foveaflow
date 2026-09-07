@@ -14,6 +14,7 @@
 <svelte:window
   onkeydown={controller.handleWindowKeydown}
   onpagehide={controller.flushSettings}
+  onpointerdown={controller.handleWindowPointerDown}
   onpointermove={controller.handleWindowPointerMove}
   onpopstate={controller.handlePopState}
 />
@@ -57,30 +58,15 @@
     <TrainerHud
       attachHudShell={controller.attachHudShell}
       hudHidden={controller.hudHidden}
-      hudContentWidth={controller.hudContentWidth}
-      attachHudContentSizer={controller.attachHudContentSizer}
       settings={controller.settings}
       isLilacChaserMode={controller.isLilacChaserMode}
       motionPaused={controller.motionPaused}
       motionDirectionToggleLabel={controller.motionDirectionToggleLabel}
       canToggleDirection={controller.canToggleDirection}
-      bind:mobilePresetSelectOpen={
-        controller.headerSelects.mobilePresetSelectOpen
-      }
-      bind:mobilePatternSelectOpen={
-        controller.headerSelects.mobilePatternSelectOpen
-      }
-      bind:mobileLilacChaserColorSelectOpen={
-        controller.headerSelects.mobileLilacChaserColorSelectOpen
-      }
-      bind:desktopPresetSelectOpen={
-        controller.headerSelects.desktopPresetSelectOpen
-      }
-      bind:desktopPatternSelectOpen={
-        controller.headerSelects.desktopPatternSelectOpen
-      }
-      bind:desktopLilacChaserColorSelectOpen={
-        controller.headerSelects.desktopLilacChaserColorSelectOpen
+      bind:presetSelectOpen={controller.headerSelects.presetSelectOpen}
+      bind:patternSelectOpen={controller.headerSelects.patternSelectOpen}
+      bind:lilacChaserColorSelectOpen={
+        controller.headerSelects.lilacChaserColorSelectOpen
       }
       bind:languageSelectOpen={controller.languageSelectOpen}
       guideButtonLabel={controller.activeRoute
@@ -122,3 +108,16 @@
     actions={controller.dialogActions}
   />
 </main>
+
+<style>
+  canvas {
+    display: block;
+  }
+  .trainer-stage {
+    overscroll-behavior: none;
+  }
+  .trainer-stage[data-cursor-hidden="true"],
+  .trainer-stage[data-cursor-hidden="true"] :global(*) {
+    cursor: none;
+  }
+</style>

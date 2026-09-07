@@ -94,6 +94,14 @@ const expectTrainer = async (
   await expectAnimation(page);
 };
 
+const hoverIsland = async (page: Page) => {
+  const bounds = await page.locator("#trainer-island").boundingBox();
+  if (!bounds) {
+    throw new Error("Island has no rendered bounds.");
+  }
+  await page.mouse.move(bounds.x + bounds.width / 2, bounds.y + 20);
+};
+
 const choose = async (
   page: Page,
   select: "mode" | "pattern",
@@ -107,6 +115,9 @@ const choose = async (
   await trigger[action]();
   await page.getByRole("option", { exact: true, name })[action]();
   await expect(page.locator('[data-slot="select-content"]')).toHaveCount(0);
+  if (!hasTouch) {
+    await hoverIsland(page);
+  }
 };
 
 const section = (page: Page, id: string) =>

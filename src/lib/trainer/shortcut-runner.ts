@@ -2,8 +2,6 @@ import type { TrainerShortcutAction } from "$lib/trainer/keyboard";
 
 export type HeaderShortcutSelect = "mode" | "pattern";
 
-export const desktopHeaderQuery = "(min-width: 48rem)";
-
 export const shortcutPrioritySurfaceSelector =
   "[data-slot='dialog-content'], [data-slot='select-content'], [popover]:popover-open";
 
@@ -19,32 +17,23 @@ interface TrainerShortcutHandlers {
   openGuideDialog: () => boolean;
 }
 
-export const getHeaderSelectOpenState = (
-  select: HeaderShortcutSelect,
-  useDesktopSelect: boolean
-) => ({
-  desktopLilacChaserColorSelectOpen: false,
-  desktopPatternSelectOpen: select === "pattern" && useDesktopSelect,
-  desktopPresetSelectOpen: select === "mode" && useDesktopSelect,
-  mobileLilacChaserColorSelectOpen: false,
-  mobilePatternSelectOpen: select === "pattern" && !useDesktopSelect,
-  mobilePresetSelectOpen: select === "mode" && !useDesktopSelect,
+export const getHeaderSelectOpenState = (select: HeaderShortcutSelect) => ({
+  lilacChaserColorSelectOpen: false,
+  patternSelectOpen: select === "pattern",
+  presetSelectOpen: select === "mode",
 });
 
 export const focusHeaderSelectTriggerFromShortcut = async ({
   select,
-  useDesktopSelect,
   flushSvelte,
 }: {
   select: HeaderShortcutSelect;
-  useDesktopSelect: boolean;
   flushSvelte: () => Promise<void>;
 }) => {
   await flushSvelte();
 
-  const viewport = useDesktopSelect ? "desktop" : "mobile";
   const trigger = document.querySelector<HTMLButtonElement>(
-    `[data-trainer-shortcut-select="${viewport}-${select}"]`
+    `[data-trainer-shortcut-select="header-${select}"]`
   );
   trigger?.focus({ preventScroll: true });
 };

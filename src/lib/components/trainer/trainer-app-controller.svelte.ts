@@ -71,7 +71,6 @@ import type {
   TrainerSliderValue,
 } from "$lib/trainer/settings";
 import {
-  desktopHeaderQuery,
   focusHeaderSelectTriggerFromShortcut,
   getHeaderSelectOpenState,
   runTrainerShortcutAction,
@@ -115,7 +114,8 @@ const setMetaContent = (selector: string, content: string) => {
 };
 
 export const createTrainerAppController = (getRouteSlug: () => string) => {
-  const hudAutoHideDelayMs = 5000;
+  const hudAutoHideDelayMs = 3500;
+  const hudInitialRevealMs = 1800;
   const cursorHideDelayMs = 2000;
 
   let settings = $state<TrainerSettings>(
@@ -129,21 +129,18 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
   let activeControlSection = $state<ControlSectionId>("drill");
   let guidePopoverOpen = $state(false);
   let openGuideFaqQuestion = $state<string | null>(null);
-  let hudContentWidth = $state<number | null>(null);
   let hudBounds = $state<HudBounds | null>(null);
   let motionPaused = $state(false);
   let storageReady = $state(false);
   let hudAutoHideReady = $state(false);
   let hudVisible = $state(true);
   let hudElementInteractionActive = $state(false);
+  let lastPointerWasTouch = false;
   let cursorHidden = $state(false);
   const headerSelects = $state({
-    desktopLilacChaserColorSelectOpen: false,
-    desktopPatternSelectOpen: false,
-    desktopPresetSelectOpen: false,
-    mobileLilacChaserColorSelectOpen: false,
-    mobilePatternSelectOpen: false,
-    mobilePresetSelectOpen: false,
+    lilacChaserColorSelectOpen: false,
+    patternSelectOpen: false,
+    presetSelectOpen: false,
   });
   let languageSelectOpen = $state(false);
   const overlayOpen = $derived(
@@ -364,7 +361,7 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
       const startHudWhenLanguageReady = async () => {
         await languageState.init();
         if (mounted) {
-          hudAutoHideTimer.start();
+          hudAutoHideTimer.start(hudInitialRevealMs);
         }
       };
       const savedSettings = loadSettings();
@@ -402,22 +399,6 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     });
 
   const speedSliderValue = () => [settings.speed.value];
-
-  const attachHudContentSizer: Attachment<HTMLDivElement> = (node) => {
-    const updateWidth = () => {
-      hudContentWidth = Math.ceil(node.getBoundingClientRect().width);
-    };
-
-    const resizeObserver = new ResizeObserver(updateWidth);
-    const measurementFrame = requestAnimationFrame(updateWidth);
-
-    resizeObserver.observe(node);
-
-    return () => {
-      cancelAnimationFrame(measurementFrame);
-      resizeObserver.disconnect();
-    };
-  };
 
   const attachHudShell: Attachment<HTMLDivElement> = (node) => {
     hudShell = node;
@@ -532,17 +513,13 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     hudElementInteractionActive = active;
 
     if (active) {
-      hudAutoHideTimer.clear();
       revealHud();
       return;
     }
 
     if (hudAutoHideReady) {
       hudVisible = false;
-      return;
     }
-
-    hudAutoHideTimer.start();
   };
 
   const hideHud = () => {
@@ -554,8 +531,36 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
 
   const handleHeaderSelectOpenChange = (open: boolean) => {
     if (open) {
+      hudAutoHideTimer.clear();
       revealHud();
+      return;
     }
+    if (lastPointerWasTouch) {
+      hudAutoHideTimer.start();
+      return;
+    }
+
+    hudAutoHideReady = false;
+    revealHud();
+    requestAnimationFrame(() => {
+      hudAutoHideReady = true;
+      hudVisible = false;
+    });
+  };
+
+  const handleWindowPointerDown = (event: PointerEvent) => {
+    lastPointerWasTouch = event.pointerType === "touch";
+    if (
+      event.pointerType !== "touch" ||
+      !(event.target instanceof HTMLCanvasElement) ||
+      overlayOpen
+    ) {
+      return;
+    }
+
+    hudAutoHideTimer.clear();
+    hudAutoHideReady = true;
+    hudVisible = false;
   };
 
   const handleWindowPointerMove = (event: PointerEvent) => {
@@ -623,17 +628,12 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
   };
 
   const openHeaderSelectFromShortcut = (select: HeaderShortcutSelect) => {
-    const useDesktopSelect = window.matchMedia(desktopHeaderQuery).matches;
-    Object.assign(
-      headerSelects,
-      getHeaderSelectOpenState(select, useDesktopSelect)
-    );
+    Object.assign(headerSelects, getHeaderSelectOpenState(select));
     revealHud();
 
     void focusHeaderSelectTriggerFromShortcut({
       flushSvelte,
       select,
-      useDesktopSelect,
     });
   };
 
@@ -770,7 +770,7 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     },
     openControlsPanel,
     revealHud,
-    revealHudTemporarily: hudAutoHideTimer.start,
+    revealHudTemporarily: () => hudAutoHideTimer.start(),
     setHudInteractionActive,
     sizeSlider: {
       set: setSizeSliderValue,
@@ -876,7 +876,6 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
       return activeTrainingModeGuide;
     },
     attachCanvasOnce,
-    attachHudContentSizer,
     attachHudShell,
     attachTrainer,
     get behaviorValue() {
@@ -909,12 +908,10 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     handlePopState,
     handleVisibilityChange,
     handleWindowKeydown,
+    handleWindowPointerDown,
     handleWindowPointerMove,
     headerSelects,
     hudActions,
-    get hudContentWidth() {
-      return hudContentWidth;
-    },
     get hudHidden() {
       return hudHidden;
     },

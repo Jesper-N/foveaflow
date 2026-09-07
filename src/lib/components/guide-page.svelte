@@ -1,4 +1,5 @@
 <script lang="ts">
+  import "./guide-motion.css";
   import GuideResourceSections from "$lib/components/guide-resource-sections.svelte";
   import GuideTrainingSections from "$lib/components/guide-training-sections.svelte";
   import LanguageSelect from "$lib/components/language-select.svelte";
