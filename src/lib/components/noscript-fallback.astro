@@ -14,10 +14,20 @@ const { heading, description, showHomeLink = false } = Astro.props;
       display: none !important;
     }
   </style>
-  <main class="noscript-shell">
-    <section class="noscript-panel">
-      <p class="noscript-kicker">Free online eye trainer</p>
-      <h2 class="noscript-title">{heading}</h2>
+  <main
+    class="bg-background text-foreground fixed inset-0 z-100 overflow-auto p-8"
+  >
+    <section
+      class="mx-auto w-full max-w-184 leading-[1.65] [&_p]:max-w-2xl [&_p]:text-muted-foreground [&_a]:text-foreground [&_a]:underline [&_a]:underline-offset-[0.2em]"
+    >
+      <p class="m-0 mb-3 text-sm font-bold uppercase">
+        Free online eye trainer
+      </p>
+      <h2
+        class="m-0 max-w-[14ch] text-[2.5rem] leading-[0.95] tracking-normal md:text-7xl"
+      >
+        {heading}
+      </h2>
       <p>{description}</p>
       <p>
         FoveaFlow needs JavaScript to run its moving-target drills. The guide
@@ -31,54 +41,3 @@ const { heading, description, showHomeLink = false } = Astro.props;
     </section>
   </main>
 </noscript>
-
-<style>
-  .noscript-shell {
-    position: fixed;
-    inset: 0;
-    z-index: 100;
-    overflow: auto;
-    background: var(--background);
-    color: var(--foreground);
-    padding: 2rem;
-  }
-
-  .noscript-panel {
-    width: min(100%, 46rem);
-    margin: 0 auto;
-    line-height: 1.65;
-  }
-
-  .noscript-title {
-    max-width: 14ch;
-    margin: 0;
-    font-size: 2.5rem;
-    line-height: 0.95;
-    letter-spacing: 0;
-  }
-
-  .noscript-panel p {
-    max-width: 42rem;
-    color: var(--muted-foreground);
-  }
-
-  .noscript-panel a {
-    color: var(--foreground);
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
-  }
-
-  .noscript-kicker {
-    margin: 0 0 0.75rem;
-    color: var(--brand-foreground);
-    font-size: 0.875rem;
-    font-weight: 700;
-    text-transform: uppercase;
-  }
-
-  @media (min-width: 48rem) {
-    .noscript-title {
-      font-size: 4.5rem;
-    }
-  }
-</style>

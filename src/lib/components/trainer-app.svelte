@@ -25,7 +25,7 @@
 </h1>
 <main
   {@attach controller.attachTrainer}
-  class="trainer-stage bg-background text-foreground relative h-dvh w-dvw overflow-hidden"
+  class="trainer-stage bg-background text-foreground relative h-dvh w-dvw overflow-hidden overscroll-none data-[cursor-hidden=true]:cursor-none data-[cursor-hidden=true]:**:cursor-none"
   data-cursor-hidden={controller.cursorHidden}
   aria-label={t(controller.locale, "FoveaFlow eye trainer app")}
 >
@@ -46,7 +46,7 @@
 
   <canvas
     {@attach controller.attachCanvasOnce}
-    class="bg-background absolute inset-0 h-full w-full touch-none"
+    class="bg-background absolute inset-0 block h-full w-full touch-none"
     aria-label={t(
       controller.locale,
       "FoveaFlow eye trainer animation for visual tracking practice"
@@ -96,10 +96,8 @@
     availableControlSections={controller.localizedControlSections}
     currentControlSection={controller.currentControlSection}
     currentControlSectionLabel={controller.currentControlSectionLabel}
-    motionPaused={controller.motionPaused}
     motionDirectionLabel={controller.motionDirectionLabel}
     canToggleDirection={controller.canToggleDirection}
-    colorMode={controller.colorMode}
     isDarkMode={controller.isDarkMode}
     isMotMode={controller.isMotMode}
     isLilacChaserMode={controller.isLilacChaserMode}
@@ -108,16 +106,3 @@
     actions={controller.dialogActions}
   />
 </main>
-
-<style>
-  canvas {
-    display: block;
-  }
-  .trainer-stage {
-    overscroll-behavior: none;
-  }
-  .trainer-stage[data-cursor-hidden="true"],
-  .trainer-stage[data-cursor-hidden="true"] :global(*) {
-    cursor: none;
-  }
-</style>

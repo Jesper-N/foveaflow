@@ -4,27 +4,14 @@ import type { PatternId, SpeedUnit, TargetForm } from "$lib/engine/types";
 import { behaviorOptions } from "$lib/trainer/behavior";
 import type { BehaviorId } from "$lib/trainer/behavior";
 
-export type ControlIconId =
-  | "target"
-  | "motion"
-  | "eye"
-  | "calibration"
-  | "theme"
-  | "reset";
+export type ControlIconId = "target" | "eye" | "display" | "settings";
 
-export type ControlSectionId =
-  | "session"
-  | "drill"
-  | "targets"
-  | "motion"
-  | "screen"
-  | "defaults";
+export type ControlSectionId = "drill" | "targets" | "display" | "general";
 
 export interface ControlSection {
   id: ControlSectionId;
   label: string;
   icon: ControlIconId;
-  hideInLilacChaser?: boolean;
 }
 
 export const guideUseCasesByMode = {
@@ -40,48 +27,12 @@ export const homepageGuideUseCases = [
   "Visual practice",
 ] as const;
 
-const controlSections = [
-  {
-    icon: "theme",
-    id: "session",
-    label: "Session",
-  },
-  {
-    icon: "target",
-    id: "drill",
-    label: "Drill",
-  },
-  {
-    hideInLilacChaser: true,
-    icon: "eye",
-    id: "targets",
-    label: "Targets",
-  },
-  {
-    hideInLilacChaser: true,
-    icon: "motion",
-    id: "motion",
-    label: "Motion",
-  },
-  {
-    hideInLilacChaser: true,
-    icon: "calibration",
-    id: "screen",
-    label: "Screen",
-  },
-  {
-    icon: "reset",
-    id: "defaults",
-    label: "Defaults",
-  },
+export const controlSections = [
+  { icon: "target", id: "drill", label: "Drill" },
+  { icon: "eye", id: "targets", label: "Targets" },
+  { icon: "display", id: "display", label: "Display" },
+  { icon: "settings", id: "general", label: "General" },
 ] as const satisfies readonly ControlSection[];
-
-const lilacChaserControlSections = controlSections.filter(
-  (section: ControlSection) => !section.hideInLilacChaser
-);
-
-export const getAvailableControlSections = (isLilacChaserMode: boolean) =>
-  isLilacChaserMode ? lilacChaserControlSections : controlSections;
 
 const getOptionName = (
   options: readonly { id: string | number; name: string }[],

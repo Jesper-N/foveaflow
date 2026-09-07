@@ -1,6 +1,4 @@
 <script lang="ts">
-  import "../guide-motion.css";
-  import "../resize-transition.css";
   import "./trainer-guide-popover.css";
   import TrainerGuideHomepageContent from "$lib/components/trainer/trainer-guide-homepage-content.svelte";
   import { Button } from "$lib/components/ui/button/index.js";
@@ -77,7 +75,7 @@
 
 {#snippet footer()}
   <footer
-    class="guide-enter guide-enter-delay-4 border-border/40 mt-8 flex flex-col gap-4 border-t pt-4 sm:flex-row sm:items-center sm:justify-between"
+    class="guide-enter border-border/40 mt-8 flex flex-col gap-4 border-t pt-4 [animation-delay:130ms] sm:flex-row sm:items-center sm:justify-between"
   >
     <p class="text-muted-foreground min-w-0 text-xs leading-5">
       {t(
@@ -110,7 +108,7 @@
 {/snippet}
 
 {#snippet homepageContent()}
-  <div class="guide-enter guide-enter-top flex items-start gap-4">
+  <div class="guide-enter flex items-start gap-4 [--guide-enter-y:-0.25rem]">
     <div class="grid min-w-0 gap-2 pr-12">
       <p
         class="text-brand-foreground text-[0.7rem] leading-4 font-semibold tracking-wide uppercase"
@@ -132,7 +130,7 @@
 {/snippet}
 
 {#snippet routeContent()}
-  <div class="guide-enter guide-enter-top grid min-w-0 gap-2 pr-12">
+  <div class="guide-enter grid min-w-0 gap-2 pr-12 [--guide-enter-y:-0.25rem]">
     <p
       class="text-brand-foreground text-[0.7rem] leading-4 font-semibold tracking-wide uppercase"
     >
@@ -157,7 +155,7 @@
     class="mt-6 grid items-start gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] xl:grid-cols-[minmax(0,0.88fr)_minmax(0,1.06fr)_minmax(16rem,0.82fr)]"
   >
     <section
-      class="guide-enter guide-enter-delay-1 border-border/40 grid gap-6 border-t pt-6"
+      class="guide-enter border-border/40 grid gap-6 border-t pt-6 [animation-delay:40ms]"
       aria-label={`${t(locale, guideSeoContent.heading)} ${t(locale, "overview")}`}
     >
       <h3 class="text-foreground text-base font-semibold">
@@ -181,7 +179,7 @@
     </section>
 
     <section
-      class="guide-enter guide-enter-delay-2 border-border/40 border-t pt-6"
+      class="guide-enter border-border/40 border-t pt-6 [animation-delay:70ms]"
       aria-labelledby="trainer-guide-steps"
     >
       <h3
@@ -219,7 +217,7 @@
     </section>
 
     <aside
-      class="guide-enter guide-enter-delay-3 border-border/40 border-t pt-6 lg:col-span-2 xl:col-span-1"
+      class="guide-enter border-border/40 border-t pt-6 [animation-delay:100ms] lg:col-span-2 xl:col-span-1"
       aria-labelledby="trainer-guide-faq"
     >
       <h3
@@ -297,7 +295,7 @@
   id="trainer-guide-popover"
   popover="auto"
   role="dialog"
-  class="trainer-guide-popover t-resize bg-popover text-popover-foreground ring-foreground/5 animation-duration-[100ms] dark:ring-foreground/10 relative rounded-4xl p-6 text-sm shadow-xl ring-1 outline-hidden sm:p-8"
+  class="t-resize bg-popover text-popover-foreground ring-foreground/5 animation-duration-[100ms] dark:ring-foreground/10 relative inset-auto top-1/2 left-1/2 m-0 hidden max-h-[calc(100dvh-2rem)] w-[min(calc(100dvw-2rem),76rem)] transform-[translate3d(-50%,-50%,0)] overflow-auto rounded-4xl p-6 text-sm shadow-xl ring-1 outline-hidden backdrop:animate-[native-dialog-overlay-enter_100ms_ease-out] backdrop:bg-black/30 backdrop:backdrop-blur-xs motion-reduce:backdrop:animate-none sm:p-8 [&:popover-open]:grid [&:popover-open]:animate-[native-dialog-content-enter_100ms_ease-out] motion-reduce:[&:popover-open]:animate-none"
   aria-labelledby="trainer-guide-popover-title"
   ontoggle={handlePopoverToggle}
 >

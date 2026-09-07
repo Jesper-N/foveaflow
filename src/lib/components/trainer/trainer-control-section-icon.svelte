@@ -1,38 +1,25 @@
 <script lang="ts">
   import type { ControlIconId } from "$lib/trainer/options";
-  import ActivityIcon from "@lucide/svelte/icons/activity";
   import TargetIcon from "@lucide/svelte/icons/crosshair";
   import EyeIcon from "@lucide/svelte/icons/eye";
-  import MoonIcon from "@lucide/svelte/icons/moon";
-  import RotateCcwIcon from "@lucide/svelte/icons/rotate-ccw";
+  import MonitorIcon from "@lucide/svelte/icons/monitor";
   import SettingsIcon from "@lucide/svelte/icons/settings-2";
-  import SunIcon from "@lucide/svelte/icons/sun";
 
   let {
     icon,
-    colorMode,
     iconClass,
   }: {
     icon: ControlIconId;
-    colorMode: "light" | "dark";
     iconClass?: string;
   } = $props();
 </script>
 
 {#if icon === "target"}
   <TargetIcon class={iconClass} />
-{:else if icon === "motion"}
-  <ActivityIcon class={iconClass} />
 {:else if icon === "eye"}
   <EyeIcon class={iconClass} />
-{:else if icon === "theme"}
-  {#if colorMode === "dark"}
-    <MoonIcon class={iconClass} />
-  {:else}
-    <SunIcon class={iconClass} />
-  {/if}
-{:else if icon === "reset"}
-  <RotateCcwIcon class={iconClass} />
+{:else if icon === "display"}
+  <MonitorIcon class={iconClass} />
 {:else}
   <SettingsIcon class={iconClass} />
 {/if}

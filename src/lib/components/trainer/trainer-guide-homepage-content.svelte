@@ -21,7 +21,7 @@
   class="mt-6 grid items-start gap-8 lg:grid-cols-[minmax(0,0.96fr)_minmax(0,1.18fr)_minmax(16rem,0.82fr)]"
 >
   <section
-    class="guide-enter guide-enter-delay-1 border-border/40 grid gap-5 border-t pt-6"
+    class="guide-enter border-border/40 grid gap-5 border-t pt-6 [animation-delay:40ms]"
     aria-label={t(locale, "FoveaFlow overview")}
   >
     <h3 class="text-foreground text-base font-semibold">
@@ -38,7 +38,7 @@
   </section>
 
   <section
-    class="guide-enter guide-enter-delay-2 border-border/40 border-t pt-6"
+    class="guide-enter border-border/40 border-t pt-6 [animation-delay:70ms]"
     aria-labelledby="homepage-guide-drills"
   >
     <h3
@@ -67,7 +67,9 @@
     </ul>
   </section>
 
-  <aside class="guide-enter guide-enter-delay-3 border-border/40 border-t pt-6">
+  <aside
+    class="guide-enter border-border/40 border-t pt-6 [animation-delay:100ms]"
+  >
     <h3 class="text-foreground text-base font-semibold">
       {t(locale, "Safety")}
     </h3>
@@ -91,7 +93,7 @@
     <Button
       href="/guide/"
       size="lg"
-      class="guide-enter guide-enter-delay-4 mt-6 w-full"
+      class="guide-enter mt-6 w-full [animation-delay:130ms]"
     >
       <BookOpenIcon data-icon="inline-start" />
       <span>{t(locale, "Read the full guide")}</span>

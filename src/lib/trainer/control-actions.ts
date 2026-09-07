@@ -46,7 +46,6 @@ export interface TrainerDialogActions {
   distractorCountSlider: SliderBinding;
   distractorBrightnessSlider: SliderBinding;
   letterScaleSlider: SliderBinding;
-  toggleMotionPaused: () => void;
   toggleMotionDirection: () => void;
   resetSettings: () => void;
 }

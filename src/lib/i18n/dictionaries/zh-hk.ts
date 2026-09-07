@@ -19,6 +19,7 @@ export const zhHK = {
   Alternative: "替代選擇",
   App: "應用程式",
   "App actions": "應用程式操作",
+  Appearance: "外觀",
   "Availability and warranty": "可用性及保證",
   "Ball color": "球的顏色",
   "Best fit": "最適合",
@@ -48,6 +49,7 @@ export const zhHK = {
   "By using FoveaFlow, you agree to these terms. If you do not agree, do not use the site.":
     "使用 FoveaFlow 即表示你同意這些條款。如果不同意，請不要使用本站。",
   "CSS pixels/cm": "CSS 像素/cm",
+  Calibration: "校準",
   "Can FoveaFlow help with tired eyes from screen work?":
     "FoveaFlow 能緩解長時間看屏幕後眼睛疲勞嗎？",
   "Can FoveaFlow improve eyesight or reaction time?":
@@ -83,6 +85,7 @@ export const zhHK = {
     "選擇路徑，設定速度和目標樣式，然後做一次短時間視覺追蹤練習。",
   "Choose an easy path when you want rhythm and control. Choose a harder path when you want more direction changes and more target-search demand.":
     "想練節奏和控制時選簡單路徑。想要更多方向變化和目標搜尋負荷時選更難的路徑。",
+  "Choose your exercise and how it moves.": "選擇練習及其移動方式。",
   Circle: "圓形",
   "Circle Smooth Pursuit Drill": "圓形 平滑追蹤練習",
   "Circle Smooth Pursuit Eye Training": "圓形 平滑追蹤眼部訓練",
@@ -141,6 +144,8 @@ export const zhHK = {
   "Diamond loop": "菱形循環",
   "Direct routes": "直接路線",
   Direction: "方向",
+  Display: "顯示",
+  Distractions: "干擾目標",
   "Distractor Tracking Eye Training": "干擾物追蹤眼部訓練",
   "Distractor color": "干擾物顏色",
   "Distractor color brightness": "干擾物顏色亮度",
@@ -150,6 +155,7 @@ export const zhHK = {
   "Do not attack, overload, scrape aggressively, or try to gain unauthorized access to the site or its infrastructure.":
     "不要攻擊、令網站過載、大量抓取，或嘗試未經授權存取本站及其基礎設施。",
   "Do not follow the balls with your eyes.": "不要用眼睛跟著球移動。",
+  Done: "完成",
   "Down-left Sweep Smooth Pursuit Drill": "左下掃動 平滑追蹤練習",
   "Down-left Sweep Smooth Pursuit Eye Training": "左下掃動 平滑追蹤眼部訓練",
   "Down-left Sweep moves from the top-right corner toward the bottom-left corner on a simple diagonal line.":
@@ -187,6 +193,7 @@ export const zhHK = {
   "Figure Eight adds a crossover point, which means the target passes through the center and changes direction more often than a simple loop.":
     "8 字形加入交叉點，目標會穿過中心，比簡單循環更頻繁地改變方向。",
   "Figure eight": "8 字形",
+  "Fine-tune what you follow.": "調整您跟隨的目標。",
   "Focused guides for FPS and alternatives": "FPS 和替代工具專題指南",
   "Follow it like Smooth Pursuit, but do not let the darker balls pull your eyes away.":
     "像 平滑追蹤一樣跟隨它，但不要被較暗的球帶走視線。",
@@ -260,6 +267,7 @@ export const zhHK = {
   "Game awareness": "遊戲感知",
   "Gamer warm-up": "玩家熱身",
   Gamers: "玩家",
+  General: "一般",
   "Give tired screen eyes a quick active break after reading, meetings, or too many tabs.":
     "閱讀、開會或打開太多標籤頁後，讓疲勞的眼睛做一次短暫的主動休息。",
   Gold: "金色",
@@ -333,6 +341,7 @@ export const zhHK = {
   "Keep your head still and start with your eyes on the ball.":
     "保持頭部不動，一開始就把視線放在球上。",
   Language: "語言",
+  "Language and saved preferences.": "語言及已儲存的偏好設定。",
   "Legal pages": "法律頁面",
   "Let the disappearing gap move around the fixed circle. With steady focus, the colored balls may fade and the missing spot can look like a moving green afterimage.":
     "讓消失的缺口沿固定圓圈移動。保持穩定注視時，彩色球可能會變淡，缺口位置可能看起來像一個移動的綠色殘像。",
@@ -372,6 +381,7 @@ export const zhHK = {
   "Lower the speed, increase target size, and keep the trail visible until you can stay on target comfortably.":
     "降低速度、增大目標，並保持軌跡可見，直到你能舒服地跟住目標。",
   Magenta: "品紅色",
+  "Match the trainer to your screen.": "讓訓練器配合您的螢幕。",
   Medium: "中等",
   "Mode guide": "模式指南",
   "More pages": "更多頁面",
@@ -537,6 +547,7 @@ export const zhHK = {
   "Selective attention": "選擇性注意力",
   Semibold: "半粗體",
   Session: "訓練",
+  "Settings save automatically.": "設定會自動儲存。",
   "Settings saved in your browser": "設定已儲存在瀏覽器中",
   "Shape, color, opacity, trail length, and trail behavior are adjustable.":
     "形狀、顏色、透明度、軌跡長度和軌跡行為都可以調整。",
@@ -776,6 +787,8 @@ export const zhHK = {
     "當 平滑追蹤感覺太單純，而你想要更接近真實情況的視覺注意挑戰時，使用這個練習。",
   "Use this guide to choose the right FoveaFlow eye trainer drill for visual tracking, quick refocus, peripheral awareness, FPS warmups, or focus under distraction.":
     "使用本指南，為視覺追蹤、快速重新對焦、周邊視覺覺察、FPS 熱身或干擾下專注選擇合適的 FoveaFlow 眼部訓練練習。",
+  "Used to calculate speed in deg/s and cm/s.":
+    "用於計算以 deg/s 及 cm/s 為單位的速度。",
   "Vertical Sweep Smooth Pursuit Drill": "垂直掃動 平滑追蹤練習",
   "Vertical Sweep Smooth Pursuit Eye Training": "垂直掃動 平滑追蹤眼部訓練",
   "Vertical Sweep mirrors the simplicity of Horizontal Sweep but changes the direction of travel for straightforward up-down tracking.":

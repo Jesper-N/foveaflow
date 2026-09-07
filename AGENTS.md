@@ -26,4 +26,7 @@ Do a quality pass before finishing code related tasks. Say the pass started, the
 
 ## UI rules
 
+- Use Tailwind CSS utilities for all supported styling, including responsive layouts and interaction states. Keep custom CSS only for unsupported styling, keyframe definitions, and theme tokens.
+- Reuse repeated utility groups through component variants, shared class constants, or Tailwind utilities. Keep one-off layouts local to their component.
+
 This project is using shadcn-svelte for UI components. If you're doing anything related to UI component such creating/editing make sure load `$shadcn-svelte` for important context.

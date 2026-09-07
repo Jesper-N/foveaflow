@@ -1,5 +1,4 @@
 <script lang="ts">
-  import "./guide-motion.css";
   import LanguageSelect from "$lib/components/language-select.svelte";
   import { Badge } from "$lib/components/ui/badge/index.js";
   import { Button } from "$lib/components/ui/button/index.js";
@@ -19,28 +18,24 @@
   import ShieldCheckIcon from "@lucide/svelte/icons/shield-check";
   import SlidersHorizontalIcon from "@lucide/svelte/icons/sliders-horizontal";
 
+  import {
+    pageItemSurface,
+    pageSectionGrid,
+    pageSectionIntro,
+    pageSectionTitle,
+  } from "./page-styles";
+
   let { page }: { page: SupportPage } = $props();
 
-  const guideEnterTop = "guide-enter guide-enter-up";
-  const guideEnterHero = "guide-enter page-enter-delay-1 guide-enter-up";
-  const guideEnterUp = "guide-enter guide-enter-up";
-  const supportItemSurface =
-    "bg-background/70 shadow-[0_16px_36px_-30px_rgba(20,24,22,0.4)]";
-  const sectionGrid =
-    "grid gap-6 border-t border-border/60 pt-10 md:grid-cols-[0.72fr_1.28fr] md:gap-10";
-  const sectionIntro = "md:sticky md:top-8 md:self-start";
-  const sectionTitle =
-    "max-w-[18rem] text-2xl leading-tight font-semibold tracking-tight";
-
   const delayClass = (index: number) =>
-    index === 0 ? "page-enter-delay-2" : "page-enter-delay-3";
+    index === 0 ? "[animation-delay:85ms]" : "[animation-delay:125ms]";
   let locale = $derived(languageState.locale);
 </script>
 
 <main class="bg-background text-foreground selection:bg-accent/30 min-h-dvh">
   <div class="mx-auto grid w-full max-w-7xl gap-10 px-4 py-5 sm:px-6 lg:px-8">
     <nav
-      class={`flex items-center justify-between gap-4 ${guideEnterTop}`}
+      class="guide-enter flex items-center justify-between gap-4"
       aria-label={t(locale, "Page navigation")}
     >
       <Button
@@ -70,7 +65,7 @@
     </nav>
 
     <section
-      class={`grid items-center gap-10 pt-10 pb-10 md:grid-cols-[minmax(0,1.08fr)_minmax(20rem,0.92fr)] md:pt-20 md:pb-16 ${guideEnterHero}`}
+      class="guide-enter grid items-center gap-10 pt-10 pb-10 [animation-delay:45ms] md:grid-cols-[minmax(0,1.08fr)_minmax(20rem,0.92fr)] md:pt-20 md:pb-16"
     >
       <div class="max-w-3xl">
         <Badge variant="secondary" class="mb-5 px-3 py-1">
@@ -103,7 +98,7 @@
       <div class="grid gap-4 md:translate-y-6">
         <Item.Root
           variant="outline"
-          class={`border-border/80 p-5 ${supportItemSurface}`}
+          class={`border-border/80 p-5 ${pageItemSurface}`}
         >
           <Item.Media
             variant="icon"
@@ -126,7 +121,7 @@
 
         <Item.Root
           variant="muted"
-          class={`border-border/70 ml-0 border p-5 md:ml-8 ${supportItemSurface}`}
+          class={`border-border/70 ml-0 border p-5 md:ml-8 ${pageItemSurface}`}
         >
           <Item.Media
             variant="icon"
@@ -151,12 +146,12 @@
 
     <div class="grid gap-10 pb-10">
       {#each page.sections as section, index (section.heading)}
-        <section class={`${sectionGrid} ${guideEnterUp} ${delayClass(index)}`}>
-          <div class={sectionIntro}>
+        <section class={`${pageSectionGrid} guide-enter ${delayClass(index)}`}>
+          <div class={pageSectionIntro}>
             <Badge variant="outline" class="mb-4">
               {t(locale, "Details")}
             </Badge>
-            <h2 class={sectionTitle}>{t(locale, section.heading)}</h2>
+            <h2 class={pageSectionTitle}>{t(locale, section.heading)}</h2>
           </div>
 
           <div class="text-muted-foreground grid gap-4 text-base leading-7">
@@ -172,7 +167,7 @@
                   <li>
                     <Item.Root
                       variant="outline"
-                      class={`items-center ${supportItemSurface}`}
+                      class={`items-center ${pageItemSurface}`}
                     >
                       <Item.Media
                         variant="icon"
@@ -200,7 +195,7 @@
                   <li>
                     <Item.Root
                       variant="outline"
-                      class={`items-center ${supportItemSurface}`}
+                      class={`items-center ${pageItemSurface}`}
                     >
                       <Item.Media
                         variant="icon"
@@ -225,14 +220,14 @@
 
       {#if page.comparisonRows && page.comparisonLabel}
         <section
-          class={`page-enter-delay-4 ${sectionGrid} ${guideEnterUp}`}
+          class={`[animation-delay:165ms] ${pageSectionGrid} guide-enter`}
           aria-labelledby="feature-comparison"
         >
-          <div class={sectionIntro}>
+          <div class={pageSectionIntro}>
             <Badge variant="outline" class="mb-4">
               {t(locale, "Comparison")}
             </Badge>
-            <h2 id="feature-comparison" class={sectionTitle}>
+            <h2 id="feature-comparison" class={pageSectionTitle}>
               {t(locale, "Feature comparison")}
             </h2>
           </div>
@@ -265,7 +260,7 @@
       {/if}
 
       <footer
-        class={`page-enter-delay-4 border-border/60 text-muted-foreground flex flex-col gap-3 border-t pt-8 pb-8 text-sm sm:flex-row sm:items-center sm:justify-between ${guideEnterUp}`}
+        class="border-border/60 text-muted-foreground guide-enter flex flex-col gap-3 border-t pt-8 pb-8 text-sm [animation-delay:165ms] sm:flex-row sm:items-center sm:justify-between"
       >
         <span>{t(locale, "FoveaFlow is free. No account, no install.")}</span>
         <div class="flex flex-wrap gap-2">

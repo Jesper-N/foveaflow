@@ -1,5 +1,4 @@
 <script lang="ts">
-  import "./guide-motion.css";
   import GuideResourceSections from "$lib/components/guide-resource-sections.svelte";
   import GuideTrainingSections from "$lib/components/guide-training-sections.svelte";
   import LanguageSelect from "$lib/components/language-select.svelte";
@@ -19,18 +18,15 @@
   import FileTextIcon from "@lucide/svelte/icons/file-text";
   import ShieldCheckIcon from "@lucide/svelte/icons/shield-check";
 
-  const guideEnterTop = "guide-enter guide-enter-up";
-  const guideEnterHero = "guide-enter page-enter-delay-1 guide-enter-up";
-  const guideEnterUp = "guide-enter guide-enter-up";
-  const guideItemSurface =
-    "bg-background/70 shadow-[0_16px_36px_-30px_rgba(20,24,22,0.4)]";
+  import { pageItemSurface } from "./page-styles";
+
   let locale = $derived(languageState.locale);
 </script>
 
 <main class="bg-background text-foreground selection:bg-accent/30 min-h-dvh">
   <div class="mx-auto grid w-full max-w-7xl gap-10 px-4 py-5 sm:px-6 lg:px-8">
     <nav
-      class={`flex items-center justify-between gap-4 ${guideEnterTop}`}
+      class="guide-enter flex items-center justify-between gap-4"
       aria-label={t(locale, "Guide navigation")}
     >
       <Button
@@ -60,7 +56,7 @@
     </nav>
 
     <section
-      class={`grid items-center gap-10 pt-10 pb-10 md:grid-cols-[minmax(0,1.08fr)_minmax(20rem,0.92fr)] md:pt-20 md:pb-16 ${guideEnterHero}`}
+      class="guide-enter grid items-center gap-10 pt-10 pb-10 [animation-delay:45ms] md:grid-cols-[minmax(0,1.08fr)_minmax(20rem,0.92fr)] md:pt-20 md:pb-16"
     >
       <div class="max-w-3xl">
         <Badge variant="secondary" class="mb-5 px-3 py-1">
@@ -95,7 +91,7 @@
       <div class="grid gap-4 md:translate-y-6">
         <Item.Root
           variant="outline"
-          class={`border-border/80 p-5 ${guideItemSurface}`}
+          class={`border-border/80 p-5 ${pageItemSurface}`}
         >
           <Item.Media
             variant="icon"
@@ -118,7 +114,7 @@
 
         <Item.Root
           variant="muted"
-          class={`border-border/70 ml-0 border p-5 md:ml-8 ${guideItemSurface}`}
+          class={`border-border/70 ml-0 border p-5 md:ml-8 ${pageItemSurface}`}
         >
           <Item.Media
             variant="icon"
@@ -141,7 +137,7 @@
     <GuideTrainingSections {locale} />
     <GuideResourceSections {locale} />
     <footer
-      class={`page-enter-delay-4 border-border/60 text-muted-foreground flex flex-col gap-3 border-t pt-6 pb-10 text-sm sm:flex-row sm:items-center sm:justify-between ${guideEnterUp}`}
+      class="border-border/60 text-muted-foreground guide-enter flex flex-col gap-3 border-t pt-6 pb-10 text-sm [animation-delay:165ms] sm:flex-row sm:items-center sm:justify-between"
     >
       <span>
         {t(locale, "FoveaFlow is free. No account, no paid plan.")}

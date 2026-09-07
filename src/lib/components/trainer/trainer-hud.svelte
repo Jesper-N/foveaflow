@@ -220,7 +220,7 @@
 {#if hudHidden}
   <button
     type="button"
-    class="trainer-hud-peek focus-visible:ring-foreground absolute left-1/2 z-30 h-12 w-36 -translate-x-1/2 rounded-full outline-hidden focus-visible:ring-3"
+    class="focus-visible:ring-foreground absolute top-[max(0px,calc(env(safe-area-inset-top)-0.75rem))] left-1/2 z-30 h-12 w-36 -translate-x-1/2 rounded-full outline-hidden focus-visible:ring-3"
     aria-label={t(locale, "Reveal controls")}
     aria-controls="trainer-island"
     aria-expanded="false"
@@ -235,17 +235,19 @@
 <div
   {@attach attachHudShell}
   {@attach attachHudInteraction}
-  class="trainer-hud-shell trainer-island-theme absolute left-1/2 z-20 -translate-x-1/2"
+  class="group/island trainer-island-theme absolute top-[max(0.75rem,env(safe-area-inset-top))] left-1/2 z-20 w-[min(35rem,calc(100dvw-1.5rem))] -translate-x-1/2 data-[hidden=true]:pointer-events-none"
   data-hidden={hudHidden}
   data-instant-reveal={instantReveal}
   data-nosnippet
 >
   <header
     id="trainer-island"
-    class="trainer-hud text-foreground relative isolate"
+    class="text-foreground before:bg-background after:bg-muted-foreground before:border-border relative isolate before:absolute before:inset-0 before:-z-1 before:origin-top before:rounded-[2rem] before:border before:shadow-[0_12px_32px_-12px_rgb(0_0_0/30%),inset_0_1px_0_rgb(255_255_255/4%)] before:content-[''] before:[transition:transform_260ms_cubic-bezier(0.32,0.72,0,1),opacity_260ms_cubic-bezier(0.32,0.72,0,1)] group-has-focus-visible/island:before:transition-none group-data-[hidden=true]/island:before:transform-[scale(0.18,0.055)] group-data-[hidden=true]/island:before:opacity-0 group-data-[hidden=true]/island:before:[transition:transform_280ms_cubic-bezier(0.645,0.045,0.355,1),opacity_120ms_ease_160ms] group-data-[instant-reveal=true]/island:before:transition-none after:pointer-events-none after:absolute after:top-0 after:left-1/2 after:h-2 after:w-22 after:transform-[translateX(-50%)_scaleX(1.15)] after:rounded-full after:opacity-0 after:content-[''] after:[transition:transform_260ms_cubic-bezier(0.32,0.72,0,1),opacity_180ms_ease] group-has-focus-visible/island:after:transition-none group-data-[hidden=true]/island:after:transform-[translateX(-50%)_scaleX(1)] group-data-[hidden=true]/island:after:opacity-30 group-data-[hidden=true]/island:after:[transition:transform_280ms_cubic-bezier(0.645,0.045,0.355,1),opacity_160ms_ease_120ms] group-data-[instant-reveal=true]/island:after:transition-none motion-reduce:group-data-hidden/island:before:transition-none motion-reduce:group-data-hidden/island:after:transition-none max-[479px]:group-data-[hidden=true]/island:before:transform-[scale(0.28,0.055)] sm:before:rounded-[2.25rem]"
     inert={hudHidden}
   >
-    <div class="trainer-island-content flex flex-col gap-4 p-4 sm:p-5">
+    <div
+      class="flex origin-top transform-[translateY(0)_scale(1)] flex-col gap-4 p-4 opacity-100 [transition:transform_220ms_cubic-bezier(0.23,1,0.32,1)_40ms,opacity_180ms_ease_40ms] group-has-focus-visible/island:transition-none group-data-[hidden=true]/island:transform-[translateY(-6px)_scale(0.96)] group-data-[hidden=true]/island:opacity-0 group-data-[hidden=true]/island:[transition:transform_140ms_cubic-bezier(0.23,1,0.32,1),opacity_140ms_ease] group-data-[instant-reveal=true]/island:transition-none motion-reduce:group-data-hidden/island:transition-none sm:p-5 [&_[data-slot=button]:active]:transform-[scale(0.96)]"
+    >
       <div
         class="flex flex-col items-stretch gap-1 min-[360px]:flex-row min-[360px]:items-center min-[360px]:justify-between min-[380px]:gap-2"
       >
@@ -288,7 +290,7 @@
             </Tooltip.Root>
 
             <div
-              class="trainer-island-direction"
+              class="visible w-11 overflow-clip opacity-100 [overflow-clip-margin:3px] [transition:width_220ms_cubic-bezier(0.23,1,0.32,1),opacity_160ms_ease,visibility_0ms] data-[visible=false]:invisible data-[visible=false]:w-0 data-[visible=false]:opacity-0 data-[visible=false]:[transition:width_220ms_cubic-bezier(0.23,1,0.32,1),opacity_80ms_ease,visibility_0ms_220ms] motion-reduce:data-visible:transition-none"
               data-visible={canToggleDirection}
               inert={!canToggleDirection}
             >
@@ -379,7 +381,9 @@
       />
       <div class="min-h-17">
         {#key isLilacChaserMode}
-          <div class="trainer-island-adjustments">
+          <div
+            class="animate-[island-adjustments-enter_180ms_cubic-bezier(0.23,1,0.32,1)_backwards] motion-reduce:animate-none"
+          >
             <TrainerHudQuickAdjustments
               {settings}
               {isLilacChaserMode}

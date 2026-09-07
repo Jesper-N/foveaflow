@@ -12,24 +12,22 @@
   import ExternalLinkIcon from "@lucide/svelte/icons/external-link";
   import SlidersHorizontalIcon from "@lucide/svelte/icons/sliders-horizontal";
 
-  const guideEnterUp = "guide-enter guide-enter-up";
-  const guideItemSurface =
-    "bg-background/70 shadow-[0_16px_36px_-30px_rgba(20,24,22,0.4)]";
-  const sectionGrid =
-    "grid gap-6 border-t border-border/60 pt-10 md:grid-cols-[0.72fr_1.28fr] md:gap-10";
-  const sectionIntro = "md:sticky md:top-8 md:self-start";
-  const sectionTitle =
-    "max-w-[18rem] text-2xl leading-tight font-semibold tracking-tight";
+  import {
+    pageItemSurface,
+    pageSectionGrid,
+    pageSectionIntro,
+    pageSectionTitle,
+  } from "./page-styles";
 
   let { locale }: { locale: AppLocale } = $props();
 </script>
 
-<section class={`page-enter-delay-4 ${sectionGrid} ${guideEnterUp}`}>
-  <div class={sectionIntro}>
+<section class={`[animation-delay:165ms] ${pageSectionGrid} guide-enter`}>
+  <div class={pageSectionIntro}>
     <Badge variant="outline" class="mb-4">
       {t(locale, "More pages")}
     </Badge>
-    <h2 class={sectionTitle}>
+    <h2 class={pageSectionTitle}>
       {t(locale, "Focused guides for FPS and alternatives")}
     </h2>
     <p class="text-muted-foreground mt-4 max-w-136 text-base leading-7">
@@ -42,7 +40,7 @@
 
   <div class="grid gap-3">
     {#each supportPages as page (page.slug)}
-      <Item.Root variant="outline" class={guideItemSurface}>
+      <Item.Root variant="outline" class={pageItemSurface}>
         <Item.Media
           variant="icon"
           class="bg-background text-brand-foreground size-9 rounded-lg border"
@@ -72,10 +70,10 @@
   </div>
 </section>
 
-<section class={`page-enter-delay-4 ${sectionGrid} ${guideEnterUp}`}>
-  <div class={sectionIntro}>
+<section class={`[animation-delay:165ms] ${pageSectionGrid} guide-enter`}>
+  <div class={pageSectionIntro}>
     <Badge variant="outline" class="mb-4">{t(locale, "Controls")}</Badge>
-    <h2 class={sectionTitle}>
+    <h2 class={pageSectionTitle}>
       {t(locale, "Adjust the settings without guesswork")}
     </h2>
   </div>
@@ -83,7 +81,7 @@
   <div class="grid gap-3">
     <Item.Root
       variant="muted"
-      class={`border-border/70 border ${guideItemSurface}`}
+      class={`border-border/70 border ${pageItemSurface}`}
     >
       <Item.Media
         variant="icon"
@@ -105,7 +103,7 @@
     </Item.Root>
     <Item.Root
       variant="muted"
-      class={`border-border/70 border ${guideItemSurface}`}
+      class={`border-border/70 border ${pageItemSurface}`}
     >
       <Item.Media
         variant="icon"
@@ -131,16 +129,16 @@
 <section
   id="faq"
   data-nosnippet
-  class={`page-enter-delay-3 ${sectionGrid} ${guideEnterUp}`}
+  class={`[animation-delay:125ms] ${pageSectionGrid} guide-enter`}
 >
-  <div class={sectionIntro}>
+  <div class={pageSectionIntro}>
     <Badge variant="outline" class="mb-4">FAQ</Badge>
-    <h2 class={sectionTitle}>{t(locale, "Guide FAQ")}</h2>
+    <h2 class={pageSectionTitle}>{t(locale, "Guide FAQ")}</h2>
   </div>
 
   <div class="grid gap-3">
     {#each guideFaqItems as faqItem (faqItem.question)}
-      <Item.Root variant="outline" class={guideItemSurface}>
+      <Item.Root variant="outline" class={pageItemSurface}>
         <Item.Content>
           <Item.Title class="line-clamp-none">
             {t(locale, faqItem.question)}
@@ -154,17 +152,17 @@
   </div>
 </section>
 
-<section class={`page-enter-delay-4 ${sectionGrid} ${guideEnterUp}`}>
-  <div class={sectionIntro}>
+<section class={`[animation-delay:165ms] ${pageSectionGrid} guide-enter`}>
+  <div class={pageSectionIntro}>
     <Badge variant="outline" class="mb-4">{t(locale, "References")}</Badge>
-    <h2 class={sectionTitle}>
+    <h2 class={pageSectionTitle}>
       {t(locale, "Research and background reading")}
     </h2>
   </div>
 
   <div class="grid gap-3">
     {#each referenceLinks as referenceLink (referenceLink.url)}
-      <Item.Root variant="outline" class={guideItemSurface}>
+      <Item.Root variant="outline" class={pageItemSurface}>
         <Item.Content>
           <Item.Title class="line-clamp-none">
             {t(locale, referenceLink.label)}

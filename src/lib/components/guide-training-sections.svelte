@@ -15,6 +15,13 @@
   import ExternalLinkIcon from "@lucide/svelte/icons/external-link";
   import MousePointerIcon from "@lucide/svelte/icons/mouse-pointer-2";
 
+  import {
+    pageItemSurface,
+    pageSectionGrid,
+    pageSectionIntro,
+    pageSectionTitle,
+  } from "./page-styles";
+
   const featuredRoutes = trainerRoutes.filter((route) =>
     [
       "smooth-pursuit",
@@ -28,29 +35,20 @@
     (route) => route.mode === "pursuit" && !route.indexable
   );
 
-  const guideEnterUp = "guide-enter guide-enter-up";
-  const guideItemSurface =
-    "bg-background/70 shadow-[0_16px_36px_-30px_rgba(20,24,22,0.4)]";
-  const sectionGrid =
-    "grid gap-6 border-t border-border/60 pt-10 md:grid-cols-[0.72fr_1.28fr] md:gap-10";
-  const sectionIntro = "md:sticky md:top-8 md:self-start";
-  const sectionTitle =
-    "max-w-[18rem] text-2xl leading-tight font-semibold tracking-tight";
-
   let { locale }: { locale: AppLocale } = $props();
 </script>
 
-<section class={`page-enter-delay-2 ${sectionGrid} ${guideEnterUp}`}>
-  <div class={sectionIntro}>
+<section class={`[animation-delay:85ms] ${pageSectionGrid} guide-enter`}>
+  <div class={pageSectionIntro}>
     <Badge variant="outline" class="mb-4">{t(locale, "Drills")}</Badge>
-    <h2 class={sectionTitle}>
+    <h2 class={pageSectionTitle}>
       {t(locale, "Choose a drill by the result you want")}
     </h2>
   </div>
 
   <div class="grid gap-3">
     {#each trainingModeNotes as trainingModeNote (trainingModeNote.title)}
-      <Item.Root variant="outline" class={guideItemSurface}>
+      <Item.Root variant="outline" class={pageItemSurface}>
         <Item.Media
           variant="icon"
           class="bg-muted text-brand-foreground size-9 rounded-lg border"
@@ -70,12 +68,12 @@
   </div>
 </section>
 
-<section class={`page-enter-delay-3 ${sectionGrid} ${guideEnterUp}`}>
-  <div class={sectionIntro}>
+<section class={`[animation-delay:125ms] ${pageSectionGrid} guide-enter`}>
+  <div class={pageSectionIntro}>
     <Badge variant="outline" class="mb-4">
       {t(locale, "Mode guide")}
     </Badge>
-    <h2 class={sectionTitle}>{t(locale, "How each drill works")}</h2>
+    <h2 class={pageSectionTitle}>{t(locale, "How each drill works")}</h2>
     <p class="text-muted-foreground mt-4 max-w-136 text-base leading-7">
       {t(
         locale,
@@ -86,7 +84,7 @@
 
   <div class="grid gap-3">
     {#each trainingModeGuides as modeGuide (modeGuide.mode)}
-      <Item.Root variant="outline" class={guideItemSurface}>
+      <Item.Root variant="outline" class={pageItemSurface}>
         <Item.Media
           variant="icon"
           class="bg-muted text-brand-foreground size-9 rounded-lg border"
@@ -108,10 +106,10 @@
   </div>
 </section>
 
-<section class={`page-enter-delay-3 ${sectionGrid} ${guideEnterUp}`}>
-  <div class={sectionIntro}>
+<section class={`[animation-delay:125ms] ${pageSectionGrid} guide-enter`}>
+  <div class={pageSectionIntro}>
     <Badge variant="outline" class="mb-4">{t(locale, "Best fit")}</Badge>
-    <h2 class={sectionTitle}>
+    <h2 class={pageSectionTitle}>
       {t(
         locale,
         "Best use cases for gamers, desk workers, and screen-heavy days"
@@ -127,7 +125,7 @@
 
   <div class="grid gap-3">
     {#each audienceNotes as audienceNote (audienceNote.title)}
-      <Item.Root variant="outline" class={guideItemSurface}>
+      <Item.Root variant="outline" class={pageItemSurface}>
         <Item.Media
           variant="icon"
           class="bg-muted text-brand-foreground size-9 rounded-lg border"
@@ -148,11 +146,11 @@
 </section>
 
 <section
-  class={`page-enter-delay-3 border-border/60 grid gap-6 border-t pt-10 md:grid-cols-[1.18fr_0.82fr] md:gap-10 ${guideEnterUp}`}
+  class="border-border/60 guide-enter grid gap-6 border-t pt-10 [animation-delay:125ms] md:grid-cols-[1.18fr_0.82fr] md:gap-10"
 >
   <div class="grid gap-3">
     {#each featuredRoutes as route (route.slug)}
-      <Item.Root variant="outline" class={guideItemSurface}>
+      <Item.Root variant="outline" class={pageItemSurface}>
         <Item.Media
           variant="icon"
           class="bg-background text-brand-foreground size-9 rounded-lg border"
@@ -188,7 +186,7 @@
     <Badge variant="outline" class="mb-4">
       {t(locale, "Direct routes")}
     </Badge>
-    <h2 class={sectionTitle}>
+    <h2 class={pageSectionTitle}>
       {t(locale, "Smooth Pursuit pattern routes")}
     </h2>
     <p class="text-muted-foreground mt-4 max-w-152 text-base leading-7">

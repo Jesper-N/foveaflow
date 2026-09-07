@@ -229,6 +229,116 @@ test("pause freezes the canvas and resume restarts motion", async ({
   await expectAnimation(page);
 });
 
+test("island hides when idle and respects pointer or touch after selection", async ({
+  page,
+  hasTouch,
+}) => {
+  await openPage(page, "/");
+  const island = page.locator("#trainer-island");
+  const reveal = page.getByRole("button", { name: "Reveal controls" });
+  await expect(reveal).toBeVisible({ timeout: 4500 });
+  await expect(island).toHaveAttribute("inert", "");
+
+  await (hasTouch ? reveal.tap() : hoverIsland(page));
+  await expect(island).not.toHaveAttribute("inert", "");
+  const action = hasTouch ? "tap" : "click";
+  const drill = page.getByRole("button", {
+    exact: true,
+    name: "Drill: Smooth Pursuit",
+  });
+  await drill[action]();
+  const reaction = page.getByRole("option", {
+    exact: true,
+    name: "Reaction jumps",
+  });
+  await reaction[action]();
+  await expect(page).toHaveURL(/\/reaction-jumps\/$/u);
+  await expect(page.getByRole("listbox")).toHaveCount(0);
+
+  if (!hasTouch) {
+    // Keep the pointer where selecting the option left it, inside the island.
+    await page.waitForTimeout(5500);
+    await expect(island).not.toHaveAttribute("inert", "");
+    await page.mouse.move(0, 0);
+  }
+  await expect(reveal).toBeVisible({ timeout: hasTouch ? 4500 : 1000 });
+  await expect(island).toHaveAttribute("inert", "");
+});
+
+test("island offers the controls supported by the selected drill", async ({
+  page,
+  hasTouch,
+}) => {
+  await openPage(page, "/circle/");
+  const reverse = page.getByRole("button", {
+    exact: true,
+    name: "Reverse motion direction",
+  });
+  const pattern = page.locator(
+    '[data-trainer-shortcut-select="header-pattern"]'
+  );
+  await expect(reverse).toBeVisible();
+  await choose(page, "pattern", "Random", hasTouch);
+  await expect(reverse).toBeHidden();
+  await expect(pattern).toBeVisible();
+
+  await choose(page, "mode", "Reaction jumps", hasTouch);
+  await expect(pattern).toBeHidden();
+  await expect(reverse).toBeHidden();
+
+  await choose(page, "mode", "Lilac Chaser", hasTouch);
+  await expect(pattern).toBeHidden();
+  await expect(
+    page.getByRole("button", { name: "Lilac Chaser ball color" })
+  ).toBeVisible();
+  await expect(
+    page.locator('[data-slot="slider"][aria-label="Header target speed"]')
+  ).toHaveCount(0);
+
+  await choose(page, "mode", "Smooth Pursuit", hasTouch);
+  await expect(pattern).toBeVisible();
+  await expect(
+    page.locator('[data-slot="slider"][aria-label="Header target speed"]')
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Lilac Chaser ball color" })
+  ).toHaveCount(0);
+});
+
+test("settings keep the selected unit and reopen the last category", async ({
+  page,
+}) => {
+  await openPage(page, "/circle/");
+  await page.getByRole("button", { name: "Open controls" }).click();
+  await section(page, "drill");
+  const unit = page.getByRole("radio", { exact: true, name: "cm/s" });
+  await unit.click();
+  await unit.click();
+  await expect(unit).toBeChecked();
+  await expect
+    .poll(() => readSettings(page))
+    .toMatchObject({
+      speed: { unit: "cm/s" },
+    });
+  await page.getByRole("button", { exact: true, name: "Done" }).click();
+  await page.getByRole("button", { name: "Open controls" }).click();
+  await expect(
+    page.getByRole("heading", { exact: true, level: 2, name: "Drill" })
+  ).toBeVisible();
+  await expect(unit).toBeChecked();
+
+  await page.reload();
+  await expectTrainer(page, "pursuit", "circle");
+  await page.getByRole("button", { name: "Open controls" }).click();
+  await section(page, "drill");
+  await expect(unit).toBeChecked();
+  await expect
+    .poll(() => readSettings(page))
+    .toMatchObject({
+      speed: { unit: "cm/s" },
+    });
+});
+
 test("settings redraw, survive reload, and reset through the controls", async ({
   page,
   hasTouch,
@@ -246,8 +356,11 @@ test("settings redraw, survive reload, and reset through the controls", async ({
     node.toDataURL()
   );
   await adjustSlider(page, "Target size", "ArrowRight");
-  await page.getByRole("button", { exact: true, name: "Target form" }).click();
-  await page.getByRole("option", { exact: true, name: "Ring" }).click();
+  await page.getByRole("radio", { exact: true, name: "Ring" }).click();
+  await page.getByRole("radio", { exact: true, name: "Ring" }).click();
+  await expect(
+    page.getByRole("radio", { exact: true, name: "Ring" })
+  ).toBeChecked();
   await page.getByRole("switch", { name: "Show target letters" }).click();
   const changed = {
     baseRadiusPx: initial.baseRadiusPx + 1,
@@ -265,7 +378,7 @@ test("settings redraw, survive reload, and reset through the controls", async ({
   await expect(
     page.getByRole("switch", { name: "Show target letters" })
   ).toBeChecked();
-  await section(page, "defaults");
+  await section(page, "general");
   await page.getByRole("button", { name: "Reset to defaults" }).click();
   await expect
     .poll(() => readSettings(page))
@@ -277,6 +390,7 @@ test("settings redraw, survive reload, and reset through the controls", async ({
   await page.keyboard.press("Escape");
   await choose(page, "mode", "Multiple Distractions", hasTouch);
   await page.getByRole("button", { name: "Open controls" }).click();
+  await section(page, "targets");
   await adjustSlider(page, "Targets", "ArrowRight");
   await adjustSlider(page, "Distractors", "ArrowLeft");
   const mot = getPreset("mot");
@@ -302,7 +416,7 @@ test("Lilac color and scale update the paused drill and persist", async ({
   }
   await page.getByRole("button", { exact: true, name: "Pause motion" }).click();
   await page.getByRole("button", { name: "Open controls" }).click();
-  await section(page, "drill");
+  await section(page, "targets");
   const canvas = page.locator("canvas");
   const image = await canvas.evaluate((node: HTMLCanvasElement) =>
     node.toDataURL()

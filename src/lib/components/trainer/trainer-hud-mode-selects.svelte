@@ -32,8 +32,9 @@
   );
 </script>
 
+<!-- Both states need explicit track lists for the columns to interpolate. -->
 <div
-  class="trainer-island-fields grid min-w-0"
+  class="group/fields @container grid min-w-0 grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-x-2 [transition:grid-template-columns_220ms_cubic-bezier(0.23,1,0.32,1),column-gap_220ms_cubic-bezier(0.23,1,0.32,1)] data-[has-pattern=false]:grid-cols-[minmax(0,1fr)_minmax(0,0fr)] data-[has-pattern=false]:gap-x-0 motion-reduce:transition-none max-[359px]:min-h-21"
   data-has-pattern={settings.presetId === "pursuit"}
 >
   <Select.Root
@@ -79,7 +80,7 @@
   </Select.Root>
 
   <div
-    class="trainer-island-pattern flex min-w-0"
+    class="visible flex min-w-0 overflow-clip opacity-100 [overflow-clip-margin:3px] [transition:opacity_160ms_ease,visibility_0ms] group-data-[has-pattern=false]/fields:invisible group-data-[has-pattern=false]/fields:opacity-0 group-data-[has-pattern=false]/fields:[transition:opacity_80ms_ease,visibility_0ms_220ms] motion-reduce:group-data-has-pattern/fields:transition-none"
     inert={settings.presetId !== "pursuit"}
   >
     <Select.Root

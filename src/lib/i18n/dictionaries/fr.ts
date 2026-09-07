@@ -19,6 +19,7 @@ export const fr = {
   Alternative: "Alternative",
   App: "Application",
   "App actions": "Actions de l'application",
+  Appearance: "Apparence",
   "Availability and warranty": "Disponibilité et garantie",
   "Ball color": "Couleur de la balle",
   "Best fit": "Meilleur choix",
@@ -49,6 +50,7 @@ export const fr = {
   "By using FoveaFlow, you agree to these terms. If you do not agree, do not use the site.":
     "En utilisant FoveaFlow, vous acceptez ces conditions. Si vous n'êtes pas d'accord, n'utilisez pas le site.",
   "CSS pixels/cm": "Pixels CSS/cm",
+  Calibration: "Étalonnage",
   "Can FoveaFlow help with tired eyes from screen work?":
     "FoveaFlow peut-il aider quand les yeux fatiguent devant l'écran ?",
   "Can FoveaFlow improve eyesight or reaction time?":
@@ -93,6 +95,8 @@ export const fr = {
     "Choisissez une trajectoire, réglez la vitesse et le style de la cible, puis lancez une courte séance de suivi visuel.",
   "Choose an easy path when you want rhythm and control. Choose a harder path when you want more direction changes and more target-search demand.":
     "Choisissez une trajectoire facile pour travailler le rythme et le contrôle. Choisissez une trajectoire plus difficile si vous voulez plus de changements de direction et plus de recherche de cible.",
+  "Choose your exercise and how it moves.":
+    "Choisissez votre exercice et son mouvement.",
   Circle: "Cercle",
   "Circle Smooth Pursuit Drill": "Exercice de poursuite fluide Cercle",
   "Circle Smooth Pursuit Eye Training":
@@ -159,6 +163,8 @@ export const fr = {
   "Diamond loop": "Boucle losange",
   "Direct routes": "Trajectoires directes",
   Direction: "Direction",
+  Display: "Affichage",
+  Distractions: "Distractions",
   "Distractor Tracking Eye Training":
     "Entraînement visuel avec suivi malgré les distractions",
   "Distractor color": "Couleur des distractions",
@@ -171,6 +177,7 @@ export const fr = {
     "N'attaquez pas le site, ne le surchargez pas, ne le scrapez pas de façon agressive et ne tentez pas d'accéder sans autorisation au site ou à son infrastructure.",
   "Do not follow the balls with your eyes.":
     "Ne suivez pas les balles avec les yeux.",
+  Done: "Terminé",
   "Down-left Sweep Smooth Pursuit Drill":
     "Exercice de poursuite fluide Balayage bas-gauche",
   "Down-left Sweep Smooth Pursuit Eye Training":
@@ -216,6 +223,7 @@ export const fr = {
   "Figure Eight adds a crossover point, which means the target passes through the center and changes direction more often than a simple loop.":
     "Huit ajoute un point de croisement : la cible passe par le centre et change de direction plus souvent que dans une boucle simple.",
   "Figure eight": "Huit",
+  "Fine-tune what you follow.": "Ajustez la cible que vous suivez.",
   "Focused guides for FPS and alternatives":
     "Guides ciblés pour FPS et alternatives",
   "Follow it like Smooth Pursuit, but do not let the darker balls pull your eyes away.":
@@ -290,6 +298,7 @@ export const fr = {
   "Game awareness": "Lecture du jeu",
   "Gamer warm-up": "Échauffement joueur",
   Gamers: "Joueurs",
+  General: "Général",
   "Give tired screen eyes a quick active break after reading, meetings, or too many tabs.":
     "Offrez une courte pause active à vos yeux après la lecture, les réunions ou trop d'onglets ouverts.",
   Gold: "Or",
@@ -374,6 +383,7 @@ export const fr = {
   "Keep your head still and start with your eyes on the ball.":
     "Gardez la tête immobile et commencez avec les yeux sur la balle.",
   Language: "Langue",
+  "Language and saved preferences.": "Langue et préférences enregistrées.",
   "Legal pages": "Pages légales",
   "Let the disappearing gap move around the fixed circle. With steady focus, the colored balls may fade and the missing spot can look like a moving green afterimage.":
     "Laissez l'espace qui disparaît tourner autour du cercle fixe. Avec une fixation stable, les balles colorées peuvent s'effacer et la zone manquante peut ressembler à une image rémanente verte en mouvement.",
@@ -416,6 +426,7 @@ export const fr = {
   "Lower the speed, increase target size, and keep the trail visible until you can stay on target comfortably.":
     "Réduisez la vitesse, augmentez la taille de la cible et gardez la traînée visible jusqu'à ce que vous puissiez suivre la cible sans difficulté.",
   Magenta: "Magenta",
+  "Match the trainer to your screen.": "Adaptez l’entraîneur à votre écran.",
   Medium: "Moyen",
   "Mode guide": "Guide des modes",
   "More pages": "Autres pages",
@@ -585,6 +596,8 @@ export const fr = {
   "Selective attention": "Attention sélective",
   Semibold: "Demi-gras",
   Session: "Séance",
+  "Settings save automatically.":
+    "Les réglages sont enregistrés automatiquement.",
   "Settings saved in your browser":
     "Réglages enregistrés dans votre navigateur",
   "Shape, color, opacity, trail length, and trail behavior are adjustable.":
@@ -827,6 +840,8 @@ export const fr = {
     "Utilisez cet exercice quand Poursuite fluide paraît trop simple et que vous voulez un défi d'attention visuelle plus réaliste.",
   "Use this guide to choose the right FoveaFlow eye trainer drill for visual tracking, quick refocus, peripheral awareness, FPS warmups, or focus under distraction.":
     "Utilisez ce guide pour choisir le bon exercice FoveaFlow pour le suivi visuel, la mise au point rapide, la perception périphérique, les échauffements FPS ou la concentration malgré les distractions.",
+  "Used to calculate speed in deg/s and cm/s.":
+    "Sert à calculer la vitesse en deg/s et cm/s.",
   "Vertical Sweep Smooth Pursuit Drill":
     "Exercice de poursuite fluide Balayage vertical",
   "Vertical Sweep Smooth Pursuit Eye Training":

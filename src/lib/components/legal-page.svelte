@@ -1,5 +1,4 @@
 <script lang="ts">
-  import "./guide-motion.css";
   import LanguageSelect from "$lib/components/language-select.svelte";
   import { Badge } from "$lib/components/ui/badge/index.js";
   import { Button } from "$lib/components/ui/button/index.js";
@@ -15,9 +14,6 @@
 
   let { page }: { page: LegalPageContent } = $props();
 
-  const guideEnterTop = "guide-enter guide-enter-up";
-  const guideEnterHero = "guide-enter page-enter-delay-1 guide-enter-up";
-  const guideEnterUp = "guide-enter guide-enter-up";
   const articleCard =
     "bg-card/70 shadow-[0_16px_36px_-30px_rgba(20,24,22,0.4)]";
   const navLinks = [
@@ -30,7 +26,7 @@
 
 <main class="bg-background text-foreground selection:bg-accent/30 min-h-dvh">
   <div class="mx-auto grid w-full max-w-5xl gap-10 px-4 py-5 sm:px-6 lg:px-8">
-    <header class={`flex items-center justify-between gap-4 ${guideEnterTop}`}>
+    <header class="guide-enter flex items-center justify-between gap-4">
       <Button
         href="/"
         variant="outline"
@@ -66,7 +62,7 @@
     </header>
 
     <section
-      class={`grid gap-8 pt-10 pb-10 md:grid-cols-[minmax(0,1fr)_18rem] md:items-end md:pt-20 md:pb-14 ${guideEnterHero}`}
+      class="guide-enter grid gap-8 pt-10 pb-10 [animation-delay:45ms] md:grid-cols-[minmax(0,1fr)_18rem] md:items-end md:pt-20 md:pb-14"
     >
       <div>
         <Badge variant="secondary" class="mb-5 px-3 py-1">
@@ -110,7 +106,7 @@
     </section>
 
     <section
-      class={`page-enter-delay-2 border-border/60 grid gap-6 border-t pt-10 md:grid-cols-[15rem_minmax(0,1fr)] md:gap-10 ${guideEnterUp}`}
+      class="border-border/60 guide-enter grid gap-6 border-t pt-10 [animation-delay:85ms] md:grid-cols-[15rem_minmax(0,1fr)] md:gap-10"
     >
       <div class="md:sticky md:top-6 md:self-start">
         <Item.Root variant="muted" class="border-border/70 border">
@@ -175,7 +171,7 @@
     </section>
 
     <footer
-      class={`page-enter-delay-3 border-border/60 text-muted-foreground flex flex-col gap-3 border-t pt-6 pb-10 text-sm sm:flex-row sm:items-center sm:justify-between ${guideEnterUp}`}
+      class="border-border/60 text-muted-foreground guide-enter flex flex-col gap-3 border-t pt-6 pb-10 text-sm [animation-delay:125ms] sm:flex-row sm:items-center sm:justify-between"
     >
       <span>
         {t(locale, "FoveaFlow is free. No account, no paid plan.")}

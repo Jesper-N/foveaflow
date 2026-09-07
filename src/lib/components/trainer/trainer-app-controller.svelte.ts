@@ -41,7 +41,7 @@ import {
 import type { TrainerShortcutAction } from "$lib/trainer/keyboard";
 import {
   canPatternToggleDirection,
-  getAvailableControlSections,
+  controlSections,
   guideUseCasesByMode,
   homepageGuideUseCases,
 } from "$lib/trainer/options";
@@ -126,7 +126,7 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
   );
   let currentRouteSlug = $state(untrack(getRouteSlug));
   let panelOpen = $state(false);
-  let activeControlSection = $state<ControlSectionId>("drill");
+  let activeControlSection = $state<ControlSectionId>("targets");
   let guidePopoverOpen = $state(false);
   let openGuideFaqQuestion = $state<string | null>(null);
   let hudBounds = $state<HudBounds | null>(null);
@@ -194,7 +194,7 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
   const isMotMode = $derived(settings.presetId === "mot");
   const isLilacChaserMode = $derived(settings.presetId === "lilacChaser");
   const localizedControlSections = $derived(
-    getAvailableControlSections(isLilacChaserMode).map((section) => ({
+    controlSections.map((section) => ({
       ...section,
       label: t(locale, section.label),
     }))
@@ -623,7 +623,6 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
 
   const openControlsPanel = () => {
     revealHud();
-    activeControlSection = "targets";
     panelOpen = true;
   };
 
@@ -852,7 +851,6 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
       value: () => [settings.targetCount],
     },
     toggleMotionDirection,
-    toggleMotionPaused,
   };
 
   $effect(() => {
@@ -883,9 +881,6 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     },
     get canToggleDirection() {
       return canToggleDirection;
-    },
-    get colorMode() {
-      return colorMode;
     },
     get currentControlSection() {
       return currentControlSection.id;

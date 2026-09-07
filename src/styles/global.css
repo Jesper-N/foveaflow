@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn-svelte/tailwind.css";
+@import "../lib/components/guide-motion.css";
+@import "../lib/components/resize-transition.css";
 
 @font-face {
   font-family: "Inter";
@@ -68,22 +70,15 @@
 
 html,
 body {
-  margin: 0;
-  min-width: 100%;
-  min-height: 100%;
-  background: var(--background);
-  color: var(--color-foreground);
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+  @apply bg-background text-foreground m-0 min-h-full min-w-full font-sans antialiased [text-rendering:optimizeLegibility];
 }
 
 body {
-  min-height: 100dvh;
+  @apply min-h-dvh;
 }
 
 button {
-  -webkit-tap-highlight-color: transparent;
+  @apply [-webkit-tap-highlight-color:transparent];
 }
 
 button,
@@ -91,11 +86,11 @@ input,
 optgroup,
 select,
 textarea {
-  font: inherit;
+  @apply [font:inherit];
 }
 
 :where([data-slot], [role="listbox"], [role="option"], [role="combobox"]) {
-  font-family: var(--font-sans);
+  @apply font-sans;
 }
 
 :root {
@@ -171,6 +166,10 @@ textarea {
   --sidebar-ring: var(--ring);
 }
 
+html[data-i18n-pending="true"] body > * {
+  @apply invisible;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -184,14 +183,14 @@ textarea {
   h1,
   h2,
   h3 {
-    text-wrap: balance;
+    @apply text-balance;
   }
   p,
   li {
-    text-wrap: pretty;
+    @apply text-pretty;
   }
   button:not(:disabled),
   [role="button"]:not(:disabled) {
-    cursor: pointer;
+    @apply cursor-pointer;
   }
 }

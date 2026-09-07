@@ -131,11 +131,6 @@ const i18nBootScript = `
 <meta charset="utf-8" />
 <script is:inline set:html={initialModeExpression} />
 {initializeI18n && <script is:inline set:html={i18nBootScript} />}
-<style is:inline>
-  html[data-i18n-pending="true"] body > * {
-    visibility: hidden;
-  }
-</style>
 <ThemeFavicon />
 {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
 <meta name="viewport" content="width=device-width, initial-scale=1" />

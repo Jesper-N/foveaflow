@@ -20,6 +20,7 @@ export const fil = {
   Alternative: "Alternatibo",
   App: "App",
   "App actions": "Mga aksyon ng app",
+  Appearance: "Hitsura",
   "Availability and warranty": "Availability at warranty",
   "Ball color": "Kulay ng bola",
   "Best fit": "Pinakaangkop",
@@ -51,6 +52,7 @@ export const fil = {
   "By using FoveaFlow, you agree to these terms. If you do not agree, do not use the site.":
     "Sa paggamit ng FoveaFlow, sumasang-ayon ka sa mga tuntuning ito. Kung hindi ka sang-ayon, huwag gamitin ang site.",
   "CSS pixels/cm": "CSS pixels/cm",
+  Calibration: "Kalibrasyon",
   "Can FoveaFlow help with tired eyes from screen work?":
     "Makakatulong ba ang FoveaFlow sa pagod na mata dahil sa screen work?",
   "Can FoveaFlow improve eyesight or reaction time?":
@@ -95,6 +97,8 @@ export const fil = {
     "Pumili ng ruta, itakda ang bilis at target style, pagkatapos gamitin ito para sa maikling sesyon ng pagsubaybay ng tingin.",
   "Choose an easy path when you want rhythm and control. Choose a harder path when you want more direction changes and more target-search demand.":
     "Pumili ng madaling ruta kung gusto mo ng ritmo at control. Pumili ng mas mahirap na ruta kung gusto mo ng mas maraming pagbabago ng direksyon at mas maraming paghahanap ng target.",
+  "Choose your exercise and how it moves.":
+    "Piliin ang ehersisyo at galaw nito.",
   Circle: "Bilog",
   "Circle Smooth Pursuit Drill":
     "Ehersisyong Bilog para sa Tuluy-tuloy na pagsunod",
@@ -163,6 +167,8 @@ export const fil = {
   "Diamond loop": "Ikot-diyamante",
   "Direct routes": "Direktang ruta",
   Direction: "Direksyon",
+  Display: "Display",
+  Distractions: "Mga distraksiyon",
   "Distractor Tracking Eye Training":
     "Pagsasanay sa mata para sa pagsubaybay na may distractors",
   "Distractor color": "Kulay ng distractor",
@@ -175,6 +181,7 @@ export const fil = {
     "Huwag atakihin, i-overload, agresibong i-scrape, o subukang makakuha ng di-awtorisadong access sa site o infrastructure nito.",
   "Do not follow the balls with your eyes.":
     "Huwag sundan ng mata ang mga bola.",
+  Done: "Tapos",
   "Down-left Sweep Smooth Pursuit Drill":
     "Ehersisyong Pababa sa kaliwa para sa Tuluy-tuloy na pagsunod",
   "Down-left Sweep Smooth Pursuit Eye Training":
@@ -222,6 +229,7 @@ export const fil = {
   "Figure Eight adds a crossover point, which means the target passes through the center and changes direction more often than a simple loop.":
     "Nagdadagdag ang Hugis-otso ng puntong tawiran, kaya dumadaan ang target sa gitna at mas madalas magbago ng direksyon kaysa sa simpleng loop.",
   "Figure eight": "Hugis-otso",
+  "Fine-tune what you follow.": "Ayusin ang target na sinusundan mo.",
   "Focused guides for FPS and alternatives":
     "Mga gabay para sa FPS at alternatives",
   "Follow it like Smooth Pursuit, but do not let the darker balls pull your eyes away.":
@@ -296,6 +304,7 @@ export const fil = {
   "Game awareness": "Pagbasa sa laro",
   "Gamer warm-up": "Warm-up para sa gamer",
   Gamers: "Mga gamer",
+  General: "Pangkalahatan",
   "Give tired screen eyes a quick active break after reading, meetings, or too many tabs.":
     "Bigyan ng mabilis na active break ang pagod na mata pagkatapos magbasa, mag-meeting, o magbukas ng sobrang daming tab.",
   Gold: "Ginto",
@@ -380,6 +389,7 @@ export const fil = {
   "Keep your head still and start with your eyes on the ball.":
     "Panatilihing hindi gumagalaw ang ulo at magsimula na nakatingin sa bola.",
   Language: "Wika",
+  "Language and saved preferences.": "Wika at mga naka-save na kagustuhan.",
   "Legal pages": "Mga legal page",
   "Let the disappearing gap move around the fixed circle. With steady focus, the colored balls may fade and the missing spot can look like a moving green afterimage.":
     "Hayaan ang nawawalang puwang na umikot sa nakapirming bilog. Kapag steady ang focus, maaaring mag-fade ang mga kulay na bola at magmukhang gumagalaw na berdeng afterimage ang nawawalang spot.",
@@ -423,6 +433,7 @@ export const fil = {
   "Lower the speed, increase target size, and keep the trail visible until you can stay on target comfortably.":
     "Ibaba ang bilis, palakihin ang laki ng target, at panatilihing visible ang trail hanggang kumportable ka nang manatili sa target.",
   Magenta: "Magenta",
+  "Match the trainer to your screen.": "Iangkop ang trainer sa iyong screen.",
   Medium: "Katamtaman",
   "Mode guide": "Gabay sa mode",
   "More pages": "Iba pang pages",
@@ -593,6 +604,7 @@ export const fil = {
   "Selective attention": "Piniling atensyon",
   Semibold: "Medyo makapal",
   Session: "Sesyon",
+  "Settings save automatically.": "Awtomatikong nase-save ang mga setting.",
   "Settings saved in your browser": "Settings na naka-save sa browser mo",
   "Shape, color, opacity, trail length, and trail behavior are adjustable.":
     "Naa-adjust ang hugis, kulay, opacity, haba ng trail, at trail behavior.",
@@ -836,6 +848,8 @@ export const fil = {
     "Gamitin ang ehersisyong ito kung masyadong malinis ang pakiramdam ng Tuluy-tuloy na pagsunod at gusto mo ng mas realistic na visual-attention challenge.",
   "Use this guide to choose the right FoveaFlow eye trainer drill for visual tracking, quick refocus, peripheral awareness, FPS warmups, or focus under distraction.":
     "Gamitin ang gabay na ito para piliin ang tamang FoveaFlow ehersisyo sa mata para sa pagsubaybay ng tingin, mabilis na paglipat ng focus, pansin sa gilid ng paningin, FPS warm-up, o focus sa gitna ng distraction.",
+  "Used to calculate speed in deg/s and cm/s.":
+    "Ginagamit sa pagkalkula ng bilis sa deg/s at cm/s.",
   "Vertical Sweep Smooth Pursuit Drill":
     "Ehersisyong Patayong galaw para sa Tuluy-tuloy na pagsunod",
   "Vertical Sweep Smooth Pursuit Eye Training":

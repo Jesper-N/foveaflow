@@ -19,6 +19,7 @@ export const hi = {
   Alternative: "विकल्प",
   App: "ऐप",
   "App actions": "ऐप की कार्रवाइयां",
+  Appearance: "दिखावट",
   "Availability and warranty": "उपलब्धता और वारंटी",
   "Ball color": "गेंद का रंग",
   "Best fit": "सबसे सही विकल्प",
@@ -48,6 +49,7 @@ export const hi = {
   "By using FoveaFlow, you agree to these terms. If you do not agree, do not use the site.":
     "FoveaFlow इस्तेमाल करके आप इन शर्तों से सहमत होते हैं. सहमत नहीं हैं तो साइट इस्तेमाल न करें.",
   "CSS pixels/cm": "CSS पिक्सल/cm",
+  Calibration: "कैलिब्रेशन",
   "Can FoveaFlow help with tired eyes from screen work?":
     "क्या FoveaFlow स्क्रीन पर काम करने से थकी आंखों में मदद कर सकता है?",
   "Can FoveaFlow improve eyesight or reaction time?":
@@ -88,6 +90,7 @@ export const hi = {
     "रास्ता चुनें, गति और लक्ष्य शैली सेट करें, फिर छोटे विजुअल ट्रैकिंग सेशन में इस्तेमाल करें.",
   "Choose an easy path when you want rhythm and control. Choose a harder path when you want more direction changes and more target-search demand.":
     "लय और कंट्रोल चाहिए तो आसान रास्ता चुनें. ज्यादा दिशा बदलाव और लक्ष्य खोजने की मेहनत चाहिए तो कठिन रास्ता चुनें.",
+  "Choose your exercise and how it moves.": "अपना अभ्यास और उसकी गति चुनें।",
   Circle: "सर्कल",
   "Circle Smooth Pursuit Drill": "सर्कल स्मूद परसूट अभ्यास",
   "Circle Smooth Pursuit Eye Training": "सर्कल स्मूद परसूट आंख अभ्यास",
@@ -146,6 +149,8 @@ export const hi = {
   "Diamond loop": "डायमंड लूप",
   "Direct routes": "सीधे रास्ते",
   Direction: "दिशा",
+  Display: "डिस्प्ले",
+  Distractions: "ध्यान भटकाने वाले लक्ष्य",
   "Distractor Tracking Eye Training": "विचलन ट्रैकिंग आंख अभ्यास",
   "Distractor color": "विचलन का रंग",
   "Distractor color brightness": "विचलन रंग की चमक",
@@ -155,6 +160,7 @@ export const hi = {
   "Do not attack, overload, scrape aggressively, or try to gain unauthorized access to the site or its infrastructure.":
     "साइट या उसके इंफ्रास्ट्रक्चर पर हमला, ओवरलोड, तेज स्क्रैपिंग या बिना अनुमति एक्सेस की कोशिश न करें.",
   "Do not follow the balls with your eyes.": "गेंदों को आंखों से फॉलो न करें.",
+  Done: "हो गया",
   "Down-left Sweep Smooth Pursuit Drill": "नीचे-बाएं स्वीप स्मूद परसूट अभ्यास",
   "Down-left Sweep Smooth Pursuit Eye Training":
     "नीचे-बाएं स्वीप स्मूद परसूट आंख अभ्यास",
@@ -194,6 +200,7 @@ export const hi = {
   "Figure Eight adds a crossover point, which means the target passes through the center and changes direction more often than a simple loop.":
     "फिगर आठ में एक क्रॉसओवर बिंदु होता है. लक्ष्य बीच से गुजरता है और सरल लूप से ज्यादा बार दिशा बदलता है.",
   "Figure eight": "फिगर आठ",
+  "Fine-tune what you follow.": "जिस लक्ष्य का पीछा करते हैं, उसे समायोजित करें।",
   "Focused guides for FPS and alternatives": "FPS और विकल्पों के लिए केंद्रित गाइड",
   "Follow it like Smooth Pursuit, but do not let the darker balls pull your eyes away.":
     "इसे स्मूद परसूट की तरह फॉलो करें, लेकिन गहरी गेंदों को आपकी नजर भटकाने न दें.",
@@ -267,6 +274,7 @@ export const hi = {
   "Game awareness": "गेम जागरूकता",
   "Gamer warm-up": "गेमर वॉर्मअप",
   Gamers: "गेमर",
+  General: "सामान्य",
   "Give tired screen eyes a quick active break after reading, meetings, or too many tabs.":
     "रीडिंग, मीटिंग या बहुत सारे टैब के बाद थकी आंखों को छोटा सक्रिय ब्रेक दें.",
   Gold: "सुनहरा",
@@ -341,6 +349,7 @@ export const hi = {
   "Keep your head still and start with your eyes on the ball.":
     "सिर स्थिर रखें और नजर गेंद पर रखकर शुरू करें.",
   Language: "भाषा",
+  "Language and saved preferences.": "भाषा और सहेजी गई प्राथमिकताएँ।",
   "Legal pages": "कानूनी पेज",
   "Let the disappearing gap move around the fixed circle. With steady focus, the colored balls may fade and the missing spot can look like a moving green afterimage.":
     "गायब होती खाली जगह को स्थिर गोल घेरे के आसपास चलने दें. नजर स्थिर रहे तो रंगीन गेंदें फीकी लग सकती हैं और खाली जगह चलती हुई हरी आफ्टरइमेज जैसी दिख सकती है.",
@@ -381,6 +390,7 @@ export const hi = {
   "Lower the speed, increase target size, and keep the trail visible until you can stay on target comfortably.":
     "गति कम करें, लक्ष्य का आकार बढ़ाएं और जब तक लक्ष्य पर आराम से टिकना न हो जाए, ट्रेल दिखती रहने दें.",
   Magenta: "मैजेंटा",
+  "Match the trainer to your screen.": "ट्रेनर को अपनी स्क्रीन के अनुसार ढालें।",
   Medium: "मध्यम",
   "Mode guide": "मोड गाइड",
   "More pages": "और पेज",
@@ -547,6 +557,7 @@ export const hi = {
   "Selective attention": "चयनात्मक ध्यान",
   Semibold: "सेमीबोल्ड",
   Session: "सेशन",
+  "Settings save automatically.": "सेटिंग अपने आप सहेजी जाती हैं।",
   "Settings saved in your browser": "सेटिंग आपके ब्राउजर में सेव हैं",
   "Shape, color, opacity, trail length, and trail behavior are adjustable.":
     "आकार, रंग, अपारदर्शिता, ट्रेल लंबाई और ट्रेल व्यवहार बदले जा सकते हैं.",
@@ -786,6 +797,8 @@ export const hi = {
     "स्मूद परसूट बहुत साफ लगे और ज्यादा वास्तविक विजुअल ध्यान चुनौती चाहिए तो यह अभ्यास इस्तेमाल करें.",
   "Use this guide to choose the right FoveaFlow eye trainer drill for visual tracking, quick refocus, peripheral awareness, FPS warmups, or focus under distraction.":
     "विजुअल ट्रैकिंग, जल्दी दोबारा फोकस, किनारी जागरूकता, FPS वॉर्मअप या विचलन के बीच फोकस के लिए सही FoveaFlow आई ट्रेनर अभ्यास चुनने में इस गाइड का इस्तेमाल करें.",
+  "Used to calculate speed in deg/s and cm/s.":
+    "deg/s और cm/s में गति की गणना के लिए उपयोग किया जाता है।",
   "Vertical Sweep Smooth Pursuit Drill": "ऊर्ध्व स्वीप स्मूद परसूट अभ्यास",
   "Vertical Sweep Smooth Pursuit Eye Training": "ऊर्ध्व स्वीप स्मूद परसूट आंख अभ्यास",
   "Vertical Sweep mirrors the simplicity of Horizontal Sweep but changes the direction of travel for straightforward up-down tracking.":
