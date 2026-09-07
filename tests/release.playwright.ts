@@ -113,7 +113,11 @@ const choose = async (
     `[data-trainer-shortcut-select$="-${select}"]:visible`
   );
   await trigger[action]();
-  await page.getByRole("option", { exact: true, name })[action]();
+  const option = page.getByRole("option", { exact: true, name });
+  // Scrolling can reveal the select's scroll buttons and shift its items.
+  // Let the click check stability after that layout change.
+  await option.scrollIntoViewIfNeeded();
+  await option[action]();
   await expect(page.locator('[data-slot="select-content"]')).toHaveCount(0);
   if (!hasTouch) {
     await hoverIsland(page);
