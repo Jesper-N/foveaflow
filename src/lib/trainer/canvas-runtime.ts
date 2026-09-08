@@ -90,6 +90,7 @@ export const createTrainerCanvasRuntime = ({
   const frameSampler = createTrainerFrameSampler();
   let canvasTheme: CanvasTheme | null = null;
   let canvasScale = 1;
+  let fontFamily = "";
   let lastLilacChaserHiddenIndex = -1;
   let lastFrameWasLilacChaser = false;
   let lastFrameUsedTrail = false;
@@ -338,7 +339,8 @@ export const createTrainerCanvasRuntime = ({
       frameSample.frames,
       frameSample.count,
       state.settings,
-      frameSample.letterContext
+      frameSample.letterContext,
+      fontFamily
     );
     storeDirtyBounds(frameSample, state.settings);
     if (showTrail) {
@@ -533,6 +535,9 @@ export const createTrainerCanvasRuntime = ({
   };
 
   const redrawForTheme = (colorMode: CanvasColorMode) => {
+    if (canvas) {
+      ({ fontFamily } = getComputedStyle(canvas));
+    }
     pendingColorMode = colorMode;
     drawFrame({ clearTrail: true });
   };
@@ -583,6 +588,7 @@ export const createTrainerCanvasRuntime = ({
   const attachCanvas = (node: HTMLCanvasElement) => {
     detachCanvas();
     canvas = node;
+    ({ fontFamily } = getComputedStyle(node));
     context = node.getContext("2d", { alpha: true });
     if (!context) {
       return () => detachCanvas(node);

@@ -72,7 +72,7 @@
           {t(locale, page.kicker)}
         </Badge>
         <h1
-          class="text-foreground max-w-[14ch] text-4xl leading-none font-semibold tracking-tight md:text-6xl"
+          class="text-foreground max-w-[14ch] text-4xl leading-none font-semibold md:text-6xl"
         >
           {t(locale, page.heading)}
         </h1>

@@ -6,5 +6,4 @@ export const pageSectionGrid =
 
 export const pageSectionIntro = "md:sticky md:top-8 md:self-start";
 
-export const pageSectionTitle =
-  "max-w-72 text-2xl leading-tight font-semibold tracking-tight";
+export const pageSectionTitle = "max-w-72 text-2xl leading-tight font-semibold";

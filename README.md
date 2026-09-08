@@ -1,6 +1,6 @@
 # FoveaFlow - Free Online Eye Trainer
 
-[![FoveaFlow eye trainer with a green tracking target against a blue sky background](docs/images/preview.jpg)](https://foveaflow.com/)
+[![FoveaFlow eye trainer with a yellow tracking target and floating controls against an orange background](docs/images/preview.jpg)](https://foveaflow.com/)
 
 [![Astro](https://img.shields.io/badge/Astro-7-ff5d01?logo=astro&logoColor=white)](https://astro.build/) [![Svelte](https://img.shields.io/badge/Svelte-5-ff3e00?logo=svelte&logoColor=white)](https://svelte.dev/) [![TypeScript](https://img.shields.io/badge/TypeScript-6.0.3-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![Bun](https://img.shields.io/badge/Bun-ready-000000?logo=bun&logoColor=white)](https://bun.sh/) [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.3.2-38bdf8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 

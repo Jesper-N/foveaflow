@@ -254,7 +254,7 @@
       >
         <a
           href="/"
-          class="focus-visible:ring-foreground flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl text-base font-semibold tracking-tight outline-hidden focus-visible:ring-3 min-[400px]:justify-start min-[480px]:text-xl"
+          class="focus-visible:ring-foreground flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl text-base font-semibold outline-hidden focus-visible:ring-3 min-[400px]:justify-start min-[480px]:text-xl"
           aria-label={t(locale, `${siteMetadata.name} home`)}
         >
           <img

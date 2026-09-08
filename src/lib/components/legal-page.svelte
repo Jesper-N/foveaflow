@@ -69,7 +69,7 @@
           {t(locale, page.label)}
         </Badge>
         <h1
-          class="text-foreground max-w-[12ch] text-4xl leading-none font-semibold tracking-tight md:text-6xl"
+          class="text-foreground max-w-[12ch] text-4xl leading-none font-semibold md:text-6xl"
         >
           {t(locale, page.title)}
         </h1>

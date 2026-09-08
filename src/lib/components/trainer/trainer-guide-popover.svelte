@@ -111,7 +111,7 @@
   <div class="guide-enter flex items-start gap-4 [--guide-enter-y:-0.25rem]">
     <div class="grid min-w-0 gap-2 pr-12">
       <p
-        class="text-brand-foreground text-[0.7rem] leading-4 font-semibold tracking-wide uppercase"
+        class="text-brand-foreground text-[0.7rem] leading-4 font-semibold uppercase"
       >
         {t(locale, homepageSeoContent.kicker)}
       </p>
@@ -132,13 +132,13 @@
 {#snippet routeContent()}
   <div class="guide-enter grid min-w-0 gap-2 pr-12 [--guide-enter-y:-0.25rem]">
     <p
-      class="text-brand-foreground text-[0.7rem] leading-4 font-semibold tracking-wide uppercase"
+      class="text-brand-foreground text-[0.7rem] leading-4 font-semibold uppercase"
     >
       {t(locale, guideSeoContent.kicker)}
     </p>
     <h2
       id="trainer-guide-popover-title"
-      class="max-w-[28ch] text-2xl leading-[1.04] font-semibold tracking-tight text-balance sm:text-3xl lg:text-[2.125rem]"
+      class="max-w-[28ch] text-2xl leading-[1.04] font-semibold text-balance sm:text-3xl lg:text-[2.125rem]"
     >
       {t(locale, guideSeoContent.heading)}
     </h2>

@@ -183,7 +183,8 @@ const drawLetterGlyph = (
   settings: Pick<
     TrainerSettings,
     "letterColor" | "letterWeight" | "letterScale" | "targetForm"
-  >
+  >,
+  fontFamily: string
 ) => {
   const fontSize = getLetterFontSize(
     frame.radiusPx,
@@ -191,7 +192,7 @@ const drawLetterGlyph = (
     settings.letterScale
   );
   ctx.fillStyle = settings.letterColor;
-  const font = `${settings.letterWeight} ${fontSize}px Inter, Arial, sans-serif`;
+  const font = `${settings.letterWeight} ${fontSize}px ${fontFamily}`;
   if (ctx.font !== font) {
     ctx.font = font;
   }
@@ -272,7 +273,8 @@ export const drawTargetFrames = (
   frames: TargetFrame[],
   count: number,
   settings: TrainerSettings,
-  letterContext: LetterContext
+  letterContext: LetterContext,
+  fontFamily: string
 ) => {
   const { letterEnabled, targetOpacity, targetForm } = settings;
   if (letterEnabled) {
@@ -296,7 +298,8 @@ export const drawTargetFrames = (
         ctx,
         getFrameLetter(settings, index, letterContext),
         frame,
-        settings
+        settings,
+        fontFamily
       );
     } else if (alpha !== 1) {
       ctx.globalAlpha = 1;
