@@ -27,6 +27,7 @@
   interface Props {
     actions: TrainerDialogActions;
     settings: TrainerSettings;
+    ballColor: string;
     isMotMode: boolean;
     isLilacChaserMode: boolean;
     sliderRow: Snippet<[string, string]>;
@@ -35,6 +36,7 @@
   let {
     actions,
     settings = $bindable(),
+    ballColor,
     isMotMode,
     isLilacChaserMode,
     sliderRow,
@@ -93,20 +95,18 @@
       <label class={settingsColorClass} for="trainer-color">
         <span
           class="size-5 shrink-0"
-          style:color={settings.ballColor}
+          style:color={ballColor}
           style:opacity={settings.targetOpacity}
           aria-hidden="true"
         >
           <TrainerTargetGlyph form={settings.targetForm} filled />
         </span>
-        <span class="truncate font-mono text-xs uppercase"
-          >{settings.ballColor}</span
-        >
+        <span class="truncate font-mono text-xs uppercase">{ballColor}</span>
         <Input
           id="trainer-color"
           class="sr-only"
           type="color"
-          value={settings.ballColor}
+          value={ballColor}
           oninput={actions.handleColorInput}
           aria-label={t(locale, "Ball color")}
         />

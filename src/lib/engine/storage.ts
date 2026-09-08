@@ -4,7 +4,8 @@ import type { Calibration } from "./calibration";
 import type { TrainerSettings } from "./presets";
 import type { SizeProfile, SpeedProfile } from "./profiles";
 
-const SETTINGS_KEY = "foveaflow.settings.v2";
+const SETTINGS_KEY = "foveaflow.settings.v3";
+const LEGACY_SETTINGS_KEY = "foveaflow.settings.v2";
 
 const profileMultiplierSchema = z.number().check(z.minimum(0), z.maximum(4));
 const orderedMultipliers = <
@@ -61,7 +62,7 @@ const calibrationSchema = z.object({
 
 const storedSettingsSchema = z.partial(
   z.object({
-    ballColor: z.string(),
+    ballColor: z.nullable(z.string()),
     baseRadiusPx: z.number(),
     calibration: calibrationSchema,
     distractorBrightness: z.number(),
@@ -95,7 +96,19 @@ type TimerId = ReturnType<typeof setTimeout>;
 export const loadSettings = (): StoredSettings | null => {
   try {
     const value = globalThis.localStorage?.getItem(SETTINGS_KEY);
-    return value ? storedSettingsSchema.parse(JSON.parse(value)) : null;
+    if (value) {
+      return storedSettingsSchema.parse(JSON.parse(value));
+    }
+    const legacyValue = globalThis.localStorage?.getItem(LEGACY_SETTINGS_KEY);
+    if (!legacyValue) {
+      return null;
+    }
+    const settings = storedSettingsSchema.parse(JSON.parse(legacyValue));
+    // Older settings stored the default as a literal instead of a theme choice.
+    if (settings.ballColor?.toLowerCase() === "#76d900") {
+      settings.ballColor = null;
+    }
+    return settings;
   } catch {
     return null;
   }
@@ -104,6 +117,7 @@ export const loadSettings = (): StoredSettings | null => {
 const saveSettings = (settings: TrainerSettings) => {
   try {
     globalThis.localStorage?.setItem(SETTINGS_KEY, JSON.stringify(settings));
+    globalThis.localStorage?.removeItem(LEGACY_SETTINGS_KEY);
   } catch {
     // Storage can be blocked by browser privacy settings.
   }

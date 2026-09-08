@@ -6,7 +6,6 @@ import {
 } from "$lib/engine/calibration";
 import type { Calibration } from "$lib/engine/calibration";
 import {
-  DEFAULT_BALL_COLOR,
   DEFAULT_LETTER_SCALE,
   firstPreset,
   getPreset,
@@ -54,7 +53,7 @@ export const trainerSettingBounds = {
 } as const;
 
 const storedSettingDefaults = {
-  distractorBrightness: 0.7,
+  distractorBrightness: 0.45,
   letterColor: "#000000",
   letterWeight: 600,
   lilacChaserBallColor: "#ff00fe",
@@ -85,8 +84,8 @@ const lilacChaserBallColorSet: ReadonlySet<string> = new Set(
   lilacChaserColorOptions.map((option) => option.id)
 );
 
-export const isHexColor = (value: string | undefined): value is string =>
-  value !== undefined && /^#[0-9a-f]{6}$/iu.test(value);
+export const isHexColor = (value: string | null | undefined): value is string =>
+  value !== null && value !== undefined && /^#[0-9a-f]{6}$/iu.test(value);
 
 export const isSpeedUnit = (value: string): value is SpeedUnit =>
   value === "deg/s" || value === "cm/s" || value === "screen/s";
@@ -317,7 +316,7 @@ export const resolveStoredSettings = (saved: StoredSettings) => {
   return settingsFromPreset(preset, resolveCalibration(saved.calibration), {
     ballColor: isHexColor(saved.ballColor)
       ? safeStimulusColor(saved.ballColor)
-      : DEFAULT_BALL_COLOR,
+      : null,
     baseRadiusPx: resolveNumber(
       saved.baseRadiusPx,
       trainerSettingBounds.baseRadiusPx,

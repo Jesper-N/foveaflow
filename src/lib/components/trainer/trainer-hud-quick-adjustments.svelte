@@ -14,6 +14,14 @@
     speedSliderStepByUnit,
   } from "$lib/trainer/options";
   import { trainerSettingBounds } from "$lib/trainer/settings";
+  import { cn } from "$lib/utils.js";
+
+  import { islandPresenceMotion } from "./island-motion";
+
+  const adjustmentsClass = cn(
+    "col-start-1 row-start-1 grid min-w-0 grid-cols-2 items-start gap-5 px-1",
+    islandPresenceMotion
+  );
 
   let {
     settings,
@@ -37,8 +45,12 @@
   let scaleLabel = $derived(t(locale, "Scale"));
 </script>
 
-{#if !isLilacChaserMode}
-  <Field.FieldGroup class="grid min-w-0 grid-cols-2 gap-5 px-1">
+<div class="grid min-h-17">
+  <Field.FieldGroup
+    class={adjustmentsClass}
+    data-visible={!isLilacChaserMode}
+    inert={isLilacChaserMode}
+  >
     <Field.Field
       class="grid min-w-0 grid-cols-[1fr_auto] items-center gap-x-2 gap-y-0"
     >
@@ -83,8 +95,11 @@
       </span>
     </Field.Field>
   </Field.FieldGroup>
-{:else}
-  <Field.FieldGroup class="grid min-w-0 grid-cols-2 items-start gap-5 px-1">
+  <Field.FieldGroup
+    class={adjustmentsClass}
+    data-visible={isLilacChaserMode}
+    inert={!isLilacChaserMode}
+  >
     <Field.Field class="gap-1">
       <span class="text-muted-foreground text-xs font-medium"
         >{t(locale, "Ball color")}</span
@@ -114,7 +129,7 @@
             </span>
           </span>
         </Select.Trigger>
-        <Select.Content class="trainer-island-theme">
+        <Select.Content class="dark">
           <TrainerHudColorSelectOptions {locale} />
         </Select.Content>
       </Select.Root>
@@ -144,4 +159,4 @@
       </span>
     </Field.Field>
   </Field.FieldGroup>
-{/if}
+</div>

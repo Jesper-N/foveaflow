@@ -47,6 +47,7 @@ import {
 } from "$lib/trainer/options";
 import type { ControlSectionId } from "$lib/trainer/options";
 import type { CanvasColorMode } from "$lib/trainer/rendering";
+import { getThemeTargetColor } from "$lib/trainer/rendering";
 import {
   adjustSpeedBySteps,
   applyPresetToSettings,
@@ -162,7 +163,10 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
       : "dark";
   });
 
-  const safeBallColor = $derived(safeStimulusColor(settings.ballColor));
+  let themeTargetColor = $state("#000000");
+  const safeBallColor = $derived(
+    safeStimulusColor(settings.ballColor ?? themeTargetColor)
+  );
   const locale = $derived(languageState.locale);
   const localeReady = $derived(languageState.ready);
   const activeRoute = $derived(findTrainerRoute(currentRouteSlug));
@@ -238,7 +242,10 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     syncPlayback,
   } = canvasRuntime;
   const attachCanvasOnce: Attachment<HTMLCanvasElement> = (node) =>
-    untrack(() => attachCanvas(node));
+    untrack(() => {
+      themeTargetColor = getThemeTargetColor(node);
+      return attachCanvas(node);
+    });
 
   const behaviorValue = $derived(
     getBehaviorId(settings.speedProfile, settings.sizeProfile)
@@ -370,6 +377,12 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
       );
 
       storageReady = true;
+      const themeObserver = new MutationObserver(() => {
+        themeTargetColor = getThemeTargetColor(document.documentElement);
+      });
+      themeObserver.observe(document.documentElement, {
+        attributeFilter: ["class", "style"],
+      });
       void startHudWhenLanguageReady();
       cursorAutoHideTimer.start();
 
@@ -388,6 +401,7 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
 
       return () => {
         mounted = false;
+        themeObserver.disconnect();
         settingsSaver.flush();
         hudAutoHideTimer.clear();
         cursorAutoHideTimer.clear();
@@ -859,6 +873,7 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     }
 
     void settingsSnapshot;
+    void safeBallColor;
     untrack(() => drawFrame({ clearTrail: true }));
   });
 
@@ -876,6 +891,9 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     attachCanvasOnce,
     attachHudShell,
     attachTrainer,
+    get ballColor() {
+      return safeBallColor;
+    },
     get behaviorValue() {
       return behaviorValue;
     },

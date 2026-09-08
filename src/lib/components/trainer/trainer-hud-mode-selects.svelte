@@ -9,6 +9,12 @@
   import { t } from "$lib/i18n/translate";
   import type { TrainerHudActions } from "$lib/trainer/control-actions";
   import { getPatternName, getPresetName } from "$lib/trainer/options";
+  import { cn } from "$lib/utils.js";
+
+  import { islandLayoutMotion, islandPresenceMotion } from "./island-motion";
+
+  const fieldTriggerClass =
+    "relative h-auto min-h-16 w-full min-w-0 items-start rounded-2xl px-3 py-2.5 data-[size=default]:h-auto sm:px-4 [&>svg:last-child]:absolute [&>svg:last-child]:top-3 [&>svg:last-child]:right-3";
 
   let {
     settings,
@@ -34,7 +40,10 @@
 
 <!-- Both states need explicit track lists for the columns to interpolate. -->
 <div
-  class="group/fields @container grid min-w-0 grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-x-2 [transition:grid-template-columns_220ms_cubic-bezier(0.23,1,0.32,1),column-gap_220ms_cubic-bezier(0.23,1,0.32,1)] data-[has-pattern=false]:grid-cols-[minmax(0,1fr)_minmax(0,0fr)] data-[has-pattern=false]:gap-x-0 motion-reduce:transition-none max-[359px]:min-h-21"
+  class={cn(
+    "@container grid min-w-0 grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-x-2 transition-[grid-template-columns,column-gap] data-[has-pattern=false]:grid-cols-[minmax(0,1fr)_minmax(0,0fr)] data-[has-pattern=false]:gap-x-0 max-[359px]:min-h-21",
+    islandLayoutMotion
+  )}
   data-has-pattern={settings.presetId === "pursuit"}
 >
   <Select.Root
@@ -46,7 +55,7 @@
   >
     <Select.Trigger
       data-trainer-shortcut-select="header-mode"
-      size="field"
+      class={fieldTriggerClass}
       aria-label={`${t(locale, "Drill")}: ${currentPresetName}`}
       title={`${t(locale, "Drill")}: ${currentPresetName}`}
     >
@@ -65,7 +74,7 @@
         </span>
       </span>
     </Select.Trigger>
-    <Select.Content class="trainer-island-theme">
+    <Select.Content class="dark">
       <Select.Group>
         {#each exercisePresets as preset (preset.id)}
           <Select.Item value={preset.id}>
@@ -80,7 +89,11 @@
   </Select.Root>
 
   <div
-    class="visible flex min-w-0 overflow-clip opacity-100 [overflow-clip-margin:3px] [transition:opacity_160ms_ease,visibility_0ms] group-data-[has-pattern=false]/fields:invisible group-data-[has-pattern=false]/fields:opacity-0 group-data-[has-pattern=false]/fields:[transition:opacity_80ms_ease,visibility_0ms_220ms] motion-reduce:group-data-has-pattern/fields:transition-none"
+    class={cn(
+      "flex min-w-0 overflow-clip [overflow-clip-margin:3px]",
+      islandPresenceMotion
+    )}
+    data-visible={settings.presetId === "pursuit"}
     inert={settings.presetId !== "pursuit"}
   >
     <Select.Root
@@ -92,8 +105,7 @@
     >
       <Select.Trigger
         data-trainer-shortcut-select="header-pattern"
-        class="w-[calc(50cqw-0.25rem)] shrink-0"
-        size="field"
+        class={cn(fieldTriggerClass, "w-[calc(50cqw-0.25rem)] shrink-0")}
         aria-label={`${t(locale, "Motion path")}: ${currentPatternName}`}
         title={`${t(locale, "Motion path")}: ${currentPatternName}`}
       >
@@ -112,9 +124,7 @@
           </span>
         </span>
       </Select.Trigger>
-      <Select.Content
-        class={["trainer-island-theme", patternSelectContentClass]}
-      >
+      <Select.Content class={["dark", patternSelectContentClass]}>
         <TrainerPatternSelectGroups />
       </Select.Content>
     </Select.Root>

@@ -91,6 +91,7 @@
   />
 
   <TrainerControlsDialog
+    ballColor={controller.ballColor}
     bind:open={controller.panelOpen}
     bind:settings={controller.settings}
     availableControlSections={controller.localizedControlSections}

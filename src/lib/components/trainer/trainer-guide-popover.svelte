@@ -172,9 +172,9 @@
         {/each}
       </div>
 
-      <Button href="/guide/" size="xl" class="w-full">
-        <BookOpenIcon class="size-5" />
-        <span class="pl-1">{t(locale, "Read full guide")}</span>
+      <Button href="/guide/" size="lg" class="h-12 w-full gap-2 text-base">
+        <BookOpenIcon data-icon="inline-start" />
+        <span>{t(locale, "Read full guide")}</span>
       </Button>
     </section>
 
@@ -194,7 +194,7 @@
         {#each activeTrainingModeGuide.steps as step, index (step)}
           <li class="grid grid-cols-[2.25rem_1fr] gap-4">
             <span
-              class="bg-accent/12 text-brand-foreground flex size-8 items-center justify-center rounded-full text-xs font-semibold tabular-nums shadow-[inset_0_0_0_1px_rgba(118,217,0,0.14)]"
+              class="bg-primary/12 text-brand-foreground inset-ring-primary/15 flex size-8 items-center justify-center rounded-full text-xs font-semibold tabular-nums inset-ring"
               aria-hidden="true"
             >
               {index + 1}

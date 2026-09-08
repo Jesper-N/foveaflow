@@ -19,6 +19,7 @@
   let {
     open = $bindable(false),
     settings = $bindable(),
+    ballColor,
     availableControlSections,
     currentControlSection,
     currentControlSectionLabel,
@@ -33,6 +34,7 @@
   }: {
     open: boolean;
     settings: TrainerSettings;
+    ballColor: string;
     availableControlSections: readonly ControlSection[];
     currentControlSection: ControlSectionId;
     currentControlSectionLabel: string;
@@ -182,6 +184,7 @@
           {:else if currentControlSection === "targets"}
             <TrainerTargetControls
               {actions}
+              {ballColor}
               bind:settings
               {isMotMode}
               {isLilacChaserMode}

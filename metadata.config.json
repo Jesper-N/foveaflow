@@ -4,10 +4,10 @@
   "colors": {
     "background": "#171717",
     "foreground": "#ffffff",
-    "accent": "#94E516"
+    "accent": "#F0B100"
   },
-  "logo": "./metadata-templates/source-assets/darkmode.png",
-  "faviconSrc": "./metadata-templates/source-assets/darkmode.png",
+  "logo": "./public/logo.jpg",
+  "faviconSrc": "./public/logo.jpg",
   "faviconTransparent": true,
   "outputDir": "public/metadata",
   "font": "Inter"

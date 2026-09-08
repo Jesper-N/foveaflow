@@ -1,5 +1,4 @@
 <script lang="ts">
-  import "./trainer-hud.css";
   import LanguageSelect from "$lib/components/language-select.svelte";
   import TrainerHudModeSelects from "$lib/components/trainer/trainer-hud-mode-selects.svelte";
   import TrainerHudQuickAdjustments from "$lib/components/trainer/trainer-hud-quick-adjustments.svelte";
@@ -17,6 +16,8 @@
   import PlayIcon from "@lucide/svelte/icons/play";
   import SettingsIcon from "@lucide/svelte/icons/settings-2";
   import type { Attachment } from "svelte/attachments";
+
+  import { islandLayoutMotion, islandPresenceMotion } from "./island-motion";
 
   interface Props {
     attachHudShell: Attachment<HTMLDivElement>;
@@ -235,32 +236,39 @@
 <div
   {@attach attachHudShell}
   {@attach attachHudInteraction}
-  class="group/island trainer-island-theme absolute top-[max(0.75rem,env(safe-area-inset-top))] left-1/2 z-20 w-[min(35rem,calc(100dvw-1.5rem))] -translate-x-1/2 data-[hidden=true]:pointer-events-none"
+  class="group/island dark absolute top-[max(0.75rem,env(safe-area-inset-top))] left-1/2 z-20 w-[min(35rem,calc(100dvw-1.5rem))] -translate-x-1/2 data-[hidden=true]:pointer-events-none"
   data-hidden={hudHidden}
   data-instant-reveal={instantReveal}
   data-nosnippet
 >
   <header
     id="trainer-island"
-    class="text-foreground before:bg-background after:bg-muted-foreground before:border-border relative isolate before:absolute before:inset-0 before:-z-1 before:origin-top before:rounded-[2rem] before:border before:shadow-[0_12px_32px_-12px_rgb(0_0_0/30%),inset_0_1px_0_rgb(255_255_255/4%)] before:content-[''] before:[transition:transform_260ms_cubic-bezier(0.32,0.72,0,1),opacity_260ms_cubic-bezier(0.32,0.72,0,1)] group-has-focus-visible/island:before:transition-none group-data-[hidden=true]/island:before:transform-[scale(0.18,0.055)] group-data-[hidden=true]/island:before:opacity-0 group-data-[hidden=true]/island:before:[transition:transform_280ms_cubic-bezier(0.645,0.045,0.355,1),opacity_120ms_ease_160ms] group-data-[instant-reveal=true]/island:before:transition-none after:pointer-events-none after:absolute after:top-0 after:left-1/2 after:h-2 after:w-22 after:transform-[translateX(-50%)_scaleX(1.15)] after:rounded-full after:opacity-0 after:content-[''] after:[transition:transform_260ms_cubic-bezier(0.32,0.72,0,1),opacity_180ms_ease] group-has-focus-visible/island:after:transition-none group-data-[hidden=true]/island:after:transform-[translateX(-50%)_scaleX(1)] group-data-[hidden=true]/island:after:opacity-30 group-data-[hidden=true]/island:after:[transition:transform_280ms_cubic-bezier(0.645,0.045,0.355,1),opacity_160ms_ease_120ms] group-data-[instant-reveal=true]/island:after:transition-none motion-reduce:group-data-hidden/island:before:transition-none motion-reduce:group-data-hidden/island:after:transition-none max-[479px]:group-data-[hidden=true]/island:before:transform-[scale(0.28,0.055)] sm:before:rounded-[2.25rem]"
+    class="text-foreground before:bg-background after:bg-muted-foreground before:border-border relative isolate before:absolute before:inset-0 before:-z-1 before:origin-top before:rounded-[2rem] before:border before:shadow-[0_12px_32px_-12px_rgb(0_0_0/30%),inset_0_1px_0_rgb(255_255_255/4%)] before:content-[''] before:[transition:transform_260ms_cubic-bezier(0.32,0.72,0,1),opacity_260ms_cubic-bezier(0.32,0.72,0,1)] group-has-focus-visible/island:before:transition-none group-data-[hidden=true]/island:before:transform-[scale(0.18,0.055)] group-data-[hidden=true]/island:before:opacity-0 group-data-[hidden=true]/island:before:[transition:transform_320ms_cubic-bezier(0.215,0.61,0.355,1),opacity_140ms_ease_180ms] group-data-[instant-reveal=true]/island:before:transition-none after:pointer-events-none after:absolute after:top-0 after:left-1/2 after:h-2 after:w-22 after:transform-[translateX(-50%)_scaleX(1.15)] after:rounded-full after:opacity-0 after:content-[''] after:[transition:transform_260ms_cubic-bezier(0.32,0.72,0,1),opacity_180ms_ease] group-has-focus-visible/island:after:transition-none group-data-[hidden=true]/island:after:transform-[translateX(-50%)_scaleX(1)] group-data-[hidden=true]/island:after:opacity-30 group-data-[hidden=true]/island:after:[transition:transform_320ms_cubic-bezier(0.215,0.61,0.355,1),opacity_140ms_ease_180ms] group-data-[instant-reveal=true]/island:after:transition-none motion-reduce:group-data-hidden/island:before:transition-none motion-reduce:group-data-hidden/island:after:transition-none max-[479px]:group-data-[hidden=true]/island:before:transform-[scale(0.28,0.055)] sm:before:rounded-[2.25rem]"
     inert={hudHidden}
   >
     <div
-      class="flex origin-top transform-[translateY(0)_scale(1)] flex-col gap-4 p-4 opacity-100 [transition:transform_220ms_cubic-bezier(0.23,1,0.32,1)_40ms,opacity_180ms_ease_40ms] group-has-focus-visible/island:transition-none group-data-[hidden=true]/island:transform-[translateY(-6px)_scale(0.96)] group-data-[hidden=true]/island:opacity-0 group-data-[hidden=true]/island:[transition:transform_140ms_cubic-bezier(0.23,1,0.32,1),opacity_140ms_ease] group-data-[instant-reveal=true]/island:transition-none motion-reduce:group-data-hidden/island:transition-none sm:p-5 [&_[data-slot=button]:active]:transform-[scale(0.96)]"
+      class="flex origin-top transform-[translateY(0)_scale(1)] flex-col gap-4 p-4 opacity-100 [transition:transform_220ms_cubic-bezier(0.23,1,0.32,1)_40ms,opacity_180ms_ease_40ms] group-has-focus-visible/island:transition-none group-data-[hidden=true]/island:transform-[translateY(-6px)_scale(0.96)] group-data-[hidden=true]/island:opacity-0 group-data-[hidden=true]/island:[transition:transform_200ms_cubic-bezier(0.215,0.61,0.355,1),opacity_100ms_ease] group-data-[instant-reveal=true]/island:transition-none motion-reduce:group-data-hidden/island:transition-none sm:p-5 [&_[data-slot=button]:active]:transform-[scale(0.96)]"
     >
       <div
-        class="flex flex-col items-stretch gap-1 min-[360px]:flex-row min-[360px]:items-center min-[360px]:justify-between min-[380px]:gap-2"
+        class="flex flex-col items-stretch gap-1 min-[400px]:flex-row min-[400px]:items-center min-[400px]:justify-between min-[400px]:gap-2"
       >
         <a
           href="/"
-          class="focus-visible:ring-foreground flex h-11 shrink-0 items-center justify-center rounded-xl text-base font-semibold tracking-tight outline-hidden focus-visible:ring-3 min-[360px]:justify-start min-[480px]:text-xl"
+          class="focus-visible:ring-foreground flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl text-base font-semibold tracking-tight outline-hidden focus-visible:ring-3 min-[400px]:justify-start min-[480px]:text-xl"
           aria-label={t(locale, `${siteMetadata.name} home`)}
         >
+          <img
+            src="/logo-small.jpg"
+            alt=""
+            width="24"
+            height="24"
+            class="size-5 shrink-0 rounded-sm object-cover min-[480px]:size-6"
+          />
           <span>{siteMetadata.name}</span>
         </a>
 
         <nav
-          class="flex shrink-0 items-center justify-center min-[360px]:justify-start"
+          class="flex shrink-0 items-center justify-center min-[400px]:justify-start"
           aria-label={t(locale, "App actions")}
         >
           <Tooltip.Provider delayDuration={450} skipDelayDuration={300}>
@@ -282,39 +290,42 @@
                   <PauseIcon />
                 {/if}
               </Tooltip.Trigger>
-              <Tooltip.Content
-                side="bottom"
-                sideOffset={6}
-                class="trainer-island-theme">{playbackLabel}</Tooltip.Content
+              <Tooltip.Content side="bottom" sideOffset={6} class="dark"
+                >{playbackLabel}</Tooltip.Content
               >
             </Tooltip.Root>
 
             <div
-              class="visible w-11 overflow-clip opacity-100 [overflow-clip-margin:3px] [transition:width_220ms_cubic-bezier(0.23,1,0.32,1),opacity_160ms_ease,visibility_0ms] data-[visible=false]:invisible data-[visible=false]:w-0 data-[visible=false]:opacity-0 data-[visible=false]:[transition:width_220ms_cubic-bezier(0.23,1,0.32,1),opacity_80ms_ease,visibility_0ms_220ms] motion-reduce:data-visible:transition-none"
+              class={cn(
+                "w-11 overflow-clip transition-[width] [overflow-clip-margin:3px] data-[visible=false]:w-0",
+                islandLayoutMotion
+              )}
               data-visible={canToggleDirection}
               inert={!canToggleDirection}
             >
-              <Tooltip.Root disabled={hudHidden || !canToggleDirection}>
-                <Tooltip.Trigger
-                  data-slot="button"
-                  class={cn(
-                    buttonVariants({ variant: "ghost", size: "icon" }),
-                    "size-11"
-                  )}
-                  aria-label={motionDirectionToggleLabel}
-                  aria-describedby="trainer-motion-status"
-                  disabled={!canToggleDirection}
-                  onclick={actions.toggleMotionDirection}
-                >
-                  <ArrowLeftRightIcon />
-                </Tooltip.Trigger>
-                <Tooltip.Content
-                  side="bottom"
-                  sideOffset={6}
-                  class="trainer-island-theme"
-                  >{motionDirectionToggleLabel}</Tooltip.Content
-                >
-              </Tooltip.Root>
+              <div
+                class={islandPresenceMotion}
+                data-visible={canToggleDirection}
+              >
+                <Tooltip.Root disabled={hudHidden || !canToggleDirection}>
+                  <Tooltip.Trigger
+                    data-slot="button"
+                    class={cn(
+                      buttonVariants({ variant: "ghost", size: "icon" }),
+                      "size-11"
+                    )}
+                    aria-label={motionDirectionToggleLabel}
+                    aria-describedby="trainer-motion-status"
+                    disabled={!canToggleDirection}
+                    onclick={actions.toggleMotionDirection}
+                  >
+                    <ArrowLeftRightIcon />
+                  </Tooltip.Trigger>
+                  <Tooltip.Content side="bottom" sideOffset={6} class="dark"
+                    >{motionDirectionToggleLabel}</Tooltip.Content
+                  >
+                </Tooltip.Root>
+              </div>
             </div>
 
             <Tooltip.Root disabled={hudHidden}>
@@ -330,10 +341,8 @@
               >
                 <BookOpenIcon />
               </Tooltip.Trigger>
-              <Tooltip.Content
-                side="bottom"
-                sideOffset={6}
-                class="trainer-island-theme">{guideButtonTitle}</Tooltip.Content
+              <Tooltip.Content side="bottom" sideOffset={6} class="dark"
+                >{guideButtonTitle}</Tooltip.Content
               >
             </Tooltip.Root>
 
@@ -349,10 +358,7 @@
               >
                 <SettingsIcon />
               </Tooltip.Trigger>
-              <Tooltip.Content
-                side="bottom"
-                sideOffset={6}
-                class="trainer-island-theme"
+              <Tooltip.Content side="bottom" sideOffset={6} class="dark"
                 >{t(locale, "Open controls")}</Tooltip.Content
               >
             </Tooltip.Root>
@@ -362,7 +368,7 @@
               showTooltip
               tooltipDisabled={hudHidden}
               triggerClass="min-h-11 min-w-11 border-transparent bg-transparent hover:bg-muted"
-              contentClass="trainer-island-theme"
+              contentClass="dark"
               variant="default"
               bind:open={languageSelectOpen}
               onOpenChange={actions.handleHeaderSelectOpenChange}
@@ -379,21 +385,13 @@
         bind:presetSelectOpen
         bind:patternSelectOpen
       />
-      <div class="min-h-17">
-        {#key isLilacChaserMode}
-          <div
-            class="animate-[island-adjustments-enter_180ms_cubic-bezier(0.23,1,0.32,1)_backwards] motion-reduce:animate-none"
-          >
-            <TrainerHudQuickAdjustments
-              {settings}
-              {isLilacChaserMode}
-              {actions}
-              {locale}
-              bind:lilacChaserColorSelectOpen
-            />
-          </div>
-        {/key}
-      </div>
+      <TrainerHudQuickAdjustments
+        {settings}
+        {isLilacChaserMode}
+        {actions}
+        {locale}
+        bind:lilacChaserColorSelectOpen
+      />
     </div>
   </header>
 </div>

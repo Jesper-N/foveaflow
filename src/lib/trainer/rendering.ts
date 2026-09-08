@@ -35,6 +35,23 @@ export interface CanvasTheme {
 
 export type CanvasColorMode = "light" | "dark";
 
+export const getThemeTargetColor = (node: HTMLElement): string => {
+  const canvas = document.createElement("canvas");
+  canvas.width = 1;
+  canvas.height = 1;
+  const context = canvas.getContext("2d");
+  if (!context) {
+    return "#000000";
+  }
+  // Resolve the theme's color space to the sRGB hex used by color inputs.
+  context.fillStyle = getComputedStyle(node)
+    .getPropertyValue("--primary")
+    .trim();
+  context.fillRect(0, 0, 1, 1);
+  const channels = context.getImageData(0, 0, 1, 1).data.slice(0, 3);
+  return `#${Array.from(channels, (channel) => channel.toString(16).padStart(2, "0")).join("")}`;
+};
+
 interface LetterContext {
   elapsedSec: number;
   travelPx: number;

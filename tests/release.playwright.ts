@@ -40,7 +40,7 @@ const test = base.extend({
 
 const readSettings = (page: Page): Promise<TrainerSettings | null> =>
   page.evaluate(() =>
-    JSON.parse(localStorage.getItem("foveaflow.settings.v2") ?? "null")
+    JSON.parse(localStorage.getItem("foveaflow.settings.v3") ?? "null")
   );
 
 const openPage = async (page: Page, path: string) => {
@@ -281,6 +281,9 @@ test("island offers the controls supported by the selected drill", async ({
   const pattern = page.locator(
     '[data-trainer-shortcut-select="header-pattern"]'
   );
+  const speed = page.locator(
+    '[data-slot="slider"][aria-label="Header target speed"]'
+  );
   await expect(reverse).toBeVisible();
   await choose(page, "pattern", "Random", hasTouch);
   await expect(reverse).toBeHidden();
@@ -295,15 +298,17 @@ test("island offers the controls supported by the selected drill", async ({
   await expect(
     page.getByRole("button", { name: "Lilac Chaser ball color" })
   ).toBeVisible();
+  await expect(speed).toBeHidden();
   await expect(
-    page.locator('[data-slot="slider"][aria-label="Header target speed"]')
-  ).toHaveCount(0);
+    page.locator('[data-slot="field-group"][inert]').filter({ has: speed })
+  ).toHaveCount(1);
 
   await choose(page, "mode", "Smooth Pursuit", hasTouch);
   await expect(pattern).toBeVisible();
+  await expect(speed).toBeVisible();
   await expect(
-    page.locator('[data-slot="slider"][aria-label="Header target speed"]')
-  ).toBeVisible();
+    page.locator('[data-slot="field-group"][inert]').filter({ has: speed })
+  ).toHaveCount(0);
   await expect(
     page.getByRole("button", { name: "Lilac Chaser ball color" })
   ).toHaveCount(0);
@@ -408,6 +413,108 @@ test("settings redraw, survive reload, and reset through the controls", async ({
   await page.keyboard.press("Escape");
   await expectAnimation(page);
 });
+
+test("target defaults follow the theme while custom colors persist", async ({
+  page,
+}) => {
+  await openPage(page, "/circle/");
+  await expectTrainer(page, "pursuit", "circle");
+  await page.getByRole("button", { exact: true, name: "Pause motion" }).click();
+  await page.getByRole("button", { name: "Open controls" }).click();
+  const color = page.getByLabel("Ball color", { exact: true });
+  const expectThemeTarget = async () => {
+    const primary = await page.evaluate(() => {
+      const sample = document.createElement("canvas");
+      const context = sample.getContext("2d");
+      if (!context) {
+        throw new Error("Canvas context unavailable");
+      }
+      context.fillStyle = getComputedStyle(document.documentElement)
+        .getPropertyValue("--primary")
+        .trim();
+      context.fillRect(0, 0, 1, 1);
+      const [red, green, blue] = context.getImageData(0, 0, 1, 1).data;
+      return [red, green, blue];
+    });
+    const hex = `#${primary.map((channel) => channel.toString(16).padStart(2, "0")).join("")}`;
+    await expect(color).toHaveValue(hex);
+    await expect
+      .poll(() =>
+        page
+          .locator("canvas")
+          .evaluate((canvas: HTMLCanvasElement, expected) => {
+            const pixels = canvas
+              .getContext("2d")
+              ?.getImageData(0, 0, canvas.width, canvas.height).data;
+            if (!pixels) {
+              return false;
+            }
+            for (let index = 0; index < pixels.length; index += 4) {
+              if (
+                pixels[index] === expected[0] &&
+                pixels[index + 1] === expected[1] &&
+                pixels[index + 2] === expected[2] &&
+                pixels[index + 3] === 255
+              ) {
+                return true;
+              }
+            }
+            return false;
+          }, primary)
+      )
+      .toBe(true);
+    await expect
+      .poll(() => readSettings(page))
+      .toMatchObject({ ballColor: null });
+  };
+  await expectThemeTarget();
+  await section(page, "display");
+  await page.getByRole("switch", { name: "Use dark theme" }).click();
+  await section(page, "targets");
+  await expectThemeTarget();
+  // The previous default must remain available as an explicitly chosen color.
+  await color.fill("#76d900");
+  await expect
+    .poll(() => readSettings(page))
+    .toMatchObject({ ballColor: "#76d900" });
+  await page.reload();
+  await expectTrainer(page, "pursuit", "circle");
+  await page.getByRole("button", { name: "Open controls" }).click();
+  await expect(color).toHaveValue("#76d900");
+  await section(page, "display");
+  await page.getByRole("switch", { name: "Use dark theme" }).click();
+  await section(page, "targets");
+  await expect(color).toHaveValue("#76d900");
+  await section(page, "general");
+  await page.getByRole("button", { name: "Reset to defaults" }).click();
+  await section(page, "targets");
+  await expectThemeTarget();
+});
+
+for (const legacyColor of ["#76d900", "#2488cc"]) {
+  test(`saved target color migrates from v2: ${legacyColor}`, async ({
+    page,
+  }) => {
+    await page.addInitScript((ballColor) => {
+      localStorage.setItem(
+        "foveaflow.settings.v2",
+        JSON.stringify({ ballColor, baseRadiusPx: 51 })
+      );
+    }, legacyColor);
+    await openPage(page, "/circle/");
+    await expect
+      .poll(() => readSettings(page))
+      .toMatchObject({
+        ballColor: legacyColor === "#76d900" ? null : legacyColor,
+        baseRadiusPx: 51,
+      });
+    await expect
+      .poll(() =>
+        page.evaluate(() => localStorage.getItem("foveaflow.settings.v2"))
+      )
+      .toBeNull();
+  });
+}
 
 test("Lilac color and scale update the paused drill and persist", async ({
   page,

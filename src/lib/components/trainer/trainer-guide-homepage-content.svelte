@@ -51,7 +51,7 @@
       {#each trainingModeNotes as trainingModeNote (trainingModeNote.title)}
         <li class="grid grid-cols-[2.25rem_1fr] gap-4">
           <span
-            class="bg-accent/12 text-brand-foreground flex size-8 items-center justify-center rounded-full shadow-[inset_0_0_0_1px_rgba(118,217,0,0.14)]"
+            class="bg-primary/12 text-brand-foreground inset-ring-primary/15 flex size-8 items-center justify-center rounded-full inset-ring"
             aria-hidden="true"
           >
             <TargetIcon class="size-4" />

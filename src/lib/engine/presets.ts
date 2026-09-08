@@ -27,7 +27,8 @@ export interface TrainerSettings {
   targetCount: number;
   distractorCount: number;
   showTrail: boolean;
-  ballColor: string;
+  /** Null follows the current theme's primary color. */
+  ballColor: string | null;
   distractorBrightness: number;
   targetOpacity: number;
   targetForm: TargetForm;
@@ -41,12 +42,11 @@ export interface TrainerSettings {
   calibration: Calibration;
 }
 
-export const DEFAULT_BALL_COLOR = "#76d900";
 export const DEFAULT_LETTER_SCALE = 0.5;
 
 export const exercisePresets = [
   {
-    baseRadiusPx: 35,
+    baseRadiusPx: 40,
     distractorCount: 0,
     id: "pursuit",
     name: "Smooth Pursuit",
@@ -57,7 +57,7 @@ export const exercisePresets = [
     targetCount: 1,
   },
   {
-    baseRadiusPx: 35,
+    baseRadiusPx: 40,
     distractorCount: 0,
     id: "reactionTime",
     name: "Reaction jumps",
@@ -68,7 +68,7 @@ export const exercisePresets = [
     targetCount: 1,
   },
   {
-    baseRadiusPx: 35,
+    baseRadiusPx: 40,
     distractorCount: 5,
     id: "mot",
     name: "Multiple Distractions",
@@ -79,7 +79,7 @@ export const exercisePresets = [
     targetCount: 1,
   },
   {
-    baseRadiusPx: 35,
+    baseRadiusPx: 40,
     distractorCount: 0,
     id: "lilacChaser",
     name: "Lilac Chaser",
@@ -125,10 +125,10 @@ export const settingsFromPreset = (
   calibration: Calibration,
   overrides: Partial<TrainerSettings> = {}
 ): TrainerSettings => ({
-  ballColor: DEFAULT_BALL_COLOR,
+  ballColor: null,
   baseRadiusPx: preset.baseRadiusPx,
   calibration,
-  distractorBrightness: 0.7,
+  distractorBrightness: 0.45,
   distractorCount: preset.distractorCount,
   letterColor: "#000000",
   letterEnabled: false,

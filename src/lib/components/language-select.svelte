@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { buttonVariants } from "$lib/components/ui/button/index.js";
   import * as Select from "$lib/components/ui/select/index.js";
   import * as Tooltip from "$lib/components/ui/tooltip/index.js";
   import {
@@ -45,7 +46,6 @@
   });
 
   let selectedLanguage = $derived(getLanguageOption(languageState.locale));
-  let triggerSize = $derived(showSelectedName ? size : "icon");
   let triggerVariant = $derived(
     variant ?? (showSelectedName ? "default" : "outline")
   );
@@ -60,10 +60,13 @@
 {#snippet languageTrigger(props: HTMLButtonAttributes = {})}
   <Select.Trigger
     {...props}
-    size={triggerSize}
-    variant={triggerVariant}
+    {size}
     class={cn(
       "shrink-0",
+      triggerVariant === "outline" &&
+        buttonVariants({ variant: "outline", size }),
+      !showSelectedName &&
+        "size-9 justify-center rounded-4xl p-0 [&>svg:last-child]:hidden",
       showSelectedName && "min-w-36 justify-between",
       showSelectedName &&
         collapseNameOnSmall &&
