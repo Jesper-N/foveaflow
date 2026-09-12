@@ -83,7 +83,6 @@
   <TrainerGuidePopover
     activeTrainingModeGuide={controller.activeTrainingModeGuide}
     guideSeoContent={controller.guideSeoContent}
-    guideUseCases={controller.guideUseCases}
     hasActiveRoute={Boolean(controller.activeRoute)}
     guidePatternId={controller.activeRoute?.indexable === false
       ? controller.activeRoute.patternId

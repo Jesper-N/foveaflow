@@ -43,8 +43,8 @@
         <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
           <h3 class="flex items-center gap-3 text-xl font-semibold">
             <span
-              class="bg-muted flex size-10 shrink-0 items-center justify-center rounded-xl"
-              ><ModePathPreview mode={guide.mode} /></span
+              class="bg-primary flex size-10 shrink-0 items-center justify-center rounded-xl"
+              ><ModePathPreview mode={guide.mode} variant="badge" /></span
             >
             {t(locale, guide.title)}
           </h3>

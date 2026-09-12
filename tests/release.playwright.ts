@@ -342,6 +342,7 @@ test("island offers the controls supported by the selected drill", async ({
 
 test("settings keep the selected unit and reopen the last category", async ({
   page,
+  hasTouch,
 }) => {
   await openPage(page, "/circle/");
   await page.getByRole("button", { name: "Open controls" }).click();
@@ -356,6 +357,10 @@ test("settings keep the selected unit and reopen the last category", async ({
       speed: { unit: "cm/s" },
     });
   await page.getByRole("button", { exact: true, name: "Done" }).click();
+  await expect(page.getByRole("dialog")).not.toBeVisible();
+  if (!hasTouch) {
+    await hoverIsland(page);
+  }
   await page.getByRole("button", { name: "Open controls" }).click();
   await expect(
     page.getByRole("heading", { exact: true, level: 2, name: "Drill" })

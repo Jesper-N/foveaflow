@@ -42,8 +42,6 @@ import type { TrainerShortcutAction } from "$lib/trainer/keyboard";
 import {
   canPatternToggleDirection,
   controlSections,
-  guideUseCasesByMode,
-  homepageGuideUseCases,
 } from "$lib/trainer/options";
 import type { ControlSectionId } from "$lib/trainer/options";
 import type { CanvasColorMode } from "$lib/trainer/rendering";
@@ -214,9 +212,6 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
   );
   const activeTrainingModeGuide = $derived(
     getTrainingModeGuide(settings.presetId)
-  );
-  const guideUseCases = $derived(
-    activeRoute ? guideUseCasesByMode[settings.presetId] : homepageGuideUseCases
   );
   const isDarkMode = $derived(colorMode === "dark");
   const settingsSnapshot = $derived($state.snapshot(settings));
@@ -917,9 +912,6 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     flushSettings: settingsSaver.flush,
     get guideSeoContent() {
       return guideSeoContent;
-    },
-    get guideUseCases() {
-      return guideUseCases;
     },
     handleGuidePopoverToggle,
     handlePopState,

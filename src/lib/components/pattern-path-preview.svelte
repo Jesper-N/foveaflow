@@ -1,12 +1,9 @@
 <script lang="ts">
   import type { PatternId } from "$lib/engine/types";
 
-  import {
-    distractorDots,
-    jumpDots,
-    pathPreviewClass,
-    previewPaths,
-  } from "./path-preview-data";
+  import MultipleDistractionsGlyph from "./multiple-distractions-glyph.svelte";
+  import { pathPreviewVariants, previewPaths } from "./path-preview-data";
+  import ReactionJumpGlyph from "./reaction-jump-glyph.svelte";
 
   let { patternId }: { patternId: PatternId } = $props();
   const path = $derived(previewPaths[patternId]);
@@ -14,7 +11,7 @@
 
 <svg
   data-slot="pattern-path-preview"
-  class={pathPreviewClass}
+  class={pathPreviewVariants()}
   viewBox="0 0 24 24"
   fill="none"
   stroke="currentColor"
@@ -34,27 +31,8 @@
   {#if patternId === "randomWalk"}
     <circle cx="21" cy="7" r="1.8" fill="currentColor" stroke="none" />
   {:else if patternId === "teleport"}
-    {#each jumpDots as dot (dot.x)}
-      <circle
-        cx={dot.x}
-        cy={dot.y}
-        r="2.3"
-        fill="currentColor"
-        stroke="none"
-        opacity={dot.opacity}
-      />
-    {/each}
+    <ReactionJumpGlyph />
   {:else if patternId === "multipleObjectTracking"}
-    <g
-      class="text-muted-foreground"
-      fill="currentColor"
-      stroke="none"
-      opacity="0.65"
-    >
-      {#each distractorDots as dot (dot.x)}
-        <circle cx={dot.x} cy={dot.y} r="1.6" />
-      {/each}
-    </g>
-    <circle cx="12" cy="12" r="2.5" fill="currentColor" stroke="none" />
+    <MultipleDistractionsGlyph />
   {/if}
 </svg>
