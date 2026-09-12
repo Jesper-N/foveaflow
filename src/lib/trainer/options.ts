@@ -1,4 +1,4 @@
-import type { LetterWeight, TrainingMode } from "$lib/engine/presets";
+import type { LetterWeight } from "$lib/engine/presets";
 import { getPreset, patternOptions } from "$lib/engine/presets";
 import type { PatternId, SpeedUnit, TargetForm } from "$lib/engine/types";
 import { behaviorOptions } from "$lib/trainer/behavior";
@@ -13,19 +13,6 @@ export interface ControlSection {
   label: string;
   icon: ControlIconId;
 }
-
-export const guideUseCasesByMode = {
-  lilacChaser: ["Steady fixation", "Peripheral awareness", "Screen reset"],
-  mot: ["Selective attention", "Visual clutter", "Game awareness"],
-  pursuit: ["Visual tracking", "Gamer warm-up", "Screen-work reset"],
-  reactionTime: ["Quick refocus", "Target acquisition", "Reaction warm-up"],
-} as const satisfies Record<TrainingMode, readonly string[]>;
-
-export const homepageGuideUseCases = [
-  "FPS warmup",
-  "Screen break",
-  "Visual practice",
-] as const;
 
 export const controlSections = [
   { icon: "target", id: "drill", label: "Drill" },

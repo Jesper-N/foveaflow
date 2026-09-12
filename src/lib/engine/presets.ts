@@ -69,7 +69,7 @@ export const exercisePresets = [
   },
   {
     baseRadiusPx: 40,
-    distractorCount: 5,
+    distractorCount: 10,
     id: "mot",
     name: "Multiple Distractions",
     patternId: "multipleObjectTracking",

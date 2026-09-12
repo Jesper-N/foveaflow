@@ -22,7 +22,6 @@
   let {
     activeTrainingModeGuide,
     guideSeoContent,
-    guideUseCases,
     hasActiveRoute,
     guidePatternId,
     openGuideFaqQuestion,
@@ -31,7 +30,6 @@
   }: {
     activeTrainingModeGuide: TrainingModeGuide;
     guideSeoContent: PageSeoContent;
-    guideUseCases: readonly string[];
     hasActiveRoute: boolean;
     guidePatternId?: PatternId;
     openGuideFaqQuestion: string | null;
@@ -142,7 +140,7 @@
 
   {@render closeButton()}
 
-  <TrainerGuideHomepageContent {guideUseCases} {locale} />
+  <TrainerGuideHomepageContent {locale} />
 {/snippet}
 
 {#snippet routeContent()}
@@ -219,7 +217,7 @@
         {#each activeTrainingModeGuide.steps as step, index (step)}
           <li class="grid grid-cols-[2rem_minmax(0,1fr)] items-start gap-3">
             <span
-              class="bg-primary/12 text-brand-foreground inset-ring-primary/15 flex size-8 items-center justify-center rounded-full text-xs font-semibold tabular-nums inset-ring"
+              class="bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-full text-xs font-semibold tabular-nums"
               aria-hidden="true"
             >
               {index + 1}
@@ -293,19 +291,6 @@
               </div>
             </div>
           </div>
-        {/each}
-      </div>
-
-      <div
-        class="mt-6 flex flex-wrap gap-2"
-        aria-label={`${t(locale, "Best uses for")} ${t(locale, activeTrainingModeGuide.title)}`}
-      >
-        {#each guideUseCases as useCase (useCase)}
-          <span
-            class="border-border/40 bg-muted/35 text-muted-foreground rounded-full border px-3 py-1 text-xs font-medium"
-          >
-            {t(locale, useCase)}
-          </span>
         {/each}
       </div>
 

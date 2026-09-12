@@ -1,9 +1,18 @@
 import { pathDefinitions } from "$lib/engine/path-definitions";
 import type { PatternBounds } from "$lib/engine/pattern-paths";
 import type { PatternId } from "$lib/engine/types";
+import { tv } from "tailwind-variants";
 
-export const pathPreviewClass =
-  "text-primary size-5 shrink-0 in-data-highlighted:text-accent-foreground";
+export const pathPreviewVariants = tv({
+  base: "in-data-highlighted:text-accent-foreground size-5 shrink-0",
+  defaultVariants: { variant: "default" },
+  variants: {
+    variant: {
+      badge: "text-primary-foreground",
+      default: "text-foreground",
+    },
+  },
+});
 
 const previewBounds: PatternBounds = {
   bottom: 19,
@@ -56,15 +65,3 @@ export const previewPaths: Record<PatternId, string | null> = {
   wave: traceDefinition("wave"),
   zigZag: traceDefinition("zigZag"),
 };
-
-export const distractorDots = [
-  { x: 5, y: 6 },
-  { x: 19, y: 7 },
-  { x: 4, y: 17 },
-  { x: 18, y: 19 },
-];
-export const jumpDots = [
-  { opacity: 0.3, x: 4.5, y: 17.5 },
-  { opacity: 0.55, x: 11, y: 6.5 },
-  { opacity: 1, x: 19.5, y: 14.5 },
-];

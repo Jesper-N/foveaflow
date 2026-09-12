@@ -11,20 +11,24 @@
 
 <script lang="ts">
   import type { TrainingMode } from "$lib/engine/presets";
+  import type { VariantProps } from "tailwind-variants";
 
-  import {
-    distractorDots,
-    jumpDots,
-    pathPreviewClass,
-    previewPaths,
-  } from "./path-preview-data";
+  import MultipleDistractionsGlyph from "./multiple-distractions-glyph.svelte";
+  import { pathPreviewVariants, previewPaths } from "./path-preview-data";
+  import ReactionJumpGlyph from "./reaction-jump-glyph.svelte";
 
-  let { mode }: { mode: TrainingMode } = $props();
+  let {
+    mode,
+    variant = "default",
+  }: {
+    mode: TrainingMode;
+    variant?: VariantProps<typeof pathPreviewVariants>["variant"];
+  } = $props();
 </script>
 
 <svg
   data-slot="mode-path-preview"
-  class={pathPreviewClass}
+  class={pathPreviewVariants({ variant })}
   viewBox="0 0 24 24"
   fill="none"
   stroke="currentColor"
@@ -37,28 +41,9 @@
     <path d={previewPaths.randomWalk} />
     <circle cx="21" cy="7" r="1.8" fill="currentColor" stroke="none" />
   {:else if mode === "reactionTime"}
-    {#each jumpDots as dot (dot.x)}
-      <circle
-        cx={dot.x}
-        cy={dot.y}
-        r="2.3"
-        fill="currentColor"
-        stroke="none"
-        opacity={dot.opacity}
-      />
-    {/each}
+    <ReactionJumpGlyph />
   {:else if mode === "mot"}
-    <g
-      class="text-muted-foreground"
-      fill="currentColor"
-      stroke="none"
-      opacity="0.65"
-    >
-      {#each distractorDots as dot (dot.x)}
-        <circle cx={dot.x} cy={dot.y} r="1.6" />
-      {/each}
-    </g>
-    <circle cx="12" cy="12" r="2.5" fill="currentColor" stroke="none" />
+    <MultipleDistractionsGlyph />
   {:else}
     {#each lilacDots as dot (dot.index)}
       {#if dot.index !== 2}
@@ -68,7 +53,6 @@
           r="1.25"
           fill="currentColor"
           stroke="none"
-          opacity="0.75"
         />
       {/if}
     {/each}

@@ -2,19 +2,12 @@
   import ModePathPreview from "$lib/components/mode-path-preview.svelte";
   import { Button } from "$lib/components/ui/button/index.js";
   import { homepageSeoContent } from "$lib/content/page-copy";
-  import { siteMetadata } from "$lib/content/site";
   import { trainingModeGuides } from "$lib/content/training";
   import type { AppLocale } from "$lib/i18n/locales";
   import { t } from "$lib/i18n/translate";
   import BookOpenIcon from "@lucide/svelte/icons/book-open";
 
-  let {
-    guideUseCases,
-    locale,
-  }: {
-    guideUseCases: readonly string[];
-    locale: AppLocale;
-  } = $props();
+  let { locale }: { locale: AppLocale } = $props();
 </script>
 
 <div
@@ -51,10 +44,10 @@
       {#each trainingModeGuides as guide (guide.mode)}
         <li class="grid grid-cols-[2rem_minmax(0,1fr)] items-start gap-3">
           <span
-            class="bg-primary/12 text-brand-foreground inset-ring-primary/15 flex size-8 items-center justify-center rounded-full inset-ring"
+            class="bg-primary flex size-8 items-center justify-center rounded-full"
             aria-hidden="true"
           >
-            <ModePathPreview mode={guide.mode} />
+            <ModePathPreview mode={guide.mode} variant="badge" />
           </span>
           <div class="min-w-0 pt-0.5">
             <p class="text-foreground leading-6 font-semibold">
@@ -78,19 +71,6 @@
     <p class="text-muted-foreground mt-6 text-sm leading-6 text-pretty">
       {t(locale, homepageSeoContent.trustNote)}
     </p>
-
-    <div
-      class="mt-6 flex flex-wrap gap-2"
-      aria-label={`${t(locale, "Best uses for")} ${siteMetadata.name}`}
-    >
-      {#each guideUseCases as useCase (useCase)}
-        <span
-          class="border-border/40 bg-muted/35 text-muted-foreground rounded-full border px-3 py-1 text-xs font-medium"
-        >
-          {t(locale, useCase)}
-        </span>
-      {/each}
-    </div>
 
     <Button
       href="/guide/"
