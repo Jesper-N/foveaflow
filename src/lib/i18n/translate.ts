@@ -73,6 +73,12 @@ export const loadDictionary = async (locale: AppLocale) => {
   }
 };
 
+export const formatDate = (locale: AppLocale, date: string): string =>
+  new Intl.DateTimeFormat(locale, {
+    dateStyle: "medium",
+    timeZone: "UTC",
+  }).format(new Date(date));
+
 export const t = (locale: AppLocale, text: string): string => {
   if (locale === defaultLocale) {
     return text;

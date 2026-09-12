@@ -1,12 +1,12 @@
 <script lang="ts">
+  import ModePathPreview from "$lib/components/mode-path-preview.svelte";
   import { Button } from "$lib/components/ui/button/index.js";
   import { homepageSeoContent } from "$lib/content/page-copy";
   import { siteMetadata } from "$lib/content/site";
-  import { trainingModeNotes } from "$lib/content/training";
+  import { trainingModeGuides } from "$lib/content/training";
   import type { AppLocale } from "$lib/i18n/locales";
   import { t } from "$lib/i18n/translate";
   import BookOpenIcon from "@lucide/svelte/icons/book-open";
-  import TargetIcon from "@lucide/svelte/icons/crosshair";
 
   let {
     guideUseCases,
@@ -48,20 +48,22 @@
       {t(locale, "Drills")}
     </h3>
     <ul class="mt-6 grid gap-5">
-      {#each trainingModeNotes as trainingModeNote (trainingModeNote.title)}
-        <li class="grid grid-cols-[2.25rem_1fr] gap-4">
+      {#each trainingModeGuides as guide (guide.mode)}
+        <li class="grid grid-cols-[2rem_minmax(0,1fr)] items-start gap-3">
           <span
             class="bg-primary/12 text-brand-foreground inset-ring-primary/15 flex size-8 items-center justify-center rounded-full inset-ring"
             aria-hidden="true"
           >
-            <TargetIcon class="size-4" />
+            <ModePathPreview mode={guide.mode} />
           </span>
-          <span class="text-muted-foreground pt-1 leading-6 text-pretty">
-            <span class="text-foreground font-semibold">
-              {t(locale, trainingModeNote.title)}:
-            </span>
-            {t(locale, trainingModeNote.body)}
-          </span>
+          <div class="min-w-0 pt-0.5">
+            <p class="text-foreground leading-6 font-semibold">
+              {t(locale, guide.title)}
+            </p>
+            <p class="text-muted-foreground mt-0.5 leading-6 text-pretty">
+              {t(locale, guide.summary)}
+            </p>
+          </div>
         </li>
       {/each}
     </ul>
@@ -93,7 +95,7 @@
     <Button
       href="/guide/"
       size="lg"
-      class="guide-enter mt-6 w-full [animation-delay:130ms]"
+      class="guide-enter mt-6 h-auto min-h-11 w-full gap-2 py-2 whitespace-normal [animation-delay:130ms]"
     >
       <BookOpenIcon data-icon="inline-start" />
       <span>{t(locale, "Read the full guide")}</span>

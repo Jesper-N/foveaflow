@@ -1,5 +1,7 @@
 <script lang="ts">
   import "./trainer-guide-popover.css";
+  import ModePathPreview from "$lib/components/mode-path-preview.svelte";
+  import PatternPathPreview from "$lib/components/pattern-path-preview.svelte";
   import TrainerGuideHomepageContent from "$lib/components/trainer/trainer-guide-homepage-content.svelte";
   import { Button } from "$lib/components/ui/button/index.js";
   import { legalPageLinks } from "$lib/content/legal";
@@ -7,11 +9,13 @@
   import { homepageSeoContent } from "$lib/content/page-copy";
   import { siteMetadata } from "$lib/content/site";
   import type { TrainingModeGuide } from "$lib/content/training";
+  import type { PatternId } from "$lib/engine/types";
   import { languageState } from "$lib/i18n/state.svelte";
   import { t } from "$lib/i18n/translate";
   import BookOpenIcon from "@lucide/svelte/icons/book-open";
   import ExternalLinkIcon from "@lucide/svelte/icons/external-link";
   import FileTextIcon from "@lucide/svelte/icons/file-text";
+  import PlusIcon from "@lucide/svelte/icons/plus";
   import ShieldCheckIcon from "@lucide/svelte/icons/shield-check";
   import XIcon from "@lucide/svelte/icons/x";
 
@@ -20,6 +24,7 @@
     guideSeoContent,
     guideUseCases,
     hasActiveRoute,
+    guidePatternId,
     openGuideFaqQuestion,
     onGuidePopoverToggle,
     toggleGuideFaq,
@@ -28,6 +33,7 @@
     guideSeoContent: PageSeoContent;
     guideUseCases: readonly string[];
     hasActiveRoute: boolean;
+    guidePatternId?: PatternId;
     openGuideFaqQuestion: string | null;
     onGuidePopoverToggle: (event: ToggleEvent) => void;
     toggleGuideFaq: (question: string) => void;
@@ -61,15 +67,14 @@
 {#snippet closeButton()}
   <Button
     bind:ref={closeButtonElement}
-    variant="ghost"
-    class="bg-secondary absolute top-4 right-4"
-    size="icon-sm"
+    variant="secondary"
+    class="absolute top-4 right-4 size-10"
+    size="icon"
     aria-label={t(locale, "Close")}
     popovertarget="trainer-guide-popover"
     popovertargetaction="hide"
   >
     <XIcon />
-    <span class="sr-only">{t(locale, "Close")}</span>
   </Button>
 {/snippet}
 
@@ -91,17 +96,28 @@
         rel="noopener noreferrer"
         variant="ghost"
         size="xs"
+        class="min-h-9 gap-2"
       >
-        <ExternalLinkIcon class="size-3" />
-        <span class="pl-1">{t(locale, "Source")}</span>
+        <ExternalLinkIcon class="size-3.5" />
+        <span>{t(locale, "Source")}</span>
       </Button>
-      <Button href={legalPageLinks.privacy.path} variant="ghost" size="xs">
-        <ShieldCheckIcon class="size-3" />
-        <span class="pl-1">{t(locale, legalPageLinks.privacy.label)}</span>
+      <Button
+        href={legalPageLinks.privacy.path}
+        variant="ghost"
+        size="xs"
+        class="min-h-9 gap-2"
+      >
+        <ShieldCheckIcon class="size-3.5" />
+        <span>{t(locale, legalPageLinks.privacy.label)}</span>
       </Button>
-      <Button href={legalPageLinks.terms.path} variant="ghost" size="xs">
-        <FileTextIcon class="size-3" />
-        <span class="pl-1">{t(locale, legalPageLinks.terms.label)}</span>
+      <Button
+        href={legalPageLinks.terms.path}
+        variant="ghost"
+        size="xs"
+        class="min-h-9 gap-2"
+      >
+        <FileTextIcon class="size-3.5" />
+        <span>{t(locale, legalPageLinks.terms.label)}</span>
       </Button>
     </div>
   </footer>
@@ -132,13 +148,18 @@
 {#snippet routeContent()}
   <div class="guide-enter grid min-w-0 gap-2 pr-12 [--guide-enter-y:-0.25rem]">
     <p
-      class="text-brand-foreground text-[0.7rem] leading-4 font-semibold uppercase"
+      class="text-brand-foreground flex items-center gap-2.5 text-[0.7rem] leading-4 font-semibold uppercase"
     >
+      {#if guidePatternId}
+        <PatternPathPreview patternId={guidePatternId} />
+      {:else}
+        <ModePathPreview mode={activeTrainingModeGuide.mode} />
+      {/if}
       {t(locale, guideSeoContent.kicker)}
     </p>
     <h2
       id="trainer-guide-popover-title"
-      class="max-w-[28ch] text-2xl leading-[1.04] font-semibold text-balance sm:text-3xl lg:text-[2.125rem]"
+      class="max-w-[28ch] text-2xl leading-tight font-semibold text-balance sm:text-3xl lg:text-[2.125rem]"
     >
       {t(locale, guideSeoContent.heading)}
     </h2>
@@ -172,7 +193,11 @@
         {/each}
       </div>
 
-      <Button href="/guide/" size="lg" class="h-12 w-full gap-2 text-base">
+      <Button
+        href="/guide/"
+        size="lg"
+        class="h-auto min-h-11 w-full gap-2 py-2 whitespace-normal"
+      >
         <BookOpenIcon data-icon="inline-start" />
         <span>{t(locale, "Read full guide")}</span>
       </Button>
@@ -192,7 +217,7 @@
 
       <ol class="mt-6 grid gap-5">
         {#each activeTrainingModeGuide.steps as step, index (step)}
-          <li class="grid grid-cols-[2.25rem_1fr] gap-4">
+          <li class="grid grid-cols-[2rem_minmax(0,1fr)] items-start gap-3">
             <span
               class="bg-primary/12 text-brand-foreground inset-ring-primary/15 flex size-8 items-center justify-center rounded-full text-xs font-semibold tabular-nums inset-ring"
               aria-hidden="true"
@@ -233,7 +258,7 @@
           <div class="py-4 first:pt-0 last:pb-0">
             <button
               type="button"
-              class="text-foreground hover:text-foreground/90 focus-visible:ring-foreground flex min-h-10 w-full cursor-pointer items-center justify-between gap-3 text-left text-sm font-semibold outline-hidden transition-colors duration-150 ease-out focus-visible:ring-3"
+              class="text-foreground hover:text-foreground/90 focus-visible:ring-ring/50 ring-offset-popover flex min-h-10 w-full cursor-pointer items-center justify-between gap-3 rounded-md text-left text-sm font-semibold outline-hidden transition-colors duration-150 ease-out focus-visible:ring-2 focus-visible:ring-offset-2 motion-reduce:transition-none"
               aria-expanded={faqOpen}
               aria-controls={`trainer-guide-faq-answer-${index}`}
               data-question={faqItem.question}
@@ -242,12 +267,12 @@
               <span>{t(locale, faqItem.question)}</span>
               <span
                 class={[
-                  "text-muted-foreground flex size-6 shrink-0 items-center justify-center rounded-full text-base leading-none transition-transform duration-200 ease-out",
+                  "text-muted-foreground flex size-6 shrink-0 items-center justify-center rounded-full transition-transform duration-200 ease-out motion-reduce:transition-none",
                   faqOpen && "rotate-45",
                 ]}
                 aria-hidden="true"
               >
-                +
+                <PlusIcon class="size-4" />
               </span>
             </button>
             <div
@@ -261,7 +286,7 @@
             >
               <div class="min-h-0 overflow-hidden">
                 <p
-                  class="text-muted-foreground pb-1 text-sm leading-6 text-pretty"
+                  class="text-muted-foreground pt-2 pb-1 text-sm leading-6 text-pretty"
                 >
                   {t(locale, faqItem.answer)}
                 </p>
@@ -295,7 +320,7 @@
   id="trainer-guide-popover"
   popover="auto"
   role="dialog"
-  class="t-resize bg-popover text-popover-foreground ring-foreground/5 animation-duration-[100ms] dark:ring-foreground/10 relative inset-auto top-1/2 left-1/2 m-0 hidden max-h-[calc(100dvh-2rem)] w-[min(calc(100dvw-2rem),76rem)] transform-[translate3d(-50%,-50%,0)] overflow-auto rounded-4xl p-6 text-sm shadow-xl ring-1 outline-hidden backdrop:animate-[native-dialog-overlay-enter_100ms_ease-out] backdrop:bg-black/30 backdrop:backdrop-blur-xs motion-reduce:backdrop:animate-none sm:p-8 [&:popover-open]:grid [&:popover-open]:animate-[native-dialog-content-enter_100ms_ease-out] motion-reduce:[&:popover-open]:animate-none"
+  class="t-resize bg-popover text-popover-foreground ring-foreground/5 animation-duration-[100ms] dark:ring-foreground/10 relative inset-auto top-1/2 left-1/2 m-0 hidden max-h-[calc(100dvh-2rem)] w-[min(calc(100dvw-2rem),76rem)] transform-[translate3d(-50%,-50%,0)] overflow-auto overscroll-contain rounded-4xl p-6 text-sm shadow-xl ring-1 outline-hidden backdrop:animate-[native-dialog-overlay-enter_100ms_ease-out] backdrop:bg-black/30 backdrop:backdrop-blur-xs motion-reduce:backdrop:animate-none sm:p-8 [&:popover-open]:grid [&:popover-open]:animate-[native-dialog-content-enter_100ms_ease-out] motion-reduce:[&:popover-open]:animate-none"
   aria-labelledby="trainer-guide-popover-title"
   ontoggle={handlePopoverToggle}
 >

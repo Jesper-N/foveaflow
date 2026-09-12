@@ -3,7 +3,7 @@ import type { PatternBounds } from "$lib/engine/pattern-paths";
 import type { PatternId } from "$lib/engine/types";
 
 export const pathPreviewClass =
-  "text-brand-foreground size-5 shrink-0 in-data-highlighted:text-accent-foreground";
+  "text-primary size-5 shrink-0 in-data-highlighted:text-accent-foreground";
 
 const previewBounds: PatternBounds = {
   bottom: 19,

@@ -147,7 +147,7 @@ export const guideMetadata = {
   description:
     "Choose the right FoveaFlow drill for visual tracking, quick refocus, peripheral awareness, FPS warmups, and focus under distraction.",
   heading: "FoveaFlow Guide",
-  lastModified: "2026-07-10",
+  lastModified: "2026-09-12",
   summary:
     "Use this guide to choose the right FoveaFlow eye trainer drill for visual tracking, quick refocus, peripheral awareness, FPS warmups, or focus under distraction.",
   title: "FoveaFlow Guide - Eye Trainer Drills & Visual Tracking Settings",

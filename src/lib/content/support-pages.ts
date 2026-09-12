@@ -20,33 +20,24 @@ export interface SupportPage {
   kicker: string;
   heading: string;
   summary: string;
-  primaryCta: {
-    label: string;
-    href: `/${string}`;
-  };
-  secondaryCta?: {
-    label: string;
-    href: `/${string}`;
-  };
+  primaryCta: { label: string; href: `/${string}` };
+  secondaryCta?: { label: string; href: `/${string}` };
   sections: readonly SupportPageSection[];
   comparisonLabel?: string;
   comparisonRows?: readonly ComparisonRow[];
-  sourceLink?: {
-    label: string;
-    href: string;
-  };
+  sourceLink?: { label: string; href: string };
 }
 
 export const supportPages = [
   {
     description:
-      "Use FoveaFlow as a free FPS eye training warmup for visual tracking, quick refocus, target switching, and focus under distraction.",
-    heading: "FPS Eye Training Warmup",
+      "Build a short FPS eye training warmup with four free browser drills. Practice moving-target tracking, quick refocus, and attention under distraction.",
+    heading: "FPS eye training warmup",
     kicker: "FPS warmup",
-    lastModified: "2026-07-10",
+    lastModified: "2026-09-12",
     path: "/fps-eye-training/",
     primaryCta: {
-      href: "/",
+      href: "/smooth-pursuit/",
       label: "Start the warmup",
     },
     secondaryCta: {
@@ -55,129 +46,127 @@ export const supportPages = [
     },
     sections: [
       {
-        heading: "7-minute FPS eye warmup",
-        orderedList: [
-          "3 minutes Smooth Pursuit: follow the target smoothly.",
-          "2 minutes Reaction Jumps: find each new target position quickly.",
-          "1 minute Multiple Distractions: stay locked on the brightest target.",
-          "1 minute Lilac Chaser: hold center focus and notice peripheral change.",
+        body: [
+          "Treat this as a starting routine, not a target you have to finish. Choose a comfortable speed and shorten or skip any drill that does not feel right.",
         ],
-      },
-      {
-        heading: "Which drill to use",
-        list: [
-          "Smooth Pursuit is for steady moving-target tracking.",
-          "Reaction Jumps is for reaction time training, fast refocus, and target switching.",
-          "Multiple Distractions is for staying with the right target when the screen is busy.",
-          "Lilac Chaser is for fixation and peripheral awareness.",
+        heading: "A 7-minute FPS eye warmup",
+        orderedList: [
+          "3 minutes of Smooth Pursuit. Follow one moving target with your eyes. Start with Circle or Ellipse and aim for steady tracking.",
+          "2 minutes of Reaction Jumps. Find the target after each jump, then settle your gaze before it moves again.",
+          "1 minute of Multiple Distractions. Follow the brightest target while the dimmer targets move around it.",
+          "1 minute of Lilac Chaser. Keep looking at the center cross while the gap moves around the ring.",
         ],
       },
       {
         body: [
-          "Use FoveaFlow as practice software, not medical care. Stop if a session causes eye strain, dizziness, headache, nausea, or discomfort.",
+          "Keep your head still and sit comfortably. If you keep losing the target, lower the speed or make it larger. Add difficulty once you can follow it comfortably.",
         ],
-        heading: "Keep it short",
+        heading: "Adjust the drill, not your posture",
+        list: [
+          "Use predictable paths to practice a steady rhythm.",
+          "Use Reaction Jumps when you want to practice finding a new target.",
+          "Add distractors when you want to practice staying with one target through clutter.",
+          "Save your preferred settings locally and return to the same setup next time.",
+        ],
+      },
+      {
+        body: [
+          "These drills give you a way to practice specific visual tasks. FoveaFlow does not measure your eye movements or prove that your aim, reaction time, or eyesight has improved.",
+          "Use it alongside your usual in-game practice if you enjoy it. There is no validated FoveaFlow routine or guaranteed performance gain.",
+        ],
+        heading: "What this warmup can and cannot tell you",
+      },
+      {
+        body: [
+          "FoveaFlow is practice software, not medical care. Stop if you feel eye strain, dizziness, headache, nausea, or other discomfort. A shorter session is fine.",
+        ],
+        heading: "Keep it comfortable",
       },
     ],
     slug: "fps-eye-training",
     summary:
-      "FoveaFlow is a free browser-based FPS eye training warmup. Use Smooth Pursuit for moving-target tracking, Reaction Jumps for quick refocus, and Multiple Distractions for staying locked on the right target through visual clutter.",
-    title: "FoveaFlow - FPS Eye Training Warmup",
+      "A few deliberate minutes before you play. FoveaFlow gives you four free browser drills for moving-target tracking, quick refocus, and attention when the screen gets busy.",
+    title: "FPS Eye Training Warmup: Tracking & Refocus | FoveaFlow",
   },
   {
     comparisonLabel: "BlinkCamp",
     comparisonRows: [
       {
         alternative:
-          "Yes. BlinkCamp is also a free browser-based eye training tool.",
-        feature: "Can I use it free in the browser?",
-        foveaflow:
-          "Yes. The app runs in the browser with no account or install.",
+          "Also free in the browser, with no sign-in needed to start.",
+        feature: "Getting started",
+        foveaflow: "Free in the browser. No account or install.",
       },
       {
-        alternative: "Yes. BlinkCamp exposes simple speed and size controls.",
-        feature: "Can I adjust speed and target size?",
+        alternative: "Speed and size sliders.",
+        feature: "Speed and size",
         foveaflow:
-          "Yes. Speed can be tuned in deg/s, cm/s, or screen/s, and target size can be changed per session.",
-      },
-      {
-        alternative:
-          "BlinkCamp keeps the public controls simpler, with the main visible controls focused on speed and size.",
-        feature: "Can I change how the target looks?",
-        foveaflow:
-          "Shape, color, opacity, trail length, and trail behavior are adjustable.",
+          "Adjust target size and speed, with deg/s, cm/s, and screen/s units.",
       },
       {
         alternative:
-          "BlinkCamp uses a simpler routine-based setup rather than exposing the same path and motion-behavior controls.",
-        feature: "Can I change paths and motion behavior?",
+          "The public interface exposes size adjustment; it does not show these appearance controls.",
+        feature: "Target appearance",
+        foveaflow: "Choose shape, color, opacity, trails, and letter overlays.",
+      },
+      {
+        alternative: "A Change Routine control cycles the exercise.",
+        feature: "Motion",
         foveaflow:
-          "Path, direction changes, steady motion, speed waves, bursts, build/reset, and size pulse options are available depending on the drill.",
+          "Choose a path and adjust supported direction and motion behaviors.",
       },
       {
         alternative:
-          "BlinkCamp is more focused on straightforward eye-training routines than distractor and letter-overlay customization.",
-        feature: "Can I train with distractors or letters?",
+          "The public interface does not show distractor count or brightness controls.",
+        feature: "Distractions",
         foveaflow:
-          "Multiple Distractions includes distractor count and brightness controls. Letter overlays include letter color, weight, and scale controls.",
+          "A separate mode with target count, distractor count, and brightness controls.",
       },
       {
         alternative:
-          "BlinkCamp keeps setup lighter and does not expose the same viewing-distance and screen-scale controls.",
-        feature: "Can I calibrate the session to my setup?",
+          "The public interface does not show display calibration settings.",
+        feature: "Screen setup",
         foveaflow:
-          "Viewing distance and screen scale controls help match motion to your setup.",
-      },
-      {
-        alternative:
-          "BlinkCamp has its own exercise set and a simpler public workflow.",
-        feature: "Which drill set is broader?",
-        foveaflow:
-          "Smooth Pursuit, Reaction Jumps, Multiple Distractions, and Lilac Chaser are available as separate modes.",
-      },
-      {
-        alternative: "BlinkCamp is organized around its own routine interface.",
-        feature: "Can I link straight to a drill?",
-        foveaflow:
-          "Yes. Main modes and Smooth Pursuit patterns have direct URLs.",
-      },
-      {
-        alternative: "Yes. BlinkCamp also links to GitHub.",
-        feature: "Is there a public source link?",
-        foveaflow: "Yes. The GitHub repository is linked from the app.",
+          "Viewing distance and screen scale settings for physical and angular speed units.",
       },
     ],
     description:
-      "Compare FoveaFlow and BlinkCamp for free browser-based eye training, visual tracking, FPS warmups, reaction jumps, and distractor tracking.",
+      "Compare FoveaFlow and BlinkCamp’s free browser eye trainers. See the differences in speed controls, target appearance, motion paths, and display calibration.",
     heading: "FoveaFlow vs BlinkCamp",
-    kicker: "Alternative",
-    lastModified: "2026-07-10",
+    kicker: "Comparison",
+    lastModified: "2026-09-12",
     path: "/blinkcamp-alternative/",
     primaryCta: {
       href: "/",
       label: "Try FoveaFlow",
     },
     secondaryCta: {
-      href: "/guide/",
-      label: "Compare drills",
+      href: "/guide/#drills",
+      label: "Explore the drills",
     },
     sections: [
       {
         body: [
-          "Choose FoveaFlow when you want direct drill links, adjustable target behavior, and a clean full-screen canvas for short visual tracking sessions.",
-          "Choose BlinkCamp if you want a simple browser tool centered on basic eye-training routines and speed-and-size adjustment.",
+          "FoveaFlow lets you change one part of a drill at a time. Keep a familiar path and increase speed. Keep the speed and add distractors. Or make the target easier to see without changing the motion.",
+          "The floating controls tuck away while you practice. Your settings stay in your browser, so you can return to your preferred setup without an account.",
         ],
-        heading: "Best fit",
+        heading: "More control, when you want it",
       },
       {
-        heading: "What FoveaFlow includes",
+        heading: "Four ways to practice",
         list: [
-          "Smooth Pursuit for one-target visual tracking.",
-          "Reaction Jumps for quick refocus.",
-          "Multiple Distractions for focus under visual clutter.",
-          "Lilac Chaser for fixation and peripheral awareness.",
-          "Controls for speed units, target size, shape, color, opacity, trail length, motion path, motion behavior, distractor count, distractor brightness, letter overlays, viewing distance, and screen scale.",
+          "Smooth Pursuit: follow one moving target along a chosen path.",
+          "Reaction Jumps: find the target after it moves to a new position.",
+          "Multiple Distractions: keep track of the brightest target through visual clutter.",
+          "Lilac Chaser: hold your gaze on the center while noticing change around it.",
         ],
+      },
+      {
+        body: [
+          "If you prefer a small set of visible controls and simply want to cycle through routines, BlinkCamp is a straightforward option. It is also open source.",
+          "FoveaFlow is the better fit if you want more say over the target, motion, and display setup. That is a feature comparison, not evidence of better health or gaming results.",
+        ],
+        heading: "When BlinkCamp may be enough",
       },
     ],
     slug: "blinkcamp-alternative",
@@ -186,59 +175,49 @@ export const supportPages = [
       label: "Visit BlinkCamp",
     },
     summary:
-      "FoveaFlow and BlinkCamp are both free browser-based eye training tools. FoveaFlow is the stronger fit when you want direct drill links, FPS warmup use, reaction jumps, distractor tracking, and deeper control over how the target moves and appears.",
-    title: "FoveaFlow - BlinkCamp Alternative for Eye Training",
+      "Both are free eye trainers you can open in a browser. Choose FoveaFlow when you want to fine-tune the session: how the target moves, what it looks like, and how the motion fits your screen.",
+    title: "FoveaFlow vs BlinkCamp: Free Eye Trainer Comparison",
   },
   {
     comparisonLabel: "EyeTrainer.gg",
     comparisonRows: [
       {
-        alternative:
-          "Yes. EyeTrainer.gg is also positioned around FPS eye training.",
-        feature: "Is it aimed at FPS eye training?",
+        alternative: "Browser exercises start without an account or install.",
+        feature: "Getting started",
+        foveaflow: "Free browser app. No account or install.",
+      },
+      {
+        alternative: "Cycle through the available browser patterns.",
+        feature: "Drill selection",
         foveaflow:
-          "Yes. FoveaFlow includes FPS warmup-friendly drills for tracking, refocus, and focus under clutter.",
+          "Smooth Pursuit, Reaction Jumps, Multiple Distractions, and Lilac Chaser.",
       },
       {
         alternative:
-          "Yes. The public page includes simple browser patterns and also promotes a Steam wishlist.",
-        feature: "Can I start in the browser?",
-        foveaflow: "Yes",
+          "The public browser interface shows pattern navigation, Show Grid, and Darkmode controls.",
+        feature: "Target and motion controls",
+        foveaflow:
+          "Speed, size, shape, color, opacity, trails, and mode-specific motion settings.",
       },
       {
         alternative:
-          "No account is needed for the simple browser patterns shown publicly. Steam is promoted for the upcoming app.",
-        feature: "Do I need an account or install?",
+          "The public browser interface does not show these calibration controls.",
+        feature: "Display calibration",
         foveaflow:
-          "No. FoveaFlow runs in the browser and stores settings locally.",
+          "Set viewing distance and screen scale; choose deg/s, cm/s, or screen/s.",
       },
       {
         alternative:
-          "EyeTrainer.gg also offers simple browser patterns and promotes its upcoming Steam version from the public page.",
-        feature: "Which drills are available?",
-        foveaflow:
-          "Smooth Pursuit, Reaction Jumps, Multiple Distractions, and Lilac Chaser are available as separate modes.",
-      },
-      {
-        alternative:
-          "The public browser page keeps controls simple: Show Grid, Darkmode, and pattern selection.",
-        feature: "How much can I customize?",
-        foveaflow:
-          "Speed units, target size, shape, color, opacity, trails, paths, motion behavior, distractors, letter overlays, viewing distance, screen scale, and mode-specific controls.",
-      },
-      {
-        alternative:
-          "EyeTrainer.gg focuses the public browser tool on simple pattern practice rather than detailed target and display calibration.",
-        feature: "Can I tune target appearance and calibration?",
-        foveaflow:
-          "Target appearance, trail display, distractor brightness, letter styling, viewing distance, and screen scale can be tuned.",
+          "The site also advertises an upcoming Steam app and Exercise Creator.",
+        feature: "Desktop app",
+        foveaflow: "The full tool runs in the browser.",
       },
     ],
     description:
-      "Compare FoveaFlow and EyeTrainer.gg for FPS eye training, visual tracking, reaction drills, distraction control, and browser-based warmups.",
+      "Compare FoveaFlow with EyeTrainer.gg’s browser version for FPS warmups. Explore drill modes, motion controls, target customization, and local settings.",
     heading: "FoveaFlow vs EyeTrainer.gg",
-    kicker: "Alternative",
-    lastModified: "2026-07-10",
+    kicker: "Comparison",
+    lastModified: "2026-09-12",
     path: "/eyetrainer-gg-alternative/",
     primaryCta: {
       href: "/",
@@ -246,26 +225,29 @@ export const supportPages = [
     },
     secondaryCta: {
       href: "/fps-eye-training/",
-      label: "Open FPS warmup",
+      label: "Build a warmup",
     },
     sections: [
       {
         body: [
-          "Choose FoveaFlow if you want a lightweight web app with direct access to visual tracking, reaction, distractor, and fixation drills.",
-          "EyeTrainer.gg also offers simple browser patterns and promotes its upcoming Steam version from the public page.",
+          "FoveaFlow lets you tune the drill to what you want to practice. Use a predictable path for steady tracking, jumps for quick refocus, or dimmer moving targets for distraction practice.",
+          "You can change the target’s appearance, adjust motion behavior, and keep your preferred settings on this device. Each main drill and Smooth Pursuit path also has a direct link.",
         ],
-        heading: "Best fit",
+        heading: "A warmup you can adjust",
       },
       {
-        heading: "What FoveaFlow includes",
-        list: [
-          "Smooth Pursuit paths for moving-target tracking.",
-          "Reaction Jumps for quick refocus.",
-          "Multiple Distractions for staying with a target through clutter.",
-          "Lilac Chaser for fixation and peripheral awareness.",
-          "Controls for speed units, target size, shape, color, opacity, trail length, motion path, motion behavior, distractors, letter overlays, viewing distance, screen scale, and mode-specific options such as Lilac Chaser ball scale.",
-          "Local settings with no account or install.",
+        body: [
+          "EyeTrainer.gg offers browser patterns and promotes a forthcoming Steam app. Its announcement mentions new features and an Exercise Creator.",
+          "This page compares the public browser tools checked on September 12, 2026. It does not treat announced Steam features as available browser features, or make claims about the finished desktop app.",
         ],
+        heading: "What is available today",
+      },
+      {
+        body: [
+          "For a quick pattern with minimal setup, EyeTrainer.gg may be enough. Choose FoveaFlow if you want four distinct drill modes and detailed control over the session without leaving the browser.",
+          "Neither the number of settings nor a preference for one interface proves better aim or vision. Pick a comfortable routine you find useful.",
+        ],
+        heading: "Choose by the controls you need",
       },
     ],
     slug: "eyetrainer-gg-alternative",
@@ -274,8 +256,8 @@ export const supportPages = [
       label: "Visit EyeTrainer.gg",
     },
     summary:
-      "FoveaFlow is a free browser-based eye trainer for FPS warmups, visual tracking, reaction jumps, distractor tracking, and peripheral awareness. It is a practical alternative if you want to start in the browser with no account or install.",
-    title: "FoveaFlow - EyeTrainer.gg Alternative for FPS Eye Training",
+      "Start a visual warmup in either browser tool. FoveaFlow gives you separate tracking, refocus, distraction, and fixation drills, with detailed controls available right now in the browser.",
+    title: "FoveaFlow vs EyeTrainer.gg: Browser Eye Training Compared",
   },
 ] as const satisfies readonly SupportPage[];
 

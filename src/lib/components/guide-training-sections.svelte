@@ -1,206 +1,129 @@
 <script lang="ts">
-  import { Badge } from "$lib/components/ui/badge/index.js";
   import { Button } from "$lib/components/ui/button/index.js";
-  import * as Item from "$lib/components/ui/item/index.js";
   import { trainerRoutes } from "$lib/content/trainer-routes";
-  import {
-    audienceNotes,
-    trainingModeGuides,
-    trainingModeNotes,
-  } from "$lib/content/training";
+  import { audienceNotes, trainingModeGuides } from "$lib/content/training";
   import type { AppLocale } from "$lib/i18n/locales";
   import { t } from "$lib/i18n/translate";
-  import ActivityIcon from "@lucide/svelte/icons/activity";
-  import CrosshairIcon from "@lucide/svelte/icons/crosshair";
-  import ExternalLinkIcon from "@lucide/svelte/icons/external-link";
-  import MousePointerIcon from "@lucide/svelte/icons/mouse-pointer-2";
+  import ArrowUpRight from "@lucide/svelte/icons/arrow-up-right";
 
+  import ModePathPreview from "./mode-path-preview.svelte";
   import {
-    pageItemSurface,
-    pageSectionGrid,
-    pageSectionIntro,
-    pageSectionTitle,
+    editorialEyebrow,
+    editorialHeading,
+    editorialCopy,
+    editorialSection,
   } from "./page-styles";
-
-  const featuredRoutes = trainerRoutes.filter((route) =>
-    [
-      "smooth-pursuit",
-      "reaction-jumps",
-      "multiple-distractions",
-      "lilac-chaser",
-    ].includes(route.slug)
-  );
+  import PatternPathPreview from "./pattern-path-preview.svelte";
 
   const patternRoutes = trainerRoutes.filter(
     (route) => route.mode === "pursuit" && !route.indexable
   );
-
+  const modeRoutes = new Map(
+    trainerRoutes
+      .filter((route) => route.indexable)
+      .map((route) => [route.mode, route.path])
+  );
   let { locale }: { locale: AppLocale } = $props();
 </script>
 
-<section class={`[animation-delay:85ms] ${pageSectionGrid} guide-enter`}>
-  <div class={pageSectionIntro}>
-    <Badge variant="outline" class="mb-4">{t(locale, "Drills")}</Badge>
-    <h2 class={pageSectionTitle}>
-      {t(locale, "Choose a drill by the result you want")}
-    </h2>
-  </div>
-
-  <div class="grid gap-3">
-    {#each trainingModeNotes as trainingModeNote (trainingModeNote.title)}
-      <Item.Root variant="outline" class={pageItemSurface}>
-        <Item.Media
-          variant="icon"
-          class="bg-muted text-brand-foreground size-9 rounded-lg border"
-        >
-          <CrosshairIcon class="size-4" />
-        </Item.Media>
-        <Item.Content>
-          <Item.Title class="line-clamp-none">
-            {t(locale, trainingModeNote.title)}
-          </Item.Title>
-          <Item.Description class="line-clamp-none leading-6">
-            {t(locale, trainingModeNote.body)}
-          </Item.Description>
-        </Item.Content>
-      </Item.Root>
-    {/each}
-  </div>
-</section>
-
-<section class={`[animation-delay:125ms] ${pageSectionGrid} guide-enter`}>
-  <div class={pageSectionIntro}>
-    <Badge variant="outline" class="mb-4">
-      {t(locale, "Mode guide")}
-    </Badge>
-    <h2 class={pageSectionTitle}>{t(locale, "How each drill works")}</h2>
-    <p class="text-muted-foreground mt-4 max-w-136 text-base leading-7">
-      {t(
-        locale,
-        "Keep your head still unless a drill says otherwise. These modes are about eye movement, attention, and focus, not neck movement."
-      )}
-    </p>
-  </div>
-
-  <div class="grid gap-3">
-    {#each trainingModeGuides as modeGuide (modeGuide.mode)}
-      <Item.Root variant="outline" class={pageItemSurface}>
-        <Item.Media
-          variant="icon"
-          class="bg-muted text-brand-foreground size-9 rounded-lg border"
-        >
-          <CrosshairIcon class="size-4" />
-        </Item.Media>
-        <Item.Content>
-          <Item.Title class="line-clamp-none">
-            {t(locale, modeGuide.title)}
-          </Item.Title>
-          <Item.Description class="line-clamp-none leading-6">
-            {t(locale, modeGuide.summary)}
-            {modeGuide.steps.map((step) => t(locale, step)).join(" ")}
-            {t(locale, modeGuide.benefits)}
-          </Item.Description>
-        </Item.Content>
-      </Item.Root>
-    {/each}
-  </div>
-</section>
-
-<section class={`[animation-delay:125ms] ${pageSectionGrid} guide-enter`}>
-  <div class={pageSectionIntro}>
-    <Badge variant="outline" class="mb-4">{t(locale, "Best fit")}</Badge>
-    <h2 class={pageSectionTitle}>
-      {t(
-        locale,
-        "Best use cases for gamers, desk workers, and screen-heavy days"
-      )}
-    </h2>
-    <p class="text-muted-foreground mt-4 max-w-136 text-base leading-7">
-      {t(
-        locale,
-        "Use it as a quick visual warmup or active screen break, not as medical care."
-      )}
-    </p>
-  </div>
-
-  <div class="grid gap-3">
-    {#each audienceNotes as audienceNote (audienceNote.title)}
-      <Item.Root variant="outline" class={pageItemSurface}>
-        <Item.Media
-          variant="icon"
-          class="bg-muted text-brand-foreground size-9 rounded-lg border"
-        >
-          <ActivityIcon class="size-4" />
-        </Item.Media>
-        <Item.Content>
-          <Item.Title class="line-clamp-none">
-            {t(locale, audienceNote.title)}
-          </Item.Title>
-          <Item.Description class="line-clamp-none leading-6">
-            {t(locale, audienceNote.body)}
-          </Item.Description>
-        </Item.Content>
-      </Item.Root>
-    {/each}
-  </div>
-</section>
-
-<section
-  class="border-border/60 guide-enter grid gap-6 border-t pt-10 [animation-delay:125ms] md:grid-cols-[1.18fr_0.82fr] md:gap-10"
->
-  <div class="grid gap-3">
-    {#each featuredRoutes as route (route.slug)}
-      <Item.Root variant="outline" class={pageItemSurface}>
-        <Item.Media
-          variant="icon"
-          class="bg-background text-brand-foreground size-9 rounded-lg border"
-        >
-          <MousePointerIcon class="size-4" />
-        </Item.Media>
-        <Item.Content>
-          <Item.Title class="line-clamp-none">
-            {t(locale, route.label)}
-          </Item.Title>
-          <Item.Description class="line-clamp-none leading-6">
-            {t(locale, route.description)}
-          </Item.Description>
-        </Item.Content>
-        <Item.Actions>
+<section id="practice" class="scroll-mt-8">
+  <h2 class={editorialHeading}>{t(locale, "How each drill works")}</h2>
+  <p class={`${editorialCopy} mt-4 max-w-2xl`}>
+    {t(
+      locale,
+      "Keep your head still unless a drill says otherwise. These modes are about eye movement, attention, and focus, not neck movement."
+    )}
+  </p>
+  <div class="divide-border mt-10 divide-y sm:mt-12">
+    {#each trainingModeGuides as guide (guide.mode)}
+      <article
+        id={guide.mode}
+        class="scroll-mt-8 py-12 first:pt-0 last:pb-0 sm:py-16"
+      >
+        <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
+          <h3 class="flex items-center gap-3 text-xl font-semibold">
+            <span
+              class="bg-muted flex size-10 shrink-0 items-center justify-center rounded-xl"
+              ><ModePathPreview mode={guide.mode} /></span
+            >
+            {t(locale, guide.title)}
+          </h3>
           <Button
-            href={route.path}
-            size="icon"
-            variant="ghost"
-            aria-label={`${t(locale, "Open")} ${t(locale, route.label)}`}
+            href={modeRoutes.get(guide.mode)}
+            variant="outline"
+            size="sm"
+            class="h-9 gap-2"
+            >{t(locale, "Try this drill")}<ArrowUpRight
+              class="size-3.5"
+            /></Button
           >
-            <ExternalLinkIcon class="size-4" />
-          </Button>
-        </Item.Actions>
-      </Item.Root>
+        </div>
+        <ol class="grid gap-5">
+          {#each guide.steps as step, stepIndex (step)}
+            <li class="flex items-baseline gap-4">
+              <span
+                class="text-muted-foreground w-4 shrink-0 text-xs tabular-nums"
+                >{stepIndex + 1}.</span
+              >
+              <p class={editorialCopy}>{t(locale, step)}</p>
+            </li>
+          {/each}
+        </ol>
+        <div class="bg-muted/40 mt-8 rounded-xl p-5 sm:p-6">
+          <h4 class="mb-1 text-sm font-medium">
+            {t(locale, "What it trains")}
+          </h4>
+          <p class="text-muted-foreground text-sm leading-6">
+            {t(locale, guide.benefits)}
+          </p>
+        </div>
+      </article>
     {/each}
   </div>
+</section>
 
+<section id="patterns" class={editorialSection}>
+  <h2 class={editorialHeading}>{t(locale, "Motion paths")}</h2>
+  <p class={`${editorialCopy} mt-4`}>
+    {t(
+      locale,
+      "Start with a predictable path for steady tracking. Try random movement or hard turns when you want to spend more time finding the target. Each link opens Smooth Pursuit with that path selected."
+    )}
+  </p>
   <nav
-    class="md:sticky md:top-8 md:self-start md:pt-2"
-    aria-label="Pattern routes"
+    aria-label={t(locale, "Pattern routes")}
+    class="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-3"
   >
-    <Badge variant="outline" class="mb-4">
-      {t(locale, "Direct routes")}
-    </Badge>
-    <h2 class={pageSectionTitle}>
-      {t(locale, "Smooth Pursuit pattern routes")}
-    </h2>
-    <p class="text-muted-foreground mt-4 max-w-152 text-base leading-7">
-      {t(
-        locale,
-        "Pattern pages start Smooth Pursuit with that path selected. Reaction jumps, Multiple Distractions, and Lilac Chaser have their own direct URLs."
-      )}
-    </p>
-    <div class="mt-5 flex flex-wrap gap-2">
-      {#each patternRoutes as route (route.slug)}
-        <Button href={route.path} variant="outline" size="sm">
-          {t(locale, route.label)}
-        </Button>
-      {/each}
-    </div>
+    {#each patternRoutes as route (route.slug)}
+      <a
+        href={route.path}
+        class="bg-muted/30 hover:bg-muted/70 focus-visible:outline-ring flex min-h-14 items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors focus-visible:outline-2 motion-reduce:transition-none"
+      >
+        {#if route.patternId}<PatternPathPreview
+            patternId={route.patternId}
+          />{/if}<span>{t(locale, route.label)}</span>
+      </a>
+    {/each}
   </nav>
+</section>
+
+<section class={editorialSection}>
+  <p class={`${editorialEyebrow} mb-3`}>{t(locale, "Best fit")}</p>
+  <h2 class={editorialHeading}>
+    {t(locale, "A short break from the usual screen.")}
+  </h2>
+  <p class={`${editorialCopy} mt-4`}>
+    {t(
+      locale,
+      "Use it as a quick visual warmup or active screen break, not as medical care."
+    )}
+  </p>
+  <div class="mt-6 grid gap-6 sm:grid-cols-3">
+    {#each audienceNotes as note (note.title)}<div>
+        <h3 class="mb-2 text-sm font-semibold">{t(locale, note.title)}</h3>
+        <p class="text-muted-foreground text-sm leading-6">
+          {t(locale, note.body)}
+        </p>
+      </div>{/each}
+  </div>
 </section>
