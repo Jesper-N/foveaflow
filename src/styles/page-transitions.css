@@ -1,0 +1,32 @@
+@reference "./global.css";
+
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+
+/* Keep the outgoing page behind the incoming snapshot to avoid a flash
+   of the canvas. History and scroll restoration remain browser-managed. */
+::view-transition-group(root),
+::view-transition-old(root) {
+  @apply animate-none;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  @apply mix-blend-normal;
+}
+
+::view-transition-new(root) {
+  @apply animate-[page-reveal_220ms_cubic-bezier(0.23,1,0.32,1)_both];
+}
+
+@keyframes page-reveal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

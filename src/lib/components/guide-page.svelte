@@ -1,157 +1,103 @@
 <script lang="ts">
+  import ContentShell from "$lib/components/content-shell.svelte";
+  import ContentToc from "$lib/components/content-toc.svelte";
+  import DrillIllustration from "$lib/components/drill-illustration.svelte";
   import GuideResourceSections from "$lib/components/guide-resource-sections.svelte";
   import GuideTrainingSections from "$lib/components/guide-training-sections.svelte";
-  import LanguageSelect from "$lib/components/language-select.svelte";
-  import { Badge } from "$lib/components/ui/badge/index.js";
   import { Button } from "$lib/components/ui/button/index.js";
-  import * as Item from "$lib/components/ui/item/index.js";
-  import { legalPageLinks } from "$lib/content/legal";
-  import { guideMetadata } from "$lib/content/page-copy";
-  import { siteMetadata } from "$lib/content/site";
-  import { safetyNote } from "$lib/content/training";
+  import { safetyNote, trainingModeGuides } from "$lib/content/training";
   import { languageState } from "$lib/i18n/state.svelte";
   import { t } from "$lib/i18n/translate";
-  import ActivityIcon from "@lucide/svelte/icons/activity";
-  import ArrowLeftIcon from "@lucide/svelte/icons/arrow-left";
-  import BookOpenIcon from "@lucide/svelte/icons/book-open";
-  import CrosshairIcon from "@lucide/svelte/icons/crosshair";
-  import FileTextIcon from "@lucide/svelte/icons/file-text";
-  import ShieldCheckIcon from "@lucide/svelte/icons/shield-check";
+  import ArrowDown from "@lucide/svelte/icons/arrow-down";
+  import ArrowUpRight from "@lucide/svelte/icons/arrow-up-right";
 
-  import { pageItemSurface } from "./page-styles";
+  import {
+    contentReadingLayout,
+    editorialEyebrow,
+    editorialSections,
+    editorialTitle,
+  } from "./page-styles";
 
   let locale = $derived(languageState.locale);
+  const contents = [
+    { id: "drills", label: "Choose a drill" },
+    { id: "practice", label: "How to practice" },
+    { id: "patterns", label: "Motion paths" },
+    { id: "controls", label: "Controls" },
+    { id: "more-guides", label: "More guides" },
+    { id: "faq", label: "Guide FAQ" },
+    { id: "references", label: "References" },
+  ];
 </script>
 
-<main class="bg-background text-foreground selection:bg-accent/30 min-h-dvh">
-  <div class="mx-auto grid w-full max-w-7xl gap-10 px-4 py-5 sm:px-6 lg:px-8">
-    <nav
-      class="guide-enter flex items-center justify-between gap-4"
-      aria-label={t(locale, "Guide navigation")}
-    >
-      <Button
-        href="/"
-        variant="outline"
-        aria-label={`${t(locale, "Open")} ${siteMetadata.name}`}
-      >
-        <ArrowLeftIcon class="size-4" />
-        <span class="pl-1">{t(locale, "Open")} {siteMetadata.name}</span>
-      </Button>
-
-      <div class="flex items-center gap-2">
-        <Badge
-          variant="outline"
-          class="border-border/80 bg-background/80 text-muted-foreground hidden h-8 px-3 py-0 text-sm sm:inline-flex"
-        >
-          {t(locale, "Updated July 10, 2026")}
-        </Badge>
-        <LanguageSelect
-          showSelectedName
-          collapseNameOnSmall
-          size="sm"
-          variant="outline"
-          triggerClass="max-w-56"
-        />
-      </div>
-    </nav>
-
+<ContentShell {locale} path="/guide/">
+  <div class="py-16 sm:py-24">
     <section
-      class="guide-enter grid items-center gap-10 pt-10 pb-10 [animation-delay:45ms] md:grid-cols-[minmax(0,1.08fr)_minmax(20rem,0.92fr)] md:pt-20 md:pb-16"
+      class="mx-auto flex max-w-2xl flex-col items-center gap-5 text-center"
     >
-      <div class="max-w-3xl">
-        <Badge variant="secondary" class="mb-5 px-3 py-1">
-          {t(locale, "Guide")}
-        </Badge>
-        <h1
-          class="text-foreground max-w-[13ch] text-4xl leading-none font-semibold md:text-6xl"
+      <p class={editorialEyebrow}>{t(locale, "Free browser tool")}</p>
+      <h1 class={editorialTitle}>{t(locale, "FoveaFlow Guide")}</h1>
+      <p
+        class="text-muted-foreground max-w-xl text-base leading-7 text-pretty sm:text-lg sm:leading-8"
+      >
+        {t(
+          locale,
+          "Your guide to FoveaFlow’s free online eye trainer. Choose a drill for visual tracking, quick refocus, or peripheral awareness, then make it your own."
+        )}
+      </p>
+      <div class="mt-2 flex flex-wrap items-center justify-center gap-2">
+        <Button href="/smooth-pursuit/" size="lg" class="h-11 gap-2 px-5"
+          >{t(locale, "Try Smooth Pursuit")}<ArrowUpRight
+            class="size-4"
+          /></Button
         >
-          {t(locale, guideMetadata.heading)}
-        </h1>
-        <p
-          class="text-muted-foreground mt-6 max-w-160 text-base leading-7 md:text-lg md:leading-8"
+        <Button href="#practice" variant="ghost" size="lg" class="h-11 gap-2"
+          >{t(locale, "How to practice")}<ArrowDown class="size-4" /></Button
         >
-          {t(locale, guideMetadata.summary)}
-        </p>
-        <div class="mt-8 flex flex-wrap gap-3">
-          <Button href="/">
-            <CrosshairIcon class="size-4" />
-            <span class="pl-1">{t(locale, "Open")} {siteMetadata.name}</span>
-          </Button>
-          <Button href="/smooth-pursuit/" variant="outline">
-            <CrosshairIcon class="size-4" />
-            <span class="pl-1">{t(locale, "Try Smooth Pursuit")}</span>
-          </Button>
-          <Button href="#faq" variant="outline">
-            <BookOpenIcon class="size-4" />
-            <span class="pl-1">{t(locale, "Read guide FAQ")}</span>
-          </Button>
-        </div>
-      </div>
-
-      <div class="grid gap-4 md:translate-y-6">
-        <Item.Root
-          variant="outline"
-          class={`border-border/80 p-5 ${pageItemSurface}`}
-        >
-          <Item.Media
-            variant="icon"
-            class="bg-muted text-brand-foreground size-10 rounded-lg border"
-          >
-            <ActivityIcon class="size-5" />
-          </Item.Media>
-          <Item.Content>
-            <Item.Title class="line-clamp-none text-base">
-              {t(locale, "Pick a drill and tune the target")}
-            </Item.Title>
-            <Item.Description class="line-clamp-none leading-6">
-              {t(
-                locale,
-                "Choose a path, set the speed and target style, then use it for a short visual tracking session."
-              )}
-            </Item.Description>
-          </Item.Content>
-        </Item.Root>
-
-        <Item.Root
-          variant="muted"
-          class={`border-border/70 ml-0 border p-5 md:ml-8 ${pageItemSurface}`}
-        >
-          <Item.Media
-            variant="icon"
-            class="bg-background text-brand-foreground size-10 rounded-lg border"
-          >
-            <ShieldCheckIcon class="size-5" />
-          </Item.Media>
-          <Item.Content>
-            <Item.Title class="line-clamp-none text-base">
-              {t(locale, "Keep the safety line clear")}
-            </Item.Title>
-            <Item.Description class="line-clamp-none leading-6">
-              {t(locale, safetyNote)}
-            </Item.Description>
-          </Item.Content>
-        </Item.Root>
       </div>
     </section>
-
-    <GuideTrainingSections {locale} />
-    <GuideResourceSections {locale} />
-    <footer
-      class="border-border/60 text-muted-foreground guide-enter flex flex-col gap-3 border-t pt-6 pb-10 text-sm [animation-delay:165ms] sm:flex-row sm:items-center sm:justify-between"
-    >
-      <span>
-        {t(locale, "FoveaFlow is free. No account, no paid plan.")}
-      </span>
-      <div class="flex flex-wrap gap-2">
-        <Button href={legalPageLinks.privacy.path} variant="ghost" size="sm">
-          <ShieldCheckIcon class="size-4" />
-          <span class="pl-1">{t(locale, legalPageLinks.privacy.label)}</span>
-        </Button>
-        <Button href={legalPageLinks.terms.path} variant="ghost" size="sm">
-          <FileTextIcon class="size-4" />
-          <span class="pl-1">{t(locale, legalPageLinks.terms.label)}</span>
-        </Button>
-      </div>
-    </footer>
   </div>
-</main>
+  <section
+    id="drills"
+    aria-label={t(locale, "Choose a drill")}
+    class="scroll-mt-8"
+  >
+    <div
+      class="border-border/70 divide-border/70 grid border-y sm:grid-cols-2 lg:grid-cols-4"
+    >
+      {#each trainingModeGuides as mode (mode.mode)}
+        <a
+          href={`#${mode.mode}`}
+          class="group hover:bg-muted/20 focus-visible:outline-ring grid grid-cols-[5.5rem_minmax(0,1fr)] items-center gap-x-5 border-b border-inherit px-1 py-6 transition-colors last:border-b-0 focus-visible:outline-2 focus-visible:outline-offset-4 motion-reduce:transition-none sm:flex sm:flex-col sm:items-stretch sm:px-5 sm:py-7 sm:nth-[2n+1]:border-r sm:nth-last-[-n+2]:border-b-0 lg:border-r lg:border-b-0 lg:last:border-r-0"
+        >
+          <DrillIllustration
+            mode={mode.mode}
+            class="row-span-2 mx-auto sm:mb-5 sm:max-w-48"
+          />
+          <h2
+            class="flex items-center justify-between gap-2 text-base font-semibold wrap-anywhere"
+          >
+            {t(locale, mode.title)}<ArrowDown
+              class="text-muted-foreground group-hover:text-brand-foreground size-3.5 shrink-0"
+            />
+          </h2>
+          <p class="text-muted-foreground mt-2 text-sm leading-6 text-pretty">
+            {t(locale, mode.summary)}
+          </p>
+        </a>
+      {/each}
+    </div>
+    <p class="text-muted-foreground mt-5 max-w-4xl text-xs leading-5">
+      <span class="text-foreground font-medium"
+        >{t(locale, "Before you start")}.</span
+      >&nbsp;{t(locale, safetyNote)}
+    </p>
+  </section>
+  <div class={`${contentReadingLayout} lg:grid-cols-[12rem_minmax(0,1fr)]`}>
+    <ContentToc {locale} links={contents} />
+    <div class={editorialSections}>
+      <GuideTrainingSections {locale} />
+      <GuideResourceSections {locale} />
+    </div>
+  </div>
+</ContentShell>

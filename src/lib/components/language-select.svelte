@@ -38,7 +38,7 @@
     tooltipDisabled?: boolean;
     collapseNameOnSmall?: boolean;
     size?: "sm" | "default";
-    variant?: "default" | "outline";
+    variant?: "default" | "outline" | "ghost";
   } = $props();
 
   $effect(() => {
@@ -63,21 +63,23 @@
     {size}
     class={cn(
       "shrink-0",
-      triggerVariant === "outline" &&
-        buttonVariants({ variant: "outline", size }),
+      triggerVariant !== "default" &&
+        buttonVariants({ variant: triggerVariant, size }),
       !showSelectedName &&
         "size-9 justify-center rounded-4xl p-0 [&>svg:last-child]:hidden",
       showSelectedName && "min-w-36 justify-between",
       showSelectedName &&
         collapseNameOnSmall &&
         "max-sm:size-9 max-sm:min-w-0 max-sm:justify-center max-sm:gap-0 max-sm:p-0 max-sm:[&>svg:last-child]:hidden",
+      triggerVariant === "ghost" &&
+        "text-muted-foreground min-w-0 justify-center gap-2 rounded-lg bg-transparent",
       triggerClass,
       className
     )}
-    aria-label={`${t(languageState.locale, "Change language")}: ${selectedLanguage.label}`}
+    aria-label={`${t(languageState.locale, "Change language")}: ${selectedLanguage.nativeLabel}`}
     title={showTooltip
       ? undefined
-      : `${t(languageState.locale, "Language")}: ${selectedLanguage.label}`}
+      : `${t(languageState.locale, "Language")}: ${selectedLanguage.nativeLabel}`}
   >
     {#if showFlag}
       <span aria-hidden="true">{selectedLanguage.flag}</span>

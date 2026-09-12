@@ -174,7 +174,11 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     activeRoute?.seoContent ?? homepageSeoContent
   );
   const activeGuideRoute = $derived(
-    getTrainerRoute(settings.presetId, settings.patternId)
+    activeRoute?.mode === settings.presetId &&
+      (activeRoute.patternId === undefined ||
+        activeRoute.patternId === settings.patternId)
+      ? activeRoute
+      : getTrainerRoute(settings.presetId, settings.patternId)
   );
   const guideSeoContent = $derived(
     activeRoute

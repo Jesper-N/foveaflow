@@ -1,189 +1,80 @@
 <script lang="ts">
-  import LanguageSelect from "$lib/components/language-select.svelte";
-  import { Badge } from "$lib/components/ui/badge/index.js";
-  import { Button } from "$lib/components/ui/button/index.js";
-  import * as Item from "$lib/components/ui/item/index.js";
   import type { LegalPageContent } from "$lib/content/legal";
-  import { siteMetadata } from "$lib/content/site";
   import { languageState } from "$lib/i18n/state.svelte";
-  import { t } from "$lib/i18n/translate";
-  import ArrowLeftIcon from "@lucide/svelte/icons/arrow-left";
-  import ExternalLinkIcon from "@lucide/svelte/icons/external-link";
-  import FileTextIcon from "@lucide/svelte/icons/file-text";
-  import ShieldCheckIcon from "@lucide/svelte/icons/shield-check";
+  import { formatDate, t } from "$lib/i18n/translate";
+  import ArrowUpRight from "@lucide/svelte/icons/arrow-up-right";
+
+  import ContentShell from "./content-shell.svelte";
+  import ContentToc from "./content-toc.svelte";
+  import {
+    editorialEyebrow,
+    editorialTitle,
+    editorialHeading,
+    editorialCopy,
+    editorialLink,
+    contentHeader,
+    contentReadingLayout,
+    editorialSection,
+    editorialSections,
+  } from "./page-styles";
 
   let { page }: { page: LegalPageContent } = $props();
-
-  const articleCard =
-    "bg-card/70 shadow-[0_16px_36px_-30px_rgba(20,24,22,0.4)]";
-  const navLinks = [
-    { href: "/guide/", label: "Guide" },
-    { href: "/privacy/", label: "Privacy" },
-    { href: "/terms/", label: "Terms" },
-  ];
   let locale = $derived(languageState.locale);
+  let contents = $derived(
+    page.sections.map((section) => ({ id: section.id, label: section.heading }))
+  );
 </script>
 
-<main class="bg-background text-foreground selection:bg-accent/30 min-h-dvh">
-  <div class="mx-auto grid w-full max-w-5xl gap-10 px-4 py-5 sm:px-6 lg:px-8">
-    <header class="guide-enter flex items-center justify-between gap-4">
-      <Button
-        href="/"
-        variant="outline"
-        aria-label={`${t(locale, "Open")} ${siteMetadata.name}`}
+<ContentShell {locale} path={page.path}>
+  <section class={`${contentHeader} border-border border-b`}>
+    <p class={editorialEyebrow}>
+      {t(locale, "FoveaFlow")} / {t(locale, page.label)}
+    </p>
+    <h1 class={editorialTitle}>{t(locale, page.title)}</h1>
+    <p
+      class="text-muted-foreground max-w-2xl text-base leading-7 sm:text-lg sm:leading-8"
+    >
+      {t(locale, page.summary)}
+    </p>
+    <p class="text-muted-foreground text-xs">
+      {t(locale, "Updated")}
+      <time datetime={page.lastModified}
+        >{formatDate(locale, page.lastModified)}</time
       >
-        <ArrowLeftIcon class="size-4" />
-        <span class="pl-1">{t(locale, "Open")} {siteMetadata.name}</span>
-      </Button>
-
-      <div class="flex items-center gap-2">
-        <nav
-          class="hidden items-center gap-1 sm:flex"
-          aria-label={t(locale, "Legal pages")}
+    </p>
+  </section>
+  <div class={`${contentReadingLayout} lg:grid-cols-[15rem_minmax(0,1fr)]`}>
+    <ContentToc {locale} links={contents} />
+    <div class={`${editorialSections} max-w-3xl lg:pr-8`}>
+      {#each page.sections as section, index (section.id)}
+        <section
+          id={section.id}
+          class={index === 0 ? "scroll-mt-8" : editorialSection}
         >
-          {#each navLinks as navLink (navLink.href)}
-            <Button
-              href={navLink.href}
-              variant={page.path === navLink.href ? "outline" : "ghost"}
-              size="sm"
+          <div class="flex items-baseline gap-4">
+            <span class="text-muted-foreground text-xs tabular-nums"
+              >{String(index + 1).padStart(2, "0")}</span
             >
-              {t(locale, navLink.label)}
-            </Button>
-          {/each}
-        </nav>
-        <LanguageSelect
-          showSelectedName
-          collapseNameOnSmall
-          size="sm"
-          variant="outline"
-          triggerClass="max-w-56"
-        />
-      </div>
-    </header>
-
-    <section
-      class="guide-enter grid gap-8 pt-10 pb-10 [animation-delay:45ms] md:grid-cols-[minmax(0,1fr)_18rem] md:items-end md:pt-20 md:pb-14"
-    >
-      <div>
-        <Badge variant="secondary" class="mb-5 px-3 py-1">
-          {t(locale, page.label)}
-        </Badge>
-        <h1
-          class="text-foreground max-w-[12ch] text-4xl leading-none font-semibold md:text-6xl"
-        >
-          {t(locale, page.title)}
-        </h1>
-        <p
-          class="text-muted-foreground mt-6 max-w-164 text-base leading-7 md:text-lg md:leading-8"
-        >
-          {t(locale, page.summary)}
-        </p>
-      </div>
-
-      <Item.Root
-        variant="outline"
-        class={`border-border/80 p-5 ${articleCard}`}
-      >
-        <Item.Media
-          variant="icon"
-          class="bg-muted text-brand-foreground size-10 rounded-lg border"
-        >
-          {#if page.path === "/privacy/"}
-            <ShieldCheckIcon class="size-5" />
-          {:else}
-            <FileTextIcon class="size-5" />
-          {/if}
-        </Item.Media>
-        <Item.Content>
-          <Item.Title class="line-clamp-none text-base">
-            {t(locale, "Updated July 10, 2026")}
-          </Item.Title>
-          <Item.Description class="line-clamp-none leading-6">
-            {t(locale, "This page is specific to this free browser tool.")}
-          </Item.Description>
-        </Item.Content>
-      </Item.Root>
-    </section>
-
-    <section
-      class="border-border/60 guide-enter grid gap-6 border-t pt-10 [animation-delay:85ms] md:grid-cols-[15rem_minmax(0,1fr)] md:gap-10"
-    >
-      <div class="md:sticky md:top-6 md:self-start">
-        <Item.Root variant="muted" class="border-border/70 border">
-          <Item.Content>
-            <h2 class="font-heading text-sm leading-snug font-medium">
-              {t(locale, "On this page")}
-            </h2>
-            <nav class="mt-3 grid gap-1" aria-label={t(locale, "On this page")}>
-              {#each page.sections as section (section.id)}
-                <a
-                  href={`#${section.id}`}
-                  class="text-muted-foreground hover:bg-background hover:text-foreground rounded-md px-2 py-1.5 text-sm leading-5 transition-[background-color,color] duration-150"
-                >
-                  {t(locale, section.heading)}
-                </a>
-              {/each}
-            </nav>
-          </Item.Content>
-        </Item.Root>
-      </div>
-
-      <div class="grid gap-4 pb-6">
-        {#each page.sections as section (section.id)}
-          <article id={section.id} class="scroll-mt-6">
-            <Item.Root
-              variant="outline"
-              class={`border-border/80 items-start p-5 md:p-6 ${articleCard}`}
+            <h2 class={editorialHeading}>{t(locale, section.heading)}</h2>
+          </div>
+          <div class={`${editorialCopy} mt-5 flex flex-col gap-4`}>
+            {#each section.body as paragraph (paragraph)}<p>
+                {t(locale, paragraph)}
+              </p>{/each}
+          </div>
+          {#if "links" in section && section.links?.length}<div
+              class="mt-5 flex flex-wrap gap-x-6 gap-y-3"
             >
-              <Item.Content>
-                <h2 class="font-heading text-lg leading-snug font-medium">
-                  {t(locale, section.heading)}
-                </h2>
-                <div
-                  class="text-muted-foreground mt-3 grid max-w-184 gap-3 text-sm leading-6"
-                >
-                  {#each section.body as paragraph (paragraph)}
-                    <p>{t(locale, paragraph)}</p>
-                  {/each}
-                </div>
-
-                {#if "links" in section && section.links?.length}
-                  <div class="mt-4 flex flex-wrap gap-2">
-                    {#each section.links as link (link.url)}
-                      <Button
-                        href={link.url}
-                        variant="outline"
-                        size="sm"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <span>{t(locale, link.label)}</span>
-                        <ExternalLinkIcon class="size-3" />
-                      </Button>
-                    {/each}
-                  </div>
-                {/if}
-              </Item.Content>
-            </Item.Root>
-          </article>
-        {/each}
-      </div>
-    </section>
-
-    <footer
-      class="border-border/60 text-muted-foreground guide-enter flex flex-col gap-3 border-t pt-6 pb-10 text-sm [animation-delay:125ms] sm:flex-row sm:items-center sm:justify-between"
-    >
-      <span>
-        {t(locale, "FoveaFlow is free. No account, no paid plan.")}
-      </span>
-      <div class="flex flex-wrap gap-2">
-        <Button href="/" variant="ghost" size="sm">
-          {t(locale, "App")}
-        </Button>
-        <Button href="/guide/" variant="ghost" size="sm">
-          {t(locale, "Guide")}
-        </Button>
-      </div>
-    </footer>
+              {#each section.links as link (link.url)}<a
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class={editorialLink}
+                  >{t(locale, link.label)}<ArrowUpRight class="size-3.5" /></a
+                >{/each}
+            </div>{/if}
+        </section>
+      {/each}
+    </div>
   </div>
-</main>
+</ContentShell>

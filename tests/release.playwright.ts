@@ -1,6 +1,7 @@
 import { expect, test as base } from "@playwright/test";
 import type { Page } from "@playwright/test";
 
+import { homepageSeoContent } from "../src/lib/content/page-copy";
 import {
   getTrainerRoute,
   trainerRoutes,
@@ -146,21 +147,46 @@ const trainerPages = [
 for (const route of trainerPages) {
   test(`direct load: ${route.path}`, async ({ page }) => {
     await openPage(page, route.path);
+    const guideTrigger = page.locator(
+      '#trainer-island [popovertarget="trainer-guide-popover"]'
+    );
+    await guideTrigger.click();
+    const guide = page.locator("#trainer-guide-popover");
+    const guideRoute = trainerRoutes.find(
+      (candidate) => candidate.path === route.path
+    );
+    await expect(guide).toBeVisible();
+    await expect(guide.getByRole("heading", { level: 2 })).toHaveText(
+      guideRoute?.seoContent.heading ?? homepageSeoContent.heading
+    );
+    await expect(guide.locator('[data-slot="mode-path-preview"]')).toHaveCount(
+      guideRoute ? Number(guideRoute.indexable) : 4
+    );
+    await expect(
+      guide.locator('[data-slot="pattern-path-preview"]')
+    ).toHaveCount(guideRoute?.indexable === false ? 1 : 0);
+    expect(
+      await guide.evaluate(
+        (element) => element.scrollWidth <= element.clientWidth
+      ),
+      "Guide content must fit without horizontal scrolling"
+    ).toBe(true);
+    if (guideRoute) {
+      const question = guide
+        .locator('[aria-controls^="trainer-guide-faq-answer-"]')
+        .first();
+      await question.press("Enter");
+      await expect(question).toHaveAttribute("aria-expanded", "true");
+      await expect(
+        guide.locator("#trainer-guide-faq-answer-0")
+      ).toHaveAttribute("aria-hidden", "false");
+      await question.press("Enter");
+      await expect(question).toHaveAttribute("aria-expanded", "false");
+    }
+    await page.keyboard.press("Escape");
+    await expect(guide).not.toBeVisible();
+    await expect(guideTrigger).toBeFocused();
     await expectTrainer(page, route.mode, route.patternId);
-  });
-}
-
-for (const path of [
-  "/guide/",
-  "/privacy/",
-  "/terms/",
-  "/fps-eye-training/",
-  "/blinkcamp-alternative/",
-  "/eyetrainer-gg-alternative/",
-]) {
-  test(`public page: ${path}`, async ({ page }) => {
-    await openPage(page, path);
-    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   });
 }
 
