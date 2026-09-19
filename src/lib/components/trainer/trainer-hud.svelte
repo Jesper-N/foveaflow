@@ -258,7 +258,7 @@
           aria-label={t(locale, `${siteMetadata.name} home`)}
         >
           <img
-            src="/logo-small.jpg"
+            src="/logo-render/logo.svg"
             alt=""
             width="24"
             height="24"

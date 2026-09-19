@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1075.2" height="1075.2" viewBox="-25.6 -25.6 1075.2 1075.2">
+  <defs>
+    <radialGradient id="gold-background" cx="49%" cy="48%" r="73%">
+      <stop stop-color="#f3b000" offset="0"/>
+      <stop stop-color="#f0ac00" offset="1"/>
+    </radialGradient>
+  </defs>
+  <g id="background">
+    <rect x="0" y="0" width="1024" height="1024" fill="url(#gold-background)"/>
+  </g>
+  <g id="white-emblem" fill="#fff">
+    <path id="upper-sweeping-wing" d="m312 454.2c37.1-45.1 69.4-91.4 109.1-128.5 34.5-32.2 74-50.2 119.1-50.2h344.1c-21.8 63.2-58.1 115.6-104.8 138-18.9 9-39 13.1-61.7 13.1h-226.5c-39.8 0-68.2 10-95.1 32.2-16.8 13.8-32.7 29.9-48.2 46.3-6.8-21.3-18.8-38.6-36-50.9z"/>
+    <path id="lower-sweeping-wing" d="m161.3 770.1 228.1-227.1c39.9-39.8 78.8-62.1 127.8-62.1h247.7c-21.2 43.6-48.6 82.5-79.2 106.8-28.1 22.3-54.8 33.4-90.2 33.4h-55.6c-34.2 0-55.7 10.9-80.1 35.2-37.6 37.5-71.4 72.2-107.9 105.7-27.3 25.2-63.7 41.7-101.3 41.7-34 0-63.7-10.8-89.3-33.6z"/>
+    <circle id="circular-mark" cx="251.4" cy="536.5" r="67.6"/>
+  </g>
+</svg>

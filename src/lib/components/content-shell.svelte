@@ -38,7 +38,7 @@
         class="focus-visible:outline-ring flex shrink-0 items-center gap-2.5 rounded-sm text-lg font-semibold focus-visible:outline-2 focus-visible:outline-offset-4"
       >
         <img
-          src="/logo-small.jpg"
+          src="/logo-render/logo.svg"
           alt=""
           width="28"
           height="28"
