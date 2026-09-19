@@ -97,7 +97,7 @@
                 class="bg-muted/60 w-[37.5%] px-5 py-5 text-base font-semibold"
                 ><span class="flex items-center gap-2"
                   ><img
-                    src="/logo-small.jpg"
+                    src="/logo-render/logo.svg"
                     alt=""
                     width="22"
                     height="22"

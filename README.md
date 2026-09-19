@@ -1,120 +1,170 @@
-# FoveaFlow - Free Online Eye Trainer
+<p align="center">
+  <a href="https://foveaflow.com/">
+    <img src="public/logo-render/logo.svg" width="88" height="88" alt="FoveaFlow logo" />
+  </a>
+</p>
 
-[![FoveaFlow eye trainer with a yellow tracking target and floating controls against an orange background](docs/images/preview.jpg)](https://foveaflow.com/)
+<h1 align="center">FoveaFlow</h1>
 
-[![Astro](https://img.shields.io/badge/Astro-7-ff5d01?logo=astro&logoColor=white)](https://astro.build/) [![Svelte](https://img.shields.io/badge/Svelte-5-ff3e00?logo=svelte&logoColor=white)](https://svelte.dev/) [![TypeScript](https://img.shields.io/badge/TypeScript-6.0.3-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![Bun](https://img.shields.io/badge/Bun-ready-000000?logo=bun&logoColor=white)](https://bun.sh/) [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.3.2-38bdf8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+<p align="center">
+  <strong>Eye training, right in your browser.</strong><br />
+  Follow a moving target, practice quick refocus, or hold your gaze through distractions.<br />
+  Set the pace yourself.
+</p>
 
-[FoveaFlow](https://foveaflow.com/) is a free online eye trainer for visual tracking, quick refocus, peripheral awareness, and FPS warmups. It includes Smooth Pursuit paths, Reaction Jumps, Lilac Chaser peripheral focus practice, random motion, and distractor tracking.
+<p align="center">
+  <a href="https://foveaflow.com/"><strong>Open FoveaFlow ↗</strong></a>
+  &nbsp; · &nbsp;
+  <a href="https://foveaflow.com/guide/">Guide</a>
+  &nbsp; · &nbsp;
+  <a href="#run-locally">Run locally</a>
+</p>
 
-It runs without an account or install. The app keeps the canvas full screen, gives direct control over target motion, and stores settings locally in your browser.
+<p align="center">
+  <sub>FREE TO USE &nbsp; / &nbsp; NO ACCOUNT &nbsp; / &nbsp; NO INSTALL</sub>
+</p>
 
-## What it does
+<p align="center">
+  <a href="https://foveaflow.com/">
+    <img src="docs/images/preview.jpg" width="100%" alt="FoveaFlow running in dark mode, with a yellow tracking target and floating controls, against an orange background" />
+  </a>
+</p>
 
-- Runs four drills: Smooth Pursuit, Reaction Jumps, Multiple Distractions, and Lilac Chaser.
-- Includes motion paths such as random, figure eight, bounce, sweeps, lissajous, and corner tour.
-- Supports speed controls in `deg/s`, `cm/s`, and `screen/s`.
-- Lets you tune target size, shape, color, opacity, trail behavior, distractor count, distractor brightness, and Lilac Chaser scale.
-- Includes calibration settings for viewing distance and CSS pixels per centimeter.
-- Stores settings locally in your browser.
-- Uses a canvas renderer with light and dark themes.
-- Keeps safety guardrails close to the engine, including saturated-red replacement and bounded frame timing.
+## Pick a drill
 
-## Background reading
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <sub>01 / TRACKING</sub>
+      <h3>Smooth Pursuit</h3>
+      <p>Follow one target along a moving path. Choose a steady sweep, a figure eight, or random motion.</p>
+    </td>
+    <td width="50%" valign="top">
+      <sub>02 / REFOCUS</sub>
+      <h3>Reaction Jumps</h3>
+      <p>Find the target each time it jumps to a new position. Adjust the pace as you go.</p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <sub>03 / DISTRACTIONS</sub>
+      <h3>Multiple Distractions</h3>
+      <p>Keep track of the brightest target among moving distractors. Control their number and brightness.</p>
+    </td>
+    <td width="50%" valign="top">
+      <sub>04 / PERIPHERAL AWARENESS</sub>
+      <h3>Lilac Chaser</h3>
+      <p>Hold your gaze on the center while noticing changes around it. Tune the ring's scale and color.</p>
+    </td>
+  </tr>
+</table>
 
-- [Visual guidance of smooth pursuit eye movements](https://pmc.ncbi.nlm.nih.gov/articles/PMC2887486/)
-- [Visual learning in multiple-object tracking](https://pmc.ncbi.nlm.nih.gov/articles/PMC2375111/)
-- [Lilac chaser illusion](https://en.wikipedia.org/wiki/Lilac_chaser)
-- [FPS Eye Training Warmup (HIGH FPS)](https://www.youtube.com/watch?v=WAPKAZhOFM4)
+## Make it comfortable
 
-## Tech stack
+Start with a large target and a slow speed. Use the floating controls to adjust both while the drill runs.
 
-- [Astro](https://astro.build/) for the app shell.
-- [Svelte 5](https://svelte.dev/) for the trainer UI.
-- [TypeScript](https://www.typescriptlang.org/) for application and engine code.
-- [Tailwind CSS 4](https://tailwindcss.com/) for styling.
-- [shadcn-svelte](https://www.shadcn-svelte.com/) and [bits-ui](https://bits-ui.com/) for UI primitives.
-- [Bun](https://bun.sh/) for dependency management and scripts.
+| Adjust | What you control |
+| :-- | :-- |
+| Motion | Random paths, sweeps, figure eight, bounce, Lissajous, corner tour, and more. |
+| Pace | Speed in `deg/s`, `cm/s`, or `screen/s`. |
+| Target | Size, shape, color, opacity, and trails. |
+| Calibration | Viewing distance and CSS pixels per centimeter. |
+| Appearance | Light and dark themes, distractor brightness, and Lilac Chaser scale. |
 
-## Quick start
+Your settings stay in your browser and carry over to your next visit.
 
-Requirements:
+> FoveaFlow is practice software, not medical care. Stop if you feel eye strain, dizziness, headache, nausea, or other discomfort. If you have an eye condition, light sensitivity, seizures, or recent eye surgery, ask a qualified clinician before using visual training tools.
 
-- Bun `1.4.1`
-- Node.js `>=22.12.0` (`.node-version` selects Node.js 24 LTS)
+## Run locally
 
-Install dependencies:
+Use **Bun 1.4.1** and **Node.js 24**, as selected by `.node-version`. The minimum supported Node.js version is `22.12.0`.
 
 ```bash
 bun install
-```
-
-Start the local dev server:
-
-```bash
 bun run dev
 ```
 
-Astro serves the app at:
+Open [127.0.0.1:4321](http://127.0.0.1:4321).
 
-```text
-http://127.0.0.1:4321
-```
+The app uses [Astro](https://astro.build/) for its shell, [Svelte 5](https://svelte.dev/) for the controls, and a TypeScript canvas engine for the drills. [Tailwind CSS 4](https://tailwindcss.com/), [shadcn-svelte](https://www.shadcn-svelte.com/), and [Bits UI](https://bits-ui.com/) handle the interface.
 
-## Scripts
+<details>
+<summary><strong>Development commands</strong></summary>
 
-| Command | What it does |
-| --- | --- |
-| `bun run dev` | Starts the Astro dev server on `127.0.0.1`. |
-| `bun run build` | Builds the production app. |
-| `bun run preview` | Serves the built app locally. |
-| `bun run check` | Runs `astro check`. |
-| `bun run lint` | Checks code and formatting with Ultracite. |
-| `bun run fix` | Applies Ultracite fixes and formats Astro files. |
-| `bun run test` | Builds production assets and runs the release browser tests. |
-| `bun run test:release` | Same release suite as `bun run test`. |
-| `bun run verify` | Runs every required pre-deploy quality check. |
-| `bun run prepush` | Runs the full verification before pushing. |
-| `bun run format` | Formats supported files with Oxfmt and Astro files with Prettier. |
+| Command | Purpose |
+| :-- | :-- |
+| `bun run dev` | Start the local Astro server. |
+| `bun run build` | Build the production app and generate CSP headers. |
+| `bun run preview` | Build and preview locally through Wrangler. |
+| `bun run check` | Check Astro, Svelte, and application types. |
+| `bun run check:tools` | Check tooling types. |
+| `bun run check:i18n` | Check translation coverage. |
+| `bun run lint` | Check code and formatting with Ultracite. |
+| `bun run fix` | Apply Ultracite fixes and format Astro files. |
+| `bun run format` | Format with Oxfmt and the Astro Prettier plugin. |
+| `bun run test` | Build and run the release browser tests. |
+| `bun run verify` | Run the full quality gate, including the dependency audit. |
 
-## Project structure
+`bun run test:release` runs the same suite as `bun run test`. `bun run prepush` runs the same checks as `bun run verify`.
 
-```text
-src/pages/                 Astro routes
-src/lib/components/        Svelte app and UI components
-src/lib/trainer/           Trainer UI state, rendering, and settings helpers
-src/lib/engine/            Training patterns, profiles, safety, storage
-src/styles/                Global styles and Tailwind setup
-public/metadata/           Generated icons and social images
-tests/release.playwright.ts Desktop and mobile release checks
-```
+</details>
 
-## Quality checks
+<details>
+<summary><strong>Checks and deployment</strong></summary>
 
-Install the test browser and enable the Git pre-push hook once per clone:
+Install the test browser and enable the pre-push hook once per clone:
 
 ```bash
 bunx playwright install chromium
 git config core.hooksPath .githooks
 ```
 
-Every push then runs `bun run prepush`: lint, formatting, types, Tailwind diagnostics, the production build, browser tests, and dependency audit. GitHub Actions runs the same verification before deploying.
+The hook runs lint, formatting, type checks, translation coverage, Tailwind diagnostics, the production build, browser tests, and a dependency audit.
 
-The release suite opens every trainer route and public page on desktop and mobile Chromium. It selects every mode and pattern through the menus, checks canvas animation, pause/resume, settings updates, persistence, and reset. Browser errors and failed site resources fail the run. Failure screenshots and traces are saved in `test-results/`.
+The release suite checks every trainer route and public page on desktop and mobile Chromium. It exercises drill and path selection, canvas animation, pause/resume, settings, persistence, and reset. Browser errors and failed site resources fail the run; failure screenshots and traces land in `test-results/`.
 
-Run `bun run test:release` for browser checks alone, or `bun run prepush` for the full gate. Set `TEST_PORT` if the default port `4323` is occupied.
+Set `TEST_PORT` if the default test port, `4323`, is occupied. GitHub Actions runs the full verification on pull requests and deploys to Cloudflare after successful verification on `main`.
 
-## Safety note
+</details>
 
-FoveaFlow is practice software, not medical care. Stop if you feel eye strain, dizziness, headache, nausea, or any other discomfort. If you have an eye condition, light sensitivity, seizures, or recent eye surgery, ask a qualified clinician before using visual training tools.
+<details>
+<summary><strong>Where things live</strong></summary>
 
-## Roadmap
+```text
+src/pages/                  Astro routes
+src/lib/components/         Svelte app and UI components
+src/lib/trainer/            Trainer state, rendering, and settings
+src/lib/engine/             Patterns, profiles, safety, and storage
+src/styles/                 Global styles and Tailwind setup
+public/logo-render/         SVG logo
+public/metadata/            App icons and social image
+tests/release.playwright.ts Desktop and mobile release checks
+```
 
-- Session history with basic progress stats.
+</details>
+
+<details>
+<summary><strong>Ideas for later</strong></summary>
+
+- Session history and basic progress stats.
 - Guided routines for warmups, tracking, reaction drills, and cooldowns.
-- Better calibration flow for screen size and viewing distance.
+- A clearer calibration flow for screen size and viewing distance.
 - Exportable presets.
-- Demo GIF and short usage clips.
+- Short demo clips.
 
-## License
+</details>
 
-MIT. See [LICENSE](LICENSE).
+## Background reading
+
+- [Visual guidance of smooth pursuit eye movements](https://pmc.ncbi.nlm.nih.gov/articles/PMC2887486/)
+- [Visual learning in multiple-object tracking](https://pmc.ncbi.nlm.nih.gov/articles/PMC2375111/)
+- [Lilac chaser illusion](https://en.wikipedia.org/wiki/Lilac_chaser)
+- [FPS Eye Training Warmup](https://www.youtube.com/watch?v=WAPKAZhOFM4)
+
+---
+
+<p align="center">
+  <a href="https://foveaflow.com/">foveaflow.com</a>
+  &nbsp; · &nbsp;
+  <a href="LICENSE">MIT license</a>
+</p>

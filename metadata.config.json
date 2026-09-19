@@ -6,8 +6,8 @@
     "foreground": "#ffffff",
     "accent": "#F0B100"
   },
-  "logo": "./public/logo.jpg",
-  "faviconSrc": "./public/logo.jpg",
+  "logo": "./public/logo-render/logo.svg",
+  "faviconSrc": "./public/logo-render/logo.svg",
   "faviconTransparent": true,
   "outputDir": "public/metadata",
   "font": "Inter"
