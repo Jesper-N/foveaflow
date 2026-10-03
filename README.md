@@ -1,60 +1,61 @@
-<p align="center">
-  <a href="https://foveaflow.com/">
-    <img src="public/logo-render/logo.svg" width="88" height="88" alt="FoveaFlow logo" />
-  </a>
-</p>
+<a href="https://foveaflow.com/">
+  <img src="docs/images/preview.avif" width="100%" alt="FoveaFlow running in dark mode, with a yellow tracking target and floating controls, against an orange background" />
+</a>
 
-<h1 align="center">FoveaFlow</h1>
+<h3 align="center">Eye training, right in your browser.</h3>
 
 <p align="center">
-  <strong>Eye training, right in your browser.</strong><br />
-  Follow a moving target, practice quick refocus, or hold your gaze through distractions.<br />
-  Set the pace yourself.
+  Follow a moving target, practice quick refocus, or hold your gaze through distractions. Set the pace yourself.<br />
+  It's free, and there's no account or install.
 </p>
 
 <p align="center">
-  <a href="https://foveaflow.com/"><strong>Open FoveaFlow ↗</strong></a>
-  &nbsp; · &nbsp;
-  <a href="https://foveaflow.com/guide/">Guide</a>
-  &nbsp; · &nbsp;
-  <a href="#run-locally">Run locally</a>
+  <a href="https://foveaflow.com/"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/buttons/open-dark.avif" /><img src="docs/images/buttons/open-light.avif" height="44" alt="Open FoveaFlow" /></picture></a>
+  &nbsp;
+  <a href="https://foveaflow.com/guide/"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/buttons/guide-dark.avif" /><img src="docs/images/buttons/guide-light.avif" height="44" alt="Read the guide" /></picture></a>
 </p>
 
 <p align="center">
-  <sub>FREE TO USE &nbsp; / &nbsp; NO ACCOUNT &nbsp; / &nbsp; NO INSTALL</sub>
-</p>
-
-<p align="center">
-  <a href="https://foveaflow.com/">
-    <img src="docs/images/preview.jpg" width="100%" alt="FoveaFlow running in dark mode, with a yellow tracking target and floating controls, against an orange background" />
-  </a>
+  <a href="https://github.com/Jesper-N/foveaflow/actions/workflows/deploy.yml"><img src="https://img.shields.io/github/actions/workflow/status/Jesper-N/foveaflow/deploy.yml?branch=main&style=flat-square&label=deploy" alt="Deploy status" /></a>
+  <img src="https://img.shields.io/badge/languages-10-blue?style=flat-square" alt="Available in 10 languages" />
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/Jesper-N/foveaflow?style=flat-square" alt="MIT license" /></a>
 </p>
 
 ## Pick a drill
 
+Each drill has its own URL, so you can bookmark the one you use most.
+
 <table>
   <tr>
     <td width="50%" valign="top">
-      <sub>01 / TRACKING</sub>
+      <a href="https://foveaflow.com/smooth-pursuit/"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/drills/smooth-pursuit-dark.avif" /><img src="docs/images/drills/smooth-pursuit-light.avif" width="100%" alt="The Smooth Pursuit target traces a figure eight with its trail turned on" /></picture></a>
       <h3>Smooth Pursuit</h3>
       <p>Follow one target along a moving path. Choose a steady sweep, a figure eight, or random motion.</p>
+      <a href="https://foveaflow.com/smooth-pursuit/">Try this drill ↗</a>
     </td>
     <td width="50%" valign="top">
-      <sub>02 / REFOCUS</sub>
+      <a href="https://foveaflow.com/reaction-jumps/"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/drills/reaction-jumps-dark.avif" /><img src="docs/images/drills/reaction-jumps-light.avif" width="100%" alt="The Reaction Jumps target jumps to a new spot on the grid" /></picture></a>
       <h3>Reaction Jumps</h3>
       <p>Find the target each time it jumps to a new position. Adjust the pace as you go.</p>
+      <a href="https://foveaflow.com/reaction-jumps/">Try this drill ↗</a>
     </td>
   </tr>
+</table>
+
+<!-- Two one-row tables: GitHub stripes every second table row, which would tint the lower cards. -->
+<table>
   <tr>
     <td width="50%" valign="top">
-      <sub>03 / DISTRACTIONS</sub>
+      <a href="https://foveaflow.com/multiple-distractions/"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/drills/multiple-distractions-dark.avif" /><img src="docs/images/drills/multiple-distractions-light.avif" width="100%" alt="One bright target moves among darker distractors in Multiple Distractions" /></picture></a>
       <h3>Multiple Distractions</h3>
       <p>Keep track of the brightest target among moving distractors. Control their number and brightness.</p>
+      <a href="https://foveaflow.com/multiple-distractions/">Try this drill ↗</a>
     </td>
     <td width="50%" valign="top">
-      <sub>04 / PERIPHERAL AWARENESS</sub>
+      <a href="https://foveaflow.com/lilac-chaser/"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/drills/lilac-chaser-dark.avif" /><img src="docs/images/drills/lilac-chaser-light.avif" width="100%" alt="A gap moves around a ring of magenta balls while the cross stays in the center, in Lilac Chaser" /></picture></a>
       <h3>Lilac Chaser</h3>
       <p>Hold your gaze on the center while noticing changes around it. Tune the ring's scale and color.</p>
+      <a href="https://foveaflow.com/lilac-chaser/">Try this drill ↗</a>
     </td>
   </tr>
 </table>
@@ -63,16 +64,34 @@
 
 Start with a large target and a slow speed. Use the floating controls to adjust both while the drill runs.
 
-| Adjust | What you control |
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/settings-dark.avif" />
+  <img src="docs/images/settings-light.avif" width="100%" alt="The FoveaFlow controls panel, open on Targets, with ball color, target form, size, opacity, and target letters" />
+</picture>
+
+| Setting | Options |
 | :-- | :-- |
-| Motion | Random paths, sweeps, figure eight, bounce, Lissajous, corner tour, and more. |
-| Pace | Speed in `deg/s`, `cm/s`, or `screen/s`. |
-| Target | Size, shape, color, opacity, and trails. |
-| Calibration | Viewing distance and CSS pixels per centimeter. |
-| Appearance | Light and dark themes, distractor brightness, and Lilac Chaser scale. |
+| Speed | 1 to 100 |
+| Target size | 4 to 100 px |
+| Target | Circle, ring, square, diamond, triangle, or cross. Color, opacity, trails, and letter overlays. |
+| Motion | 20 paths, including sweeps, figure eight, bounce, Lissajous, and corner tour |
+| Distractors | Up to 10, with adjustable brightness |
+| Lilac Chaser | Ring scale and ball color |
+| Interface | Light, dark, or system theme, in 10 languages |
 
 Your settings stay in your browser and carry over to your next visit.
 
+### Keyboard shortcuts
+
+| Key | Action | Key | Action |
+| :-- | :-- | :-- | :-- |
+| <kbd>Space</kbd> | Pause or resume | <kbd>M</kbd> | Choose a drill |
+| <kbd>←</kbd> <kbd>→</kbd> | Slower or faster | <kbd>P</kbd> | Choose a motion path |
+| <kbd>↓</kbd> <kbd>↑</kbd> | Smaller or larger target | <kbd>S</kbd> | Open the controls |
+| <kbd>D</kbd> | Switch between light and dark | <kbd>G</kbd> | Open the guide |
+
+> [!IMPORTANT]
+>
 > FoveaFlow is practice software, not medical care. Stop if you feel eye strain, dizziness, headache, nausea, or other discomfort. If you have an eye condition, light sensitivity, seizures, or recent eye surgery, ask a qualified clinician before using visual training tools.
 
 ## Run locally
@@ -90,6 +109,7 @@ The app uses [Astro](https://astro.build/) for its shell, [Svelte 5](https://sve
 
 <details>
 <summary><strong>Development commands</strong></summary>
+<br />
 
 | Command | Purpose |
 | :-- | :-- |
@@ -111,6 +131,7 @@ The app uses [Astro](https://astro.build/) for its shell, [Svelte 5](https://sve
 
 <details>
 <summary><strong>Checks and deployment</strong></summary>
+<br />
 
 Install the test browser and enable the pre-push hook once per clone:
 
@@ -129,6 +150,7 @@ Set `TEST_PORT` if the default test port, `4323`, is occupied. GitHub Actions ru
 
 <details>
 <summary><strong>Where things live</strong></summary>
+<br />
 
 ```text
 src/pages/                  Astro routes
@@ -138,6 +160,7 @@ src/lib/engine/             Patterns, profiles, safety, and storage
 src/styles/                 Global styles and Tailwind setup
 public/logo-render/         SVG logo
 public/metadata/            App icons and social image
+docs/images/                README images
 tests/release.playwright.ts Desktop and mobile release checks
 ```
 
@@ -145,12 +168,11 @@ tests/release.playwright.ts Desktop and mobile release checks
 
 <details>
 <summary><strong>Ideas for later</strong></summary>
+<br />
 
 - Session history and basic progress stats.
 - Guided routines for warmups, tracking, reaction drills, and cooldowns.
-- A clearer calibration flow for screen size and viewing distance.
 - Exportable presets.
-- Short demo clips.
 
 </details>
 
@@ -161,10 +183,10 @@ tests/release.playwright.ts Desktop and mobile release checks
 - [Lilac chaser illusion](https://en.wikipedia.org/wiki/Lilac_chaser)
 - [FPS Eye Training Warmup](https://www.youtube.com/watch?v=WAPKAZhOFM4)
 
----
+<br />
 
 <p align="center">
-  <a href="https://foveaflow.com/">foveaflow.com</a>
-  &nbsp; · &nbsp;
-  <a href="LICENSE">MIT license</a>
+  <a href="https://foveaflow.com/"><img src="public/logo-render/logo.svg" width="32" height="32" alt="FoveaFlow" /></a>
+  <br />
+  <sub><a href="https://foveaflow.com/">foveaflow.com</a> &nbsp;·&nbsp; <a href="LICENSE">MIT license</a></sub>
 </p>
