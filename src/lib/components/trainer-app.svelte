@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createTrainerAppController } from "$lib/components/trainer/trainer-app-controller.svelte";
   import TrainerControlsDialog from "$lib/components/trainer/trainer-controls-dialog.svelte";
-  import TrainerGuidePopover from "$lib/components/trainer/trainer-guide-popover.svelte";
+  import TrainerGuideDialog from "$lib/components/trainer/trainer-guide-dialog.svelte";
   import TrainerHud from "$lib/components/trainer/trainer-hud.svelte";
   import { t } from "$lib/i18n/translate";
   import { ModeWatcher } from "mode-watcher";
@@ -80,16 +80,12 @@
     />
   {/if}
 
-  <TrainerGuidePopover
+  <TrainerGuideDialog
     activeTrainingModeGuide={controller.activeTrainingModeGuide}
     guideSeoContent={controller.guideSeoContent}
     hasActiveRoute={Boolean(controller.activeRoute)}
-    guidePatternId={controller.activeRoute?.indexable === false
-      ? controller.activeRoute.patternId
-      : undefined}
-    openGuideFaqQuestion={controller.openGuideFaqQuestion}
-    onGuidePopoverToggle={controller.handleGuidePopoverToggle}
-    toggleGuideFaq={controller.toggleGuideFaq}
+    lastModified={controller.guideLastModified}
+    onClose={controller.handleGuideClose}
   />
 
   <TrainerControlsDialog
@@ -99,9 +95,7 @@
     availableControlSections={controller.localizedControlSections}
     currentControlSection={controller.currentControlSection}
     currentControlSectionLabel={controller.currentControlSectionLabel}
-    motionDirectionLabel={controller.motionDirectionLabel}
     canToggleDirection={controller.canToggleDirection}
-    isDarkMode={controller.isDarkMode}
     isMotMode={controller.isMotMode}
     isLilacChaserMode={controller.isLilacChaserMode}
     behaviorValue={controller.behaviorValue}

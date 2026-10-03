@@ -1,4 +1,6 @@
 ---
+import { editorialLede, editorialLink, editorialTitle } from "./page-styles";
+
 interface Props {
   heading: string;
   description: string;
@@ -18,23 +20,23 @@ const { heading, description, showHomeLink = false } = Astro.props;
     class="bg-background text-foreground fixed inset-0 z-100 overflow-auto p-8"
   >
     <section
-      class="mx-auto w-full max-w-184 leading-[1.65] [&_p]:max-w-2xl [&_p]:text-muted-foreground [&_a]:text-foreground [&_a]:underline [&_a]:underline-offset-[0.2em]"
+      class="mx-auto flex w-full max-w-2xl flex-col gap-4 py-16 leading-7 [&_p]:text-muted-foreground"
     >
-      <p class="m-0 mb-3 text-sm font-bold uppercase">
-        Free online eye trainer
-      </p>
-      <h2 class="m-0 max-w-[14ch] text-[2.5rem] leading-[0.95] md:text-7xl">
-        {heading}
-      </h2>
-      <p>{description}</p>
+      <h2 class={editorialTitle}>{heading}</h2>
+      <p class={editorialLede}>{description}</p>
       <p>
         FoveaFlow needs JavaScript to run its moving-target drills. The guide
-        and safety information remain available without JavaScript.
+        works without it.
       </p>
-      <p>
-        {showHomeLink && <a href="/">Open the FoveaFlow home page</a>}
-        {showHomeLink && " · "}
-        <a href="/guide/">Read the FoveaFlow guide</a>
+      <p class="flex flex-wrap gap-x-6 gap-y-2">
+        {
+          showHomeLink && (
+            <a href="/" class={editorialLink}>
+              Open the FoveaFlow home page
+            </a>
+          )
+        }
+        <a href="/guide/" class={editorialLink}> Read the FoveaFlow guide </a>
       </p>
     </section>
   </main>

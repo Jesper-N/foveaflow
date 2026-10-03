@@ -18,7 +18,7 @@ export const audienceNotes = [
 export const trainingModeGuides = [
   {
     benefits:
-      "Smooth Pursuit helps train steady tracking, moving-target focus, and controlled eye movement across more of your usable range. Predictable paths build rhythm and control. Random paths and hard turns add more visual search and reaction demand.",
+      "Smooth Pursuit helps train steady tracking, moving-target focus, and controlled eye movement across more of your usable range.",
     mode: "pursuit",
     steps: [
       "Keep your head still and let your eyes do the work.",
@@ -43,7 +43,7 @@ export const trainingModeGuides = [
   },
   {
     benefits:
-      "Multiple Distractions trains selective attention, visual tracking under clutter, and target identity. The job is not just following motion. You also have to keep choosing the right object when similar objects compete for attention.",
+      "Multiple Distractions trains selective attention, visual tracking under clutter, and target identity. You follow the motion and keep choosing the right ball when similar ones compete for your attention.",
     mode: "mot",
     steps: [
       "Keep your head still and lock onto the main, brightest ball.",

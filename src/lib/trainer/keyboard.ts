@@ -60,7 +60,7 @@ const shortcutCaptureSelector = [
   "[contenteditable='true']",
   "[data-slot='dialog-content']",
   "[data-slot='select-content']",
-  "[popover]:popover-open",
+  "dialog[open]",
   "[role='button']",
   "[role='combobox']",
   "[role='listbox']",

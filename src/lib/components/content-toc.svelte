@@ -33,10 +33,10 @@
   </div>
   <details class="group border-border border-b pb-4 lg:hidden">
     <summary
-      class="focus-visible:outline-ring flex cursor-pointer list-none items-center justify-between gap-3 rounded-sm text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-4 [&::-webkit-details-marker]:hidden"
+      class="focus-visible:outline-ring flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 rounded-sm text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-4 [&::-webkit-details-marker]:hidden"
     >
       {t(locale, "On this page")}<ChevronDown
-        class="text-muted-foreground size-4 transition-transform group-open:rotate-180 motion-reduce:transition-none"
+        class="text-muted-foreground size-4 transition-transform duration-200 group-open:rotate-180 motion-reduce:transition-none"
       />
     </summary>
     {@render navigation()}

@@ -5,8 +5,8 @@ import {
   getRouteSlugFromPath,
   getTrainerRoute,
 } from "$lib/content/trainer-routes";
+import type { TrainerRoute } from "$lib/content/trainer-routes";
 import { getTrainingModeGuide } from "$lib/content/training";
-import { DEFAULT_CALIBRATION } from "$lib/engine/calibration";
 import { firstPreset, settingsFromPreset } from "$lib/engine/presets";
 import type { TrainerSettings } from "$lib/engine/presets";
 import { darkenHexColor, safeStimulusColor } from "$lib/engine/safety";
@@ -54,21 +54,14 @@ import {
   isLetterWeight,
   isLilacChaserBallColor,
   isPatternId,
-  isSpeedUnit,
   isTargetForm,
   resolveSliderInteger,
   resolveSliderNumber,
-  resolveSpeedSliderValue,
-  resolveSpeedUnit,
   resetSettingsToPresetDefaults,
   resolveStoredSettings,
   trainerSettingBounds,
-  updateCalibrationField,
 } from "$lib/trainer/settings";
-import type {
-  CalibrationField,
-  TrainerSliderValue,
-} from "$lib/trainer/settings";
+import type { TrainerSliderValue } from "$lib/trainer/settings";
 import {
   focusHeaderSelectTriggerFromShortcut,
   getHeaderSelectOpenState,
@@ -102,32 +95,80 @@ const applySliderNumber = (
   }
 };
 
-const handleThemeCheckedChange = (checked: boolean) => {
-  setMode(checked ? "dark" : "light");
-};
-
 const setMetaContent = (selector: string, content: string) => {
   document.head
     .querySelector<HTMLMetaElement>(selector)
     ?.setAttribute("content", content);
 };
 
+const syncDocumentRouteMetadata = (path: string) => {
+  const route = findTrainerRoute(getRouteSlugFromPath(path));
+  const title = route?.title ?? siteMetadata.title;
+  const description = route?.description ?? siteMetadata.description;
+  const siteOrigin = new URL(window.location.origin);
+  const canonicalUrl = new URL(route?.path ?? "/", siteOrigin).toString();
+  const robots =
+    route?.indexable === false
+      ? "noindex,follow"
+      : "index,follow,max-image-preview:large";
+
+  document.title = title;
+  document.head
+    .querySelector<HTMLLinkElement>('link[rel="canonical"]')
+    ?.setAttribute("href", canonicalUrl);
+  setMetaContent('meta[name="description"]', description);
+  setMetaContent('meta[name="robots"]', robots);
+  setMetaContent('meta[property="og:title"]', title);
+  setMetaContent('meta[property="og:description"]', description);
+  setMetaContent('meta[property="og:url"]', canonicalUrl);
+  setMetaContent('meta[name="twitter:title"]', title);
+  setMetaContent('meta[name="twitter:description"]', description);
+
+  let structuredData:
+    | ReturnType<typeof buildStructuredData>
+    | ReturnType<typeof buildTrainerRouteStructuredData>
+    | undefined = buildStructuredData(siteOrigin);
+  if (route) {
+    structuredData = route.indexable
+      ? buildTrainerRouteStructuredData(route, siteOrigin)
+      : undefined;
+  }
+
+  let structuredDataElement = document.head.querySelector<HTMLScriptElement>(
+    "script[data-seo-structured-data]"
+  );
+  if (!structuredData) {
+    structuredDataElement?.remove();
+    return;
+  }
+  if (!structuredDataElement) {
+    structuredDataElement = document.createElement("script");
+    structuredDataElement.type = "application/ld+json";
+    structuredDataElement.dataset.seoStructuredData = "";
+    document.head.append(structuredDataElement);
+  }
+  structuredDataElement.textContent = JSON.stringify(structuredData);
+};
+
+const getGuideRoute = (route: TrainerRoute, settings: TrainerSettings) =>
+  route.mode === settings.presetId &&
+  (route.patternId === undefined || route.patternId === settings.patternId)
+    ? route
+    : (getTrainerRoute(settings.presetId, settings.patternId) ?? route);
+
 export const createTrainerAppController = (getRouteSlug: () => string) => {
   const hudAutoHideDelayMs = 3500;
   const hudInitialRevealMs = 1800;
+  const hudPointerRevealDelayMs = 120;
   const cursorHideDelayMs = 2000;
 
   let settings = $state<TrainerSettings>(
-    applyRouteToSettings(
-      settingsFromPreset(firstPreset, DEFAULT_CALIBRATION),
-      untrack(getRouteSlug)
-    )
+    applyRouteToSettings(settingsFromPreset(firstPreset), untrack(getRouteSlug))
   );
   let currentRouteSlug = $state(untrack(getRouteSlug));
   let panelOpen = $state(false);
   let activeControlSection = $state<ControlSectionId>("targets");
-  let guidePopoverOpen = $state(false);
-  let openGuideFaqQuestion = $state<string | null>(null);
+  let guideOpen = $state(false);
   let hudBounds = $state<HudBounds | null>(null);
   let motionPaused = $state(false);
   let storageReady = $state(false);
@@ -135,6 +176,7 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
   let hudVisible = $state(true);
   let hudElementInteractionActive = $state(false);
   let lastPointerWasTouch = false;
+  let hudPointerRevealTimeout: number | undefined;
   let cursorHidden = $state(false);
   const headerSelects = $state({
     lilacChaserColorSelectOpen: false,
@@ -144,7 +186,7 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
   let languageSelectOpen = $state(false);
   const overlayOpen = $derived(
     panelOpen ||
-      guidePopoverOpen ||
+      guideOpen ||
       languageSelectOpen ||
       Object.values(headerSelects).some(Boolean)
   );
@@ -171,17 +213,12 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
   const pageSeoContent = $derived(
     activeRoute?.seoContent ?? homepageSeoContent
   );
-  const activeGuideRoute = $derived(
-    activeRoute?.mode === settings.presetId &&
-      (activeRoute.patternId === undefined ||
-        activeRoute.patternId === settings.patternId)
-      ? activeRoute
-      : getTrainerRoute(settings.presetId, settings.patternId)
+  const guideRoute = $derived(
+    activeRoute ? getGuideRoute(activeRoute, settings) : null
   );
-  const guideSeoContent = $derived(
-    activeRoute
-      ? (activeGuideRoute?.seoContent ?? pageSeoContent)
-      : pageSeoContent
+  const guideSeoContent = $derived(guideRoute?.seoContent ?? pageSeoContent);
+  const guideLastModified = $derived(
+    guideRoute?.lastModified ?? siteMetadata.homepageLastModified
   );
   const canToggleDirection = $derived(
     canPatternToggleDirection(settings.patternId)
@@ -215,11 +252,14 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
   );
   const isDarkMode = $derived(colorMode === "dark");
   const settingsSnapshot = $derived($state.snapshot(settings));
+  // The controls and the guide cover the drill with a blurred overlay, so the
+  // canvas holds its frame instead of animating under them.
+  const canvasPaused = $derived(motionPaused || panelOpen || guideOpen);
   const canvasState = $derived({
     canToggleDirection,
     distractorColor,
     isLilacChaserMode,
-    motionPaused,
+    motionPaused: canvasPaused,
     safeBallColor,
     settings: settingsSnapshot,
   });
@@ -230,12 +270,10 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
   const {
     attachCanvas,
     drawFrame,
-    getArena,
     handleVisibilityChange,
     invalidateLilacChaserFrame,
     normalizeMotionDirection,
     redrawForTheme,
-    refreshBaseSpeed,
     resetMotion,
     resetPatternState,
     syncPlayback,
@@ -274,55 +312,6 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
   let hudShell: HTMLDivElement | undefined;
   const settingsSaver = createDebouncedSettingsSaver();
 
-  const syncDocumentRouteMetadata = (path: string) => {
-    const route = findTrainerRoute(getRouteSlugFromPath(path));
-    const title = route?.title ?? siteMetadata.title;
-    const description = route?.description ?? siteMetadata.description;
-    const siteOrigin = new URL(window.location.origin);
-    const canonicalUrl = new URL(route?.path ?? "/", siteOrigin).toString();
-    const robots =
-      route?.indexable === false
-        ? "noindex,follow"
-        : "index,follow,max-image-preview:large";
-
-    document.title = title;
-    document.head
-      .querySelector<HTMLLinkElement>('link[rel="canonical"]')
-      ?.setAttribute("href", canonicalUrl);
-    setMetaContent('meta[name="description"]', description);
-    setMetaContent('meta[name="robots"]', robots);
-    setMetaContent('meta[property="og:title"]', title);
-    setMetaContent('meta[property="og:description"]', description);
-    setMetaContent('meta[property="og:url"]', canonicalUrl);
-    setMetaContent('meta[name="twitter:title"]', title);
-    setMetaContent('meta[name="twitter:description"]', description);
-
-    let structuredData:
-      | ReturnType<typeof buildStructuredData>
-      | ReturnType<typeof buildTrainerRouteStructuredData>
-      | undefined = buildStructuredData(siteOrigin);
-    if (route) {
-      structuredData = route.indexable
-        ? buildTrainerRouteStructuredData(route, siteOrigin)
-        : undefined;
-    }
-
-    let structuredDataElement = document.head.querySelector<HTMLScriptElement>(
-      "script[data-seo-structured-data]"
-    );
-    if (!structuredData) {
-      structuredDataElement?.remove();
-      return;
-    }
-    if (!structuredDataElement) {
-      structuredDataElement = document.createElement("script");
-      structuredDataElement.type = "application/ld+json";
-      structuredDataElement.dataset.seoStructuredData = "";
-      document.head.append(structuredDataElement);
-    }
-    structuredDataElement.textContent = JSON.stringify(structuredData);
-  };
-
   const resetDirectionForFixedPatterns = (patternId: PatternId) => {
     settings.motionDirection = normalizeMotionDirection(
       patternId,
@@ -335,8 +324,41 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     syncPlayback();
   };
 
+  const handleReduceMotionChange = (event: MediaQueryListEvent) => {
+    if (event.matches) {
+      setMotionPaused(true);
+    }
+  };
+
+  const setPanelOpen = (open: boolean) => {
+    panelOpen = open;
+    syncPlayback();
+  };
+
+  const setGuideOpen = (open: boolean) => {
+    guideOpen = open;
+    syncPlayback();
+  };
+
   const revealHud = () => {
     hudVisible = true;
+  };
+
+  const cancelHudPointerReveal = () => {
+    window.clearTimeout(hudPointerRevealTimeout);
+    hudPointerRevealTimeout = undefined;
+  };
+
+  // A short hover intent keeps a cursor drifting past the top edge from
+  // popping the controls over the drill.
+  const revealHudAfterPointerIntent = () => {
+    if (hudVisible || hudPointerRevealTimeout !== undefined) {
+      return;
+    }
+    hudPointerRevealTimeout = window.setTimeout(() => {
+      hudPointerRevealTimeout = undefined;
+      revealHud();
+    }, hudPointerRevealDelayMs);
   };
 
   $effect(() => {
@@ -352,7 +374,6 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     settings = applyRouteToSettings(baseSettings, browserRouteSlug);
     resetPatternState();
     resetDirectionForFixedPatterns(settings.patternId);
-    refreshBaseSpeed();
     syncDocumentRouteMetadata(window.location.pathname);
   };
 
@@ -391,11 +412,6 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
       if (reduceMotionQuery.matches) {
         setMotionPaused(true);
       }
-      const handleReduceMotionChange = (event: MediaQueryListEvent) => {
-        if (event.matches) {
-          setMotionPaused(true);
-        }
-      };
       reduceMotionQuery.addEventListener("change", handleReduceMotionChange);
 
       return () => {
@@ -403,6 +419,7 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
         themeObserver.disconnect();
         settingsSaver.flush();
         hudAutoHideTimer.clear();
+        cancelHudPointerReveal();
         cursorAutoHideTimer.clear();
         reduceMotionQuery.removeEventListener(
           "change",
@@ -411,7 +428,7 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
       };
     });
 
-  const speedSliderValue = () => [settings.speed.value];
+  const speedSliderValue = () => [settings.speed];
 
   const attachHudShell: Attachment<HTMLDivElement> = (node) => {
     hudShell = node;
@@ -439,16 +456,14 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
   };
 
   const setSpeedSliderValue = (value: TrainerSliderValue) => {
-    const next = resolveSpeedSliderValue(value, settings.speed.unit);
-    if (next === null) {
-      return;
+    const next = resolveSliderInteger(
+      value,
+      trainerSettingBounds.speed.min,
+      trainerSettingBounds.speed.max
+    );
+    if (next !== null) {
+      settings.speed = next;
     }
-
-    settings.speed = {
-      ...settings.speed,
-      value: next,
-    };
-    refreshBaseSpeed();
   };
 
   const sizeSliderValue = () => [settings.baseRadiusPx];
@@ -483,13 +498,22 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     drawFrame();
   };
 
+  const handleMotionDirectionChange = (value: string) => {
+    if (value !== "forward" && value !== "reverse") {
+      return;
+    }
+    const direction = value === "forward" ? 1 : -1;
+    if (direction !== settings.motionDirection) {
+      toggleMotionDirection();
+    }
+  };
+
   const adjustTargetSize = (deltaPx: number) => {
     setSizeSliderValue([settings.baseRadiusPx + deltaPx]);
   };
 
   const adjustSpeed = (delta: number) => {
     settings.speed = adjustSpeedBySteps(settings.speed, delta);
-    refreshBaseSpeed();
   };
 
   const syncBrowserPath = () => {
@@ -508,15 +532,8 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     syncBrowserPath();
   };
 
-  const handleGuidePopoverToggle = (event: ToggleEvent) => {
-    guidePopoverOpen = event.newState === "open";
-    if (guidePopoverOpen) {
-      revealHud();
-    }
-  };
-
-  const toggleGuideFaq = (question: string) => {
-    openGuideFaqQuestion = openGuideFaqQuestion === question ? null : question;
+  const handleGuideClose = () => {
+    setGuideOpen(false);
   };
 
   const setHudInteractionActive = (active: boolean) => {
@@ -593,10 +610,11 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     );
 
     if (pointerIntent === "reveal") {
-      revealHud();
+      revealHudAfterPointerIntent();
       return;
     }
 
+    cancelHudPointerReveal();
     if (pointerIntent === "hide") {
       hideHud();
     }
@@ -636,7 +654,7 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
 
   const openControlsPanel = () => {
     revealHud();
-    panelOpen = true;
+    setPanelOpen(true);
   };
 
   const openHeaderSelectFromShortcut = (select: HeaderShortcutSelect) => {
@@ -650,22 +668,17 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
   };
 
   const openGuideDialog = () => {
-    const guidePopover = document.querySelector("#trainer-guide-popover");
-    if (!(guidePopover instanceof HTMLElement)) {
+    const guide = document.querySelector("#trainer-guide");
+    if (!(guide instanceof HTMLDialogElement)) {
       return false;
     }
 
     revealHud();
-    if (guidePopover.matches(":popover-open")) {
-      return true;
+    if (!guide.open) {
+      guide.showModal();
+      setGuideOpen(true);
     }
-
-    if (guidePopover.showPopover) {
-      guidePopover.showPopover();
-      return true;
-    }
-
-    return false;
+    return true;
   };
 
   const hasPriorityKeyboardSurface = () =>
@@ -704,7 +717,6 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     settings = applyPresetToSettings(settings, value);
     resetPatternState();
     resetDirectionForFixedPatterns(settings.patternId);
-    refreshBaseSpeed();
     drawFrame({ clearTrail: true });
     syncBrowserPath();
   };
@@ -718,19 +730,6 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     resetDirectionForFixedPatterns(value);
     drawFrame({ clearTrail: true });
     syncBrowserPath();
-  };
-
-  const handleSpeedUnitChange = (value: string) => {
-    if (!isSpeedUnit(value)) {
-      return;
-    }
-    settings.speed = resolveSpeedUnit(
-      settings.speed,
-      value,
-      getArena(),
-      settings.calibration
-    );
-    refreshBaseSpeed();
   };
 
   const handleBehaviorChange = (value: string) => {
@@ -753,24 +752,6 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     }
   };
 
-  const handleCalibrationInput = (event: Event, field: CalibrationField) => {
-    const target = event.currentTarget;
-    if (!(target instanceof HTMLInputElement)) {
-      return;
-    }
-    const nextCalibration = updateCalibrationField(
-      settings.calibration,
-      field,
-      Number(target.value)
-    );
-    if (!nextCalibration) {
-      return;
-    }
-
-    settings.calibration = nextCalibration;
-    refreshBaseSpeed();
-  };
-
   const hudActions: TrainerHudActions = {
     handleHeaderSelectOpenChange,
     handleLilacChaserColorChange,
@@ -781,6 +762,9 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
       value: lilacChaserScaleSliderValue,
     },
     openControlsPanel,
+    openGuide: () => {
+      openGuideDialog();
+    },
     revealHud,
     revealHudTemporarily: () => hudAutoHideTimer.start(),
     setHudInteractionActive,
@@ -822,16 +806,14 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
       value: () => [settings.distractorCount],
     },
     handleBehaviorChange,
-    handleCalibrationInput,
     handleColorInput,
     handleLetterColorInput,
     handleLetterWeightChange,
     handleLilacChaserColorChange,
+    handleMotionDirectionChange,
     handlePatternChange,
     handlePresetChange,
-    handleSpeedUnitChange,
     handleTargetFormChange,
-    handleThemeCheckedChange,
     letterScaleSlider: {
       set: (value) => {
         applySliderNumber(value, trainerSettingBounds.letterScale, (next) => {
@@ -863,11 +845,10 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
       },
       value: () => [settings.targetCount],
     },
-    toggleMotionDirection,
   };
 
   $effect(() => {
-    if (!motionPaused) {
+    if (!canvasPaused) {
       return;
     }
 
@@ -910,10 +891,13 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     },
     dialogActions,
     flushSettings: settingsSaver.flush,
+    get guideLastModified() {
+      return guideLastModified;
+    },
     get guideSeoContent() {
       return guideSeoContent;
     },
-    handleGuidePopoverToggle,
+    handleGuideClose,
     handlePopState,
     handleVisibilityChange,
     handleWindowKeydown,
@@ -923,9 +907,6 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     hudActions,
     get hudHidden() {
       return hudHidden;
-    },
-    get isDarkMode() {
-      return isDarkMode;
     },
     get isLilacChaserMode() {
       return isLilacChaserMode;
@@ -957,9 +938,6 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     get motionPaused() {
       return motionPaused;
     },
-    get openGuideFaqQuestion() {
-      return openGuideFaqQuestion;
-    },
     get pageSeoContent() {
       return pageSeoContent;
     },
@@ -967,7 +945,7 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
       return panelOpen;
     },
     set panelOpen(open: boolean) {
-      panelOpen = open;
+      setPanelOpen(open);
     },
     patternSelectContentClass,
     get settings() {
@@ -976,6 +954,5 @@ export const createTrainerAppController = (getRouteSlug: () => string) => {
     set settings(nextSettings: TrainerSettings) {
       settings = nextSettings;
     },
-    toggleGuideFaq,
   };
 };

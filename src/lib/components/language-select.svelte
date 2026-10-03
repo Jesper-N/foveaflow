@@ -20,7 +20,6 @@
     open = $bindable(false),
     onOpenChange,
     showSelectedName = false,
-    showFlag = true,
     showTooltip = false,
     tooltipDisabled = false,
     collapseNameOnSmall = false,
@@ -33,7 +32,6 @@
     open?: boolean;
     onOpenChange?: (open: boolean) => void;
     showSelectedName?: boolean;
-    showFlag?: boolean;
     showTooltip?: boolean;
     tooltipDisabled?: boolean;
     collapseNameOnSmall?: boolean;
@@ -72,7 +70,7 @@
         collapseNameOnSmall &&
         "max-sm:size-9 max-sm:min-w-0 max-sm:justify-center max-sm:gap-0 max-sm:p-0 max-sm:[&>svg:last-child]:hidden",
       triggerVariant === "ghost" &&
-        "text-muted-foreground min-w-0 justify-center gap-2 rounded-lg bg-transparent",
+        "text-muted-foreground min-w-0 justify-center gap-2 bg-transparent",
       triggerClass,
       className
     )}
@@ -81,14 +79,13 @@
       ? undefined
       : `${t(languageState.locale, "Language")}: ${selectedLanguage.nativeLabel}`}
   >
-    {#if showFlag}
-      <span aria-hidden="true">{selectedLanguage.flag}</span>
-    {:else}
-      <LanguagesIcon />
-    {/if}
+    <LanguagesIcon />
     {#if showSelectedName}
       <span
-        class={cn("min-w-0 truncate", collapseNameOnSmall && "max-sm:sr-only")}
+        class={cn(
+          "min-w-0 flex-1 truncate text-start",
+          collapseNameOnSmall && "max-sm:sr-only"
+        )}
       >
         {selectedLanguage.nativeLabel}
       </span>
@@ -129,7 +126,6 @@
       {#each languageOptions as option (option.locale)}
         <Select.Item value={option.locale}>
           <span class="flex min-w-0 items-center gap-2">
-            <span aria-hidden="true">{option.flag}</span>
             <span class="truncate">{option.nativeLabel}</span>
             {#if option.nativeLabel !== option.label}
               <span class="text-muted-foreground hidden truncate sm:inline"

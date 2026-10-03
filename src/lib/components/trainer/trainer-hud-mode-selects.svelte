@@ -60,7 +60,8 @@
       title={`${t(locale, "Drill")}: ${currentPresetName}`}
     >
       <span class="flex w-full min-w-0 flex-col items-start gap-1">
-        <span class="text-muted-foreground max-w-full truncate pr-5 text-xs"
+        <span
+          class="text-muted-foreground max-w-full truncate pr-5 text-xs font-medium"
           >{t(locale, "Drill")}</span
         >
         <span class="flex w-full min-w-0 items-center gap-2">
@@ -110,7 +111,8 @@
         title={`${t(locale, "Motion path")}: ${currentPatternName}`}
       >
         <span class="flex w-full min-w-0 flex-col items-start gap-1">
-          <span class="text-muted-foreground max-w-full truncate pr-5 text-xs"
+          <span
+            class="text-muted-foreground max-w-full truncate pr-5 text-xs font-medium"
             >{t(locale, "Motion path")}</span
           >
           <span class="flex w-full min-w-0 items-center gap-2">

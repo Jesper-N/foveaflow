@@ -5,13 +5,16 @@
   import { pathPreviewVariants, previewPaths } from "./path-preview-data";
   import ReactionJumpGlyph from "./reaction-jump-glyph.svelte";
 
-  let { patternId }: { patternId: PatternId } = $props();
+  let {
+    patternId,
+    class: className,
+  }: { patternId: PatternId; class?: string } = $props();
   const path = $derived(previewPaths[patternId]);
 </script>
 
 <svg
   data-slot="pattern-path-preview"
-  class={pathPreviewVariants()}
+  class={pathPreviewVariants({ class: className })}
   viewBox="0 0 24 24"
   fill="none"
   stroke="currentColor"

@@ -1,7 +1,7 @@
-import { speedToPixelsPerSecond } from "$lib/engine/calibration";
 import { resolveCanvasLayout } from "$lib/engine/canvas";
 import type { TrainerSettings } from "$lib/engine/presets";
 import { createRng, createSessionSeed } from "$lib/engine/random";
+import { speedToPixelsPerSecond } from "$lib/engine/speed";
 import type { Arena, PatternId, TargetFrame } from "$lib/engine/types";
 import { createTrainerFrameSampler } from "$lib/trainer/frame-sampler";
 import type { TrainerFrameInput } from "$lib/trainer/frame-sampler";
@@ -51,7 +51,6 @@ const TRAIL_TILE_MAX_AGE = 20;
 interface TrainerCanvasRuntime {
   attachCanvas: (node: HTMLCanvasElement) => () => void;
   drawFrame: (options?: DrawFrameOptions) => void;
-  getArena: () => Arena;
   handleVisibilityChange: () => void;
   invalidateLilacChaserFrame: () => void;
   normalizeMotionDirection: (
@@ -59,7 +58,6 @@ interface TrainerCanvasRuntime {
     motionDirection: TrainerSettings["motionDirection"]
   ) => TrainerSettings["motionDirection"];
   redrawForTheme: (colorMode: CanvasColorMode) => void;
-  refreshBaseSpeed: () => void;
   resetMotion: () => void;
   resetPatternState: () => void;
   syncPlayback: () => void;
@@ -84,7 +82,6 @@ export const createTrainerCanvasRuntime = ({
   let clearTrailRequested = false;
   let pendingColorMode: CanvasColorMode | null = null;
   let arena = initialArena();
-  let baseSpeedPxPerSec = 0;
   let seed = createSessionSeed();
   let rng = createRng(seed);
   const frameSampler = createTrainerFrameSampler();
@@ -119,15 +116,6 @@ export const createTrainerCanvasRuntime = ({
     seed,
     settings: getState().settings,
     travelPx: 0,
-  };
-
-  const refreshBaseSpeed = () => {
-    const { settings } = getState();
-    baseSpeedPxPerSec = speedToPixelsPerSecond(
-      settings.speed,
-      arena,
-      settings.calibration
-    );
   };
 
   const invalidateLilacChaserFrame = () => {
@@ -284,6 +272,27 @@ export const createTrainerCanvasRuntime = ({
     dirtyBounds.length = dirtyCount;
   };
 
+  const isTeleportFrameUnchanged = (
+    settings: TrainerSettings,
+    target: TargetFrame,
+    letter: string
+  ) =>
+    lastRenderedSettings === settings &&
+    lastRenderedTarget?.x === target.x &&
+    lastRenderedTarget.y === target.y &&
+    lastRenderedTarget.radiusPx === target.radiusPx &&
+    lastRenderedTarget.alpha === target.alpha &&
+    lastRenderedLetter === letter;
+
+  const rememberTeleportFrame = (target: TargetFrame, letter: string) => {
+    if (lastRenderedTarget) {
+      Object.assign(lastRenderedTarget, target);
+    } else {
+      lastRenderedTarget = { ...target };
+    }
+    lastRenderedLetter = letter;
+  };
+
   const renderFrame = (state: TrainerCanvasState, clearTrail: boolean) => {
     if (!canvas || !context || !canvasTheme) {
       return;
@@ -316,12 +325,7 @@ export const createTrainerCanvasRuntime = ({
       !frameRequested &&
       !mustClearCanvas &&
       !showTrail &&
-      lastRenderedSettings === state.settings &&
-      lastRenderedTarget?.x === target.x &&
-      lastRenderedTarget.y === target.y &&
-      lastRenderedTarget.radiusPx === target.radiusPx &&
-      lastRenderedTarget.alpha === target.alpha &&
-      lastRenderedLetter === letter
+      isTeleportFrameUnchanged(state.settings, target, letter)
     ) {
       return;
     }
@@ -350,12 +354,7 @@ export const createTrainerCanvasRuntime = ({
     lastFrameUsedTrail = showTrail;
     lastRenderedSettings = state.settings;
     if (state.settings.patternId === "teleport") {
-      if (lastRenderedTarget) {
-        Object.assign(lastRenderedTarget, target);
-      } else {
-        lastRenderedTarget = { ...target };
-      }
-      lastRenderedLetter = letter;
+      rememberTeleportFrame(target, letter);
     }
   };
 
@@ -414,7 +413,7 @@ export const createTrainerCanvasRuntime = ({
       advanceMotionTick(
         motionState,
         timestamp,
-        baseSpeedPxPerSec,
+        speedToPixelsPerSecond(state.settings.speed),
         state.settings.speedProfile,
         state.canToggleDirection,
         state.settings.motionDirection
@@ -496,7 +495,6 @@ export const createTrainerCanvasRuntime = ({
       context.setTransform(layout.scale, 0, 0, layout.scale, 0, 0);
     }
     if (arenaChanged) {
-      refreshBaseSpeed();
       rebuildTrailTiles();
       invalidateLilacChaserFrame();
     }
@@ -559,7 +557,6 @@ export const createTrainerCanvasRuntime = ({
     seed = createSessionSeed();
     rng = createRng(seed);
     resetPatternState();
-    refreshBaseSpeed();
     drawFrame({ clearTrail: true });
   };
 
@@ -607,12 +604,10 @@ export const createTrainerCanvasRuntime = ({
   return {
     attachCanvas,
     drawFrame,
-    getArena: () => ({ ...arena }),
     handleVisibilityChange,
     invalidateLilacChaserFrame,
     normalizeMotionDirection,
     redrawForTheme,
-    refreshBaseSpeed,
     resetMotion,
     resetPatternState,
     syncPlayback,

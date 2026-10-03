@@ -1,10 +1,7 @@
 import type { ControlSectionId } from "$lib/trainer/options";
-import type {
-  CalibrationField,
-  TrainerSliderValue,
-} from "$lib/trainer/settings";
+import type { TrainerSliderValue } from "$lib/trainer/settings";
 
-interface SliderBinding {
+export interface SliderBinding {
   value: () => number[];
   set: (value: TrainerSliderValue) => void;
 }
@@ -23,6 +20,7 @@ export interface TrainerHudActions {
   revealHudTemporarily: () => void;
   setHudInteractionActive: (active: boolean) => void;
   openControlsPanel: () => void;
+  openGuide: () => void;
 }
 
 export interface TrainerDialogActions {
@@ -33,11 +31,9 @@ export interface TrainerDialogActions {
   handleLilacChaserColorChange: (value: string) => void;
   handleTargetFormChange: (value: string) => void;
   handleLetterWeightChange: (value: string) => void;
-  handleThemeCheckedChange: (checked: boolean) => void;
-  handleSpeedUnitChange: (value: string) => void;
+  handleMotionDirectionChange: (value: string) => void;
   handleColorInput: (event: Event) => void;
   handleLetterColorInput: (event: Event) => void;
-  handleCalibrationInput: (event: Event, field: CalibrationField) => void;
   speedSlider: SliderBinding;
   sizeSlider: SliderBinding;
   lilacChaserScaleSlider: SliderBinding;
@@ -46,6 +42,5 @@ export interface TrainerDialogActions {
   distractorCountSlider: SliderBinding;
   distractorBrightnessSlider: SliderBinding;
   letterScaleSlider: SliderBinding;
-  toggleMotionDirection: () => void;
   resetSettings: () => void;
 }

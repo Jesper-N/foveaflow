@@ -5,77 +5,66 @@ export const localeCookieName = "PARAGLIDE_LOCALE";
 export const languageOptions = [
   {
     direction: "ltr",
-    flag: "🇺🇸",
     label: "English",
     locale: "en",
     nativeLabel: "English",
   },
   {
     direction: "ltr",
-    flag: "🇨🇳",
     label: "Chinese (Simplified)",
     locale: "zh-CN",
     nativeLabel: "简体中文",
   },
   {
     direction: "ltr",
-    flag: "🇭🇰",
     label: "Chinese (Traditional)",
     locale: "zh-HK",
     nativeLabel: "繁體中文",
   },
   {
     direction: "ltr",
-    flag: "🇧🇷",
     label: "Portuguese (Brazil)",
     locale: "pt-BR",
     nativeLabel: "Português do Brasil",
   },
   {
     direction: "ltr",
-    flag: "🇦🇷",
     label: "Spanish",
     locale: "es-419",
     nativeLabel: "Español",
   },
   {
     direction: "ltr",
-    flag: "🇫🇷",
     label: "French",
     locale: "fr",
     nativeLabel: "Français",
   },
   {
     direction: "ltr",
-    flag: "🇧🇩",
     label: "Bengali",
     locale: "bn",
     nativeLabel: "বাংলা",
   },
   {
     direction: "ltr",
-    flag: "🇮🇳",
     label: "Hindi",
     locale: "hi",
     nativeLabel: "हिन्दी",
   },
   {
     direction: "ltr",
-    flag: "🇵🇭",
     label: "Filipino",
     locale: "fil",
     nativeLabel: "Filipino",
   },
   {
     direction: "ltr",
-    flag: "🇩🇪",
     label: "German",
     locale: "de",
     nativeLabel: "Deutsch",
   },
 ] as const satisfies readonly {
   locale: string;
-  flag: string;
   label: string;
   nativeLabel: string;
   direction: "ltr" | "rtl";

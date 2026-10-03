@@ -1,84 +1,86 @@
 <script lang="ts">
-  import ModePathPreview from "$lib/components/mode-path-preview.svelte";
-  import { Button } from "$lib/components/ui/button/index.js";
-  import { homepageSeoContent } from "$lib/content/page-copy";
+  import DrillIllustration from "$lib/components/drill-illustration.svelte";
+  import { freeUseNote, homepageSeoContent } from "$lib/content/page-copy";
+  import { trainerRoutes } from "$lib/content/trainer-routes";
   import { trainingModeGuides } from "$lib/content/training";
+  import type { TrainingMode } from "$lib/engine/presets";
   import type { AppLocale } from "$lib/i18n/locales";
   import { t } from "$lib/i18n/translate";
-  import BookOpenIcon from "@lucide/svelte/icons/book-open";
+  import { cn } from "$lib/utils.js";
+
+  import { drillCard } from "../page-styles";
+  import {
+    guideCopy,
+    guideLede,
+    guideSectionHeading,
+    guideStage,
+    guideTitle,
+  } from "./guide-styles";
 
   let { locale }: { locale: AppLocale } = $props();
+
+  const drillPath = (mode: TrainingMode) =>
+    trainerRoutes.find((route) => route.mode === mode && route.indexable)
+      ?.path ?? "/";
 </script>
 
-<div
-  class="mt-6 grid items-start gap-8 lg:grid-cols-[minmax(0,0.96fr)_minmax(0,1.18fr)_minmax(16rem,0.82fr)]"
->
-  <section
-    class="guide-enter border-border/40 grid gap-5 border-t pt-6 [animation-delay:40ms]"
-    aria-label={t(locale, "FoveaFlow overview")}
-  >
-    <h3 class="text-foreground text-base font-semibold">
-      {t(locale, "Overview")}
-    </h3>
+<header class={guideStage}>
+  <div class="guide-enter grid gap-3 pr-12">
+    <h2 id="trainer-guide-title" class={guideTitle}>
+      {t(locale, homepageSeoContent.heading)}
+    </h2>
+    <p class={guideLede}>{t(locale, homepageSeoContent.hero)}</p>
+  </div>
+</header>
 
-    <div
-      class="text-muted-foreground grid gap-4 text-sm leading-6 text-pretty sm:text-[0.95rem] sm:leading-7"
-    >
-      {#each homepageSeoContent.body as paragraph (paragraph)}
-        <p class="max-w-[58ch]">{t(locale, paragraph)}</p>
-      {/each}
-    </div>
-  </section>
-
+<div class="grid gap-10 px-6 py-7 sm:px-8">
   <section
-    class="guide-enter border-border/40 border-t pt-6 [animation-delay:70ms]"
-    aria-labelledby="homepage-guide-drills"
+    class="guide-enter grid gap-4 [animation-delay:40ms]"
+    aria-labelledby="trainer-guide-drills"
   >
-    <h3
-      id="homepage-guide-drills"
-      class="text-foreground text-base font-semibold"
-    >
+    <h3 id="trainer-guide-drills" class={guideSectionHeading}>
       {t(locale, "Drills")}
     </h3>
-    <ul class="mt-6 grid gap-5">
+    <ul class="grid gap-3 sm:grid-cols-2">
       {#each trainingModeGuides as guide (guide.mode)}
-        <li class="grid grid-cols-[2rem_minmax(0,1fr)] items-start gap-3">
-          <span
-            class="bg-primary flex size-8 items-center justify-center rounded-full"
-            aria-hidden="true"
+        <li>
+          <a
+            href={drillPath(guide.mode)}
+            class={cn(
+              drillCard,
+              "grid h-full grid-cols-[6.5rem_minmax(0,1fr)] items-center gap-4 rounded-2xl p-3"
+            )}
           >
-            <ModePathPreview mode={guide.mode} variant="badge" />
-          </span>
-          <div class="min-w-0 pt-0.5">
-            <p class="text-foreground leading-6 font-semibold">
-              {t(locale, guide.title)}
-            </p>
-            <p class="text-muted-foreground mt-0.5 leading-6 text-pretty">
-              {t(locale, guide.summary)}
-            </p>
-          </div>
+            <span class="px-2 py-1.5">
+              <DrillIllustration mode={guide.mode} />
+            </span>
+            <span class="grid gap-1">
+              <span class="text-foreground leading-5 font-semibold">
+                {t(locale, guide.title)}
+              </span>
+              <span class="text-muted-foreground leading-5 text-pretty">
+                {t(locale, guide.summary)}
+              </span>
+            </span>
+          </a>
         </li>
       {/each}
     </ul>
   </section>
 
-  <aside
-    class="guide-enter border-border/40 border-t pt-6 [animation-delay:100ms]"
+  <section
+    class="guide-enter grid gap-3 [animation-delay:80ms]"
+    aria-labelledby="trainer-guide-overview"
   >
-    <h3 class="text-foreground text-base font-semibold">
-      {t(locale, "Safety")}
+    <h3 id="trainer-guide-overview" class={guideSectionHeading}>
+      {t(locale, "Overview")}
     </h3>
-    <p class="text-muted-foreground mt-6 text-sm leading-6 text-pretty">
-      {t(locale, homepageSeoContent.trustNote)}
-    </p>
-
-    <Button
-      href="/guide/"
-      size="lg"
-      class="guide-enter mt-6 h-auto min-h-11 w-full gap-2 py-2 whitespace-normal [animation-delay:130ms]"
-    >
-      <BookOpenIcon data-icon="inline-start" />
-      <span>{t(locale, "Read the full guide")}</span>
-    </Button>
-  </aside>
+    <!-- Balanced columns keep the closing note from sitting alone. -->
+    <div class="*:break-inside-avoid *:not-last:pb-3 sm:columns-2 sm:gap-10">
+      {#each homepageSeoContent.body as paragraph (paragraph)}
+        <p class={guideCopy}>{t(locale, paragraph)}</p>
+      {/each}
+      <p class={guideCopy}>{t(locale, freeUseNote)}</p>
+    </div>
+  </section>
 </div>

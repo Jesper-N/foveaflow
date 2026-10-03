@@ -196,13 +196,6 @@
     });
   };
 
-  const handleRevealPointerEnter = (event: PointerEvent) => {
-    if (event.pointerType === "touch") {
-      return;
-    }
-    actions.revealHud();
-  };
-
   const handleRevealPointerDown = (event: PointerEvent) => {
     if (event.pointerType === "touch") {
       actions.revealHudTemporarily();
@@ -225,7 +218,6 @@
     aria-label={t(locale, "Reveal controls")}
     aria-controls="trainer-island"
     aria-expanded="false"
-    onpointerenter={handleRevealPointerEnter}
     onpointerdown={handleRevealPointerDown}
     onfocus={handleRevealFocus}
   >
@@ -243,18 +235,16 @@
 >
   <header
     id="trainer-island"
-    class="text-foreground before:bg-background after:bg-muted-foreground before:border-border relative isolate before:absolute before:inset-0 before:-z-1 before:origin-top before:rounded-[2rem] before:border before:shadow-[0_12px_32px_-12px_rgb(0_0_0/30%),inset_0_1px_0_rgb(255_255_255/4%)] before:content-[''] before:[transition:transform_260ms_cubic-bezier(0.32,0.72,0,1),opacity_260ms_cubic-bezier(0.32,0.72,0,1)] group-has-focus-visible/island:before:transition-none group-data-[hidden=true]/island:before:transform-[scale(0.18,0.055)] group-data-[hidden=true]/island:before:opacity-0 group-data-[hidden=true]/island:before:[transition:transform_320ms_cubic-bezier(0.215,0.61,0.355,1),opacity_140ms_ease_180ms] group-data-[instant-reveal=true]/island:before:transition-none after:pointer-events-none after:absolute after:top-0 after:left-1/2 after:h-2 after:w-22 after:transform-[translateX(-50%)_scaleX(1.15)] after:rounded-full after:opacity-0 after:content-[''] after:[transition:transform_260ms_cubic-bezier(0.32,0.72,0,1),opacity_180ms_ease] group-has-focus-visible/island:after:transition-none group-data-[hidden=true]/island:after:transform-[translateX(-50%)_scaleX(1)] group-data-[hidden=true]/island:after:opacity-30 group-data-[hidden=true]/island:after:[transition:transform_320ms_cubic-bezier(0.215,0.61,0.355,1),opacity_140ms_ease_180ms] group-data-[instant-reveal=true]/island:after:transition-none motion-reduce:group-data-hidden/island:before:transition-none motion-reduce:group-data-hidden/island:after:transition-none max-[479px]:group-data-[hidden=true]/island:before:transform-[scale(0.28,0.055)] sm:before:rounded-[2.25rem]"
+    class="text-foreground before:bg-card before:border-border group-data-[hidden=true]/island:before:bg-muted-foreground/30 relative isolate before:absolute before:inset-0 before:-z-1 before:rounded-[2rem] before:border before:shadow-[0_12px_32px_-12px_rgb(0_0_0/30%),inset_0_1px_0_rgb(255_255_255/4%)] before:transition-[inset,border-radius,background-color,border-color] before:duration-260 before:ease-[cubic-bezier(0.32,0.72,0,1)] before:content-[''] group-has-focus-visible/island:before:transition-none group-data-[hidden=true]/island:before:inset-x-[calc(50%-2.75rem)] group-data-[hidden=true]/island:before:bottom-[calc(100%-0.5rem)] group-data-[hidden=true]/island:before:rounded-sm group-data-[hidden=true]/island:before:border-transparent group-data-[hidden=true]/island:before:delay-60 group-data-[hidden=true]/island:before:duration-220 group-data-[hidden=true]/island:before:ease-[cubic-bezier(0.215,0.61,0.355,1)] group-data-[instant-reveal=true]/island:before:transition-none motion-reduce:group-data-hidden/island:before:transition-none sm:before:rounded-[2.25rem]"
     inert={hudHidden}
   >
     <div
-      class="flex origin-top transform-[translateY(0)_scale(1)] flex-col gap-4 p-4 opacity-100 [transition:transform_220ms_cubic-bezier(0.23,1,0.32,1)_40ms,opacity_180ms_ease_40ms] group-has-focus-visible/island:transition-none group-data-[hidden=true]/island:transform-[translateY(-6px)_scale(0.96)] group-data-[hidden=true]/island:opacity-0 group-data-[hidden=true]/island:[transition:transform_200ms_cubic-bezier(0.215,0.61,0.355,1),opacity_100ms_ease] group-data-[instant-reveal=true]/island:transition-none motion-reduce:group-data-hidden/island:transition-none sm:p-5 [&_[data-slot=button]:active]:transform-[scale(0.96)]"
+      class="flex origin-top transform-[translateY(0)_scale(1)] flex-col gap-4 p-4 opacity-100 [transition:transform_220ms_cubic-bezier(0.23,1,0.32,1)_40ms,opacity_180ms_ease_40ms] group-has-focus-visible/island:transition-none group-data-[hidden=true]/island:transform-[translateY(-6px)_scale(0.96)] group-data-[hidden=true]/island:opacity-0 group-data-[hidden=true]/island:[transition:transform_200ms_cubic-bezier(0.215,0.61,0.355,1),opacity_80ms_ease] group-data-[instant-reveal=true]/island:transition-none motion-reduce:transition-opacity motion-reduce:duration-150 motion-reduce:group-data-[hidden=true]/island:transition-none sm:p-5"
     >
-      <div
-        class="flex flex-col items-stretch gap-1 min-[400px]:flex-row min-[400px]:items-center min-[400px]:justify-between min-[400px]:gap-2"
-      >
+      <div class="flex items-center justify-between gap-2">
         <a
           href="/"
-          class="focus-visible:ring-foreground flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl text-base font-semibold outline-hidden focus-visible:ring-3 min-[400px]:justify-start min-[480px]:text-xl"
+          class="focus-visible:border-ring focus-visible:ring-ring/30 flex h-11 min-w-11 shrink-0 items-center justify-center gap-2.5 rounded-4xl border border-transparent text-base font-semibold outline-hidden focus-visible:ring-3 min-[480px]:text-xl"
           aria-label={t(locale, `${siteMetadata.name} home`)}
         >
           <img
@@ -262,13 +252,14 @@
             alt=""
             width="24"
             height="24"
-            class="size-5 shrink-0 rounded-sm object-cover min-[480px]:size-6"
+            class="size-5 shrink-0 rounded-sm object-cover min-[480px]:size-7"
           />
-          <span>{siteMetadata.name}</span>
+          <!-- Five actions and the wordmark only share one row from 400px. -->
+          <span class="hidden min-[400px]:inline">{siteMetadata.name}</span>
         </a>
 
         <nav
-          class="flex shrink-0 items-center justify-center min-[400px]:justify-start"
+          class="flex shrink-0 items-center"
           aria-label={t(locale, "App actions")}
         >
           <Tooltip.Provider delayDuration={450} skipDelayDuration={300}>
@@ -336,8 +327,8 @@
                   "size-11"
                 )}
                 aria-label={guideButtonLabel}
-                popovertarget="trainer-guide-popover"
-                onclick={actions.revealHud}
+                aria-controls="trainer-guide"
+                onclick={actions.openGuide}
               >
                 <BookOpenIcon />
               </Tooltip.Trigger>
@@ -364,10 +355,9 @@
             </Tooltip.Root>
 
             <LanguageSelect
-              showFlag={false}
               showTooltip
               tooltipDisabled={hudHidden}
-              triggerClass="min-h-11 min-w-11 border-transparent bg-transparent hover:bg-muted"
+              triggerClass="min-h-11 min-w-11 border-transparent bg-transparent hover:bg-muted/50 aria-expanded:bg-muted"
               contentClass="dark"
               variant="default"
               bind:open={languageSelectOpen}

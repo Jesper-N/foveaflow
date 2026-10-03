@@ -1,6 +1,5 @@
-import type { Calibration } from "./calibration";
 import type { SizeProfile, SpeedProfile } from "./profiles";
-import type { PatternId, SpeedSetting, TargetForm } from "./types";
+import type { PatternId, TargetForm } from "./types";
 
 export type TrainingMode = "pursuit" | "reactionTime" | "mot" | "lilacChaser";
 export type LetterWeight = 400 | 500 | 600 | 700 | 800;
@@ -9,7 +8,8 @@ export interface ExercisePreset {
   id: TrainingMode;
   name: string;
   patternId: PatternId;
-  speed: SpeedSetting;
+  /** Whole number from 1 to 100. */
+  speed: number;
   baseRadiusPx: number;
   speedProfile: SpeedProfile;
   sizeProfile: SizeProfile;
@@ -20,7 +20,8 @@ export interface ExercisePreset {
 export interface TrainerSettings {
   presetId: TrainingMode;
   patternId: PatternId;
-  speed: SpeedSetting;
+  /** Whole number from 1 to 100. */
+  speed: number;
   baseRadiusPx: number;
   speedProfile: SpeedProfile;
   sizeProfile: SizeProfile;
@@ -39,7 +40,6 @@ export interface TrainerSettings {
   letterScale: number;
   lilacChaserScale: number;
   lilacChaserBallColor: string;
-  calibration: Calibration;
 }
 
 export const DEFAULT_LETTER_SCALE = 0.5;
@@ -52,7 +52,7 @@ export const exercisePresets = [
     name: "Smooth Pursuit",
     patternId: "randomWalk",
     sizeProfile: { kind: "constant" },
-    speed: { unit: "deg/s", value: 20 },
+    speed: 20,
     speedProfile: { kind: "constant" },
     targetCount: 1,
   },
@@ -60,10 +60,10 @@ export const exercisePresets = [
     baseRadiusPx: 40,
     distractorCount: 0,
     id: "reactionTime",
-    name: "Reaction jumps",
+    name: "Reaction Jumps",
     patternId: "teleport",
     sizeProfile: { kind: "constant" },
-    speed: { unit: "deg/s", value: 20 },
+    speed: 20,
     speedProfile: { kind: "constant" },
     targetCount: 1,
   },
@@ -74,7 +74,7 @@ export const exercisePresets = [
     name: "Multiple Distractions",
     patternId: "multipleObjectTracking",
     sizeProfile: { kind: "constant" },
-    speed: { unit: "deg/s", value: 20 },
+    speed: 20,
     speedProfile: { kind: "constant" },
     targetCount: 1,
   },
@@ -85,7 +85,7 @@ export const exercisePresets = [
     name: "Lilac Chaser",
     patternId: "circle",
     sizeProfile: { kind: "constant" },
-    speed: { unit: "deg/s", value: 20 },
+    speed: 20,
     speedProfile: { kind: "constant" },
     targetCount: 1,
   },
@@ -122,12 +122,10 @@ export const getPreset = (id: string) =>
 
 export const settingsFromPreset = (
   preset: ExercisePreset,
-  calibration: Calibration,
   overrides: Partial<TrainerSettings> = {}
 ): TrainerSettings => ({
   ballColor: null,
   baseRadiusPx: preset.baseRadiusPx,
-  calibration,
   distractorBrightness: 0.45,
   distractorCount: preset.distractorCount,
   letterColor: "#000000",
@@ -141,7 +139,7 @@ export const settingsFromPreset = (
   presetId: preset.id,
   showTrail: false,
   sizeProfile: { ...preset.sizeProfile },
-  speed: { ...preset.speed },
+  speed: preset.speed,
   speedProfile: { ...preset.speedProfile },
   targetCount: preset.targetCount,
   targetForm: "circle",

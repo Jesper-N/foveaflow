@@ -17,7 +17,7 @@ export const legalPages = {
     ...legalPageLinks.privacy,
     description:
       "How FoveaFlow handles locally stored browser settings, Cloudflare hosting, and basic analytics.",
-    lastModified: "2026-07-10",
+    lastModified: "2026-09-26",
     metaTitle: "FoveaFlow - Privacy Policy",
     sections: [
       {
@@ -30,7 +30,7 @@ export const legalPages = {
       },
       {
         body: [
-          "FoveaFlow stores settings locally in your browser so the app can remember them on the current device. That can include the selected language, mode, motion pattern, speed, target size, color, opacity, trail setting, viewing distance, screen scale, and theme.",
+          "FoveaFlow stores settings locally in your browser so the app can remember them on the current device. That can include the selected language, mode, motion pattern, speed, target size, color, opacity, trail setting, and theme.",
           "Those settings stay in your browser unless your browser syncs, backs up, or exports its site data. You can remove them by clearing site data for foveaflow.com.",
         ],
         heading: "Settings saved in your browser",
@@ -112,7 +112,7 @@ export const legalPages = {
     ...legalPageLinks.terms,
     description:
       "The terms for using FoveaFlow, including safety limits, medical disclaimers, free access, and acceptable use.",
-    lastModified: "2026-07-10",
+    lastModified: "2026-09-26",
     metaTitle: "FoveaFlow - Terms of Use",
     sections: [
       {
@@ -134,6 +134,7 @@ export const legalPages = {
         body: [
           "FoveaFlow is not medical advice, diagnosis, treatment, vision therapy, or a medical device. It does not replace an optometrist, ophthalmologist, doctor, therapist, or other qualified professional.",
           safetyNote,
+          "If symptoms continue after you stop, get advice from a qualified professional.",
           "If you have a vision condition, recent eye injury, surgery, neurological symptoms, or any concern about using moving visual targets, ask a qualified professional before using the app.",
         ],
         heading: "Not medical care",

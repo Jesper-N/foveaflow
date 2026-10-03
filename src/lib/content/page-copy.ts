@@ -31,7 +31,7 @@ const faqItems = [
   },
   {
     answer:
-      "FoveaFlow may help you train visual skills like tracking, refocusing, peripheral awareness, processing speed, and reaction timing. Results vary, and it is not a replacement for professional care if you have an eye condition or ongoing symptoms.",
+      "FoveaFlow may help you train visual skills like tracking, refocusing, peripheral awareness, processing speed, and reaction timing. Results vary.",
     question: "Can FoveaFlow improve eyesight or reaction time?",
   },
   {
@@ -46,7 +46,7 @@ const faqItems = [
   },
   {
     answer:
-      "FoveaFlow can be a short active break during long screen sessions. If screen use causes pain, dizziness, headaches, or ongoing symptoms, stop and get professional advice.",
+      "FoveaFlow can be a short active break during long screen sessions.",
     question: "Can FoveaFlow help with tired eyes from screen work?",
   },
   {
@@ -56,7 +56,7 @@ const faqItems = [
   },
   {
     answer:
-      "You can adjust the mode, motion path, target size, speed, shape, color, opacity, trail, distractor count, viewing distance, screen scale, and Lilac Chaser size and color.",
+      "You can adjust the mode, motion path, target size, speed, shape, color, opacity, trail, distractor count, and Lilac Chaser size and color.",
     question: "What settings can I change?",
   },
   {
@@ -105,7 +105,6 @@ interface PageFaqItem {
 }
 
 export interface PageSeoContent {
-  kicker: string;
   heading: string;
   hero: string;
   body: readonly string[];
@@ -117,20 +116,16 @@ export interface PageSeoContent {
     label: string;
     href: `/${string}`;
   };
-  trustNote: string;
   faq: readonly PageFaqItem[];
 }
 
 export const homepageSeoContent = {
   body: [
-    "FoveaFlow is a free online eye trainer for visual tracking, quick refocus, peripheral awareness, and focus under distraction. It runs in the browser with no account or install.",
-    "Use Smooth Pursuit to follow one moving target, Reaction Jumps to snap focus to new target positions, Multiple Distractions to track the right target through visual clutter, and Lilac Chaser to hold fixation while noticing peripheral change.",
     "Use FoveaFlow as a short FPS warmup, an active screen break, or a focused visual practice session.",
   ],
   faq: faqItems,
   heading: "Free online eye trainer",
   hero: "Train visual tracking, quick refocus, peripheral awareness, and focus under distraction in your browser.",
-  kicker: "Free browser tool",
   primaryCta: {
     href: "/smooth-pursuit/",
     label: "Try Smooth Pursuit",
@@ -139,8 +134,6 @@ export const homepageSeoContent = {
     href: "/guide/",
     label: "Open the full guide",
   },
-  trustNote:
-    "Updated July 10, 2026. FoveaFlow is practice software, not medical care. Stop if a session causes strain, dizziness, headache, nausea, or any other discomfort.",
 } satisfies PageSeoContent;
 
 export const guideMetadata = {
@@ -152,3 +145,6 @@ export const guideMetadata = {
     "Use this guide to choose the right FoveaFlow eye trainer drill for visual tracking, quick refocus, peripheral awareness, FPS warmups, or focus under distraction.",
   title: "FoveaFlow Guide - Eye Trainer Drills & Visual Tracking Settings",
 } as const;
+
+export const freeUseNote =
+  "FoveaFlow is free to use, requires no account or install, and stores settings locally in your browser.";

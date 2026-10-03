@@ -1,7 +1,6 @@
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
-import { DEFAULT_CALIBRATION } from "../src/lib/engine/calibration";
 import {
   firstPreset,
   patternOptions,
@@ -46,14 +45,14 @@ const median = (values: number[]) =>
 
 const patterns = [
   ...patternOptions,
-  { id: "teleport", name: "Reaction jumps" },
+  { id: "teleport", name: "Reaction Jumps" },
 ] as const;
 const patternResults = patterns.map(({ id }) => {
   const times: number[] = [];
   let checksum = 0;
   for (let round = 0; round < 5; round += 1) {
     const sampler = samplerModule.createTrainerFrameSampler();
-    const settings = settingsFromPreset(firstPreset, DEFAULT_CALIBRATION, {
+    const settings = settingsFromPreset(firstPreset, {
       distractorCount: 10,
       patternId: id,
       targetCount: 6,

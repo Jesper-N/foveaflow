@@ -76,12 +76,6 @@ export const supportPages = [
         ],
         heading: "What this warmup can and cannot tell you",
       },
-      {
-        body: [
-          "FoveaFlow is practice software, not medical care. Stop if you feel eye strain, dizziness, headache, nausea, or other discomfort. A shorter session is fine.",
-        ],
-        heading: "Keep it comfortable",
-      },
     ],
     slug: "fps-eye-training",
     summary:
@@ -100,8 +94,7 @@ export const supportPages = [
       {
         alternative: "Speed and size sliders.",
         feature: "Speed and size",
-        foveaflow:
-          "Adjust target size and speed, with deg/s, cm/s, and screen/s units.",
+        foveaflow: "Adjust target size and speed.",
       },
       {
         alternative:
@@ -122,19 +115,12 @@ export const supportPages = [
         foveaflow:
           "A separate mode with target count, distractor count, and brightness controls.",
       },
-      {
-        alternative:
-          "The public interface does not show display calibration settings.",
-        feature: "Screen setup",
-        foveaflow:
-          "Viewing distance and screen scale settings for physical and angular speed units.",
-      },
     ],
     description:
-      "Compare FoveaFlow and BlinkCamp’s free browser eye trainers. See the differences in speed controls, target appearance, motion paths, and display calibration.",
+      "Compare FoveaFlow and BlinkCamp’s free browser eye trainers. See the differences in target appearance, motion paths, and distraction controls.",
     heading: "FoveaFlow vs BlinkCamp",
     kicker: "Comparison",
-    lastModified: "2026-09-12",
+    lastModified: "2026-09-26",
     path: "/blinkcamp-alternative/",
     primaryCta: {
       href: "/",
@@ -164,7 +150,7 @@ export const supportPages = [
       {
         body: [
           "If you prefer a small set of visible controls and simply want to cycle through routines, BlinkCamp is a straightforward option. It is also open source.",
-          "FoveaFlow is the better fit if you want more say over the target, motion, and display setup. That is a feature comparison, not evidence of better health or gaming results.",
+          "FoveaFlow is the better fit if you want more say over the target and motion. That is a feature comparison, not evidence of better health or gaming results.",
         ],
         heading: "When BlinkCamp may be enough",
       },
@@ -175,7 +161,7 @@ export const supportPages = [
       label: "Visit BlinkCamp",
     },
     summary:
-      "Both are free eye trainers you can open in a browser. Choose FoveaFlow when you want to fine-tune the session: how the target moves, what it looks like, and how the motion fits your screen.",
+      "Both are free eye trainers you can open in a browser. Choose FoveaFlow when you want to fine-tune the session: how the target moves and what it looks like.",
     title: "FoveaFlow vs BlinkCamp: Free Eye Trainer Comparison",
   },
   {
@@ -201,13 +187,6 @@ export const supportPages = [
       },
       {
         alternative:
-          "The public browser interface does not show these calibration controls.",
-        feature: "Display calibration",
-        foveaflow:
-          "Set viewing distance and screen scale; choose deg/s, cm/s, or screen/s.",
-      },
-      {
-        alternative:
           "The site also advertises an upcoming Steam app and Exercise Creator.",
         feature: "Desktop app",
         foveaflow: "The full tool runs in the browser.",
@@ -217,7 +196,7 @@ export const supportPages = [
       "Compare FoveaFlow with EyeTrainer.gg’s browser version for FPS warmups. Explore drill modes, motion controls, target customization, and local settings.",
     heading: "FoveaFlow vs EyeTrainer.gg",
     kicker: "Comparison",
-    lastModified: "2026-09-12",
+    lastModified: "2026-09-26",
     path: "/eyetrainer-gg-alternative/",
     primaryCta: {
       href: "/",
