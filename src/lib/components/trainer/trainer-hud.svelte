@@ -72,24 +72,8 @@
     );
   };
 
-  const handlePointerEnter = (event: PointerEvent) => {
-    if (event.pointerType === "touch") {
-      return;
-    }
-    pointerInside = true;
-    syncHudInteraction();
-  };
-
-  const handlePointerLeave = () => {
-    pointerInside = false;
-    syncHudInteraction();
-  };
-
-  const handlePointerDown = () => {
-    pointerDown = true;
-    syncHudInteraction();
-  };
-
+  // The thin strip between the island and the top edge counts as inside.
+  // Hiding there let the top-edge reveal reopen the island and it flickered.
   const isPointerOverHud = (event: PointerEvent) => {
     if (event.pointerType === "touch" || !hudElement || hudHidden) {
       return false;
@@ -98,9 +82,26 @@
     return (
       event.clientX >= bounds.left &&
       event.clientX <= bounds.right &&
-      event.clientY >= bounds.top &&
       event.clientY <= bounds.bottom
     );
+  };
+
+  const handlePointerEnter = (event: PointerEvent) => {
+    if (event.pointerType === "touch") {
+      return;
+    }
+    pointerInside = true;
+    syncHudInteraction();
+  };
+
+  const handlePointerLeave = (event: PointerEvent) => {
+    pointerInside = isPointerOverHud(event);
+    syncHudInteraction();
+  };
+
+  const handlePointerDown = () => {
+    pointerDown = true;
+    syncHudInteraction();
   };
 
   const handlePointerEnd = (event: PointerEvent) => {
