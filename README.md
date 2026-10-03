@@ -1,18 +1,19 @@
-<a href="https://foveaflow.com/">
-  <img src="docs/images/preview.avif" width="100%" alt="FoveaFlow running in dark mode, with a yellow tracking target and floating controls, against an orange background" />
-</a>
+<p align="center">
+  <a href="https://foveaflow.com/"><img src="public/logo-render/logo.svg" width="64" height="64" alt="foveaflow.com" /></a>
+</p>
 
-<h3 align="center">Eye training, right in your browser.</h3>
+<h1 align="center">FoveaFlow</h1>
 
 <p align="center">
-  Follow a moving target, practice quick refocus, or hold your gaze through distractions. Set the pace yourself.<br />
-  It's free, and there's no account or install.
+  <strong>Eye training, right in your browser.</strong><br />
+  Follow a moving target, practice quick refocus, or hold your gaze through distractions.<br />
+  It's free, with no account or install.
 </p>
 
 <p align="center">
-  <a href="https://foveaflow.com/"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/buttons/open-dark.avif" /><img src="docs/images/buttons/open-light.avif" height="44" alt="Open FoveaFlow" /></picture></a>
+  <a href="https://foveaflow.com/"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/buttons/open-dark.avif" /><img src="docs/images/buttons/open-light.avif" height="40" alt="Open FoveaFlow" /></picture></a>
   &nbsp;
-  <a href="https://foveaflow.com/guide/"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/buttons/guide-dark.avif" /><img src="docs/images/buttons/guide-light.avif" height="44" alt="Read the guide" /></picture></a>
+  <a href="https://foveaflow.com/guide/"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/buttons/guide-dark.avif" /><img src="docs/images/buttons/guide-light.avif" height="40" alt="Read the guide" /></picture></a>
 </p>
 
 <p align="center">
@@ -20,6 +21,12 @@
   <img src="https://img.shields.io/badge/languages-10-blue?style=flat-square" alt="Available in 10 languages" />
   <a href="LICENSE"><img src="https://img.shields.io/github/license/Jesper-N/foveaflow?style=flat-square" alt="MIT license" /></a>
 </p>
+
+<br />
+
+<a href="https://foveaflow.com/">
+  <img src="docs/images/preview.avif" width="100%" alt="FoveaFlow open in a browser, with a yellow tracking target and floating controls on a dark grid, against an orange background" />
+</a>
 
 ## Pick a drill
 
@@ -60,35 +67,7 @@ Each drill has its own URL, so you can bookmark the one you use most.
   </tr>
 </table>
 
-## Make it comfortable
-
-Start with a large target and a slow speed. Use the floating controls to adjust both while the drill runs.
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/images/settings-dark.avif" />
-  <img src="docs/images/settings-light.avif" width="100%" alt="The FoveaFlow controls panel, open on Targets, with ball color, target form, size, opacity, and target letters" />
-</picture>
-
-| Setting | Options |
-| :-- | :-- |
-| Speed | 1 to 100 |
-| Target size | 4 to 100 px |
-| Target | Circle, ring, square, diamond, triangle, or cross. Color, opacity, trails, and letter overlays. |
-| Motion | 20 paths, including sweeps, figure eight, bounce, Lissajous, and corner tour |
-| Distractors | Up to 10, with adjustable brightness |
-| Lilac Chaser | Ring scale and ball color |
-| Interface | Light, dark, or system theme, in 10 languages |
-
-Your settings stay in your browser and carry over to your next visit.
-
-### Keyboard shortcuts
-
-| Key | Action | Key | Action |
-| :-- | :-- | :-- | :-- |
-| <kbd>Space</kbd> | Pause or resume | <kbd>M</kbd> | Choose a drill |
-| <kbd>←</kbd> <kbd>→</kbd> | Slower or faster | <kbd>P</kbd> | Choose a motion path |
-| <kbd>↓</kbd> <kbd>↑</kbd> | Smaller or larger target | <kbd>S</kbd> | Open the controls |
-| <kbd>D</kbd> | Switch between light and dark | <kbd>G</kbd> | Open the guide |
+Start with a large target and a slow speed, then adjust both while the drill runs. Your settings stay in your browser.
 
 > [!IMPORTANT]
 >
@@ -96,97 +75,70 @@ Your settings stay in your browser and carry over to your next visit.
 
 ## Run locally
 
-Use **Bun 1.4.1** and **Node.js 24**, as selected by `.node-version`. The minimum supported Node.js version is `22.12.0`.
-
-```bash
-bun install
-bun run dev
-```
-
-Open [127.0.0.1:4321](http://127.0.0.1:4321).
-
-The app uses [Astro](https://astro.build/) for its shell, [Svelte 5](https://svelte.dev/) for the controls, and a TypeScript canvas engine for the drills. [Tailwind CSS 4](https://tailwindcss.com/), [shadcn-svelte](https://www.shadcn-svelte.com/), and [Bits UI](https://bits-ui.com/) handle the interface.
-
-<details>
-<summary><strong>Development commands</strong></summary>
-<br />
-
-| Command | Purpose |
+| Requirement | Version |
 | :-- | :-- |
-| `bun run dev` | Start the local Astro server. |
-| `bun run build` | Build the production app and generate CSP headers. |
-| `bun run preview` | Build and preview locally through Wrangler. |
-| `bun run check` | Check Astro, Svelte, and application types. |
-| `bun run check:tools` | Check tooling types. |
-| `bun run check:i18n` | Check translation coverage. |
-| `bun run lint` | Check code and formatting with Ultracite. |
-| `bun run fix` | Apply Ultracite fixes and format Astro files. |
-| `bun run format` | Format with Oxfmt and the Astro Prettier plugin. |
-| `bun run test` | Build and run the release browser tests. |
-| `bun run verify` | Run the full quality gate, including the dependency audit. |
-
-`bun run test:release` runs the same suite as `bun run test`. `bun run prepush` runs the same checks as `bun run verify`.
-
-</details>
-
-<details>
-<summary><strong>Checks and deployment</strong></summary>
-<br />
-
-Install the test browser and enable the pre-push hook once per clone:
+| [Bun](https://bun.com/) | 1.4.1 |
+| [Node.js](https://nodejs.org/) | 24, from `.node-version` (22.12.0 at minimum) |
 
 ```bash
-bunx playwright install chromium
-git config core.hooksPath .githooks
+git clone https://github.com/Jesper-N/foveaflow.git
+cd foveaflow
+bun install
+bun run dev  # http://127.0.0.1:4321
 ```
 
-The hook runs lint, formatting, type checks, translation coverage, Tailwind diagnostics, the production build, browser tests, and a dependency audit.
+## Built with
 
-The release suite checks every trainer route and public page on desktop and mobile Chromium. It exercises drill and path selection, canvas animation, pause/resume, settings, persistence, and reset. Browser errors and failed site resources fail the run; failure screenshots and traces land in `test-results/`.
+| Part | Tools |
+| :-- | :-- |
+| Site | [Astro](https://astro.build/) |
+| Controls | [Svelte 5](https://svelte.dev/), [shadcn-svelte](https://www.shadcn-svelte.com/), [Bits UI](https://bits-ui.com/) |
+| Styling | [Tailwind CSS 4](https://tailwindcss.com/) |
+| Drills | A TypeScript canvas engine in `src/lib/engine/` |
+| Hosting | [Cloudflare Workers](https://workers.cloudflare.com/) |
 
-Set `TEST_PORT` if the default test port, `4323`, is occupied. GitHub Actions runs the full verification on pull requests and deploys to Cloudflare after successful verification on `main`.
+## Commands
 
-</details>
+| Command              | What it does                                         |
+| :------------------- | :--------------------------------------------------- |
+| `bun run dev`        | Start the dev server                                 |
+| `bun run build`      | Build the production site and its CSP headers        |
+| `bun run preview`    | Build and serve the site through Wrangler            |
+| `bun run check`      | Type-check Astro, Svelte, and TypeScript             |
+| `bun run check:i18n` | Check that every language has every string           |
+| `bun run lint`       | Check code and formatting with Ultracite             |
+| `bun run fix`        | Apply Ultracite fixes and format Astro files         |
+| `bun run test`       | Build and run the Playwright release tests           |
+| `bun run verify`     | Run every check, the tests, and the dependency audit |
 
-<details>
-<summary><strong>Where things live</strong></summary>
-<br />
+## Tests and deployment
+
+- `bun install` turns on the git hooks. Pre-commit checks formatting, and pre-push runs `bun run verify`.
+- The release tests open every trainer route and public page in desktop and mobile Chromium. Install the browser once with `bunx playwright install chromium`, and set `TEST_PORT` if port 4323 is taken.
+- GitHub Actions runs `bun run verify` on pull requests and deploys `main` to Cloudflare.
+
+## Project structure
 
 ```text
-src/pages/                  Astro routes
-src/lib/components/         Svelte app and UI components
-src/lib/trainer/            Trainer state, rendering, and settings
-src/lib/engine/             Patterns, profiles, safety, and storage
-src/styles/                 Global styles and Tailwind setup
-public/logo-render/         SVG logo
-public/metadata/            App icons and social image
-docs/images/                README images
-tests/release.playwright.ts Desktop and mobile release checks
+src/pages/              Astro routes
+src/lib/components/     Svelte app and UI components
+src/lib/trainer/        Trainer state, rendering, and settings
+src/lib/engine/         Patterns, profiles, safety, and storage
+src/lib/i18n/           Translations for 10 languages
+src/styles/             Global styles and Tailwind setup
+public/                 Logo, icons, and social image
+tests/                  Desktop and mobile release tests
+docs/images/            README images and drill clips
 ```
 
-</details>
-
-<details>
-<summary><strong>Ideas for later</strong></summary>
-<br />
+## Ideas for later
 
 - Session history and basic progress stats.
 - Guided routines for warmups, tracking, reaction drills, and cooldowns.
 - Exportable presets.
 
-</details>
-
-## Background reading
-
-- [Visual guidance of smooth pursuit eye movements](https://pmc.ncbi.nlm.nih.gov/articles/PMC2887486/)
-- [Visual learning in multiple-object tracking](https://pmc.ncbi.nlm.nih.gov/articles/PMC2375111/)
-- [Lilac chaser illusion](https://en.wikipedia.org/wiki/Lilac_chaser)
-- [FPS Eye Training Warmup](https://www.youtube.com/watch?v=WAPKAZhOFM4)
-
-<br />
+---
 
 <p align="center">
-  <a href="https://foveaflow.com/"><img src="public/logo-render/logo.svg" width="32" height="32" alt="FoveaFlow" /></a>
-  <br />
   <sub><a href="https://foveaflow.com/">foveaflow.com</a> &nbsp;·&nbsp; <a href="LICENSE">MIT license</a></sub>
 </p>
