@@ -1,12 +1,12 @@
 import type { LetterWeight } from "$lib/engine/presets";
 import { getPreset, patternOptions } from "$lib/engine/presets";
-import type { PatternId, SpeedUnit, TargetForm } from "$lib/engine/types";
+import type { PatternId, TargetForm } from "$lib/engine/types";
 import { behaviorOptions } from "$lib/trainer/behavior";
 import type { BehaviorId } from "$lib/trainer/behavior";
 
-export type ControlIconId = "target" | "eye" | "display" | "settings";
+export type ControlIconId = "route" | "target" | "settings";
 
-export type ControlSectionId = "drill" | "targets" | "display" | "general";
+export type ControlSectionId = "drill" | "targets" | "general";
 
 export interface ControlSection {
   id: ControlSectionId;
@@ -15,9 +15,8 @@ export interface ControlSection {
 }
 
 export const controlSections = [
-  { icon: "target", id: "drill", label: "Drill" },
-  { icon: "eye", id: "targets", label: "Targets" },
-  { icon: "display", id: "display", label: "Display" },
+  { icon: "route", id: "drill", label: "Drill" },
+  { icon: "target", id: "targets", label: "Targets" },
   { icon: "settings", id: "general", label: "General" },
 ] as const satisfies readonly ControlSection[];
 
@@ -65,36 +64,6 @@ export const getTargetFormName = (id: TargetForm) =>
 
 export const getLetterWeightName = (id: LetterWeight) =>
   getOptionName(letterWeightOptions, id);
-
-export const maxSpeedByUnit = {
-  "cm/s": 143,
-  "deg/s": 100,
-  "screen/s": 6,
-} satisfies Record<SpeedUnit, number>;
-
-export const minSpeedByUnit = {
-  "cm/s": 0.1,
-  "deg/s": 0.1,
-  "screen/s": 0.01,
-} satisfies Record<SpeedUnit, number>;
-
-export const speedSliderStepByUnit = {
-  "cm/s": 0.1,
-  "deg/s": 0.1,
-  "screen/s": 0.01,
-} satisfies Record<SpeedUnit, number>;
-
-export const speedKeyboardStepByUnit = {
-  "cm/s": 1,
-  "deg/s": 1,
-  "screen/s": 0.05,
-} satisfies Record<SpeedUnit, number>;
-
-export const speedDecimalPlacesByUnit = {
-  "cm/s": 1,
-  "deg/s": 1,
-  "screen/s": 2,
-} satisfies Record<SpeedUnit, number>;
 
 const pursuitPatternOptions = patternOptions.filter(
   (option) => option.id !== "multipleObjectTracking"

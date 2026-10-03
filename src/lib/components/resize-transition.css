@@ -1,3 +1,0 @@
-@utility t-resize {
-  @apply transition-[width,height] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[width,height] motion-reduce:transition-none motion-reduce:will-change-auto;
-}

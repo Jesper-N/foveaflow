@@ -11,24 +11,23 @@
 
 <script lang="ts">
   import type { TrainingMode } from "$lib/engine/presets";
-  import type { VariantProps } from "tailwind-variants";
 
   import MultipleDistractionsGlyph from "./multiple-distractions-glyph.svelte";
-  import { pathPreviewVariants, previewPaths } from "./path-preview-data";
+  import { pathPreviewVariants } from "./path-preview-data";
   import ReactionJumpGlyph from "./reaction-jump-glyph.svelte";
 
   let {
     mode,
-    variant = "default",
+    class: className,
   }: {
     mode: TrainingMode;
-    variant?: VariantProps<typeof pathPreviewVariants>["variant"];
+    class?: string;
   } = $props();
 </script>
 
 <svg
   data-slot="mode-path-preview"
-  class={pathPreviewVariants({ variant })}
+  class={pathPreviewVariants({ class: className })}
   viewBox="0 0 24 24"
   fill="none"
   stroke="currentColor"
@@ -38,8 +37,12 @@
   aria-hidden="true"
 >
   {#if mode === "pursuit"}
-    <path d={previewPaths.randomWalk} />
-    <circle cx="21" cy="7" r="1.8" fill="currentColor" stroke="none" />
+    <path
+      d="M3.5 19a10 10 0 0 1 10-10"
+      stroke-width="2.25"
+      stroke-dasharray="0.1 4"
+    />
+    <circle cx="17.5" cy="9" r="3" fill="currentColor" stroke="none" />
   {:else if mode === "reactionTime"}
     <ReactionJumpGlyph />
   {:else if mode === "mot"}

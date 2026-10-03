@@ -629,6 +629,67 @@ const getMotRandomWalkObjects = (
   return cache.objects;
 };
 
+const sampleMultipleObjectTrackingInto = (
+  samplerState: PatternSamplerState,
+  frames: TargetFrame[],
+  metrics: PatternMetrics,
+  params: PatternParams,
+  rng: Rng
+) => {
+  const {
+    bottom,
+    left,
+    primaryColor,
+    radiusPx,
+    right,
+    secondaryColor,
+    top,
+    travelPx,
+  } = metrics;
+  const targetCount = clamp(Math.round(params.targetCount ?? 3), 1, 12);
+  const distractorCount = clamp(Math.round(params.distractorCount ?? 5), 0, 20);
+  const total = targetCount + distractorCount;
+  const objects = getMotRandomWalkObjects(
+    samplerState,
+    rng,
+    total,
+    travelPx,
+    left,
+    top,
+    right,
+    bottom
+  );
+  let count = 0;
+
+  for (let index = 0; index < total; index += 1) {
+    const object = objects[index];
+    const role: TargetRole = index < targetCount ? "target" : "distractor";
+    const sampledState = advanceRandomWalk(
+      object.state,
+      object.previewState,
+      object.rng,
+      travelPx,
+      left,
+      top,
+      right,
+      bottom
+    );
+    count = writeTarget(
+      frames,
+      count,
+      sampledState.x,
+      sampledState.y,
+      radiusPx,
+      role === "target" ? primaryColor : secondaryColor,
+      1,
+      true,
+      role
+    );
+  }
+
+  return count;
+};
+
 export const getTeleportJumpDistancePx = ({
   width,
   height,
@@ -705,7 +766,6 @@ const samplePatternInto = (
     height,
     left,
     primaryColor,
-    secondaryColor,
     radiusX: rx,
     radiusY: ry,
     radiusPx,
@@ -932,52 +992,13 @@ const samplePatternInto = (
   }
 
   if (id === "multipleObjectTracking") {
-    const targetCount = clamp(Math.round(params.targetCount ?? 3), 1, 12);
-    const distractorCount = clamp(
-      Math.round(params.distractorCount ?? 5),
-      0,
-      20
-    );
-    const total = targetCount + distractorCount;
-    const objects = getMotRandomWalkObjects(
+    return sampleMultipleObjectTrackingInto(
       samplerState,
-      rng,
-      total,
-      travelPx,
-      left,
-      top,
-      right,
-      bottom
+      frames,
+      metrics,
+      params,
+      rng
     );
-    let count = 0;
-
-    for (let index = 0; index < total; index += 1) {
-      const object = objects[index];
-      const role: TargetRole = index < targetCount ? "target" : "distractor";
-      const sampledState = advanceRandomWalk(
-        object.state,
-        object.previewState,
-        object.rng,
-        travelPx,
-        left,
-        top,
-        right,
-        bottom
-      );
-      count = writeTarget(
-        frames,
-        count,
-        sampledState.x,
-        sampledState.y,
-        radiusPx,
-        role === "target" ? primaryColor : secondaryColor,
-        1,
-        true,
-        role
-      );
-    }
-
-    return count;
   }
 
   throw new Error(`Unsupported pattern: ${id}`);

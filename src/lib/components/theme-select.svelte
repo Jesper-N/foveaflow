@@ -25,7 +25,7 @@
         {...props}
         variant="ghost"
         size="icon-lg"
-        class="relative rounded-lg"
+        class="text-muted-foreground relative"
         aria-label={t(locale, "Theme")}
         title={t(locale, "Theme")}
       >

@@ -3,7 +3,7 @@ import type { TrainerShortcutAction } from "$lib/trainer/keyboard";
 export type HeaderShortcutSelect = "mode" | "pattern";
 
 export const shortcutPrioritySurfaceSelector =
-  "[data-slot='dialog-content'], [data-slot='select-content'], [popover]:popover-open";
+  "[data-slot='dialog-content'], [data-slot='select-content'], dialog[open]";
 
 interface TrainerShortcutHandlers {
   hasPriorityKeyboardSurface: () => boolean;

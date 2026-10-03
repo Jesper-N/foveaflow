@@ -1,5 +1,6 @@
 <script lang="ts">
   import ModePathPreview from "$lib/components/mode-path-preview.svelte";
+  import PatternPathPreview from "$lib/components/pattern-path-preview.svelte";
   import TrainerPatternSelectGroups from "$lib/components/trainer/trainer-pattern-select-groups.svelte";
   import * as Field from "$lib/components/ui/field/index.js";
   import * as Select from "$lib/components/ui/select/index.js";
@@ -11,8 +12,9 @@
   import { getPatternName, getPresetName } from "$lib/trainer/options";
 
   import {
+    settingsRowClass,
+    settingsRowsClass,
     settingsSectionClass,
-    settingsColumnsClass,
   } from "./settings-styles";
 
   let {
@@ -33,8 +35,8 @@
 </script>
 
 <Field.FieldSet class={settingsSectionClass} aria-label={t(locale, "Drill")}>
-  <Field.FieldGroup class={settingsColumnsClass}>
-    <Field.Field>
+  <Field.FieldGroup class={settingsRowsClass}>
+    <Field.Field class={settingsRowClass}>
       <Field.Label for="trainer-mode">{t(locale, "Drill")}</Field.Label>
       <Select.Root
         type="single"
@@ -46,7 +48,10 @@
           class="min-h-11 w-full"
           aria-label={t(locale, "Drill")}
         >
-          {currentPresetName}
+          <span class="flex min-w-0 items-center gap-2">
+            <ModePathPreview mode={settings.presetId} />
+            <span class="truncate">{currentPresetName}</span>
+          </span>
         </Select.Trigger>
         <Select.Content>
           <Select.Group>
@@ -64,7 +69,7 @@
     </Field.Field>
 
     {#if settings.presetId === "pursuit"}
-      <Field.Field>
+      <Field.Field class={settingsRowClass}>
         <Field.Label for="trainer-pattern"
           >{t(locale, "Motion path")}</Field.Label
         >
@@ -78,7 +83,10 @@
             class="min-h-11 w-full"
             aria-label={t(locale, "Motion path")}
           >
-            {currentPatternName}
+            <span class="flex min-w-0 items-center gap-2">
+              <PatternPathPreview patternId={settings.patternId} />
+              <span class="truncate">{currentPatternName}</span>
+            </span>
           </Select.Trigger>
           <Select.Content class={patternSelectContentClass}>
             <TrainerPatternSelectGroups />

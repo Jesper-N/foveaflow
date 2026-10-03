@@ -1,8 +1,6 @@
 <script lang="ts">
-  import { Button } from "$lib/components/ui/button/index.js";
   import * as Field from "$lib/components/ui/field/index.js";
   import * as Select from "$lib/components/ui/select/index.js";
-  import { Slider } from "$lib/components/ui/slider/index.js";
   import { Switch } from "$lib/components/ui/switch/index.js";
   import * as ToggleGroup from "$lib/components/ui/toggle-group/index.js";
   import type { TrainerSettings } from "$lib/engine/presets";
@@ -11,44 +9,42 @@
   import { behaviorOptions } from "$lib/trainer/behavior";
   import type { BehaviorId } from "$lib/trainer/behavior";
   import type { TrainerDialogActions } from "$lib/trainer/control-actions";
-  import {
-    getBehaviorName,
-    maxSpeedByUnit,
-    minSpeedByUnit,
-    speedDecimalPlacesByUnit,
-    speedSliderStepByUnit,
-  } from "$lib/trainer/options";
-  import ArrowLeftRightIcon from "@lucide/svelte/icons/arrow-left-right";
-  import type { Snippet } from "svelte";
+  import { getBehaviorName } from "$lib/trainer/options";
+  import { trainerSettingBounds } from "$lib/trainer/settings";
 
-  import { settingsSectionClass } from "./settings-styles";
+  import SettingsSliderRow from "./settings-slider-row.svelte";
+  import {
+    settingsRowClass,
+    settingsRowsClass,
+    settingsSectionClass,
+    settingsSwitchRowClass,
+  } from "./settings-styles";
 
   let {
     actions,
     behaviorValue,
     settings = $bindable(),
-    sliderRow,
     isLilacChaserMode,
     canToggleDirection,
-    motionDirectionLabel,
   }: {
     actions: TrainerDialogActions;
     behaviorValue: BehaviorId;
     settings: TrainerSettings;
-    sliderRow: Snippet<[string, string]>;
     isLilacChaserMode: boolean;
     canToggleDirection: boolean;
-    motionDirectionLabel: string;
   } = $props();
   let locale = $derived(languageState.locale);
   let currentBehaviorName = $derived(t(locale, getBehaviorName(behaviorValue)));
+  let motionDirectionValue = $derived(
+    settings.motionDirection === 1 ? "forward" : "reverse"
+  );
 </script>
 
 {#if !isLilacChaserMode}
   <Field.FieldSet class={settingsSectionClass}>
-    <Field.Legend>{t(locale, "Motion")}</Field.Legend>
-    <Field.FieldGroup class="gap-4">
-      <Field.Field>
+    <Field.Legend variant="label">{t(locale, "Motion")}</Field.Legend>
+    <Field.FieldGroup class={settingsRowsClass}>
+      <Field.Field class={settingsRowClass}>
         <Field.Label for="trainer-behavior"
           >{t(locale, "Motion feel")}</Field.Label
         >
@@ -75,58 +71,38 @@
           </Select.Content>
         </Select.Root>
       </Field.Field>
-      <Field.Field>
-        {@render sliderRow(
-          t(locale, "Speed"),
-          `${settings.speed.value.toFixed(speedDecimalPlacesByUnit[settings.speed.unit])} ${settings.speed.unit}`
-        )}
-        <Slider
-          bind:value={actions.speedSlider.value, actions.speedSlider.set}
-          min={minSpeedByUnit[settings.speed.unit]}
-          max={maxSpeedByUnit[settings.speed.unit]}
-          step={speedSliderStepByUnit[settings.speed.unit]}
-          aria-label={t(locale, "Speed")}
-        />
-      </Field.Field>
-      <Field.Field>
-        <Field.Label id="trainer-speed-unit">{t(locale, "Unit")}</Field.Label>
-        <ToggleGroup.Root
-          type="single"
-          bind:value={() => settings.speed.unit, actions.handleSpeedUnitChange}
-          variant="outline"
-          aria-labelledby="trainer-speed-unit"
-        >
-          <ToggleGroup.Item value="deg/s" class="min-h-11"
-            >deg/s</ToggleGroup.Item
-          >
-          <ToggleGroup.Item value="cm/s" class="min-h-11">cm/s</ToggleGroup.Item
-          >
-          <ToggleGroup.Item value="screen/s" class="min-h-11"
-            >screen/s</ToggleGroup.Item
-          >
-        </ToggleGroup.Root>
-      </Field.Field>
+      <SettingsSliderRow
+        label={t(locale, "Speed")}
+        valueLabel={String(settings.speed)}
+        ariaLabel={t(locale, "Speed")}
+        slider={actions.speedSlider}
+        min={trainerSettingBounds.speed.min}
+        max={trainerSettingBounds.speed.max}
+        step={1}
+      />
       {#if canToggleDirection}
-        <Field.Field
-          orientation="horizontal"
-          class="flex min-h-11 flex-wrap items-center justify-between gap-6"
-        >
-          <Field.Label>{t(locale, "Direction")}</Field.Label>
-          <Button
-            variant="outline"
-            class="min-h-11"
-            aria-describedby="trainer-motion-status"
-            onclick={actions.toggleMotionDirection}
+        <Field.Field class={settingsRowClass}>
+          <Field.Label id="trainer-direction-label"
+            >{t(locale, "Direction")}</Field.Label
           >
-            <ArrowLeftRightIcon
-              data-icon="inline-start"
-            />{motionDirectionLabel}
-          </Button>
+          <ToggleGroup.Root
+            type="single"
+            class="grid w-full grid-cols-2"
+            bind:value={
+              () => motionDirectionValue, actions.handleMotionDirectionChange
+            }
+            variant="outline"
+            aria-labelledby="trainer-direction-label"
+          >
+            <ToggleGroup.Item value="forward" class="min-h-11"
+              >{t(locale, "Forward")}</ToggleGroup.Item
+            >
+            <ToggleGroup.Item value="reverse" class="min-h-11"
+              >{t(locale, "Reverse")}</ToggleGroup.Item
+            >
+          </ToggleGroup.Root>
         </Field.Field>
-        <Field.Field
-          orientation="horizontal"
-          class="flex min-h-11 flex-wrap items-center justify-between gap-6"
-        >
+        <Field.Field orientation="horizontal" class={settingsSwitchRowClass}>
           <Field.Label for="trainer-show-trail"
             >{t(locale, "Show trail")}</Field.Label
           >

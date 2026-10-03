@@ -12,7 +12,7 @@
 </script>
 
 <Select.Group>
-  <Select.GroupHeading>{t(locale, "Unpredictive")}</Select.GroupHeading>
+  <Select.GroupHeading>{t(locale, "Unpredictable")}</Select.GroupHeading>
   {#each unpredictivePatternOptions as option (option.id)}
     <Select.Item value={option.id}>
       <span class="flex min-w-0 items-center gap-2">
@@ -23,7 +23,7 @@
   {/each}
 </Select.Group>
 <Select.Group>
-  <Select.GroupHeading>{t(locale, "Predictive")}</Select.GroupHeading>
+  <Select.GroupHeading>{t(locale, "Predictable")}</Select.GroupHeading>
   {#each predictivePatternOptions as option (option.id)}
     <Select.Item value={option.id}>
       <span class="flex min-w-0 items-center gap-2">

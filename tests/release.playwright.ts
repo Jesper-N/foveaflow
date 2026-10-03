@@ -128,6 +128,15 @@ const choose = async (
 const section = (page: Page, id: string) =>
   page.locator(`[data-control-section="${id}"]:visible`).click();
 
+const resetToDefaults = async (page: Page) => {
+  await page.getByRole("button", { name: "Reset to defaults" }).click();
+  await page
+    .getByRole("alertdialog")
+    .getByRole("button", { name: "Reset to defaults" })
+    .click();
+  await expect(page.getByRole("alertdialog")).toHaveCount(0);
+};
+
 const adjustSlider = (page: Page, name: string, key: string) =>
   page
     .getByRole("dialog")
@@ -148,10 +157,10 @@ for (const route of trainerPages) {
   test(`direct load: ${route.path}`, async ({ page }) => {
     await openPage(page, route.path);
     const guideTrigger = page.locator(
-      '#trainer-island [popovertarget="trainer-guide-popover"]'
+      '#trainer-island [aria-controls="trainer-guide"]'
     );
     await guideTrigger.click();
-    const guide = page.locator("#trainer-guide-popover");
+    const guide = page.locator("#trainer-guide");
     const guideRoute = trainerRoutes.find(
       (candidate) => candidate.path === route.path
     );
@@ -159,12 +168,9 @@ for (const route of trainerPages) {
     await expect(guide.getByRole("heading", { level: 2 })).toHaveText(
       guideRoute?.seoContent.heading ?? homepageSeoContent.heading
     );
-    await expect(guide.locator('[data-slot="mode-path-preview"]')).toHaveCount(
-      guideRoute ? Number(guideRoute.indexable) : 4
+    await expect(guide.locator('[data-slot="drill-illustration"]')).toHaveCount(
+      guideRoute ? 1 : 4
     );
-    await expect(
-      guide.locator('[data-slot="pattern-path-preview"]')
-    ).toHaveCount(guideRoute?.indexable === false ? 1 : 0);
     expect(
       await guide.evaluate(
         (element) => element.scrollWidth <= element.clientWidth
@@ -172,16 +178,12 @@ for (const route of trainerPages) {
       "Guide content must fit without horizontal scrolling"
     ).toBe(true);
     if (guideRoute) {
-      const question = guide
-        .locator('[aria-controls^="trainer-guide-faq-answer-"]')
-        .first();
+      const answer = guide.locator("details").first();
+      const question = answer.locator("summary");
       await question.press("Enter");
-      await expect(question).toHaveAttribute("aria-expanded", "true");
-      await expect(
-        guide.locator("#trainer-guide-faq-answer-0")
-      ).toHaveAttribute("aria-hidden", "false");
+      await expect(answer).toHaveAttribute("open", "");
       await question.press("Enter");
-      await expect(question).toHaveAttribute("aria-expanded", "false");
+      await expect(answer).not.toHaveAttribute("open");
     }
     await page.keyboard.press("Escape");
     await expect(guide).not.toBeVisible();
@@ -189,6 +191,21 @@ for (const route of trainerPages) {
     await expectTrainer(page, route.mode, route.patternId);
   });
 }
+
+test("guide links to the full guide and closes from outside", async ({
+  page,
+}) => {
+  await openPage(page, "/smooth-pursuit/");
+  const guide = page.locator("#trainer-guide");
+  await page.locator('#trainer-island [aria-controls="trainer-guide"]').click();
+  await expect(guide).toBeVisible();
+  await expect(
+    guide.getByRole("link", { name: "Read full guide" })
+  ).toHaveAttribute("href", "/guide/");
+  await page.mouse.click(4, 4);
+  await expect(guide).not.toBeVisible();
+  await expectAnimation(page);
+});
 
 const menuChoices = [
   ...exercisePresets.map((preset) => ({
@@ -279,7 +296,7 @@ test("island hides when idle and respects pointer or touch after selection", asy
   await drill[action]();
   const reaction = page.getByRole("option", {
     exact: true,
-    name: "Reaction jumps",
+    name: "Reaction Jumps",
   });
   await reaction[action]();
   await expect(page).toHaveURL(/\/reaction-jumps\/$/u);
@@ -315,7 +332,7 @@ test("island offers the controls supported by the selected drill", async ({
   await expect(reverse).toBeHidden();
   await expect(pattern).toBeVisible();
 
-  await choose(page, "mode", "Reaction jumps", hasTouch);
+  await choose(page, "mode", "Reaction Jumps", hasTouch);
   await expect(pattern).toBeHidden();
   await expect(reverse).toBeHidden();
 
@@ -340,22 +357,15 @@ test("island offers the controls supported by the selected drill", async ({
   ).toHaveCount(0);
 });
 
-test("settings keep the selected unit and reopen the last category", async ({
+test("speed stays a whole number and the last category reopens", async ({
   page,
   hasTouch,
 }) => {
   await openPage(page, "/circle/");
   await page.getByRole("button", { name: "Open controls" }).click();
   await section(page, "drill");
-  const unit = page.getByRole("radio", { exact: true, name: "cm/s" });
-  await unit.click();
-  await unit.click();
-  await expect(unit).toBeChecked();
-  await expect
-    .poll(() => readSettings(page))
-    .toMatchObject({
-      speed: { unit: "cm/s" },
-    });
+  await adjustSlider(page, "Speed", "ArrowRight");
+  await expect.poll(() => readSettings(page)).toMatchObject({ speed: 21 });
   await page.getByRole("button", { exact: true, name: "Done" }).click();
   await expect(page.getByRole("dialog")).not.toBeVisible();
   if (!hasTouch) {
@@ -365,19 +375,39 @@ test("settings keep the selected unit and reopen the last category", async ({
   await expect(
     page.getByRole("heading", { exact: true, level: 2, name: "Drill" })
   ).toBeVisible();
-  await expect(unit).toBeChecked();
 
   await page.reload();
   await expectTrainer(page, "pursuit", "circle");
-  await page.getByRole("button", { name: "Open controls" }).click();
-  await section(page, "drill");
-  await expect(unit).toBeChecked();
-  await expect
-    .poll(() => readSettings(page))
-    .toMatchObject({
-      speed: { unit: "cm/s" },
-    });
+  await expect.poll(() => readSettings(page)).toMatchObject({ speed: 21 });
 });
+
+for (const [legacySpeed, speed] of [
+  [{ unit: "deg/s", value: 29.6 }, 30],
+  [{ unit: "cm/s", value: 20 }, 19],
+  [{ unit: "screen/s", value: 0.5 }, 20],
+] as const) {
+  test(`saved ${legacySpeed.unit} speed migrates to ${speed}`, async ({
+    page,
+  }) => {
+    await page.addInitScript((savedSpeed) => {
+      localStorage.setItem(
+        "foveaflow.settings.v3",
+        JSON.stringify({
+          calibration: {
+            createdAt: 0,
+            cssPxPerCm: 37.8,
+            id: "default",
+            viewingDistanceCm: 60,
+          },
+          speed: savedSpeed,
+        })
+      );
+    }, legacySpeed);
+    await openPage(page, "/circle/");
+    await expect.poll(() => readSettings(page)).toMatchObject({ speed });
+    expect(await readSettings(page)).not.toHaveProperty("calibration");
+  });
+}
 
 test("settings redraw, survive reload, and reset through the controls", async ({
   page,
@@ -419,7 +449,7 @@ test("settings redraw, survive reload, and reset through the controls", async ({
     page.getByRole("switch", { name: "Show target letters" })
   ).toBeChecked();
   await section(page, "general");
-  await page.getByRole("button", { name: "Reset to defaults" }).click();
+  await resetToDefaults(page);
   await expect
     .poll(() => readSettings(page))
     .toMatchObject({
@@ -499,8 +529,8 @@ test("target defaults follow the theme while custom colors persist", async ({
       .toMatchObject({ ballColor: null });
   };
   await expectThemeTarget();
-  await section(page, "display");
-  await page.getByRole("switch", { name: "Use dark theme" }).click();
+  await section(page, "general");
+  await page.getByRole("radio", { exact: true, name: "Dark" }).click();
   await section(page, "targets");
   await expectThemeTarget();
   // The previous default must remain available as an explicitly chosen color.
@@ -512,12 +542,12 @@ test("target defaults follow the theme while custom colors persist", async ({
   await expectTrainer(page, "pursuit", "circle");
   await page.getByRole("button", { name: "Open controls" }).click();
   await expect(color).toHaveValue("#76d900");
-  await section(page, "display");
-  await page.getByRole("switch", { name: "Use dark theme" }).click();
+  await section(page, "general");
+  await page.getByRole("radio", { exact: true, name: "Light" }).click();
   await section(page, "targets");
   await expect(color).toHaveValue("#76d900");
   await section(page, "general");
-  await page.getByRole("button", { name: "Reset to defaults" }).click();
+  await resetToDefaults(page);
   await section(page, "targets");
   await expectThemeTarget();
 });

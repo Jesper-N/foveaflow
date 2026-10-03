@@ -3,13 +3,6 @@ export interface Arena {
   height: number;
 }
 
-export type SpeedUnit = "deg/s" | "cm/s" | "screen/s";
-
-export interface SpeedSetting {
-  unit: SpeedUnit;
-  value: number;
-}
-
 export type TargetRole = "target" | "distractor";
 
 export interface TargetFrame {

@@ -4,14 +4,7 @@ import type { PatternId } from "$lib/engine/types";
 import { tv } from "tailwind-variants";
 
 export const pathPreviewVariants = tv({
-  base: "in-data-highlighted:text-accent-foreground size-5 shrink-0",
-  defaultVariants: { variant: "default" },
-  variants: {
-    variant: {
-      badge: "text-primary-foreground",
-      default: "text-foreground",
-    },
-  },
+  base: "text-foreground in-data-highlighted:text-accent-foreground size-5 shrink-0",
 });
 
 const previewBounds: PatternBounds = {

@@ -7,21 +7,20 @@
   import type { AppLocale } from "$lib/i18n/locales";
   import { t } from "$lib/i18n/translate";
   import type { TrainerHudActions } from "$lib/trainer/control-actions";
-  import {
-    getLilacChaserColorName,
-    maxSpeedByUnit,
-    minSpeedByUnit,
-    speedSliderStepByUnit,
-  } from "$lib/trainer/options";
+  import { getLilacChaserColorName } from "$lib/trainer/options";
   import { trainerSettingBounds } from "$lib/trainer/settings";
   import { cn } from "$lib/utils.js";
 
   import { islandPresenceMotion } from "./island-motion";
+  import { compactSliderClass } from "./settings-styles";
 
   const adjustmentsClass = cn(
-    "col-start-1 row-start-1 grid min-w-0 grid-cols-2 items-start gap-5 px-1",
+    "col-start-1 row-start-1 grid min-w-0 grid-cols-2 items-start gap-5",
     islandPresenceMotion
   );
+  const sliderFieldClass =
+    "grid min-w-0 grid-cols-[1fr_auto] items-center gap-x-2 gap-y-4";
+  const sliderClass = cn("col-span-2 row-start-2 w-full", compactSliderClass);
 
   let {
     settings,
@@ -45,15 +44,13 @@
   let scaleLabel = $derived(t(locale, "Scale"));
 </script>
 
-<div class="grid min-h-17">
+<div class="grid">
   <Field.FieldGroup
     class={adjustmentsClass}
     data-visible={!isLilacChaserMode}
     inert={isLilacChaserMode}
   >
-    <Field.Field
-      class="grid min-w-0 grid-cols-[1fr_auto] items-center gap-x-2 gap-y-0"
-    >
+    <Field.Field class={sliderFieldClass}>
       <span
         class="text-muted-foreground min-w-0 truncate text-xs font-medium"
         title={sizeLabel}
@@ -66,16 +63,14 @@
         max={trainerSettingBounds.baseRadiusPx.max}
         step={1}
         aria-label={t(locale, "Header target size")}
-        class="col-span-2 row-start-2 min-h-11 w-full"
+        class={sliderClass}
       />
       <span class="col-start-2 row-start-1 text-xs font-medium tabular-nums">
-        {Math.round(settings.baseRadiusPx)}
+        {Math.round(settings.baseRadiusPx)} px
       </span>
     </Field.Field>
 
-    <Field.Field
-      class="grid min-w-0 grid-cols-[1fr_auto] items-center gap-x-2 gap-y-0"
-    >
+    <Field.Field class={sliderFieldClass}>
       <span
         class="text-muted-foreground min-w-0 truncate text-xs font-medium"
         title={speedLabel}
@@ -84,14 +79,14 @@
       </span>
       <Slider
         bind:value={actions.speedSlider.value, actions.speedSlider.set}
-        min={minSpeedByUnit[settings.speed.unit]}
-        max={maxSpeedByUnit[settings.speed.unit]}
-        step={speedSliderStepByUnit[settings.speed.unit]}
+        min={trainerSettingBounds.speed.min}
+        max={trainerSettingBounds.speed.max}
+        step={1}
         aria-label={t(locale, "Header target speed")}
-        class="col-span-2 row-start-2 min-h-11 w-full"
+        class={sliderClass}
       />
       <span class="col-start-2 row-start-1 text-xs font-medium tabular-nums">
-        {Math.round(settings.speed.value)}
+        {settings.speed}
       </span>
     </Field.Field>
   </Field.FieldGroup>
@@ -112,15 +107,20 @@
         onOpenChange={actions.handleHeaderSelectOpenChange}
       >
         <Select.Trigger
-          class="min-h-11 w-full min-w-0 overflow-hidden rounded-xl px-2.5"
+          size="sm"
+          class="relative w-full min-w-0 px-2.5 before:absolute before:inset-x-0 before:-inset-y-1.5"
           aria-label={t(locale, "Lilac Chaser ball color")}
         >
           <span class="flex min-w-0 items-center gap-2">
-            <svg viewBox="0 0 12 12" class="size-3 shrink-0" aria-hidden="true">
+            <svg
+              viewBox="0 0 12 12"
+              class="border-border/60 size-3 shrink-0 rounded-full border"
+              aria-hidden="true"
+            >
               <circle
                 cx="6"
                 cy="6"
-                r="5"
+                r="6"
                 fill={settings.lilacChaserBallColor}
               />
             </svg>
@@ -134,9 +134,7 @@
         </Select.Content>
       </Select.Root>
     </Field.Field>
-    <Field.Field
-      class="grid min-w-0 grid-cols-[1fr_auto] items-center gap-x-2 gap-y-0"
-    >
+    <Field.Field class={sliderFieldClass}>
       <span
         class="text-muted-foreground min-w-0 truncate text-xs font-medium"
         title={scaleLabel}
@@ -152,7 +150,7 @@
         max={trainerSettingBounds.lilacChaserScale.max}
         step={0.05}
         aria-label={t(locale, "Lilac Chaser scale")}
-        class="col-span-2 row-start-2 min-h-12 w-full"
+        class={sliderClass}
       />
       <span class="col-start-2 row-start-1 text-xs font-medium tabular-nums">
         {settings.lilacChaserScale.toFixed(2)}x

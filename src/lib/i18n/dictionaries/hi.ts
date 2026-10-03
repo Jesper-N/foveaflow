@@ -25,15 +25,14 @@ export const hi = {
     "खेलने से पहले कुछ मिनट ध्यान से अभ्यास करें। FoveaFlow में चार मुफ़्त ब्राउज़र अभ्यास हैं: चलते लक्ष्य पर नज़र रखना, तेज़ी से नज़र बदलना और व्यस्त स्क्रीन पर ध्यान बनाए रखना।",
   "A separate mode with target count, distractor count, and brightness controls.":
     "अलग मोड, जिसमें लक्ष्यों की संख्या, व्यवधानों की संख्या और चमक बदल सकते हैं।",
-  "A short break from the usual screen.": "रोज़ के स्क्रीन काम से छोटा-सा विराम।",
+  "A short break from the usual screen": "रोज़ के स्क्रीन काम से छोटा-सा विराम",
   "A warmup you can adjust": "अपनी ज़रूरत के अनुसार वार्मअप",
   "About FoveaFlow": "FoveaFlow के बारे में",
   "About FoveaFlow eye trainer": "FoveaFlow आई ट्रेनर के बारे में",
   "Acceptable use": "स्वीकार्य उपयोग",
   "Add distractors when you want to practice staying with one target through clutter.":
     "भरे हुए दृश्य में एक ही लक्ष्य पर नज़र रखने का अभ्यास करने के लिए व्यवधान जोड़ें।",
-  "Adjust target size and speed, with deg/s, cm/s, and screen/s units.":
-    "लक्ष्य का आकार और गति बदलें। deg/s, cm/s और screen/s इकाइयाँ उपलब्ध हैं।",
+  "Adjust target size and speed.": "लक्ष्य का आकार और गति बदलें।",
   "Adjust the drill, not your posture": "अभ्यास बदलें, बैठने का ढंग नहीं",
   "Adjust the settings without guesswork": "अनुमान लगाए बिना सेटिंग बदलें",
   Agreement: "सहमति",
@@ -46,8 +45,6 @@ export const hi = {
   Appearance: "दिखावट",
   "Availability and warranty": "उपलब्धता और वारंटी",
   "Ball color": "गेंद का रंग",
-  "Before you start": "शुरू करने से पहले",
-  "Best fit": "सबसे सही विकल्प",
   "Best uses for": "सबसे अच्छा उपयोग",
   BlinkCamp: "BlinkCamp",
   "BlinkCamp has its own exercise set and a simpler public workflow.":
@@ -56,21 +53,20 @@ export const hi = {
     "BlinkCamp में भटकाने वाली वस्तुओं और अक्षर ओवरले की कस्टम सेटिंग से ज्यादा सीधे आंखों के अभ्यास पर ध्यान है.",
   "BlinkCamp is organized around its own routine interface.":
     "BlinkCamp अपने रूटीन इंटरफेस के हिसाब से बना है.",
-  "BlinkCamp keeps setup lighter and does not expose the same viewing-distance and screen-scale controls.":
-    "BlinkCamp सेटअप को हल्का रखता है और वही देखने की दूरी या स्क्रीन स्केल के कंट्रोल नहीं देता.",
   "BlinkCamp keeps the public controls simpler, with the main visible controls focused on speed and size.":
     "BlinkCamp सार्वजनिक कंट्रोल सरल रखता है. मुख्य कंट्रोल गति और आकार पर हैं.",
   "BlinkCamp uses a simpler routine-based setup rather than exposing the same path and motion-behavior controls.":
     "BlinkCamp वही रास्ता और गति व्यवहार कंट्रोल देने के बजाय सरल रूटीन आधारित सेटअप इस्तेमाल करता है.",
   Blue: "नीला",
   Bold: "बोल्ड",
-  "Both are free eye trainers you can open in a browser. Choose FoveaFlow when you want to fine-tune the session: how the target moves, what it looks like, and how the motion fits your screen.":
-    "दोनों मुफ़्त नेत्र-अभ्यास हैं जो ब्राउज़र में खुलते हैं। लक्ष्य की गति, दिखावट और स्क्रीन के अनुसार उसका चलना बारीकी से बदलना हो तो FoveaFlow चुनें।",
+  "Both are free eye trainers you can open in a browser. Choose FoveaFlow when you want to fine-tune the session: how the target moves and what it looks like.":
+    "दोनों मुफ़्त नेत्र-अभ्यास हैं जो ब्राउज़र में खुलते हैं। लक्ष्य की गति और दिखावट बारीकी से बदलनी हो तो FoveaFlow चुनें।",
   Bounce: "बाउंस",
   "Bounce Smooth Pursuit Drill": "बाउंस स्मूद ट्रैकिंग अभ्यास",
   "Bounce Smooth Pursuit Eye Training": "बाउंस स्मूद ट्रैकिंग आंख अभ्यास",
   "Bounce adds repeated reversals at the edges. It is useful when you want more direction changes and less continuous flow than Circle or Wave.":
     "बाउंस किनारों पर बार-बार दिशा बदलता है. सर्कल या वेव से ज्यादा दिशा बदलाव और कम लगातार बहाव चाहिए तो यह काम आता है.",
+  Breadcrumb: "ब्रेडक्रम्ब",
   "Browser exercises start without an account or install.":
     "ब्राउज़र अभ्यास बिना अकाउंट या इंस्टॉल के शुरू होते हैं।",
   "Browser only, no account": "सिर्फ ब्राउजर, कोई खाता नहीं",
@@ -80,16 +76,12 @@ export const hi = {
   "Build and reset": "गति बढ़ाएं और वापस लाएं",
   "By using FoveaFlow, you agree to these terms. If you do not agree, do not use the site.":
     "FoveaFlow इस्तेमाल करके आप इन शर्तों से सहमत होते हैं. सहमत नहीं हैं तो साइट इस्तेमाल न करें.",
-  "CSS pixels/cm": "CSS पिक्सल/cm",
-  Calibration: "कैलिब्रेशन",
   "Can FoveaFlow help with tired eyes from screen work?":
     "क्या FoveaFlow स्क्रीन पर काम करने से थकी आंखों में मदद कर सकता है?",
   "Can FoveaFlow improve eyesight or reaction time?":
     "क्या FoveaFlow नजर या प्रतिक्रिया समय सुधार सकता है?",
   "Can I adjust speed and target size?":
     "क्या मैं गति और लक्ष्य का आकार बदल सकता हूं?",
-  "Can I calibrate the session to my setup?":
-    "क्या मैं सेशन को अपने सेटअप के हिसाब से कैलिब्रेट कर सकता हूं?",
   "Can I change how the target looks?": "क्या मैं लक्ष्य का रूप बदल सकता हूं?",
   "Can I change paths and motion behavior?":
     "क्या मैं रास्ते और गति का व्यवहार बदल सकता हूं?",
@@ -97,11 +89,10 @@ export const hi = {
   "Can I start in the browser?": "क्या मैं ब्राउजर में शुरू कर सकता हूं?",
   "Can I train with distractors or letters?":
     "क्या मैं भटकाने वाली वस्तुओं या अक्षरों के साथ अभ्यास कर सकता हूं?",
-  "Can I tune target appearance and calibration?":
-    "क्या मैं लक्ष्य का रूप और कैलिब्रेशन बदल सकता हूं?",
   "Can I use FoveaFlow on a phone?": "क्या मैं FoveaFlow फोन पर इस्तेमाल कर सकता हूं?",
   "Can I use it free in the browser?":
     "क्या मैं इसे ब्राउजर में मुफ्त इस्तेमाल कर सकता हूं?",
+  Cancel: "रद्द करें",
   "Change language": "भाषा बदलें",
   "Change speed and target size first. They usually have the biggest effect on difficulty and control.":
     "पहले गति और लक्ष्य का आकार बदलें. कठिनाई और कंट्रोल पर आम तौर पर इन्हीं का सबसे ज्यादा असर होता है.",
@@ -125,8 +116,6 @@ export const hi = {
     "रास्ता चुनें और उसमें समर्थित दिशा तथा गति के व्यवहार को बदलें।",
   "Choose a path, set the speed and target style, then use it for a short visual tracking session.":
     "रास्ता चुनें, गति और लक्ष्य शैली सेट करें, फिर छोटे विजुअल ट्रैकिंग सेशन में इस्तेमाल करें.",
-  "Choose an easy path when you want rhythm and control. Choose a harder path when you want more direction changes and more target-search demand.":
-    "लय और कंट्रोल चाहिए तो आसान रास्ता चुनें. ज्यादा दिशा बदलाव और लक्ष्य खोजने की मेहनत चाहिए तो कठिन रास्ता चुनें.",
   "Choose by the controls you need": "ज़रूरी नियंत्रणों के अनुसार चुनें",
   "Choose shape, color, opacity, trails, and letter overlays.":
     "आकृति, रंग, अपारदर्शिता, गति का निशान और ऊपर दिखने वाले अक्षर चुनें।",
@@ -150,8 +139,8 @@ export const hi = {
     "क्लोवर लगातार गति के लिए दोहराए जाने वाले लूप बनाता है. इसमें सर्कल से ज्यादा आकार बदलाव होता है.",
   "Compare FoveaFlow and BlinkCamp for free browser-based eye training, visual tracking, FPS warmups, reaction jumps, and distractor tracking.":
     "मुफ्त ब्राउजर आधारित आंख अभ्यास, विजुअल ट्रैकिंग, FPS वॉर्मअप, तेज़ फोकस शिफ्ट और विचलन ट्रैकिंग के लिए FoveaFlow और BlinkCamp की तुलना करें.",
-  "Compare FoveaFlow and BlinkCamp’s free browser eye trainers. See the differences in speed controls, target appearance, motion paths, and display calibration.":
-    "FoveaFlow और BlinkCamp के मुफ़्त ब्राउज़र नेत्र-अभ्यास की तुलना करें: गति नियंत्रण, लक्ष्य की दिखावट, गति के रास्ते और स्क्रीन कैलिब्रेशन।",
+  "Compare FoveaFlow and BlinkCamp’s free browser eye trainers. See the differences in target appearance, motion paths, and distraction controls.":
+    "FoveaFlow और BlinkCamp के मुफ़्त ब्राउज़र नेत्र-अभ्यास की तुलना करें: लक्ष्य की दिखावट, गति के रास्ते और विचलन नियंत्रण।",
   "Compare FoveaFlow and EyeTrainer.gg for FPS eye training, visual tracking, reaction drills, distraction control, and browser-based warmups.":
     "FPS आंख अभ्यास, विजुअल ट्रैकिंग, प्रतिक्रिया अभ्यास, विचलन कंट्रोल और ब्राउजर आधारित वॉर्मअप के लिए FoveaFlow और EyeTrainer.gg की तुलना करें.",
   "Compare FoveaFlow with EyeTrainer.gg’s browser version for FPS warmups. Explore drill modes, motion controls, target customization, and local settings.":
@@ -162,10 +151,6 @@ export const hi = {
   Contact: "संपर्क",
   "Control sections": "कंट्रोल सेक्शन",
   Controls: "कंट्रोल",
-  "Controls for speed units, target size, shape, color, opacity, trail length, motion path, motion behavior, distractor count, distractor brightness, letter overlays, viewing distance, and screen scale.":
-    "गति इकाई, लक्ष्य आकार, आकृति, रंग, अपारदर्शिता, ट्रेल लंबाई, गति रास्ता, गति व्यवहार, विचलन संख्या, विचलन चमक, अक्षर ओवरले, देखने की दूरी और स्क्रीन स्केल के कंट्रोल.",
-  "Controls for speed units, target size, shape, color, opacity, trail length, motion path, motion behavior, distractors, letter overlays, viewing distance, screen scale, and mode-specific options such as Lilac Chaser ball scale.":
-    "गति इकाई, लक्ष्य आकार, आकृति, रंग, अपारदर्शिता, ट्रेल लंबाई, गति रास्ता, गति व्यवहार, विचलन, अक्षर ओवरले, देखने की दूरी, स्क्रीन स्केल और लाइलैक चेज़र गेंद स्केल जैसे मोड विकल्पों के कंट्रोल.",
   Cookies: "कुकी",
   "Corner Tour Smooth Pursuit Drill": "कॉर्नर टूर स्मूद ट्रैकिंग अभ्यास",
   "Corner Tour Smooth Pursuit Eye Training": "कॉर्नर टूर स्मूद ट्रैकिंग आंख अभ्यास",
@@ -177,7 +162,6 @@ export const hi = {
   "Cycle through the available browser patterns.":
     "ब्राउज़र में उपलब्ध रास्तों के बीच बदलें।",
   Dark: "गहरा",
-  "Dark mode": "डार्क मोड",
   "Data is used to run the site, keep it secure, understand whether pages load correctly, and see which public pages people use. FoveaFlow does not sell visitor data.":
     "डेटा साइट चलाने, उसे सुरक्षित रखने, पेज सही लोड हो रहे हैं या नहीं समझने और लोग कौन से सार्वजनिक पेज इस्तेमाल करते हैं यह देखने के लिए इस्तेमाल होता है. FoveaFlow विजिटर डेटा नहीं बेचता.",
   "Data we do not collect": "जो डेटा हम इकट्ठा नहीं करते",
@@ -197,8 +181,6 @@ export const hi = {
   "Diamond loop": "डायमंड लूप",
   "Direct routes": "सीधे रास्ते",
   Direction: "दिशा",
-  Display: "डिस्प्ले",
-  "Display calibration": "स्क्रीन कैलिब्रेशन",
   Distractions: "ध्यान भटकाने वाले लक्ष्य",
   "Distractor Tracking Eye Training": "विचलन ट्रैकिंग आंख अभ्यास",
   "Distractor color": "विचलन का रंग",
@@ -240,8 +222,6 @@ export const hi = {
   "EyeTrainer.gg": "EyeTrainer.gg",
   "EyeTrainer.gg also offers simple browser patterns and promotes its upcoming Steam version from the public page.":
     "EyeTrainer.gg भी सरल ब्राउजर पैटर्न देता है और सार्वजनिक पेज से अपने आने वाले Steam संस्करण को दिखाता है.",
-  "EyeTrainer.gg focuses the public browser tool on simple pattern practice rather than detailed target and display calibration.":
-    "EyeTrainer.gg का सार्वजनिक ब्राउजर टूल विस्तार वाली लक्ष्य और डिस्प्ले कैलिब्रेशन के बजाय सरल पैटर्न अभ्यास पर केंद्रित है.",
   "EyeTrainer.gg offers browser patterns and promotes a forthcoming Steam app. Its announcement mentions new features and an Exercise Creator.":
     "EyeTrainer.gg ब्राउज़र में पैटर्न देता है और आने वाले Steam ऐप का प्रचार करता है। घोषणा में नई सुविधाओं और Exercise Creator का ज़िक्र है।",
   FAQ: "सवाल-जवाब",
@@ -271,13 +251,14 @@ export const hi = {
     "कम सेटिंग के साथ जल्दी से कोई पैटर्न चलाना हो तो EyeTrainer.gg पर्याप्त हो सकता है। ब्राउज़र में चार अलग अभ्यास मोड और बारीक नियंत्रण चाहिए तो FoveaFlow चुनें।",
   "For project questions, use the GitHub repository. Do not post private information in a public issue.":
     "प्रोजेक्ट से जुड़े सवालों के लिए GitHub रिपॉजिटरी इस्तेमाल करें. सार्वजनिक इश्यू में निजी जानकारी न डालें.",
+  Forward: "आगे",
   "Four ways to practice": "अभ्यास के चार तरीके",
   FoveaFlow: "FoveaFlow",
   "FoveaFlow Guide": "FoveaFlow गाइड",
   "FoveaFlow and BlinkCamp are both free browser-based eye training tools. FoveaFlow is the stronger fit when you want direct drill links, FPS warmup use, reaction jumps, distractor tracking, and deeper control over how the target moves and appears.":
     "FoveaFlow और BlinkCamp दोनों मुफ्त ब्राउजर आधारित आंख अभ्यास टूल हैं. सीधे अभ्यास लिंक, FPS वॉर्मअप, तेज़ फोकस शिफ्ट, विचलन ट्रैकिंग और लक्ष्य कैसे चले या दिखे इस पर ज्यादा कंट्रोल चाहिए तो FoveaFlow बेहतर फिट है.",
-  "FoveaFlow can be a short active break during long screen sessions. If screen use causes pain, dizziness, headaches, or ongoing symptoms, stop and get professional advice.":
-    "लंबे स्क्रीन सेशन के बीच FoveaFlow छोटा सक्रिय ब्रेक हो सकता है. स्क्रीन इस्तेमाल से दर्द, चक्कर, सिरदर्द या लगातार लक्षण हों तो रुकें और विशेषज्ञ सलाह लें.",
+  "FoveaFlow can be a short active break during long screen sessions.":
+    "लंबे स्क्रीन सेशन के बीच FoveaFlow छोटा सक्रिय ब्रेक हो सकता है.",
   "FoveaFlow can be used without sending personal details. It is not built to collect personal information from children.":
     "FoveaFlow निजी जानकारी भेजे बिना इस्तेमाल किया जा सकता है. यह बच्चों की निजी जानकारी इकट्ठा करने के लिए नहीं बना है.",
   "FoveaFlow does not set advertising cookies. Cloudflare may set security cookies when it needs them to keep the site available and safe.":
@@ -297,8 +278,6 @@ export const hi = {
     "FoveaFlow मुफ्त ब्राउजर आधारित FPS आंख अभ्यास वॉर्मअप है. चलते लक्ष्य की ट्रैकिंग के लिए स्मूद ट्रैकिंग, जल्दी दोबारा फोकस के लिए तेज़ फोकस शिफ्ट और दृश्य भीड़ में सही लक्ष्य पर टिके रहने के लिए कई व्यवधान इस्तेमाल करें.",
   "FoveaFlow is a free browser-based eye trainer for FPS warmups, visual tracking, reaction jumps, distractor tracking, and peripheral awareness. It is a practical alternative if you want to start in the browser with no account or install.":
     "FoveaFlow FPS वॉर्मअप, विजुअल ट्रैकिंग, तेज़ फोकस शिफ्ट, विचलन ट्रैकिंग और किनारी जागरूकता के लिए मुफ्त ब्राउजर आधारित आई ट्रेनर है. बिना खाता या इंस्टॉल ब्राउजर में शुरू करना हो तो यह व्यावहारिक विकल्प है.",
-  "FoveaFlow is a free online eye trainer for visual tracking, quick refocus, peripheral awareness, and focus under distraction. It runs in the browser with no account or install.":
-    "FoveaFlow विजुअल ट्रैकिंग, जल्दी दोबारा फोकस, किनारी जागरूकता और विचलन के बीच फोकस के लिए मुफ्त ऑनलाइन आई ट्रेनर है. यह बिना खाता या इंस्टॉल ब्राउजर में चलता है.",
   "FoveaFlow is a free online eye training app for visual tracking, focus, reaction speed, and peripheral awareness. It includes Smooth Pursuit, Reaction Jumps, Lilac Chaser, and distractor tracking with no account or install.":
     "FoveaFlow विजुअल ट्रैकिंग, फोकस, प्रतिक्रिया गति और किनारी जागरूकता के लिए मुफ्त ऑनलाइन आंख अभ्यास ऐप है. इसमें बिना खाता या इंस्टॉल स्मूद ट्रैकिंग, तेज़ फोकस शिफ्ट, लाइलैक चेज़र और विचलन ट्रैकिंग शामिल हैं.",
   "FoveaFlow is built to work without an account. The app keeps your settings in your browser and uses Cloudflare to serve the site.":
@@ -307,28 +286,23 @@ export const hi = {
     "FoveaFlow मुफ्त है, खाते या इंस्टॉल की जरूरत नहीं, और सेटिंग आपके ब्राउजर में स्थानीय रूप से सेव रहती हैं.",
   "FoveaFlow is free to use. There is no account, paid plan, subscription, or in-app purchase.":
     "FoveaFlow मुफ्त है. कोई खाता, पेड प्लान, सब्सक्रिप्शन या इन-ऐप खरीद नहीं है.",
-  "FoveaFlow is free. No account, no install.":
-    "FoveaFlow मुफ्त है. खाता नहीं, इंस्टॉल नहीं.",
   "FoveaFlow is free. No account, no paid plan.":
     "FoveaFlow मुफ्त है. खाता नहीं, पेड प्लान नहीं.",
   "FoveaFlow is not medical advice, diagnosis, treatment, vision therapy, or a medical device. It does not replace an optometrist, ophthalmologist, doctor, therapist, or other qualified professional.":
     "FoveaFlow चिकित्सा सलाह, निदान, उपचार, विजन थेरेपी या चिकित्सा उपकरण नहीं है. यह ऑप्टोमेट्रिस्ट, नेत्र रोग विशेषज्ञ, डॉक्टर, थेरेपिस्ट या किसी योग्य पेशेवर की जगह नहीं लेता.",
-  "FoveaFlow is practice software, not medical care. Stop if you feel eye strain, dizziness, headache, nausea, or other discomfort. A shorter session is fine.":
-    "FoveaFlow अभ्यास का साधन है, चिकित्सा सेवा नहीं। आँखों में थकान, चक्कर, सिरदर्द, मतली या कोई और परेशानी हो तो रुक जाएँ। कम समय का अभ्यास भी ठीक है।",
-  "FoveaFlow is the better fit if you want more say over the target, motion, and display setup. That is a feature comparison, not evidence of better health or gaming results.":
-    "लक्ष्य, गति और स्क्रीन को विस्तार से बदलना हो तो FoveaFlow बेहतर विकल्प है। यह सुविधाओं की तुलना है, बेहतर स्वास्थ्य या गेम के नतीजों का प्रमाण नहीं।",
+  "FoveaFlow is the better fit if you want more say over the target and motion. That is a feature comparison, not evidence of better health or gaming results.":
+    "लक्ष्य और गति को विस्तार से बदलना हो तो FoveaFlow बेहतर विकल्प है। यह सुविधाओं की तुलना है, बेहतर स्वास्थ्य या गेम के नतीजों का प्रमाण नहीं।",
   "FoveaFlow lets you change one part of a drill at a time. Keep a familiar path and increase speed. Keep the speed and add distractors. Or make the target easier to see without changing the motion.":
     "FoveaFlow में एक बार में अभ्यास का एक पहलू बदल सकते हैं। परिचित रास्ता रखते हुए गति बढ़ाएँ। गति वही रखकर व्यवधान जोड़ें। या गति बदले बिना लक्ष्य को देखना आसान बनाएँ।",
   "FoveaFlow lets you tune the drill to what you want to practice. Use a predictable path for steady tracking, jumps for quick refocus, or dimmer moving targets for distraction practice.":
     "FoveaFlow में अपनी ज़रूरत के अनुसार अभ्यास बदलें। स्थिर ट्रैकिंग के लिए अनुमान लगाने योग्य रास्ता, तेज़ नज़र बदलने के लिए छलाँगें या व्यवधान वाले अभ्यास के लिए मंद चलते लक्ष्य चुनें।",
-  "FoveaFlow may help you train visual skills like tracking, refocusing, peripheral awareness, processing speed, and reaction timing. Results vary, and it is not a replacement for professional care if you have an eye condition or ongoing symptoms.":
-    "FoveaFlow ट्रैकिंग, दोबारा फोकस, किनारी जागरूकता, प्रोसेसिंग गति और प्रतिक्रिया समय जैसे विजुअल कौशल का अभ्यास कराने में मदद कर सकता है. नतीजे अलग-अलग होंगे, और आंख की समस्या या लगातार लक्षण हों तो यह पेशेवर देखभाल की जगह नहीं है.",
+  "FoveaFlow may help you train visual skills like tracking, refocusing, peripheral awareness, processing speed, and reaction timing. Results vary.":
+    "FoveaFlow ट्रैकिंग, दोबारा फोकस, किनारी जागरूकता, प्रोसेसिंग गति और प्रतिक्रिया समय जैसे विजुअल कौशल का अभ्यास कराने में मदद कर सकता है. नतीजे अलग-अलग होंगे.",
   "FoveaFlow on GitHub": "GitHub पर FoveaFlow",
-  "FoveaFlow overview": "FoveaFlow ओवरव्यू",
   "FoveaFlow saves local controls for speed, size, shape, color, opacity, trails, paths, distractors, letters, and display scale.":
     "FoveaFlow गति, आकार, आकृति, रंग, अपारदर्शिता, ट्रेल, रास्ते, विचलन, अक्षर और डिस्प्ले स्केल के स्थानीय कंट्रोल सेव करता है.",
-  "FoveaFlow stores settings locally in your browser so the app can remember them on the current device. That can include the selected language, mode, motion pattern, speed, target size, color, opacity, trail setting, viewing distance, screen scale, and theme.":
-    "FoveaFlow सेटिंग आपके ब्राउजर में स्थानीय रूप से रखता है ताकि ऐप उन्हें इसी डिवाइस पर याद रख सके. इनमें चुनी हुई भाषा, मोड, गति पैटर्न, गति, लक्ष्य आकार, रंग, अपारदर्शिता, ट्रेल सेटिंग, देखने की दूरी, स्क्रीन स्केल और थीम शामिल हो सकते हैं.",
+  "FoveaFlow stores settings locally in your browser so the app can remember them on the current device. That can include the selected language, mode, motion pattern, speed, target size, color, opacity, trail setting, and theme.":
+    "FoveaFlow सेटिंग आपके ब्राउजर में स्थानीय रूप से रखता है ताकि ऐप उन्हें इसी डिवाइस पर याद रख सके. इनमें चुनी हुई भाषा, मोड, गति पैटर्न, गति, लक्ष्य आकार, रंग, अपारदर्शिता, ट्रेल सेटिंग और थीम शामिल हो सकते हैं.",
   "FoveaFlow stores your language preference in local browser storage and in a same-site preference cookie so the correct language can be selected before the app starts. The cookie can last up to 400 days, uses SameSite=Lax, and is marked Secure on HTTPS.":
     "FoveaFlow आपकी भाषा की पसंद को ब्राउज़र के स्थानीय स्टोरेज और उसी साइट की preference cookie में रखता है, ताकि ऐप शुरू होने से पहले सही भाषा चुनी जा सके. कुकी 400 दिनों तक रह सकती है, SameSite=Lax का उपयोग करती है और HTTPS पर Secure के रूप में चिह्नित होती है.",
   "FoveaFlow vs BlinkCamp": "FoveaFlow बनाम BlinkCamp",
@@ -340,7 +314,6 @@ export const hi = {
   "Free access": "मुफ्त पहुंच",
   "Free browser app. No account or install.":
     "मुफ़्त ब्राउज़र ऐप। अकाउंट या इंस्टॉल की ज़रूरत नहीं।",
-  "Free browser tool": "मुफ्त ब्राउजर टूल",
   "Free in the browser. No account or install.":
     "ब्राउज़र में मुफ़्त। अकाउंट या इंस्टॉल की ज़रूरत नहीं।",
   "Free online eye trainer": "मुफ्त ऑनलाइन आई ट्रेनर",
@@ -399,10 +372,11 @@ export const hi = {
   "How much can I customize?": "मैं कितना कस्टमाइज कर सकता हूं?",
   "How should beginners start?": "शुरुआती लोग कैसे शुरू करें?",
   "How to practice": "अभ्यास कैसे करें",
-  "How to use": "कैसे इस्तेमाल करें",
   "IT professionals": "IT पेशेवर",
   "If JavaScript is turned off, the moving target app will not run. The guide and policy pages still work as normal pages.":
     "JavaScript बंद हो तो चलता लक्ष्य वाला ऐप नहीं चलेगा. गाइड और नीति पेज सामान्य पेज की तरह चलते रहेंगे.",
+  "If symptoms continue after you stop, get advice from a qualified professional.":
+    "रुकने के बाद भी लक्षण बने रहें, तो योग्य पेशेवर से सलाह लें.",
   "If you have a vision condition, recent eye injury, surgery, neurological symptoms, or any concern about using moving visual targets, ask a qualified professional before using the app.":
     "अगर आंखों की समस्या, हाल की आंख चोट, सर्जरी, न्यूरोलॉजिकल लक्षण या चलते विजुअल लक्ष्य इस्तेमाल करने को लेकर कोई चिंता है, तो ऐप इस्तेमाल करने से पहले योग्य पेशेवर से पूछें.",
   "If you prefer a small set of visible controls and simply want to cycle through routines, BlinkCamp is a straightforward option. It is also open source.":
@@ -416,19 +390,14 @@ export const hi = {
   "Is Smooth Pursuit good as a warmup?": "क्या स्मूद ट्रैकिंग वॉर्मअप के लिए अच्छा है?",
   "Is it aimed at FPS eye training?": "क्या यह FPS आंख अभ्यास के लिए है?",
   "Is there a public source link?": "क्या सार्वजनिक सोर्स लिंक है?",
-  "Is this a medical tool?": "क्या यह चिकित्सा टूल है?",
   "Is this good for gamers?": "क्या यह गेमरों के लिए अच्छा है?",
   "Is this meant to improve eyesight?": "क्या यह नजर सुधारने के लिए है?",
-  "Is this medical treatment?": "क्या यह चिकित्सा उपचार है?",
-  "Is this the same as medical peripheral-vision therapy?":
-    "क्या यह मेडिकल पेरिफेरल विजन थेरेपी जैसा है?",
   "It is a Smooth Pursuit pattern page that loads the matching path so you can start that style of moving-target practice immediately.":
     "यह स्मूद ट्रैकिंग पैटर्न पेज है जो मेल खाता रास्ता लोड करता है, ताकि आप तुरंत उसी शैली का चलते लक्ष्य अभ्यास शुरू कर सकें.",
   "It is the task of following the correct target while similar moving objects compete for your attention.":
     "इसमें मिलती-जुलती चलती वस्तुओं के बीच सही लक्ष्य को फॉलो करना होता है.",
   "It trains selective attention, target identity, and steady tracking under clutter.":
     "यह दृश्य भीड़ में चयनात्मक ध्यान, लक्ष्य पहचान और स्थिर ट्रैकिंग का अभ्यास कराता है.",
-  "Keep it comfortable": "आराम का ध्यान रखें",
   "Keep it short": "इसे छोटा रखें",
   "Keep sessions short and deliberate. The goal is focused practice, not pushing through discomfort.":
     "सेशन छोटे और सोच-समझकर रखें. लक्ष्य केंद्रित अभ्यास है, असुविधा सहते रहना नहीं.",
@@ -444,11 +413,10 @@ export const hi = {
   "Keep your head still unless a drill says otherwise. These modes are about eye movement, attention, and focus, not neck movement.":
     "जब तक अभ्यास में अलग निर्देश न हों, सिर स्थिर रखें। ये अभ्यास आँखों की गति, ध्यान और नज़र टिकाने के लिए हैं, गर्दन घुमाने के लिए नहीं।",
   Language: "भाषा",
-  "Language and saved preferences.": "भाषा और सहेजी गई प्राथमिकताएँ।",
+  "Language, theme, and saved preferences.": "भाषा, थीम और सहेजी गई प्राथमिकताएँ।",
   "Legal pages": "कानूनी पेज",
   "Let the disappearing gap move around the fixed circle. With steady focus, the colored balls may fade and the missing spot can look like a moving green afterimage.":
     "गायब होती खाली जगह को स्थिर गोल घेरे के आसपास चलने दें. नजर स्थिर रहे तो रंगीन गेंदें फीकी लग सकती हैं और खाली जगह चलती हुई हरी आफ्टरइमेज जैसी दिख सकती है.",
-  Letter: "अक्षर",
   "Letter color": "अक्षर का रंग",
   "Letter text size": "अक्षर का आकार",
   "Letter weight": "अक्षर की मोटाई",
@@ -489,7 +457,6 @@ export const hi = {
     "गति कम करें, लक्ष्य का आकार बढ़ाएं और जब तक लक्ष्य पर आराम से टिकना न हो जाए, ट्रेल दिखती रहने दें.",
   Magenta: "मैजेंटा",
   "Make the target work for you.": "लक्ष्य को अपने अनुसार ढालें।",
-  "Match the trainer to your screen.": "ट्रेनर को अपनी स्क्रीन के अनुसार ढालें।",
   Medium: "मध्यम",
   "Mode guide": "मोड गाइड",
   "More control, when you want it": "ज़रूरत पड़ने पर ज़्यादा नियंत्रण",
@@ -515,7 +482,7 @@ export const hi = {
     "स्क्रीन व्यस्त हो तब सही लक्ष्य पर टिके रहने के लिए कई व्यवधान है.",
   "Multiple Distractions is the best choice for practicing selective attention under visual clutter.":
     "दृश्य भीड़ में चयनात्मक ध्यान का अभ्यास करना हो तो कई व्यवधान सबसे अच्छा विकल्प है.",
-  "Multiple Distractions trains selective attention, visual tracking under clutter, and target identity. The job is not just following motion. You also have to keep choosing the right object when similar objects compete for attention.":
+  "Multiple Distractions trains selective attention, visual tracking under clutter, and target identity. You follow the motion and keep choosing the right ball when similar ones compete for your attention.":
     "कई व्यवधान चयनात्मक ध्यान, भीड़ में विजुअल ट्रैकिंग और लक्ष्य पहचान का अभ्यास कराता है. इसमें गति पर नज़र रखते हुए, मिलती-जुलती वस्तुओं के बीच सही लक्ष्य बार-बार चुनना होता है.",
   "Multiple Distractions: keep track of the brightest target through visual clutter.":
     "कई व्यवधान: भरे हुए दृश्य में सबसे चमकीले लक्ष्य पर नज़र रखें।",
@@ -524,16 +491,10 @@ export const hi = {
     "ज़्यादा सेटिंग या किसी इंटरफ़ेस को पसंद करना बेहतर निशाने या नज़र का प्रमाण नहीं है। ऐसी आरामदायक दिनचर्या चुनें जो आपको उपयोगी लगे।",
   "No account is needed for the simple browser patterns shown publicly. Steam is promoted for the upcoming app.":
     "सार्वजनिक रूप से दिखाए गए सरल ब्राउजर पैटर्न के लिए खाते की जरूरत नहीं. आने वाले ऐप के लिए Steam को दिखाया गया है.",
-  "No. FoveaFlow is practice software and should not replace professional care.":
-    "नहीं. FoveaFlow अभ्यास सॉफ्टवेयर है और पेशेवर देखभाल की जगह नहीं लेना चाहिए.",
   "No. FoveaFlow runs in the browser and stores settings locally.":
     "नहीं. FoveaFlow ब्राउजर में चलता है और सेटिंग स्थानीय रूप से सेव करता है.",
-  "No. It is a browser-based practice drill and not medical treatment.":
-    "नहीं. यह ब्राउजर आधारित अभ्यास है, चिकित्सा उपचार नहीं.",
   "No. It is designed for practice, not to promise eyesight improvement.":
     "नहीं. यह अभ्यास के लिए बना है, नजर सुधारने का वादा करने के लिए नहीं.",
-  "No. It is practice software, not a treatment or diagnostic tool.":
-    "नहीं. यह अभ्यास सॉफ्टवेयर है, उपचार या निदान टूल नहीं.",
   "No. Keep your eyes on the center cross and let the visual effect happen in the periphery.":
     "नहीं. नजर बीच के क्रॉस पर रखें और विजुअल असर किनारों में होने दें.",
   "No. The tool runs in a modern browser and stores settings locally in your browser.":
@@ -550,7 +511,6 @@ export const hi = {
   "Open the full guide": "पूरा गाइड खोलें",
   Overview: "ओवरव्यू",
   "Page navigation": "पेज नेविगेशन",
-  "Page not found": "पेज नहीं मिला",
   "Path, direction changes, steady motion, speed waves, bursts, build/reset, and size pulse options are available depending on the drill.":
     "अभ्यास के अनुसार रास्ता, दिशा, स्थिर गति, लहर की तरह बदलती गति, छोटे तेज दौर, गति बढ़ाकर वापस लाने और आकार बदलने के विकल्प मिलते हैं।",
   "Pattern pages start Smooth Pursuit with that path selected. Reaction jumps, Multiple Distractions, and Lilac Chaser have their own direct URLs.":
@@ -563,50 +523,49 @@ export const hi = {
   "Pick a drill and tune the target": "अभ्यास चुनें और लक्ष्य सेट करें",
   "Practice software, not medical care. Stop if you feel eye strain, dizziness, headache, nausea, or any other discomfort.":
     "यह अभ्यास सॉफ्टवेयर है, चिकित्सा देखभाल नहीं. आंखों में तनाव, चक्कर, सिरदर्द, मितली या कोई असुविधा हो तो रुकें.",
-  "Practice the Bounce smooth pursuit pattern online. Adjust speed, target size, color, trail, and screen scale for short visual tracking sessions.":
-    "बाउंस स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग, ट्रेल और स्क्रीन स्केल बदलें.",
-  "Practice the Circle smooth pursuit pattern online. Adjust speed, target size, color, trail, and screen scale for short visual tracking sessions.":
-    "सर्कल स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग, ट्रेल और स्क्रीन स्केल बदलें.",
-  "Practice the Clover smooth pursuit pattern online. Adjust speed, target size, color, trail, and screen scale for short visual tracking sessions.":
-    "क्लोवर स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग, ट्रेल और स्क्रीन स्केल बदलें.",
-  "Practice the Corner tour smooth pursuit pattern online. Adjust speed, target size, color, trail, and screen scale for short visual tracking sessions.":
-    "कॉर्नर टूर स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग, ट्रेल और स्क्रीन स्केल बदलें.",
-  "Practice the Diagonal smooth pursuit pattern online. Adjust speed, target size, color, trail, and screen scale for short visual tracking sessions.":
-    "तिरछा स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग, ट्रेल और स्क्रीन स्केल बदलें.",
-  "Practice the Diamond loop smooth pursuit pattern online. Adjust speed, target size, color, trail, and screen scale for short visual tracking sessions.":
-    "डायमंड लूप स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग, ट्रेल और स्क्रीन स्केल बदलें.",
-  "Practice the Down-left sweep smooth pursuit pattern online. Adjust speed, target size, color, trail, and screen scale for short visual tracking sessions.":
-    "नीचे-बाएं स्वीप स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग, ट्रेल और स्क्रीन स्केल बदलें.",
-  "Practice the Down-right sweep smooth pursuit pattern online. Adjust speed, target size, color, trail, and screen scale for short visual tracking sessions.":
-    "नीचे-दाएं स्वीप स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग, ट्रेल और स्क्रीन स्केल बदलें.",
-  "Practice the Edge loop smooth pursuit pattern online. Adjust speed, target size, color, trail, and screen scale for short visual tracking sessions.":
-    "किनारा लूप स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग, ट्रेल और स्क्रीन स्केल बदलें.",
-  "Practice the Ellipse smooth pursuit pattern online. Adjust speed, target size, color, trail, and screen scale for short visual tracking sessions.":
-    "दीर्घवृत्त स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग, ट्रेल और स्क्रीन स्केल बदलें.",
-  "Practice the Figure eight smooth pursuit pattern online. Adjust speed, target size, color, trail, and screen scale for short visual tracking sessions.":
-    "फिगर आठ स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग, ट्रेल और स्क्रीन स्केल बदलें.",
-  "Practice the Hard turns smooth pursuit pattern online. Adjust speed, target size, color, trail, and screen scale for short visual tracking sessions.":
-    "हार्ड टर्न्स स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग, ट्रेल और स्क्रीन स्केल बदलें.",
-  "Practice the Horizontal sweep smooth pursuit pattern online. Adjust speed, target size, color, trail, and screen scale for short visual tracking sessions.":
-    "क्षैतिज स्वीप स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग, ट्रेल और स्क्रीन स्केल बदलें.",
-  "Practice the Hourglass smooth pursuit pattern online. Adjust speed, target size, color, trail, and screen scale for short visual tracking sessions.":
-    "आवरग्लास स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग, ट्रेल और स्क्रीन स्केल बदलें.",
-  "Practice the Lissajous smooth pursuit pattern online. Adjust speed, target size, color, trail, and screen scale for short visual tracking sessions.":
-    "लिसाजू स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग, ट्रेल और स्क्रीन स्केल बदलें.",
-  "Practice the Random smooth pursuit pattern online. Adjust speed, target size, color, trail, and screen scale for short visual tracking sessions.":
-    "रैंडम स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग, ट्रेल और स्क्रीन स्केल बदलें.",
-  "Practice the Stair steps smooth pursuit pattern online. Adjust speed, target size, color, trail, and screen scale for short visual tracking sessions.":
-    "सीढ़ी स्टेप्स स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग, ट्रेल और स्क्रीन स्केल बदलें.",
-  "Practice the Vertical sweep smooth pursuit pattern online. Adjust speed, target size, color, trail, and screen scale for short visual tracking sessions.":
-    "ऊर्ध्व स्वीप स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग, ट्रेल और स्क्रीन स्केल बदलें.",
-  "Practice the Wave smooth pursuit pattern online. Adjust speed, target size, color, trail, and screen scale for short visual tracking sessions.":
-    "वेव स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग, ट्रेल और स्क्रीन स्केल बदलें.",
-  "Practice the Zigzag smooth pursuit pattern online. Adjust speed, target size, color, trail, and screen scale for short visual tracking sessions.":
-    "जिगजैग स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग, ट्रेल और स्क्रीन स्केल बदलें.",
-  Predictive: "पूर्वानुमेय",
+  "Practice the Bounce smooth pursuit pattern online. Adjust speed, target size, color, and trail for short visual tracking sessions.":
+    "बाउंस स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग और ट्रेल बदलें.",
+  "Practice the Circle smooth pursuit pattern online. Adjust speed, target size, color, and trail for short visual tracking sessions.":
+    "सर्कल स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग और ट्रेल बदलें.",
+  "Practice the Clover smooth pursuit pattern online. Adjust speed, target size, color, and trail for short visual tracking sessions.":
+    "क्लोवर स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग और ट्रेल बदलें.",
+  "Practice the Corner tour smooth pursuit pattern online. Adjust speed, target size, color, and trail for short visual tracking sessions.":
+    "कॉर्नर टूर स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग और ट्रेल बदलें.",
+  "Practice the Diagonal smooth pursuit pattern online. Adjust speed, target size, color, and trail for short visual tracking sessions.":
+    "तिरछा स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग और ट्रेल बदलें.",
+  "Practice the Diamond loop smooth pursuit pattern online. Adjust speed, target size, color, and trail for short visual tracking sessions.":
+    "डायमंड लूप स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग और ट्रेल बदलें.",
+  "Practice the Down-left sweep smooth pursuit pattern online. Adjust speed, target size, color, and trail for short visual tracking sessions.":
+    "नीचे-बाएं स्वीप स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग और ट्रेल बदलें.",
+  "Practice the Down-right sweep smooth pursuit pattern online. Adjust speed, target size, color, and trail for short visual tracking sessions.":
+    "नीचे-दाएं स्वीप स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग और ट्रेल बदलें.",
+  "Practice the Edge loop smooth pursuit pattern online. Adjust speed, target size, color, and trail for short visual tracking sessions.":
+    "किनारा लूप स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग और ट्रेल बदलें.",
+  "Practice the Ellipse smooth pursuit pattern online. Adjust speed, target size, color, and trail for short visual tracking sessions.":
+    "दीर्घवृत्त स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग और ट्रेल बदलें.",
+  "Practice the Figure eight smooth pursuit pattern online. Adjust speed, target size, color, and trail for short visual tracking sessions.":
+    "फिगर आठ स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग और ट्रेल बदलें.",
+  "Practice the Hard turns smooth pursuit pattern online. Adjust speed, target size, color, and trail for short visual tracking sessions.":
+    "हार्ड टर्न्स स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग और ट्रेल बदलें.",
+  "Practice the Horizontal sweep smooth pursuit pattern online. Adjust speed, target size, color, and trail for short visual tracking sessions.":
+    "क्षैतिज स्वीप स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग और ट्रेल बदलें.",
+  "Practice the Hourglass smooth pursuit pattern online. Adjust speed, target size, color, and trail for short visual tracking sessions.":
+    "आवरग्लास स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग और ट्रेल बदलें.",
+  "Practice the Lissajous smooth pursuit pattern online. Adjust speed, target size, color, and trail for short visual tracking sessions.":
+    "लिसाजू स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग और ट्रेल बदलें.",
+  "Practice the Random smooth pursuit pattern online. Adjust speed, target size, color, and trail for short visual tracking sessions.":
+    "रैंडम स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग और ट्रेल बदलें.",
+  "Practice the Stair steps smooth pursuit pattern online. Adjust speed, target size, color, and trail for short visual tracking sessions.":
+    "सीढ़ी स्टेप्स स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग और ट्रेल बदलें.",
+  "Practice the Vertical sweep smooth pursuit pattern online. Adjust speed, target size, color, and trail for short visual tracking sessions.":
+    "ऊर्ध्व स्वीप स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग और ट्रेल बदलें.",
+  "Practice the Wave smooth pursuit pattern online. Adjust speed, target size, color, and trail for short visual tracking sessions.":
+    "वेव स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग और ट्रेल बदलें.",
+  "Practice the Zigzag smooth pursuit pattern online. Adjust speed, target size, color, and trail for short visual tracking sessions.":
+    "जिगजैग स्मूद ट्रैकिंग पैटर्न का ऑनलाइन अभ्यास करें. छोटे विजुअल ट्रैकिंग सेशन के लिए गति, लक्ष्य आकार, रंग और ट्रेल बदलें.",
+  Predictable: "पूर्वानुमेय",
   Privacy: "गोपनीयता",
   "Privacy Policy": "गोपनीयता नीति",
-  "Public browser versions": "सार्वजनिक ब्राउज़र संस्करण",
   Question: "सवाल",
   "Quick answers": "जल्दी जवाब",
   "Quick refocus": "जल्दी दोबारा फोकस",
@@ -638,12 +597,10 @@ export const hi = {
     "तेज़ फोकस शिफ्ट छोटे प्री-गेम वॉर्मअप या कामों के बीच तेज विजुअल रीसेट के रूप में अच्छा चलता है.",
   "Reaction Jumps: find the target after it moves to a new position.":
     "तेज़ फोकस शिफ्ट: नई जगह पहुँचने के बाद लक्ष्य को ढूँढें।",
-  "Reaction jumps": "तेज़ फोकस शिफ्ट",
   "Reaction warm-up": "रिएक्शन वॉर्मअप",
   "Read full guide": "पूरा गाइड पढ़ें",
   "Read guide FAQ": "गाइड सवाल-जवाब पढ़ें",
   "Read source": "सोर्स पढ़ें",
-  "Read the full guide": "पूरा गाइड पढ़ें",
   "Read the guide": "गाइड पढ़ें",
   "Ready to try a drill?": "अभ्यास आज़माने के लिए तैयार हैं?",
   Red: "लाल",
@@ -651,30 +608,27 @@ export const hi = {
   Regular: "सामान्य",
   "Research and background reading": "रिसर्च और पृष्ठभूमि पढ़ाई",
   "Reset to defaults": "डिफॉल्ट पर रीसेट करें",
-  "Restore the selected drill to its default behavior, visuals, calibration, and saved local settings.":
-    "चुने हुए अभ्यास को उसके डिफॉल्ट व्यवहार, विजुअल, कैलिब्रेशन और सेव स्थानीय सेटिंग पर लौटाएं.",
+  "Reset to defaults?": "डिफॉल्ट पर रीसेट करें?",
+  "Restore the selected drill to its default behavior, visuals, and saved local settings.":
+    "चुने हुए अभ्यास को उसके डिफॉल्ट व्यवहार, विजुअल और सेव स्थानीय सेटिंग पर लौटाएं.",
   Resume: "फिर शुरू करें",
   "Resume motion": "गति फिर शुरू करें",
   "Reveal controls": "कंट्रोल दिखाएं",
+  Reverse: "उल्टा",
   "Reverse motion direction": "गति की दिशा उलटें",
   Ring: "रिंग",
   "Role of peripheral vision in saccade planning":
     "सैकैड योजना में किनारी दृष्टि की भूमिका",
   "Saccadic reaction time factors": "सैकैडिक प्रतिक्रिया समय के कारक",
-  Safety: "सुरक्षा",
   "Save your preferred settings locally and return to the same setup next time.":
     "पसंदीदा सेटिंग डिवाइस पर सहेजें और अगली बार वहीं से शुरू करें।",
   Scale: "स्केल",
   "Screen break": "स्क्रीन ब्रेक",
   "Screen reset": "स्क्रीन रीसेट",
-  "Screen scale": "स्क्रीन स्केल",
-  "Screen setup": "स्क्रीन सेटअप",
   "Screen-work reset": "स्क्रीन काम रीसेट",
   "Selective attention": "चयनात्मक ध्यान",
   Semibold: "सेमीबोल्ड",
   Session: "सेशन",
-  "Set viewing distance and screen scale; choose deg/s, cm/s, or screen/s.":
-    "देखने की दूरी और स्क्रीन स्केल तय करें; deg/s, cm/s या screen/s चुनें।",
   "Settings save automatically.": "सेटिंग अपने आप सहेजी जाती हैं।",
   "Settings saved in your browser": "सेटिंग आपके ब्राउजर में सेव हैं",
   "Shape, color, opacity, trail length, and trail behavior are adjustable.":
@@ -696,8 +650,8 @@ export const hi = {
   "Smooth Pursuit Eye Training": "स्मूद ट्रैकिंग आंख अभ्यास",
   "Smooth Pursuit for one-target visual tracking.":
     "एक लक्ष्य की विजुअल ट्रैकिंग के लिए स्मूद ट्रैकिंग.",
-  "Smooth Pursuit helps train steady tracking, moving-target focus, and controlled eye movement across more of your usable range. Predictable paths build rhythm and control. Random paths and hard turns add more visual search and reaction demand.":
-    "स्मूद ट्रैकिंग स्थिर ट्रैकिंग, चलते लक्ष्य पर फोकस और आपके उपयोगी दायरे में नियंत्रित आंख गति का अभ्यास कराता है. अनुमानित रास्ते लय और कंट्रोल बनाते हैं. रैंडम रास्ते और हार्ड टर्न्स ज्यादा विजुअल खोज और प्रतिक्रिया मांग जोड़ते हैं.",
+  "Smooth Pursuit helps train steady tracking, moving-target focus, and controlled eye movement across more of your usable range.":
+    "स्मूद ट्रैकिंग स्थिर ट्रैकिंग, चलते लक्ष्य पर फोकस और आपके उपयोगी दायरे में नियंत्रित आंख गति का अभ्यास कराता है.",
   "Smooth Pursuit is FoveaFlow's moving-target drill. Keep your head still, follow one target with your eyes, and stay smooth instead of jumping ahead.":
     "स्मूद ट्रैकिंग, FoveaFlow का चलते लक्ष्य वाला अभ्यास है. सिर स्थिर रखें, एक लक्ष्य को आंखों से फॉलो करें और आगे कूदने के बजाय सहज रहें.",
   "Smooth Pursuit is a drill where you follow one moving target as steadily as you can with your eyes.":
@@ -710,7 +664,6 @@ export const hi = {
     "एक चलते लक्ष्य को जितना हो सके स्थिरता से फॉलो करना लक्ष्य हो तो स्मूद ट्रैकिंग सबसे अच्छी शुरुआत है.",
   "Smooth Pursuit paths for moving-target tracking.":
     "चलते लक्ष्य ट्रैकिंग के लिए स्मूद ट्रैकिंग रास्ते.",
-  "Smooth Pursuit pattern": "स्मूद ट्रैकिंग पैटर्न",
   "Smooth Pursuit pattern routes": "स्मूद ट्रैकिंग पैटर्न रास्ते",
   "Smooth Pursuit, Reaction Jumps, Multiple Distractions, and Lilac Chaser are available as separate modes.":
     "स्मूद ट्रैकिंग, तेज़ फोकस शिफ्ट, कई व्यवधान और लाइलैक चेज़र अलग मोड के रूप में उपलब्ध हैं.",
@@ -727,9 +680,6 @@ export const hi = {
   Speed: "गति",
   "Speed and size": "गति और आकार",
   "Speed and size sliders.": "गति और आकार के स्लाइडर।",
-  "Speed unit": "गति इकाई",
-  "Speed units, target size, shape, color, opacity, trails, paths, motion behavior, distractors, letter overlays, viewing distance, screen scale, and mode-specific controls.":
-    "गति इकाइयां, लक्ष्य आकार, आकृति, रंग, अपारदर्शिता, ट्रेल, रास्ते, गति व्यवहार, विचलन, अक्षर ओवरले, देखने की दूरी, स्क्रीन स्केल और मोड आधारित कंट्रोल.",
   "Speed wave": "स्पीड वेव",
   "Speed, size, shape, color, opacity, and trail change the feel of the moving drills. Lilac Chaser has its own ball color and scale controls.":
     "गति, आकार, आकृति, रंग, अपारदर्शिता और ट्रेल चलते अभ्यासों का एहसास बदलते हैं. लाइलैक चेज़र के अपने गेंद रंग और स्केल कंट्रोल हैं.",
@@ -783,15 +733,11 @@ export const hi = {
     "कम विचलनों से शुरू करें. लक्ष्य पर साफ टिक सकें तो और जोड़ें.",
   "Steady fixation": "स्थिर नजर",
   "Steady speed": "स्थिर गति",
-  "Stop the session and rest. Do not push through discomfort.":
-    "सेशन रोकें और आराम करें. असुविधा सहते न रहें.",
   System: "सिस्टम",
   "Take a closer look.": "और जानें।",
   "Target acquisition": "लक्ष्य पकड़ना",
   "Target and motion controls": "लक्ष्य और गति के नियंत्रण",
   "Target appearance": "लक्ष्य की दिखावट",
-  "Target appearance, trail display, distractor brightness, letter styling, viewing distance, and screen scale can be tuned.":
-    "लक्ष्य का रूप, ट्रेल डिस्प्ले, विचलन चमक, अक्षर शैली, देखने की दूरी और स्क्रीन स्केल बदले जा सकते हैं.",
   "Target form": "आकृति",
   "Target opacity": "लक्ष्य अपारदर्शिता",
   "Target size": "लक्ष्य आकार",
@@ -811,14 +757,10 @@ export const hi = {
     "रास्ते का आकार बदलता है कि गति कितनी अनुमानित लगेगी और लक्ष्य कितनी बार दिशा बदलेगा.",
   "The patterns are simple screen paths and timing drills. They are not a clinical program, and results will vary from person to person.":
     "ये पैटर्न सरल स्क्रीन रास्ते और टाइमिंग अभ्यास हैं. ये क्लिनिकल प्रोग्राम नहीं हैं और नतीजे व्यक्ति के हिसाब से बदलेंगे.",
-  "The public browser interface does not show these calibration controls.":
-    "सार्वजनिक ब्राउज़र इंटरफ़ेस में ये कैलिब्रेशन नियंत्रण नहीं दिखते।",
   "The public browser interface shows pattern navigation, Show Grid, and Darkmode controls.":
     "सार्वजनिक ब्राउज़र इंटरफ़ेस में पैटर्न बदलने, Show Grid और Darkmode के नियंत्रण दिखते हैं।",
   "The public browser page keeps controls simple: Show Grid, Darkmode, and pattern selection.":
     "सार्वजनिक ब्राउजर पेज कंट्रोल सरल रखता है: ग्रिड दिखाएं, डार्क मोड और पैटर्न चयन.",
-  "The public interface does not show display calibration settings.":
-    "सार्वजनिक इंटरफ़ेस में स्क्रीन कैलिब्रेशन की सेटिंग नहीं दिखती।",
   "The public interface does not show distractor count or brightness controls.":
     "सार्वजनिक इंटरफ़ेस में व्यवधानों की संख्या या चमक के नियंत्रण नहीं दिखते।",
   "The public interface exposes size adjustment; it does not show these appearance controls.":
@@ -842,17 +784,11 @@ export const hi = {
     "ये स्रोत अभ्यासों में होने वाली आँखों की गति और दृश्य प्रभावों को समझाते हैं। ये साबित नहीं करते कि FoveaFlow से नज़र या गेम का प्रदर्शन बेहतर होता है।",
   "These terms may be updated when the app or site changes. The date at the top shows the latest version.":
     "ऐप या साइट बदलने पर ये शर्तें अपडेट हो सकती हैं. ऊपर दी गई तारीख नया संस्करण दिखाती है.",
-  "This mode is a strong fit when you want to practice selective attention and target identity under visual noise.":
-    "विजुअल शोर में चयनात्मक ध्यान और लक्ष्य पहचान का अभ्यास करना हो तो यह मोड अच्छा फिट है.",
-  "This mode is useful when you want faster target acquisition and cleaner refocusing. Start slower for accuracy, then raise the speed for a more demanding session.":
-    "तेज लक्ष्य पकड़ना और साफ दोबारा फोकस चाहिए तो यह मोड उपयोगी है. सटीकता के लिए धीमे शुरू करें, फिर कठिन सेशन के लिए गति बढ़ाएं.",
-  "This mode works best when you resist the urge to chase the disappearing gap. Keep your gaze centered, stay relaxed, and let the effect happen on its own.":
-    "यह मोड तब सबसे अच्छा काम करता है जब आप गायब होती जगह के पीछे नजर नहीं दौड़ाते. नजर बीच में रखें, आराम से रहें और असर अपने आप होने दें.",
   "This page compares the public browser tools checked on September 12, 2026. It does not treat announced Steam features as available browser features, or make claims about the finished desktop app.":
     "इस पेज पर 12 सितंबर 2026 को जाँचे गए सार्वजनिक ब्राउज़र साधनों की तुलना है। घोषित Steam सुविधाओं को उपलब्ध ब्राउज़र सुविधाएँ नहीं माना गया है, और तैयार डेस्कटॉप ऐप के बारे में दावे नहीं किए गए हैं।",
   "This page is specific to this free browser tool.":
     "यह पेज इसी मुफ्त ब्राउजर टूल के लिए है.",
-  "This path ends here.": "यह रास्ता यहीं खत्म होता है।",
+  "This path ends here": "यह रास्ता यहीं खत्म होता है",
   "Those settings stay in your browser unless your browser syncs, backs up, or exports its site data. You can remove them by clearing site data for foveaflow.com.":
     "ये सेटिंग आपके ब्राउजर में रहती हैं, जब तक आपका ब्राउजर साइट डेटा सिंक, बैकअप या एक्सपोर्ट न करे. foveaflow.com का साइट डेटा साफ करके आप इन्हें हटा सकते हैं.",
   "Track the ball as smoothly as you can instead of jumping ahead of it.":
@@ -872,25 +808,12 @@ export const hi = {
   "Try Smooth Pursuit": "स्मूद ट्रैकिंग आजमाएं",
   "Try Smooth Pursuit first": "पहले स्मूद ट्रैकिंग आजमाएं",
   "Try another drill": "दूसरा अभ्यास आजमाएं",
-  "Try it with your own settings.": "अपनी सेटिंग के साथ आज़माएँ।",
+  "Try it with your own settings": "अपनी सेटिंग के साथ आज़माएँ",
   "Try this drill": "यह अभ्यास आज़माएँ",
   "Tune the session before you start": "शुरू करने से पहले सेशन सेट करें",
-  Unit: "इकाई",
-  Unpredictive: "अननुमेय",
+  Unpredictable: "अननुमेय",
   Updated: "अपडेट की तारीख",
   "Updated July 10, 2026": "10 जुलाई 2026 को अपडेट किया गया",
-  "Updated July 10, 2026. FoveaFlow is practice software, not medical care. Stop if a session causes strain, dizziness, headache, nausea, or any other discomfort.":
-    "10 जुलाई 2026 को अपडेट किया गया. FoveaFlow अभ्यास सॉफ्टवेयर है, चिकित्सा देखभाल नहीं. सेशन से तनाव, चक्कर, सिरदर्द, मितली या कोई असुविधा हो तो रुकें.",
-  "Updated July 10, 2026. If the visual effect feels strange or uncomfortable, stop the session and rest.":
-    "10 जुलाई 2026 को अपडेट किया गया. विजुअल असर अजीब या असहज लगे तो सेशन रोकें और आराम करें.",
-  "Updated July 10, 2026. Keep sessions brief and controlled. If the drill causes strain or discomfort, stop.":
-    "10 जुलाई 2026 को अपडेट किया गया. सेशन छोटे और नियंत्रित रखें. अभ्यास से तनाव या असुविधा हो तो रुकें.",
-  "Updated July 10, 2026. Start with fewer distractors or a bigger target, and stop if the session becomes uncomfortable.":
-    "10 जुलाई 2026 को अपडेट किया गया. कम विचलन या बड़े लक्ष्य से शुरू करें, और सेशन असहज हो तो रुकें.",
-  "Updated July 10, 2026. This is a browser-based practice drill and not medical therapy.":
-    "10 जुलाई 2026 को अपडेट किया गया. यह ब्राउजर आधारित अभ्यास है, चिकित्सा थेरेपी नहीं.",
-  "Updated July 10, 2026. This is practice software, not medical care, so stop if the session feels uncomfortable.":
-    "10 जुलाई 2026 को अपडेट किया गया. यह अभ्यास सॉफ्टवेयर है, चिकित्सा देखभाल नहीं, इसलिए सेशन असहज लगे तो रुकें.",
   "Use FoveaFlow as a free FPS eye training warmup for visual tracking, quick refocus, target switching, and focus under distraction.":
     "विजुअल ट्रैकिंग, जल्दी दोबारा फोकस, लक्ष्य बदलने और विचलन के बीच फोकस के लिए FoveaFlow को मुफ्त FPS आंख अभ्यास वॉर्मअप की तरह इस्तेमाल करें.",
   "Use FoveaFlow as a short FPS warmup, an active screen break, or a focused visual practice session.":
@@ -903,14 +826,11 @@ export const hi = {
     "नया लक्ष्य ढूँढने का अभ्यास करने के लिए तेज़ फोकस शिफ्ट चुनें।",
   "Use Smooth Pursuit for short browser-based practice, a pre-game warmup, or a focused reset after dense screen work.":
     "छोटे ब्राउजर आधारित अभ्यास, प्री-गेम वॉर्मअप या भारी स्क्रीन काम के बाद केंद्रित रीसेट के लिए स्मूद ट्रैकिंग इस्तेमाल करें.",
-  "Use Smooth Pursuit to follow one moving target, Reaction Jumps to snap focus to new target positions, Multiple Distractions to track the right target through visual clutter, and Lilac Chaser to hold fixation while noticing peripheral change.":
-    "एक चलते लक्ष्य को फॉलो करने के लिए स्मूद ट्रैकिंग, नई लक्ष्य जगहों पर तुरंत फोकस करने के लिए तेज़ फोकस शिफ्ट, दृश्य भीड़ में सही लक्ष्य ट्रैक करने के लिए कई व्यवधान और किनारी बदलाव देखते हुए नजर टिकाने के लिए लाइलैक चेज़र इस्तेमाल करें.",
-  "Use dark theme": "डार्क थीम इस्तेमाल करें",
   "Use forward motion direction": "आगे वाली गति दिशा इस्तेमाल करें",
   "Use it alongside your usual in-game practice if you enjoy it. There is no validated FoveaFlow routine or guaranteed performance gain.":
     "पसंद आए तो इसे गेम के अपने सामान्य अभ्यास के साथ इस्तेमाल करें। FoveaFlow की कोई प्रमाणित दिनचर्या या प्रदर्शन में सुधार की गारंटी नहीं है।",
-  "Use it as a quick visual warmup or active screen break, not as medical care.":
-    "इसे तेज विजुअल वॉर्मअप या सक्रिय स्क्रीन ब्रेक की तरह इस्तेमाल करें, चिकित्सा देखभाल की तरह नहीं.",
+  "Use it as a quick visual warmup or active screen break.":
+    "इसे तेज विजुअल वॉर्मअप या सक्रिय स्क्रीन ब्रेक की तरह इस्तेमाल करें.",
   "Use it for short practice sessions. Stop if you feel eye strain, dizziness, headache, nausea, or discomfort.":
     "इसे छोटे अभ्यास सेशन के लिए इस्तेमाल करें. आंखों में तनाव, चक्कर, सिरदर्द, मितली या असुविधा हो तो रुकें.",
   "Use it when you want a busier, harder tracking task than Smooth Pursuit.":
@@ -972,20 +892,11 @@ export const hi = {
     "स्मूद ट्रैकिंग बहुत सरल लगे और ध्यान बनाए रखने की अधिक चुनौती चाहिए तो यह अभ्यास चुनें।",
   "Use this guide to choose the right FoveaFlow eye trainer drill for visual tracking, quick refocus, peripheral awareness, FPS warmups, or focus under distraction.":
     "विजुअल ट्रैकिंग, जल्दी दोबारा फोकस, किनारी जागरूकता, FPS वॉर्मअप या विचलन के बीच फोकस के लिए सही FoveaFlow आई ट्रेनर अभ्यास चुनने में इस गाइड का इस्तेमाल करें.",
-  "Used to calculate speed in deg/s and cm/s.":
-    "deg/s और cm/s में गति की गणना के लिए उपयोग किया जाता है।",
   "Vertical Sweep Smooth Pursuit Drill": "ऊर्ध्व स्वीप स्मूद ट्रैकिंग अभ्यास",
   "Vertical Sweep Smooth Pursuit Eye Training": "ऊर्ध्व स्वीप स्मूद ट्रैकिंग आंख अभ्यास",
   "Vertical Sweep mirrors the simplicity of Horizontal Sweep but changes the direction of travel for straightforward up-down tracking.":
     "ऊर्ध्व स्वीप, क्षैतिज स्वीप की सरलता जैसा है, लेकिन सीधे ऊपर-नीचे ट्रैकिंग के लिए चलने की दिशा बदलता है.",
   "Vertical sweep": "ऊर्ध्व स्वीप",
-  "Viewing distance": "देखने की दूरी",
-  "Viewing distance and CSS pixels/cm help speed settings match your display setup more closely.":
-    "देखने की दूरी और CSS पिक्सल/cm गति सेटिंग को आपके डिस्प्ले सेटअप से बेहतर मिलाने में मदद करते हैं.",
-  "Viewing distance and screen scale controls help match motion to your setup.":
-    "देखने की दूरी और स्क्रीन स्केल कंट्रोल गति को आपके सेटअप से मिलाने में मदद करते हैं.",
-  "Viewing distance and screen scale settings for physical and angular speed units.":
-    "दूरी और कोण वाली गति इकाइयों के लिए देखने की दूरी तथा स्क्रीन स्केल की सेटिंग।",
   "Visit BlinkCamp": "BlinkCamp पर जाएं",
   "Visit EyeTrainer.gg": "EyeTrainer.gg पर जाएं",
   "Visual clutter": "दृश्य भीड़",
@@ -1004,8 +915,6 @@ export const hi = {
   "What FoveaFlow includes": "FoveaFlow में क्या शामिल है",
   "What does Multiple Distractions train?": "कई व्यवधान किसका अभ्यास कराता है?",
   "What does Reaction Jumps train?": "तेज़ फोकस शिफ्ट किसका अभ्यास कराता है?",
-  "What if the effect feels strange or uncomfortable?":
-    "असर अजीब या असहज लगे तो क्या करें?",
   "What is FoveaFlow?": "FoveaFlow क्या है?",
   "What is Lilac Chaser mode?": "लाइलैक चेज़र मोड क्या है?",
   "What is Lilac Chaser?": "लाइलैक चेज़र क्या है?",
@@ -1036,7 +945,6 @@ export const hi = {
   "What is the Wave drill?": "वेव अभ्यास क्या है?",
   "What is the Zigzag drill?": "जिगजैग अभ्यास क्या है?",
   "What is the goal of this mode?": "इस मोड का लक्ष्य क्या है?",
-  "What it trains": "इसमें क्या अभ्यास होता है",
   "What it trains:": "यह क्या अभ्यास कराता है:",
   "What makes the Bounce path different?": "बाउंस रास्ता अलग कैसे है?",
   "What makes the Circle path different?": "सर्कल रास्ता अलग कैसे है?",
@@ -1111,8 +1019,6 @@ export const hi = {
     "हां. गेम या कठिन स्क्रीन काम से पहले यह छोटा विजुअल वॉर्मअप अच्छा रहता है.",
   "Yes. Main modes and Smooth Pursuit patterns have direct URLs.":
     "हां. मुख्य मोड और स्मूद ट्रैकिंग पैटर्न के सीधे URL हैं.",
-  "Yes. Speed can be tuned in deg/s, cm/s, or screen/s, and target size can be changed per session.":
-    "हां. गति को deg/s, cm/s या screen/s में सेट किया जा सकता है, और लक्ष्य आकार हर सेशन में बदला जा सकता है.",
   "Yes. The GitHub repository is linked from the app.":
     "हां. ऐप से GitHub रिपॉजिटरी लिंक है.",
   "Yes. The app runs in the browser with no account or install.":
@@ -1121,8 +1027,8 @@ export const hi = {
     "हां. सार्वजनिक पेज में सरल ब्राउजर पैटर्न हैं और Steam wishlist भी दिखाई गई है.",
   "Yes. Use FoveaFlow as a quick visual warmup before FPS games or any game where tracking targets and reading movement matters.":
     "हां. FPS गेम या ऐसे किसी भी गेम से पहले FoveaFlow को तेज विजुअल वॉर्मअप की तरह इस्तेमाल करें जहां लक्ष्य ट्रैक करना और मूवमेंट पढ़ना मायने रखता है.",
-  "You can adjust the mode, motion path, target size, speed, shape, color, opacity, trail, distractor count, viewing distance, screen scale, and Lilac Chaser size and color.":
-    "आप मोड, गति रास्ता, लक्ष्य आकार, गति, आकृति, रंग, अपारदर्शिता, ट्रेल, विचलन संख्या, देखने की दूरी, स्क्रीन स्केल और लाइलैक चेज़र का आकार व रंग बदल सकते हैं.",
+  "You can adjust the mode, motion path, target size, speed, shape, color, opacity, trail, distractor count, and Lilac Chaser size and color.":
+    "आप मोड, गति रास्ता, लक्ष्य आकार, गति, आकृति, रंग, अपारदर्शिता, ट्रेल, विचलन संख्या और लाइलैक चेज़र का आकार व रंग बदल सकते हैं.",
   "You can change the target’s appearance, adjust motion behavior, and keep your preferred settings on this device. Each main drill and Smooth Pursuit path also has a direct link.":
     "लक्ष्य की दिखावट और गति बदलें तथा पसंदीदा सेटिंग इस डिवाइस पर रखें। हर मुख्य अभ्यास और स्मूद ट्रैकिंग के हर रास्ते का सीधा लिंक भी है।",
   "You can clear saved FoveaFlow settings from your browser's site data controls. You can also use browser or extension settings to block optional analytics scripts.":
@@ -1145,7 +1051,6 @@ export const hi = {
   constant: "स्थिर",
   forward: "आगे",
   guide: "गाइड",
-  overview: "ओवरव्यू",
   paused: "रुका हुआ",
   playing: "चल रहा है",
   reverse: "उल्टा",

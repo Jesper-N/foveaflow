@@ -4,15 +4,13 @@
   import { formatDate, t } from "$lib/i18n/translate";
   import ArrowUpRight from "@lucide/svelte/icons/arrow-up-right";
 
+  import ContentHero from "./content-hero.svelte";
   import ContentShell from "./content-shell.svelte";
   import ContentToc from "./content-toc.svelte";
   import {
-    editorialEyebrow,
-    editorialTitle,
     editorialHeading,
     editorialCopy,
     editorialLink,
-    contentHeader,
     contentReadingLayout,
     editorialSection,
     editorialSections,
@@ -26,38 +24,29 @@
 </script>
 
 <ContentShell {locale} path={page.path}>
-  <section class={`${contentHeader} border-border border-b`}>
-    <p class={editorialEyebrow}>
-      {t(locale, "FoveaFlow")} / {t(locale, page.label)}
-    </p>
-    <h1 class={editorialTitle}>{t(locale, page.title)}</h1>
-    <p
-      class="text-muted-foreground max-w-2xl text-base leading-7 sm:text-lg sm:leading-8"
-    >
-      {t(locale, page.summary)}
-    </p>
-    <p class="text-muted-foreground text-xs">
+  <ContentHero
+    {locale}
+    breadcrumb={[{ href: "/", label: "FoveaFlow" }, { label: page.label }]}
+    title={t(locale, page.title)}
+    lede={t(locale, page.summary)}
+  >
+    {#snippet meta()}
       {t(locale, "Updated")}
       <time datetime={page.lastModified}
         >{formatDate(locale, page.lastModified)}</time
       >
-    </p>
-  </section>
-  <div class={`${contentReadingLayout} lg:grid-cols-[15rem_minmax(0,1fr)]`}>
+    {/snippet}
+  </ContentHero>
+  <div class={contentReadingLayout}>
     <ContentToc {locale} links={contents} />
-    <div class={`${editorialSections} max-w-3xl lg:pr-8`}>
+    <div class={editorialSections}>
       {#each page.sections as section, index (section.id)}
         <section
           id={section.id}
           class={index === 0 ? "scroll-mt-8" : editorialSection}
         >
-          <div class="flex items-baseline gap-4">
-            <span class="text-muted-foreground text-xs tabular-nums"
-              >{String(index + 1).padStart(2, "0")}</span
-            >
-            <h2 class={editorialHeading}>{t(locale, section.heading)}</h2>
-          </div>
-          <div class={`${editorialCopy} mt-5 flex flex-col gap-4`}>
+          <h2 class={editorialHeading}>{t(locale, section.heading)}</h2>
+          <div class={`${editorialCopy} mt-4 flex flex-col gap-4`}>
             {#each section.body as paragraph (paragraph)}<p>
                 {t(locale, paragraph)}
               </p>{/each}

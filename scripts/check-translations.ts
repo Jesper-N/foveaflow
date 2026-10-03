@@ -36,12 +36,10 @@ const messages = new Set<string>([
 
 const collectSeoContent = (content: PageSeoContent) => {
   for (const message of [
-    content.kicker,
     content.heading,
     content.hero,
     ...content.body,
     content.primaryCta.label,
-    content.trustNote,
     ...content.faq.flatMap(({ question, answer }) => [question, answer]),
   ]) {
     messages.add(message);

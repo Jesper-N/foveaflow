@@ -4,9 +4,12 @@
   import { Button, buttonVariants } from "$lib/components/ui/button/index.js";
   import type { AppLocale } from "$lib/i18n/locales";
   import { t } from "$lib/i18n/translate";
+  import { cn } from "$lib/utils.js";
   import ArrowLeft from "@lucide/svelte/icons/arrow-left";
   import ArrowUpRight from "@lucide/svelte/icons/arrow-up-right";
   import type { Snippet } from "svelte";
+
+  import { textLink } from "./page-styles";
 
   let {
     locale,
@@ -18,8 +21,6 @@
     { href: "/privacy/", label: "Privacy" },
     { href: "/terms/", label: "Terms" },
   ];
-  const textLink =
-    "rounded-sm text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring";
 </script>
 
 <div class="bg-background text-foreground selection:bg-primary/25 min-h-dvh">
@@ -35,7 +36,7 @@
       <a
         href="/"
         aria-label={t(locale, "Open FoveaFlow")}
-        class="focus-visible:outline-ring flex shrink-0 items-center gap-2.5 rounded-sm text-lg font-semibold focus-visible:outline-2 focus-visible:outline-offset-4"
+        class="focus-visible:outline-ring flex shrink-0 items-center gap-2.5 rounded-sm text-xl font-semibold focus-visible:outline-2 focus-visible:outline-offset-4"
       >
         <img
           src="/logo-render/logo.svg"
@@ -55,9 +56,12 @@
             href="/guide/"
             aria-label={t(locale, "Guide")}
             title={t(locale, "Guide")}
-            class={`${buttonVariants({ variant: "ghost", size: "sm" })} text-muted-foreground size-10 gap-2 rounded-lg p-0 sm:w-auto sm:px-3`}
+            class={cn(
+              buttonVariants({ variant: "ghost", size: "sm" }),
+              "text-muted-foreground size-10 gap-2 p-0 sm:w-auto sm:px-3"
+            )}
           >
-            <ArrowLeft class="size-4" /><span class="hidden sm:inline"
+            <ArrowLeft /><span class="hidden sm:inline"
               >{t(locale, "Guide")}</span
             >
           </a>
@@ -65,13 +69,18 @@
         <LanguageSelect
           showSelectedName
           collapseNameOnSmall
-          showFlag={false}
           size="sm"
           variant="ghost"
           triggerClass="max-w-44 data-[size=sm]:h-10 max-sm:size-10"
         />
-        <Button href="/" size="lg" class="hidden gap-2 sm:inline-flex"
-          >{t(locale, "Open FoveaFlow")}<ArrowUpRight class="size-4" /></Button
+        <Button
+          href="/"
+          variant="outline"
+          size="lg"
+          class="hidden gap-2 sm:inline-flex"
+          >{t(locale, "Open FoveaFlow")}<ArrowUpRight
+            data-icon="inline-end"
+          /></Button
         >
         <ThemeSelect {locale} />
       </nav>
@@ -89,7 +98,11 @@
       class="border-border/70 flex flex-col gap-6 border-t py-8 md:flex-row md:items-center md:justify-between"
     >
       <div class="flex flex-col gap-2">
-        <a href="/" class="font-semibold">FoveaFlow</a>
+        <a
+          href="/"
+          class="focus-visible:outline-ring self-start rounded-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-4"
+          >FoveaFlow</a
+        >
         <p class="text-muted-foreground text-sm">
           {t(locale, "FoveaFlow is free. No account, no paid plan.")}
         </p>

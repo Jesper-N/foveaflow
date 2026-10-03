@@ -26,7 +26,6 @@ export interface TrainerRoute {
 const smoothPursuitSeoContent = {
   body: [
     "Smooth Pursuit is FoveaFlow's moving-target drill. Keep your head still, follow one target with your eyes, and stay smooth instead of jumping ahead.",
-    "Choose an easy path when you want rhythm and control. Choose a harder path when you want more direction changes and more target-search demand.",
     "Use Smooth Pursuit for short browser-based practice, a pre-game warmup, or a focused reset after dense screen work.",
   ],
   faq: [
@@ -55,15 +54,9 @@ const smoothPursuitSeoContent = {
         "Yes. It works well as a short visual warmup before games or demanding screen tasks.",
       question: "Is Smooth Pursuit good as a warmup?",
     },
-    {
-      answer:
-        "No. FoveaFlow is practice software and should not replace professional care.",
-      question: "Is this medical treatment?",
-    },
   ],
   heading: "Smooth Pursuit Eye Training",
   hero: "Follow one moving target and train steady visual tracking.",
-  kicker: "Smooth Pursuit",
   primaryCta: {
     href: "/smooth-pursuit/",
     label: "Start Smooth Pursuit",
@@ -72,14 +65,11 @@ const smoothPursuitSeoContent = {
     href: "/guide/",
     label: "Open the full guide",
   },
-  trustNote:
-    "Updated July 10, 2026. This is practice software, not medical care, so stop if the session feels uncomfortable.",
 } satisfies PageSeoContent;
 
 const reactionJumpsSeoContent = {
   body: [
     "Reaction Jumps is the drill to use when moving smoothly is not the point. The target holds still, then jumps to a new location.",
-    "This mode is useful when you want faster target acquisition and cleaner refocusing. Start slower for accuracy, then raise the speed for a more demanding session.",
     "Reaction Jumps works well as a short pre-game warmup or a fast visual reset between tasks.",
   ],
   faq: [
@@ -116,7 +106,6 @@ const reactionJumpsSeoContent = {
   ],
   heading: "Reaction Jumps Eye Training",
   hero: "Snap to the next target and train fast refocus.",
-  kicker: "Reaction Jumps",
   primaryCta: {
     href: "/reaction-jumps/",
     label: "Start Reaction Jumps",
@@ -125,14 +114,11 @@ const reactionJumpsSeoContent = {
     href: "/guide/",
     label: "Compare all drills",
   },
-  trustNote:
-    "Updated July 10, 2026. Keep sessions brief and controlled. If the drill causes strain or discomfort, stop.",
 } satisfies PageSeoContent;
 
 const multipleDistractionsSeoContent = {
   body: [
     "Multiple Distractions is FoveaFlow's clutter drill. One target matters most, but other moving objects share the screen and try to pull your attention away.",
-    "This mode is a strong fit when you want to practice selective attention and target identity under visual noise.",
     "Use this drill when Smooth Pursuit feels too clean and you want a more realistic visual-attention challenge.",
   ],
   faq: [
@@ -161,15 +147,9 @@ const multipleDistractionsSeoContent = {
         "Yes. It can be useful as a short warmup for games where visual clutter matters.",
       question: "Is this good for gamers?",
     },
-    {
-      answer:
-        "No. It is practice software, not a treatment or diagnostic tool.",
-      question: "Is this a medical tool?",
-    },
   ],
   heading: "Distractor Tracking Eye Training",
   hero: "Hold the right target even when the screen gets busy.",
-  kicker: "Multiple Distractions",
   primaryCta: {
     href: "/multiple-distractions/",
     label: "Start Distractor Tracking",
@@ -178,14 +158,11 @@ const multipleDistractionsSeoContent = {
     href: "/smooth-pursuit/",
     label: "Try Smooth Pursuit first",
   },
-  trustNote:
-    "Updated July 10, 2026. Start with fewer distractors or a bigger target, and stop if the session becomes uncomfortable.",
 } satisfies PageSeoContent;
 
 const lilacChaserSeoContent = {
   body: [
     "Lilac Chaser is different from the moving-target drills. Instead of following an object, you keep your eyes on the center cross while the outer ring changes.",
-    "This mode works best when you resist the urge to chase the disappearing gap. Keep your gaze centered, stay relaxed, and let the effect happen on its own.",
     "Use Lilac Chaser for a short fixation drill, a perceptual reset, or a quick change of pace between more active modes.",
   ],
   faq: [
@@ -209,19 +186,9 @@ const lilacChaserSeoContent = {
         "Use it when you want a fixation-focused drill rather than a moving-target tracking session.",
       question: "When should I use this mode?",
     },
-    {
-      answer:
-        "No. It is a browser-based practice drill and not medical treatment.",
-      question: "Is this the same as medical peripheral-vision therapy?",
-    },
-    {
-      answer: "Stop the session and rest. Do not push through discomfort.",
-      question: "What if the effect feels strange or uncomfortable?",
-    },
   ],
   heading: "Lilac Chaser Fixation and Peripheral Awareness",
   hero: "Hold steady at the center and notice change around it.",
-  kicker: "Lilac Chaser",
   primaryCta: {
     href: "/lilac-chaser/",
     label: "Start Lilac Chaser",
@@ -230,8 +197,6 @@ const lilacChaserSeoContent = {
     href: "/guide/",
     label: "Try another drill",
   },
-  trustNote:
-    "Updated July 10, 2026. If the visual effect feels strange or uncomfortable, stop the session and rest.",
 } satisfies PageSeoContent;
 
 type PursuitPatternId = Exclude<PatternId, "multipleObjectTracking">;
@@ -360,7 +325,6 @@ const buildPatternSeoContent = (
     ],
     heading: `${toTitleCase(label)} Smooth Pursuit Drill`,
     hero: `Use the ${label} path for short smooth pursuit practice.`,
-    kicker: "Smooth Pursuit pattern",
     primaryCta: {
       href: path,
       label: `Start ${label}`,
@@ -369,8 +333,6 @@ const buildPatternSeoContent = (
       href: "/smooth-pursuit/",
       label: "Open Smooth Pursuit",
     },
-    trustNote:
-      "Updated July 10, 2026. This is a browser-based practice drill and not medical therapy.",
   }) satisfies PageSeoContent;
 
 export const trainerRoutes = [
@@ -389,7 +351,7 @@ export const trainerRoutes = [
     title: `${siteMetadata.name} - Free Online Smooth Pursuit Eye Trainer`,
   },
   ...publicPursuitPatternRoutes.map((patternRoute) => ({
-    description: `Practice the ${patternRoute.label} smooth pursuit pattern online. Adjust speed, target size, color, trail, and screen scale for short visual tracking sessions.`,
+    description: `Practice the ${patternRoute.label} smooth pursuit pattern online. Adjust speed, target size, color, and trail for short visual tracking sessions.`,
     heading: `${toTitleCase(patternRoute.label)} Smooth Pursuit Eye Training`,
     indexable: false,
     label: patternRoute.label,

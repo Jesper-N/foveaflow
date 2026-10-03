@@ -1,8 +1,8 @@
 import * as z from "zod/mini";
 
-import type { Calibration } from "./calibration";
 import type { TrainerSettings } from "./presets";
 import type { SizeProfile, SpeedProfile } from "./profiles";
+import { centimetersPerSecondToSpeed } from "./speed";
 
 const SETTINGS_KEY = "foveaflow.settings.v3";
 const LEGACY_SETTINGS_KEY = "foveaflow.settings.v2";
@@ -53,18 +53,29 @@ const sizeProfileSchema = z.discriminatedUnion("kind", [
     .check(z.refine(orderedMultipliers)),
 ]) satisfies z.ZodMiniType<SizeProfile>;
 
-const calibrationSchema = z.object({
-  createdAt: z.number(),
-  cssPxPerCm: z.number(),
-  id: z.string(),
-  viewingDistanceCm: z.number(),
-}) satisfies z.ZodMiniType<Calibration>;
+// Settings saved before speed became a plain number stored a unit with it.
+// deg/s was the default unit, so its values already match the speed scale.
+// screen/s depended on the window size and falls back to the preset speed.
+const legacySpeedSchema = z.pipe(
+  z.object({
+    unit: z.enum(["cm/s", "deg/s", "screen/s"]),
+    value: z.number(),
+  }),
+  z.transform(({ unit, value }) => {
+    if (unit === "deg/s") {
+      return value;
+    }
+    if (unit === "cm/s") {
+      return centimetersPerSecondToSpeed(value);
+    }
+    return null;
+  })
+);
 
 const storedSettingsSchema = z.partial(
   z.object({
     ballColor: z.nullable(z.string()),
     baseRadiusPx: z.number(),
-    calibration: calibrationSchema,
     distractorBrightness: z.number(),
     distractorCount: z.number(),
     letterColor: z.string(),
@@ -78,10 +89,7 @@ const storedSettingsSchema = z.partial(
     presetId: z.string(),
     showTrail: z.boolean(),
     sizeProfile: sizeProfileSchema,
-    speed: z.object({
-      unit: z.enum(["cm/s", "deg/s", "screen/s"]),
-      value: z.number(),
-    }),
+    speed: z.union([z.number(), legacySpeedSchema]),
     speedProfile: speedProfileSchema,
     targetCount: z.number(),
     targetForm: z.string(),
