@@ -47,7 +47,6 @@
   <canvas
     {@attach trainer.attachCanvas}
     class="bg-background absolute inset-0 block h-full w-full touch-none"
-    role="img"
     aria-label={t(
       "FoveaFlow eye trainer animation for visual tracking practice"
     )}
