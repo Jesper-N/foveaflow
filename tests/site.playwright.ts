@@ -49,6 +49,28 @@ test("content pages link only to pages that exist", async ({ request }) => {
   expect(statuses).toEqual([...links].map((href) => `${href} 200`));
 });
 
+// Preloads let a page download its scripts together instead of one import
+// level at a time.
+for (const path of ["/", "/guide/"]) {
+  test(`${path} preloads exactly the scripts it loads at startup`, async ({
+    page,
+  }) => {
+    await openPage(page, path);
+    const { loaded, preloaded } = await page.evaluate(() => ({
+      loaded: performance
+        .getEntriesByType("resource")
+        .map(({ name }) => new URL(name).pathname)
+        .filter((pathname) => pathname.endsWith(".js")),
+      preloaded: Array.from(
+        document.querySelectorAll<HTMLLinkElement>('link[rel="modulepreload"]'),
+        ({ href }) => new URL(href).pathname
+      ),
+    }));
+    expect(loaded.length, "The page should load scripts").toBeGreaterThan(0);
+    expect([...new Set(loaded)].toSorted()).toEqual(preloaded.toSorted());
+  });
+}
+
 test("an unknown path shows the not found page", async ({ page }) => {
   const response = await page.goto("/no-such-page/");
   expect(response?.status()).toBe(404);
