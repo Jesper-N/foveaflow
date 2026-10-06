@@ -1,13 +1,8 @@
+import { getSiteOrigin } from "$lib/seo/site-url";
+import { sitemapXml } from "$lib/seo/sitemap";
 import type { APIRoute } from "astro";
 
-import { buildSitemapXml } from "../lib/publication-outputs";
-import { getSiteOrigin } from "../lib/seo";
-
-export const prerender = true;
-
-export const GET: APIRoute = (context) =>
-  new Response(buildSitemapXml(getSiteOrigin(context.site)), {
-    headers: {
-      "Content-Type": "application/xml; charset=utf-8",
-    },
+export const GET: APIRoute = ({ site }) =>
+  new Response(sitemapXml(getSiteOrigin(site)), {
+    headers: { "Content-Type": "application/xml; charset=utf-8" },
   });

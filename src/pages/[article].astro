@@ -1,0 +1,31 @@
+---
+import ArticlePage from "$lib/components/site/article-page.svelte";
+import { articles } from "$lib/content/articles";
+import type { Article } from "$lib/content/articles";
+import { getSiteOrigin } from "$lib/seo/site-url";
+import { articleStructuredData } from "$lib/seo/structured-data";
+
+import BaseLayout from "../layouts/base-layout.astro";
+
+interface Props {
+  article: Article;
+}
+
+export const getStaticPaths = () =>
+  articles.map((article) => ({
+    params: { article: article.slug },
+    props: { article },
+  }));
+
+const { article } = Astro.props;
+---
+
+<BaseLayout
+  title={article.title}
+  description={article.description}
+  canonicalPath={article.path}
+  ogType="article"
+  structuredData={articleStructuredData(article, getSiteOrigin(Astro.site))}
+>
+  <ArticlePage page={article} client:load />
+</BaseLayout>

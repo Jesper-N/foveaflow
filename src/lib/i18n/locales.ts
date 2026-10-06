@@ -1,64 +1,56 @@
 export const defaultLocale = "en";
+/** 400 days, the longest cookie lifetime browsers allow. */
 export const localeCookieMaxAge = 34_560_000;
+/** Also the local storage key. Kept from an earlier i18n library so saved choices survive. */
 export const localeCookieName = "PARAGLIDE_LOCALE";
 
 export const languageOptions = [
   {
-    direction: "ltr",
     label: "English",
     locale: "en",
     nativeLabel: "English",
   },
   {
-    direction: "ltr",
     label: "Chinese (Simplified)",
     locale: "zh-CN",
     nativeLabel: "简体中文",
   },
   {
-    direction: "ltr",
     label: "Chinese (Traditional)",
     locale: "zh-HK",
     nativeLabel: "繁體中文",
   },
   {
-    direction: "ltr",
     label: "Portuguese (Brazil)",
     locale: "pt-BR",
     nativeLabel: "Português do Brasil",
   },
   {
-    direction: "ltr",
     label: "Spanish",
     locale: "es-419",
     nativeLabel: "Español",
   },
   {
-    direction: "ltr",
     label: "French",
     locale: "fr",
     nativeLabel: "Français",
   },
   {
-    direction: "ltr",
     label: "Bengali",
     locale: "bn",
     nativeLabel: "বাংলা",
   },
   {
-    direction: "ltr",
     label: "Hindi",
     locale: "hi",
     nativeLabel: "हिन्दी",
   },
   {
-    direction: "ltr",
     label: "Filipino",
     locale: "fil",
     nativeLabel: "Filipino",
   },
   {
-    direction: "ltr",
     label: "German",
     locale: "de",
     nativeLabel: "Deutsch",
@@ -67,7 +59,6 @@ export const languageOptions = [
   locale: string;
   label: string;
   nativeLabel: string;
-  direction: "ltr" | "rtl";
 }[];
 
 export type LanguageOption = (typeof languageOptions)[number];
@@ -123,6 +114,7 @@ export const localePrefixAliases = [
   ["de-", "de"],
 ] as const satisfies readonly (readonly [string, AppLocale])[];
 
+/** Maps a browser or saved language tag to a supported locale. */
 const resolveSupportedLocale = (
   value: string | null | undefined
 ): AppLocale | null => {
@@ -189,12 +181,14 @@ const readPreferredLocale = (): AppLocale | null => {
   return null;
 };
 
+/** The saved language, then the browser's, then English. */
 export const getResolvedLocale = async (): Promise<AppLocale> =>
   resolveSupportedLocale(await readCookieLocale()) ??
   resolveSupportedLocale(readLocalStorageLocale()) ??
   readPreferredLocale() ??
   defaultLocale;
 
+/** Remembers the language in local storage and a cookie the boot script can read. */
 export const setResolvedLocale = async (locale: AppLocale) => {
   const browserWindow = globalThis.window;
   if (!browserWindow) {

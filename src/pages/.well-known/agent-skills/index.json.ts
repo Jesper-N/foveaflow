@@ -1,21 +1,8 @@
+import { agentSkillsIndexJson } from "$lib/seo/agent-skills";
+import { getSiteOrigin } from "$lib/seo/site-url";
 import type { APIRoute } from "astro";
 
-import {
-  buildAgentSkillsIndexJson,
-  stringifyAgentSkillsIndex,
-} from "../../../lib/agent-discovery";
-import { getSiteOrigin } from "../../../lib/seo";
-
-export const prerender = true;
-
-export const GET: APIRoute = (context) =>
-  new Response(
-    stringifyAgentSkillsIndex(
-      buildAgentSkillsIndexJson(getSiteOrigin(context.site))
-    ),
-    {
-      headers: {
-        "Content-Type": "application/json; charset=utf-8",
-      },
-    }
-  );
+export const GET: APIRoute = ({ site }) =>
+  new Response(agentSkillsIndexJson(getSiteOrigin(site)), {
+    headers: { "Content-Type": "application/json; charset=utf-8" },
+  });

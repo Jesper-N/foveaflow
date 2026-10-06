@@ -1,3 +1,7 @@
+// Reports Tailwind classes that have a canonical spelling, like the editor's
+// suggestCanonicalClasses diagnostic, and exits 1 when it finds any. Skips the
+// generated shadcn components. Note: it maps arbitrary `rounded-[…]` values to
+// the wrong named radius in this theme, so use named radii instead.
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -25,8 +29,7 @@ const ignoredSourceDirs = new Set(["src/lib/components/ui"]);
 
 interface Edit {
   file: string;
-  start: number;
-  end: number;
+  line: number;
   from: string;
   to: string;
 }
@@ -85,7 +88,7 @@ const strings = (text: string) => {
 };
 
 const tokens = (value: string) => {
-  const ranges: { start: number; end: number; value: string }[] = [];
+  const ranges: { start: number; value: string }[] = [];
   let start = -1;
   let depth = 0;
   let quote = "";
@@ -125,7 +128,7 @@ const tokens = (value: string) => {
 
     if (/\s/u.test(char) && depth === 0) {
       if (start >= 0) {
-        ranges.push({ end: i, start, value: value.slice(start, i) });
+        ranges.push({ start, value: value.slice(start, i) });
       }
       start = -1;
       continue;
@@ -173,7 +176,6 @@ const sources = sourceFiles.map((file) => {
           !token.value.includes("${") && /[\w\][\]():!@*/.-]/u.test(token.value)
       )
       .map((token) => ({
-        end: string.start + token.end,
         start: string.start + token.start,
         value: token.value,
       }))
@@ -202,10 +204,9 @@ for (const source of sources) {
     const to = canonical.get(token.value);
     if (to && to !== token.value) {
       edits.push({
-        end: token.end,
         file: source.file,
         from: token.value,
-        start: token.start,
+        line: source.text.slice(0, token.start).split("\n").length,
         to,
       });
     }
@@ -219,7 +220,7 @@ if (edits.length === 0) {
 
 for (const edit of edits) {
   const file = path.relative(root, edit.file).split(path.sep).join("/");
-  process.stdout.write(`${file} ${edit.from} -> ${edit.to}\n`);
+  process.stdout.write(`${file}:${edit.line} ${edit.from} -> ${edit.to}\n`);
 }
 
 process.exit(1);

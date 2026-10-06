@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn-svelte/tailwind.css";
-@import "../lib/components/guide-motion.css";
+@import "./guide-animations.css";
 @import "@fontsource-variable/inter";
 
 @custom-variant dark (&:is(.dark *));

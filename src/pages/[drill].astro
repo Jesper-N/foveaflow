@@ -1,0 +1,40 @@
+---
+import NoscriptFallback from "$lib/components/site/noscript-fallback.astro";
+import TrainerApp from "$lib/components/trainer/trainer-app.svelte";
+import { drillRoutes } from "$lib/content/drill-routes";
+import type { DrillRoute } from "$lib/content/drill-routes";
+import { robotsMeta } from "$lib/seo/robots";
+import { getSiteOrigin } from "$lib/seo/site-url";
+import { drillRouteStructuredData } from "$lib/seo/structured-data";
+
+import BaseLayout from "../layouts/base-layout.astro";
+
+interface Props {
+  route: DrillRoute;
+}
+
+export const getStaticPaths = () =>
+  drillRoutes.map((route) => ({
+    params: { drill: route.slug },
+    props: { route },
+  }));
+
+const { route } = Astro.props;
+---
+
+<BaseLayout
+  title={route.title}
+  description={route.description}
+  canonicalPath={route.path}
+  robots={route.indexable ? robotsMeta.index : robotsMeta.noindex}
+  structuredData={route.indexable
+    ? drillRouteStructuredData(route, getSiteOrigin(Astro.site))
+    : undefined}
+>
+  <TrainerApp routeSlug={route.slug} client:load />
+  <NoscriptFallback
+    heading={route.heading}
+    description={route.description}
+    showHomeLink
+  />
+</BaseLayout>

@@ -1,5 +1,24 @@
-import { siteMetadata } from "./site";
-import { safetyNote } from "./training";
+import { safetyNote, siteMetadata } from "./site";
+
+interface LegalSection {
+  id: string;
+  heading: string;
+  body: readonly string[];
+  links?: readonly { label: string; url: string }[];
+}
+
+export interface LegalPage {
+  label: string;
+  path: `/${string}/`;
+  /** Page heading. */
+  title: string;
+  /** Document title. */
+  metaTitle: string;
+  description: string;
+  summary: string;
+  lastModified: string;
+  sections: readonly LegalSection[];
+}
 
 export const legalPageLinks = {
   privacy: {
@@ -194,6 +213,4 @@ export const legalPages = {
       "FoveaFlow is a free browser tool. Use it safely, stop if it feels bad, and do not treat it as medical care.",
     title: "Terms of Use",
   },
-} as const;
-
-export type LegalPageContent = (typeof legalPages)[keyof typeof legalPages];
+} as const satisfies Record<keyof typeof legalPageLinks, LegalPage>;

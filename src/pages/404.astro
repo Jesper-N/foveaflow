@@ -1,18 +1,14 @@
 ---
-import "../styles/global.css";
-import NotFoundPage from "../lib/components/not-found-page.svelte";
-import SeoHead from "../lib/components/seo-head.astro";
+import NotFoundPage from "$lib/components/site/not-found-page.svelte";
+import { robotsMeta } from "$lib/seo/robots";
+
+import BaseLayout from "../layouts/base-layout.astro";
 ---
 
-<html lang="en">
-  <head>
-    <SeoHead
-      title="Page not found | FoveaFlow"
-      description="The requested FoveaFlow page could not be found."
-      robots="noindex,follow"
-    />
-  </head>
-  <body>
-    <NotFoundPage client:load />
-  </body>
-</html>
+<BaseLayout
+  title="Page not found | FoveaFlow"
+  description="The requested FoveaFlow page could not be found."
+  robots={robotsMeta.noindex}
+>
+  <NotFoundPage client:load />
+</BaseLayout>

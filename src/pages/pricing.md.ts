@@ -1,13 +1,8 @@
+import { pricingMarkdown } from "$lib/seo/llms";
+import { getSiteOrigin } from "$lib/seo/site-url";
 import type { APIRoute } from "astro";
 
-import { buildPricingText } from "../lib/publication-outputs";
-import { getSiteOrigin } from "../lib/seo";
-
-export const prerender = true;
-
-export const GET: APIRoute = (context) =>
-  new Response(buildPricingText(getSiteOrigin(context.site)), {
-    headers: {
-      "Content-Type": "text/markdown; charset=utf-8",
-    },
+export const GET: APIRoute = ({ site }) =>
+  new Response(pricingMarkdown(getSiteOrigin(site)), {
+    headers: { "Content-Type": "text/markdown; charset=utf-8" },
   });
