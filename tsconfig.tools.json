@@ -1,8 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "types": ["bun"],
-    "strictNullChecks": true
+    "types": ["bun"]
   },
   "include": [
     "astro.config.mjs",

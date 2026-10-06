@@ -4,8 +4,7 @@
     "paths": {
       "$lib": ["./src/lib"],
       "$lib/*": ["./src/lib/*"]
-    },
-    "strictNullChecks": true
+    }
   },
   "include": [".astro/types.d.ts", "src/**/*"],
   "exclude": ["dist", "node_modules"]

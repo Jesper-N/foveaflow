@@ -1,0 +1,97 @@
+---
+// Registers WebMCP tools so AI agents in the browser can open a drill or find
+// the public docs. Browsers without WebMCP skip it. Inline scripts cannot
+// import, so the route list mirrors the main drill routes in
+// `content/drill-routes.ts`.
+---
+
+<script is:inline>
+  // Scoped so these names never collide with other inline scripts.
+  (() => {
+    const routes = {
+      guide: "/guide/",
+      "lilac-chaser": "/lilac-chaser/",
+      "multiple-distractions": "/multiple-distractions/",
+      "reaction-jumps": "/reaction-jumps/",
+      "smooth-pursuit": "/smooth-pursuit/",
+    };
+
+    const modelContext = document.modelContext ?? navigator.modelContext;
+
+    const registerTool = (tool) => {
+      try {
+        modelContext.registerTool(tool);
+      } catch (error) {
+        // Another script already registered it.
+        if (
+          error instanceof DOMException &&
+          error.name === "InvalidStateError"
+        ) {
+          return;
+        }
+        throw error;
+      }
+    };
+
+    if (!modelContext?.registerTool) {
+      return;
+    }
+
+    registerTool({
+      description:
+        "Open a FoveaFlow drill or guide route in the current browser tab.",
+      execute: ({ route }) => {
+        const path = routes[route] ?? "/";
+        const url = new URL(path, window.location.origin).toString();
+        window.location.assign(url);
+
+        return {
+          content: [{ text: `Opening ${url}`, type: "text" }],
+        };
+      },
+      inputSchema: {
+        additionalProperties: false,
+        properties: {
+          route: {
+            description: "The FoveaFlow route to open.",
+            enum: Object.keys(routes),
+            type: "string",
+          },
+        },
+        required: ["route"],
+        type: "object",
+      },
+      name: "open_foveaflow_route",
+      title: "Open FoveaFlow Route",
+    });
+
+    registerTool({
+      description:
+        "Return public FoveaFlow discovery, documentation, and safety resources.",
+      execute: () => ({
+        content: [
+          {
+            json: {
+              app: new URL("/", window.location.origin).toString(),
+              guide: new URL("/guide/", window.location.origin).toString(),
+              llms: new URL("/llms.txt", window.location.origin).toString(),
+              note: "FoveaFlow is practice software, not medical advice, diagnosis, treatment, vision therapy, or a medical device.",
+              sitemap: new URL(
+                "/sitemap.xml",
+                window.location.origin,
+              ).toString(),
+            },
+            type: "json",
+          },
+        ],
+      }),
+      inputSchema: {
+        additionalProperties: false,
+        properties: {},
+        type: "object",
+      },
+      name: "get_foveaflow_resources",
+      title: "Get FoveaFlow Resources",
+    });
+  })();
+</script>

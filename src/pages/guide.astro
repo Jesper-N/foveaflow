@@ -1,25 +1,18 @@
 ---
-import "../styles/global.css";
-import GuidePage from "../lib/components/guide-page.svelte";
-import SeoHead from "../lib/components/seo-head.astro";
-import { guideMetadata } from "../lib/content/page-copy";
-import { buildGuideStructuredData, getSiteOrigin } from "../lib/seo";
+import GuidePage from "$lib/components/site/guide-page.svelte";
+import { guideMetadata } from "$lib/content/guide";
+import { getSiteOrigin } from "$lib/seo/site-url";
+import { guideStructuredData } from "$lib/seo/structured-data";
 
-const siteOrigin = getSiteOrigin(Astro.site);
-const structuredData = buildGuideStructuredData(siteOrigin);
+import BaseLayout from "../layouts/base-layout.astro";
 ---
 
-<html lang="en">
-  <head>
-    <SeoHead
-      title={guideMetadata.title}
-      description={guideMetadata.description}
-      canonicalPath="/guide/"
-      ogType="article"
-      {structuredData}
-    />
-  </head>
-  <body>
-    <GuidePage client:load />
-  </body>
-</html>
+<BaseLayout
+  title={guideMetadata.title}
+  description={guideMetadata.description}
+  canonicalPath="/guide/"
+  ogType="article"
+  structuredData={guideStructuredData(getSiteOrigin(Astro.site))}
+>
+  <GuidePage client:load />
+</BaseLayout>

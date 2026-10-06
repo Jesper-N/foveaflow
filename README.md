@@ -94,41 +94,51 @@ bun run dev  # http://127.0.0.1:4321
 | Site | [Astro](https://astro.build/) |
 | Controls | [Svelte 5](https://svelte.dev/), [shadcn-svelte](https://www.shadcn-svelte.com/), [Bits UI](https://bits-ui.com/) |
 | Styling | [Tailwind CSS 4](https://tailwindcss.com/) |
-| Drills | A TypeScript canvas engine in `src/lib/engine/` |
+| Drills | A TypeScript canvas engine in `src/lib/trainer/` |
 | Hosting | [Cloudflare Workers](https://workers.cloudflare.com/) |
 
 ## Commands
 
-| Command              | What it does                                         |
-| :------------------- | :--------------------------------------------------- |
-| `bun run dev`        | Start the dev server                                 |
-| `bun run build`      | Build the production site and its CSP headers        |
-| `bun run preview`    | Build and serve the site through Wrangler            |
-| `bun run check`      | Type-check Astro, Svelte, and TypeScript             |
-| `bun run check:i18n` | Check that every language has every string           |
-| `bun run lint`       | Check code and formatting with Ultracite             |
-| `bun run fix`        | Apply Ultracite fixes and format Astro files         |
-| `bun run test`       | Build and run the Playwright release tests           |
-| `bun run verify`     | Run every check, the tests, and the dependency audit |
+| Command                | What it does                                    |
+| :--------------------- | :---------------------------------------------- |
+| `bun run dev`          | Start the dev server                            |
+| `bun run build`        | Build the production site and its CSP headers   |
+| `bun run preview`      | Build and serve the site through Wrangler       |
+| `bun run check`        | Type-check Astro, Svelte, and TypeScript        |
+| `bun run check:i18n`   | Check every string is translated and used       |
+| `bun run lint`         | Check code and formatting with Ultracite        |
+| `bun run fix`          | Apply Ultracite fixes and format Astro files    |
+| `bun run test`         | Run the unit tests, then the browser tests      |
+| `bun run test:unit`    | Run the unit tests                              |
+| `bun run test:browser` | Build the site and run the browser tests        |
+| `bun run verify`       | Run all checks, tests, and the dependency audit |
 
 ## Tests and deployment
 
 - `bun install` turns on the git hooks. Pre-commit checks formatting, and pre-push runs `bun run verify`.
-- The release tests open every trainer route and public page in desktop and mobile Chromium. Install the browser once with `bunx playwright install chromium`, and set `TEST_PORT` if port 4323 is taken.
+- The unit tests in `tests/unit/` cover motion, settings, saved-settings migrations, drill routes, and shortcuts. A snapshot locks every motion path; update it with `bun test tests/unit --update-snapshots` only when a motion change is intended.
+- The browser tests build the site and run it in desktop and mobile Chromium. `tests/trainer.playwright.ts` covers every trainer route and the controls; `tests/site.playwright.ts` covers the content pages, links, the 404 page, and languages. Install the browser once with `bunx playwright install chromium`, and set `TEST_PORT` if port 4323 is taken.
 - GitHub Actions runs `bun run verify` on pull requests and deploys `main` to Cloudflare.
 
 ## Project structure
 
 ```text
-src/pages/              Astro routes
-src/lib/components/     Svelte app and UI components
-src/lib/trainer/        Trainer state, rendering, and settings
-src/lib/engine/         Patterns, profiles, safety, and storage
-src/lib/i18n/           Translations for 10 languages
-src/styles/             Global styles and Tailwind setup
-public/                 Logo, icons, and social image
-tests/                  Desktop and mobile release tests
-docs/images/            README images and drill clips
+src/pages/                   Astro routes and text endpoints (sitemap, llms.txt)
+src/layouts/                 Page shell shared by every route
+src/lib/trainer/engine/      Motion patterns, speed profiles, seeded randomness
+src/lib/trainer/canvas/      Canvas loop and drawing
+src/lib/trainer/settings/    Drills, options, and saved settings
+src/lib/components/trainer/  Trainer app: state, island, controls, guide
+src/lib/components/site/     Guide, article, and legal pages
+src/lib/components/ui/       shadcn-svelte components
+src/lib/content/             Page copy, routes, and guides
+src/lib/i18n/                Translations for 10 languages
+src/lib/seo/                 Structured data and machine-readable files
+src/styles/                  Global styles and Tailwind setup
+public/                      Logo, icons, and social image
+tests/unit/                  Unit tests
+tests/                       Desktop and mobile browser tests
+docs/images/                 README images and drill clips
 ```
 
 ## Ideas for later

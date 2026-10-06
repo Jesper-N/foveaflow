@@ -1,26 +1,20 @@
 ---
-import "../styles/global.css";
-import LegalPage from "../lib/components/legal-page.svelte";
-import SeoHead from "../lib/components/seo-head.astro";
-import { legalPages } from "../lib/content/legal";
-import { buildLegalStructuredData, getSiteOrigin } from "../lib/seo";
+import LegalPage from "$lib/components/site/legal-page.svelte";
+import { legalPages } from "$lib/content/legal";
+import { getSiteOrigin } from "$lib/seo/site-url";
+import { legalStructuredData } from "$lib/seo/structured-data";
+
+import BaseLayout from "../layouts/base-layout.astro";
 
 const page = legalPages.privacy;
-const siteOrigin = getSiteOrigin(Astro.site);
-const structuredData = buildLegalStructuredData(page, siteOrigin);
 ---
 
-<html lang="en">
-  <head>
-    <SeoHead
-      title={page.metaTitle}
-      description={page.description}
-      canonicalPath={page.path}
-      ogType="article"
-      {structuredData}
-    />
-  </head>
-  <body>
-    <LegalPage page={page} client:load />
-  </body>
-</html>
+<BaseLayout
+  title={page.metaTitle}
+  description={page.description}
+  canonicalPath={page.path}
+  ogType="article"
+  structuredData={legalStructuredData(page, getSiteOrigin(Astro.site))}
+>
+  <LegalPage {page} client:load />
+</BaseLayout>

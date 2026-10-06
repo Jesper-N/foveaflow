@@ -1,0 +1,66 @@
+---
+import { siteMetadata } from "$lib/content/site";
+import { robotsMeta } from "$lib/seo/robots";
+import { absoluteUrl, getSiteOrigin } from "$lib/seo/site-url";
+import type { StructuredData } from "$lib/seo/structured-data";
+
+export interface Props {
+  title: string;
+  description: string;
+  /** Leave unset on pages that should not be canonical, like the 404 page. */
+  canonicalPath?: `/${string}`;
+  structuredData?: StructuredData;
+  ogType?: "website" | "article";
+  ogDescription?: string;
+  twitterDescription?: string;
+  robots?: string;
+}
+
+const {
+  title,
+  description,
+  canonicalPath,
+  structuredData,
+  ogType = "website",
+  ogDescription = description,
+  twitterDescription = ogDescription,
+  robots = robotsMeta.index,
+} = Astro.props;
+
+const site = getSiteOrigin(Astro.site);
+const canonicalUrl = canonicalPath && absoluteUrl(canonicalPath, site);
+const ogImageUrl = absoluteUrl(siteMetadata.imagePath, site);
+---
+
+{canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="generator" content={Astro.generator} />
+<meta name="description" content={description} />
+<meta name="robots" content={robots} />
+<meta name="application-name" content={siteMetadata.name} />
+<meta name="apple-mobile-web-app-title" content={siteMetadata.name} />
+<meta property="og:type" content={ogType} />
+<meta property="og:site_name" content={siteMetadata.name} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={ogDescription} />
+{canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
+<meta property="og:image" content={ogImageUrl} />
+<meta property="og:image:alt" content={siteMetadata.imageAlt} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={twitterDescription} />
+<meta name="twitter:image" content={ogImageUrl} />
+<meta name="twitter:image:alt" content={siteMetadata.imageAlt} />
+{
+  structuredData && (
+    <script
+      is:inline
+      type="application/ld+json"
+      data-seo-structured-data
+      set:html={JSON.stringify(structuredData)}
+    />
+  )
+}
+<title>{title}</title>

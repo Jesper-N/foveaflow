@@ -1,0 +1,27 @@
+---
+import "../styles/global.css";
+import "../styles/page-transitions.css";
+import Favicons from "$lib/components/head/favicons.astro";
+import SeoHead from "$lib/components/head/seo-head.astro";
+import type { Props as SeoHeadProps } from "$lib/components/head/seo-head.astro";
+import { localeBootScript } from "$lib/i18n/boot-script";
+import { createInitialModeExpression } from "mode-watcher";
+
+type Props = SeoHeadProps;
+
+// Applies the saved theme before first paint, so the page never flashes.
+const themeBootScript = createInitialModeExpression({ defaultMode: "system" });
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <script is:inline set:html={themeBootScript} />
+    <script is:inline set:html={localeBootScript} />
+    <Favicons />
+    <SeoHead {...Astro.props} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

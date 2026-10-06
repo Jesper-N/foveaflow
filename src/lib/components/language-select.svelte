@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { buttonVariants } from "$lib/components/ui/button/index.js";
-  import * as Select from "$lib/components/ui/select/index.js";
-  import * as Tooltip from "$lib/components/ui/tooltip/index.js";
+  import { buttonVariants } from "$lib/components/ui/button";
+  import * as Select from "$lib/components/ui/select";
+  import * as Tooltip from "$lib/components/ui/tooltip";
   import {
     getLanguageOption,
     isAppLocale,
@@ -9,12 +9,12 @@
   } from "$lib/i18n/locales";
   import { languageState } from "$lib/i18n/state.svelte";
   import { t } from "$lib/i18n/translate";
-  import { cn } from "$lib/utils.js";
+  import { cn } from "$lib/utils";
   import LanguagesIcon from "@lucide/svelte/icons/languages";
+  import { onMount } from "svelte";
   import type { HTMLButtonAttributes } from "svelte/elements";
 
   let {
-    class: className,
     triggerClass,
     contentClass,
     open = $bindable(false),
@@ -24,29 +24,30 @@
     tooltipDisabled = false,
     collapseNameOnSmall = false,
     size = "default",
-    variant,
+    variant = "default",
   }: {
-    class?: string;
     triggerClass?: string;
+    /** Classes for the menu and tooltip, which render in a portal. */
     contentClass?: string;
     open?: boolean;
     onOpenChange?: (open: boolean) => void;
+    /** Shows the language name next to the icon. */
     showSelectedName?: boolean;
+    /** Uses a tooltip instead of a native title. Needs a `Tooltip.Provider` above. */
     showTooltip?: boolean;
     tooltipDisabled?: boolean;
+    /** Hides the name on small screens, leaving the icon. */
     collapseNameOnSmall?: boolean;
     size?: "sm" | "default";
-    variant?: "default" | "outline" | "ghost";
+    variant?: "default" | "ghost";
   } = $props();
 
-  $effect(() => {
+  // Content pages have no trainer to start the language, so the select does.
+  onMount(() => {
     void languageState.init();
   });
 
   let selectedLanguage = $derived(getLanguageOption(languageState.locale));
-  let triggerVariant = $derived(
-    variant ?? (showSelectedName ? "default" : "outline")
-  );
 
   const handleLanguageChange = (value: string) => {
     if (isAppLocale(value)) {
@@ -61,23 +62,21 @@
     {size}
     class={cn(
       "shrink-0",
-      triggerVariant !== "default" &&
-        buttonVariants({ variant: triggerVariant, size }),
+      variant === "ghost" && buttonVariants({ size, variant }),
       !showSelectedName &&
         "size-9 justify-center rounded-4xl p-0 [&>svg:last-child]:hidden",
       showSelectedName && "min-w-36 justify-between",
       showSelectedName &&
         collapseNameOnSmall &&
         "max-sm:size-9 max-sm:min-w-0 max-sm:justify-center max-sm:gap-0 max-sm:p-0 max-sm:[&>svg:last-child]:hidden",
-      triggerVariant === "ghost" &&
+      variant === "ghost" &&
         "text-muted-foreground min-w-0 justify-center gap-2 bg-transparent",
-      triggerClass,
-      className
+      triggerClass
     )}
-    aria-label={`${t(languageState.locale, "Change language")}: ${selectedLanguage.nativeLabel}`}
+    aria-label={`${t("Change language")}: ${selectedLanguage.nativeLabel}`}
     title={showTooltip
       ? undefined
-      : `${t(languageState.locale, "Language")}: ${selectedLanguage.nativeLabel}`}
+      : `${t("Language")}: ${selectedLanguage.nativeLabel}`}
   >
     <LanguagesIcon />
     {#if showSelectedName}
@@ -89,8 +88,6 @@
       >
         {selectedLanguage.nativeLabel}
       </span>
-    {:else}
-      <span class="sr-only">{selectedLanguage.label}</span>
     {/if}
   </Select.Trigger>
 {/snippet}
@@ -110,7 +107,7 @@
         {/snippet}
       </Tooltip.Trigger>
       <Tooltip.Content side="bottom" sideOffset={6} class={contentClass}>
-        {t(languageState.locale, "Language")}
+        {t("Language")}
       </Tooltip.Content>
     </Tooltip.Root>
   {:else}

@@ -1,109 +1,62 @@
+// Adds a hash for every inline script in the built pages to the `script-src`
+// of the Content-Security-Policy in dist/_headers. The rest of the policy lives
+// in public/_headers. Runs after `astro build`, so the strict policy only exists
+// in production builds.
 import { createHash } from "node:crypto";
-import { readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
-const distDir = "dist";
-const headersPath = path.join(distDir, "_headers");
+const DIST_DIR = "dist";
+const HEADERS_PATH = path.join(DIST_DIR, "_headers");
+/** The CSP header up to the end of its `script-src` directive. */
+const SCRIPT_SRC_PATTERN =
+  /Content-Security-Policy: (?:[^;\n]*; )*script-src [^;\n]*/u;
+const INLINE_SCRIPT_PATTERN =
+  /<script\b(?<attributes>[^>]*)>(?<content>[\s\S]*?)<\/script>/giu;
+const JSON_LD_TYPE_PATTERN =
+  /\stype\s*=\s*(?<quote>["'])application\/ld\+json\k<quote>/iu;
 
-const readHtmlFiles = (dir: string): string[] => {
-  const files: string[] = [];
+const listHtmlFiles = (dir: string): string[] =>
+  readdirSync(dir, { recursive: true, withFileTypes: true })
+    .filter((entry) => entry.isFile() && entry.name.endsWith(".html"))
+    .map((entry) => path.join(entry.parentPath, entry.name));
 
-  for (const entry of readdirSync(dir)) {
-    const entryPath = path.join(dir, entry);
-    const stat = statSync(entryPath);
+// External scripts are covered by 'self', and JSON-LD is data the browser never runs.
+const hashInlineScripts = (html: string) =>
+  [...html.matchAll(INLINE_SCRIPT_PATTERN)]
+    .filter(({ groups }) => {
+      const attributes = groups?.attributes ?? "";
+      return (
+        !/\ssrc\s*=/iu.test(attributes) &&
+        !JSON_LD_TYPE_PATTERN.test(attributes) &&
+        Boolean(groups?.content?.trim())
+      );
+    })
+    .map(({ groups }) => {
+      const digest = createHash("sha256")
+        .update(groups?.content ?? "")
+        .digest("base64");
+      return `'sha256-${digest}'`;
+    });
 
-    if (stat.isDirectory()) {
-      files.push(...readHtmlFiles(entryPath));
-    } else if (entryPath.endsWith(".html")) {
-      files.push(entryPath);
-    }
-  }
+const scriptHashes = [
+  ...new Set(
+    listHtmlFiles(DIST_DIR).flatMap((file) =>
+      hashInlineScripts(readFileSync(file, "utf-8"))
+    )
+  ),
+].toSorted();
 
-  return files;
-};
-
-const hashInlineBlocks = (html: string, tagName: "script" | "style") => {
-  const hashes = new Set<string>();
-  const pattern = new RegExp(
-    `<${tagName}\\b(?<attributes>[^>]*)>(?<content>[\\s\\S]*?)<\\/${tagName}>`,
-    "giu"
-  );
-
-  for (const match of html.matchAll(pattern)) {
-    const attributes = match[1] ?? "";
-    const content = match[2] ?? "";
-
-    if (tagName === "script") {
-      if (/\ssrc\s*=/iu.test(attributes)) {
-        continue;
-      }
-      if (
-        /\stype\s*=\s*(?<quote>["'])application\/ld\+json\k<quote>/iu.test(
-          attributes
-        )
-      ) {
-        continue;
-      }
-    }
-    if (!content.trim()) {
-      continue;
-    }
-
-    const digest = createHash("sha256").update(content).digest("base64");
-    hashes.add(`'sha256-${digest}'`);
-  }
-
-  return hashes;
-};
-
-const collectScriptHashes = () => {
-  const scriptHashes = new Set<string>();
-
-  for (const file of readHtmlFiles(distDir)) {
-    const html = readFileSync(file, "utf-8");
-
-    for (const hash of hashInlineBlocks(html, "script")) {
-      scriptHashes.add(hash);
-    }
-  }
-
-  return [...scriptHashes].toSorted();
-};
-
-const scriptHashes = collectScriptHashes();
-
-const csp = [
-  "default-src 'self'",
-  `script-src 'self' https://static.cloudflareinsights.com ${scriptHashes.join(" ")}`.trim(),
-  "script-src-attr 'none'",
-  "style-src 'self' 'unsafe-inline'",
-  "style-src-attr 'unsafe-inline'",
-  "img-src 'self' data:",
-  "font-src 'self'",
-  "connect-src 'self' https://cloudflareinsights.com",
-  "object-src 'none'",
-  "base-uri 'self'",
-  "frame-ancestors 'none'",
-  "form-action 'self'",
-  "manifest-src 'self'",
-  "worker-src 'none'",
-  "upgrade-insecure-requests",
-].join("; ");
-
-const headers = readFileSync(headersPath, "utf-8");
-const cspHeaderPattern = /Content-Security-Policy: .*/u;
-if (!cspHeaderPattern.test(headers)) {
-  throw new Error(`No Content-Security-Policy header found in ${headersPath}`);
+const headers = readFileSync(HEADERS_PATH, "utf-8");
+if (!SCRIPT_SRC_PATTERN.test(headers)) {
+  throw new Error(`No CSP script-src directive found in ${HEADERS_PATH}`);
 }
-
-const updatedHeaders = headers.replace(
-  cspHeaderPattern,
-  `Content-Security-Policy: ${csp}`
+writeFileSync(
+  HEADERS_PATH,
+  headers.replace(SCRIPT_SRC_PATTERN, (directive) =>
+    [directive, ...scriptHashes].join(" ")
+  )
 );
-
-if (headers !== updatedHeaders) {
-  writeFileSync(headersPath, updatedHeaders);
-}
 process.stdout.write(
   `Applied CSP with ${scriptHashes.length} script hash(es).\n`
 );

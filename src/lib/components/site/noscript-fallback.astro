@@ -1,0 +1,45 @@
+---
+import { editorialLede, editorialLink, editorialTitle } from "./styles";
+
+interface Props {
+  heading: string;
+  description: string;
+  /** Drill pages link back to the homepage. */
+  showHomeLink?: boolean;
+}
+
+const { heading, description, showHomeLink = false } = Astro.props;
+---
+
+<!-- The drills need JavaScript. Without it, this replaces the empty trainer. -->
+<noscript>
+  <style is:inline>
+    .trainer-stage {
+      display: none !important;
+    }
+  </style>
+  <main
+    class="bg-background text-foreground fixed inset-0 z-100 overflow-auto p-8"
+  >
+    <section
+      class="[&_p]:text-muted-foreground mx-auto flex w-full max-w-2xl flex-col gap-4 py-16 leading-7"
+    >
+      <h2 class={editorialTitle}>{heading}</h2>
+      <p class={editorialLede}>{description}</p>
+      <p>
+        FoveaFlow needs JavaScript to run its moving-target drills. The guide
+        works without it.
+      </p>
+      <p class="flex flex-wrap gap-x-6 gap-y-2">
+        {
+          showHomeLink && (
+            <a href="/" class={editorialLink}>
+              Open the FoveaFlow home page
+            </a>
+          )
+        }
+        <a href="/guide/" class={editorialLink}> Read the FoveaFlow guide </a>
+      </p>
+    </section>
+  </main>
+</noscript>

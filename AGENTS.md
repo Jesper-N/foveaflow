@@ -26,7 +26,7 @@ Browser app for vision training: visual tracking, focus, reaction speed, and per
 
 ## Gotchas
 
-- The strict CSP only exists in production builds (`scripts/apply-csp.ts`), so a new third-party script, font, image host, or API works in dev and breaks in prod. Ask before adding one.
+- The strict CSP lives in `public/_headers` and only applies to production builds, where `scripts/apply-csp.ts` adds the inline script hashes. So a new third-party script, font, image host, or API works in dev and breaks in prod. Ask before adding one.
 - Use named radii (`rounded-md`, `rounded-lg`). `bun run tailwind:diagnostics` maps arbitrary `rounded-[…]` values to the wrong named radius in this theme.
 - If controls do nothing in dev and the console shows `504 Outdated Optimize Dep`, the Vite dependency cache is stale. Stop the server, delete `node_modules/.vite`, restart, and hard-reload.
 

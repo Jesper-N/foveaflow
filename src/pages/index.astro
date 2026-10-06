@@ -1,125 +1,26 @@
 ---
-import "../styles/global.css";
-import NoscriptFallback from "../lib/components/noscript-fallback.astro";
-import SeoHead from "../lib/components/seo-head.astro";
-import TrainerApp from "../lib/components/trainer-app.svelte";
-import { siteMetadata } from "../lib/content/site";
-import { buildStructuredData, getSiteOrigin } from "../lib/seo";
+import AgentTools from "$lib/components/site/agent-tools.astro";
+import NoscriptFallback from "$lib/components/site/noscript-fallback.astro";
+import TrainerApp from "$lib/components/trainer/trainer-app.svelte";
+import { siteMetadata } from "$lib/content/site";
+import { getSiteOrigin } from "$lib/seo/site-url";
+import { homeStructuredData } from "$lib/seo/structured-data";
 
-const siteOrigin = getSiteOrigin(Astro.site);
-const structuredData = buildStructuredData(siteOrigin);
+import BaseLayout from "../layouts/base-layout.astro";
 ---
 
-<html lang="en">
-  <head>
-    <SeoHead
-      title={siteMetadata.title}
-      description={siteMetadata.description}
-      canonicalPath="/"
-      ogDescription="A free browser-based eye trainer with Smooth Pursuit, Reaction Jumps, Multiple Distractions, and Lilac Chaser. No account or install."
-      twitterDescription="Train visual tracking, quick refocus, peripheral awareness, and focus under distraction in your browser."
-      {structuredData}
-    />
-  </head>
-  <body>
-    <script is:inline>
-      (() => {
-        const modelContext = document.modelContext ?? navigator.modelContext;
-
-        if (!modelContext?.registerTool) {
-          return;
-        }
-
-        const drillRoutes = {
-          guide: "/guide/",
-          "lilac-chaser": "/lilac-chaser/",
-          "multiple-distractions": "/multiple-distractions/",
-          "reaction-jumps": "/reaction-jumps/",
-          "smooth-pursuit": "/smooth-pursuit/",
-        };
-
-        const registerTool = (tool) => {
-          try {
-            modelContext.registerTool(tool);
-          } catch (error) {
-            if (
-              error instanceof DOMException &&
-              error.name === "InvalidStateError"
-            ) {
-              return;
-            }
-
-            throw error;
-          }
-        };
-
-        registerTool({
-          description:
-            "Open a FoveaFlow drill or guide route in the current browser tab.",
-          execute: ({ route }) => {
-            const path = drillRoutes[route] ?? "/";
-            const url = new URL(path, window.location.origin).toString();
-            window.location.assign(url);
-
-            return {
-              content: [
-                {
-                  text: `Opening ${url}`,
-                  type: "text",
-                },
-              ],
-            };
-          },
-          inputSchema: {
-            additionalProperties: false,
-            properties: {
-              route: {
-                description: "The FoveaFlow route to open.",
-                enum: Object.keys(drillRoutes),
-                type: "string",
-              },
-            },
-            required: ["route"],
-            type: "object",
-          },
-          name: "open_foveaflow_route",
-          title: "Open FoveaFlow Route",
-        });
-
-        registerTool({
-          description:
-            "Return public FoveaFlow discovery, documentation, and safety resources.",
-          execute: () => ({
-            content: [
-              {
-                json: {
-                  app: new URL("/", window.location.origin).toString(),
-                  guide: new URL("/guide/", window.location.origin).toString(),
-                  llms: new URL("/llms.txt", window.location.origin).toString(),
-                  note: "FoveaFlow is practice software, not medical advice, diagnosis, treatment, vision therapy, or a medical device.",
-                  sitemap: new URL(
-                    "/sitemap.xml",
-                    window.location.origin,
-                  ).toString(),
-                },
-                type: "json",
-              },
-            ],
-          }),
-          inputSchema: {
-            additionalProperties: false,
-            properties: {},
-            type: "object",
-          },
-          name: "get_foveaflow_resources",
-          title: "Get FoveaFlow Resources",
-        });
-      })();
-    </script>
-    <TrainerApp client:load />
-    <NoscriptFallback
-      heading={siteMetadata.name}
-      description={siteMetadata.shortDescription}
-    />
-  </body>
-</html>
+<BaseLayout
+  title={siteMetadata.title}
+  description={siteMetadata.description}
+  canonicalPath="/"
+  ogDescription={siteMetadata.ogDescription}
+  twitterDescription={siteMetadata.twitterDescription}
+  structuredData={homeStructuredData(getSiteOrigin(Astro.site))}
+>
+  <AgentTools />
+  <TrainerApp client:load />
+  <NoscriptFallback
+    heading={siteMetadata.name}
+    description={siteMetadata.shortDescription}
+  />
+</BaseLayout>

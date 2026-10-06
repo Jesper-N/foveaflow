@@ -1,70 +1,63 @@
-import {
-  defaultLocale,
-  getLanguageOption,
-  getResolvedLocale,
-  setResolvedLocale,
-} from "$lib/i18n/locales";
-import type { AppLocale } from "$lib/i18n/locales";
-import { loadDictionary } from "$lib/i18n/translate";
+import { loadDictionary } from "./load-dictionary";
+import { defaultLocale, getResolvedLocale, setResolvedLocale } from "./locales";
+import type { AppLocale } from "./locales";
 
+/** The page language. Shared by every island, so changing it updates them all. */
 class LanguageState {
   locale = $state<AppLocale>(defaultLocale);
+  /** False until the visitor's language is resolved and loaded. */
   ready = $state(false);
-  private initPromise: Promise<void> | null = null;
-  private requestId = 0;
+  #initPromise: Promise<void> | null = null;
+  #latestRequest = 0;
 
+  /** Resolves the visitor's language once. Safe to call from every component. */
   init() {
-    this.initPromise ??= this.initialize();
-    return this.initPromise;
+    this.#initPromise ??= this.#initialize();
+    return this.#initPromise;
   }
 
   set(locale: AppLocale) {
-    void this.apply(locale, true);
+    void this.#apply(locale, true);
   }
 
-  private async apply(locale: AppLocale, persist: boolean) {
-    this.requestId += 1;
-    const { requestId } = this;
+  async #initialize() {
+    await this.#apply(await getResolvedLocale(), false);
+  }
+
+  async #apply(locale: AppLocale, persist: boolean) {
+    // A slow download must not override a language picked after it.
+    this.#latestRequest += 1;
+    const request = this.#latestRequest;
 
     try {
       await loadDictionary(locale);
     } catch {
-      if (requestId === this.requestId) {
-        this.locale = defaultLocale;
-        this.ready = true;
-        this.syncDocument();
+      if (request === this.#latestRequest) {
+        this.#show(defaultLocale);
       }
       return;
     }
-
-    if (requestId !== this.requestId) {
+    if (request !== this.#latestRequest) {
       return;
     }
 
-    this.locale = locale;
-    this.ready = true;
-    this.syncDocument();
-
+    this.#show(locale);
     if (persist) {
       await setResolvedLocale(locale);
     }
   }
 
-  private async initialize() {
-    const locale = await getResolvedLocale();
-    await this.apply(locale, false);
-  }
+  #show(locale: AppLocale) {
+    this.locale = locale;
+    this.ready = true;
 
-  private syncDocument() {
-    const browserDocument = globalThis.document;
-    if (!browserDocument) {
+    const root = globalThis.document?.documentElement;
+    if (!root) {
       return;
     }
-
-    const option = getLanguageOption(this.locale);
-    browserDocument.documentElement.lang = option.locale;
-    browserDocument.documentElement.dir = option.direction;
-    delete browserDocument.documentElement.dataset.i18nPending;
+    root.lang = locale;
+    // Reveals the page that the boot script hid while the language loaded.
+    delete root.dataset.i18nPending;
   }
 }
 

@@ -1,107 +1,84 @@
-import path from "node:path";
-import { pathToFileURL } from "node:url";
-
+// Times the motion engine without a browser. Run it on two checkouts to
+// compare: `bun scripts/benchmark-engine.ts`. Checksums must match between
+// runs when a change should not move any target.
+import { FrameSampler } from "../src/lib/trainer/canvas/frame-sampler";
+import { integrateSpeedProfile } from "../src/lib/trainer/engine/profiles";
+import { createRng } from "../src/lib/trainer/engine/random";
+import type { PatternId } from "../src/lib/trainer/engine/types";
 import {
-  firstPreset,
-  patternOptions,
-  settingsFromPreset,
-} from "../src/lib/engine/presets";
-import { integrateSpeedProfile } from "../src/lib/engine/profiles";
-import type * as ProfilesModule from "../src/lib/engine/profiles";
-import { createRng } from "../src/lib/engine/random";
-import type * as RandomModule from "../src/lib/engine/random";
-import {
-  behaviorOptions,
-  createBehaviorProfiles,
-} from "../src/lib/trainer/behavior";
-import { createTrainerFrameSampler } from "../src/lib/trainer/frame-sampler";
-import type * as SamplerModule from "../src/lib/trainer/frame-sampler";
+  behaviors,
+  profilesForBehavior,
+} from "../src/lib/trainer/settings/behaviors";
+import { getDrill } from "../src/lib/trainer/settings/drills";
+import { pursuitPatterns } from "../src/lib/trainer/settings/patterns";
+import { createDefaultSettings } from "../src/lib/trainer/settings/settings";
 
-const [referenceDirectory] = process.argv.slice(2);
-const samplerModule: typeof SamplerModule = referenceDirectory
-  ? await import(
-      pathToFileURL(
-        path.resolve(referenceDirectory, "trainer/frame-sampler.js")
-      ).href
-    )
-  : { createTrainerFrameSampler };
-const profilesModule: Pick<typeof ProfilesModule, "integrateSpeedProfile"> =
-  referenceDirectory
-    ? await import(
-        pathToFileURL(path.resolve(referenceDirectory, "engine/profiles.js"))
-          .href
-      )
-    : { integrateSpeedProfile };
-const integrate = profilesModule.integrateSpeedProfile;
-const randomModule: Pick<typeof RandomModule, "createRng"> = referenceDirectory
-  ? await import(
-      pathToFileURL(path.resolve(referenceDirectory, "engine/random.js")).href
-    )
-  : { createRng };
+const SAMPLE_COUNT = 100_000;
+const ROUNDS = 5;
+const SEED = 12_345;
 
-const sampleCount = 100_000;
 const median = (values: number[]) =>
   values.toSorted((a, b) => a - b)[Math.floor(values.length / 2)];
 
-const patterns = [
-  ...patternOptions,
-  { id: "teleport", name: "Reaction Jumps" },
-] as const;
-const patternResults = patterns.map(({ id }) => {
+const time = (run: () => number) => {
   const times: number[] = [];
   let checksum = 0;
-  for (let round = 0; round < 5; round += 1) {
-    const sampler = samplerModule.createTrainerFrameSampler();
-    const settings = settingsFromPreset(firstPreset, {
-      distractorCount: 10,
-      patternId: id,
-      targetCount: 6,
-    });
-    const input: SamplerModule.TrainerFrameInput = {
-      arena: { height: 1080, width: 1920 },
-      distractorColor: "#339999",
-      elapsedSec: 0,
-      pathMarginPx: 16,
-      rng: randomModule.createRng(12_345),
-      safeBallColor: "#76d900",
-      seed: 12_345,
-      settings,
-      travelPx: 0,
-    };
+  for (let round = 0; round < ROUNDS; round += 1) {
     const start = performance.now();
-    for (let index = 0; index < sampleCount; index += 1) {
-      input.elapsedSec = index / 120;
-      input.travelPx = index * 3;
-      const sample = sampler.sample(input);
+    checksum += run();
+    times.push(performance.now() - start);
+  }
+  return { checksum, milliseconds: median(times), samples: SAMPLE_COUNT };
+};
+
+const patterns: { drillId: string; patternId: PatternId }[] = [
+  ...pursuitPatterns.map(({ id }) => ({ drillId: "pursuit", patternId: id })),
+  { drillId: "reactionTime", patternId: "teleport" },
+  { drillId: "mot", patternId: "multipleObjectTracking" },
+];
+
+const patternResults = patterns.map(({ drillId, patternId }) => {
+  const settings = {
+    ...createDefaultSettings(getDrill(drillId)),
+    distractorCount: 10,
+    patternId,
+    targetCount: 6,
+  };
+  const arena = { height: 1080, width: 1920 };
+  const result = time(() => {
+    const sampler = new FrameSampler();
+    const rng = createRng(SEED);
+    let checksum = 0;
+    for (let index = 0; index < SAMPLE_COUNT; index += 1) {
+      const sample = sampler.sample(
+        settings,
+        arena,
+        index / 120,
+        index * 3,
+        rng
+      );
       checksum += sample.frames[0].x + sample.frames[sample.count - 1].y;
     }
-    times.push(performance.now() - start);
-  }
-  return {
-    checksum,
-    milliseconds: median(times),
-    pattern: id,
-    samples: sampleCount,
-  };
+    return checksum;
+  });
+  return { pattern: patternId, ...result };
 });
 
-const profileResults = behaviorOptions.map(({ id }) => {
-  const { speedProfile } = createBehaviorProfiles(id);
-  const times: number[] = [];
-  let checksum = 0;
-  for (let round = 0; round < 5; round += 1) {
-    const start = performance.now();
-    for (let index = 0; index < sampleCount; index += 1) {
-      checksum += integrate(speedProfile, index / 120, (index + 1) / 120, 360);
+const profileResults = behaviors.map(({ id }) => {
+  const { speedProfile } = profilesForBehavior(id);
+  const result = time(() => {
+    let checksum = 0;
+    for (let index = 0; index < SAMPLE_COUNT; index += 1) {
+      checksum += integrateSpeedProfile(
+        speedProfile,
+        index / 120,
+        (index + 1) / 120,
+        360
+      );
     }
-    times.push(performance.now() - start);
-  }
-  return {
-    behavior: id,
-    checksum,
-    milliseconds: median(times),
-    samples: sampleCount,
-  };
+    return checksum;
+  });
+  return { behavior: id, ...result };
 });
 
 process.stdout.write(

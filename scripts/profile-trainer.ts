@@ -1,8 +1,11 @@
+// Measures the trainer's script size and main-thread cost on a running build.
+// Start one with `bun run preview`, then run:
+//   bun scripts/profile-trainer.ts [baseUrl] [route]
 import { setTimeout as delay } from "node:timers/promises";
 
 import { chromium } from "@playwright/test";
 
-const [baseUrl = "http://127.0.0.1:4323", route = "/smooth-pursuit/"] =
+const [baseUrl = "http://127.0.0.1:8787", route = "/smooth-pursuit/"] =
   process.argv.slice(2);
 
 const browser = await chromium.launch();
