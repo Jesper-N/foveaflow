@@ -2,7 +2,7 @@
 
 /** Width and column changes. Add a `transition-[…]` utility for the property. */
 export const islandLayoutMotion =
-  "duration-280 ease-[cubic-bezier(0.215,0.61,0.355,1)] motion-reduce:transition-none";
+  "duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none";
 
 /** Fades content in after its space opens and out before its space closes. Toggle with `data-visible`. */
 export const islandPresenceMotion =
