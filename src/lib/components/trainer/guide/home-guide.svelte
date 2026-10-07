@@ -1,6 +1,6 @@
 <script lang="ts">
   import DrillIllustration from "$lib/components/drills/drill-illustration.svelte";
-  import { drillCard } from "$lib/components/site/styles";
+  import { drillCard, editorialSubheading } from "$lib/components/site/styles";
   import { drillGuides } from "$lib/content/drill-guides";
   import { mainRouteForDrill } from "$lib/content/drill-routes";
   import { homeCopy } from "$lib/content/home";
@@ -14,9 +14,9 @@
 
 <GuideHeader title={t(homeCopy.heading)} lede={t(homeCopy.hero)} />
 
-<div class="grid gap-10 px-6 py-7 sm:px-8">
+<div class="grid gap-6 px-6 py-7 sm:px-8">
   <section
-    class="guide-enter grid gap-4 [animation-delay:40ms]"
+    class="guide-enter grid gap-2 [animation-delay:40ms]"
     aria-labelledby="trainer-guide-drills"
   >
     <h3 id="trainer-guide-drills" class={guideSectionHeading}>
@@ -35,11 +35,11 @@
             <span class="px-2 py-1.5">
               <DrillIllustration drillId={guide.drillId} />
             </span>
-            <span class="grid gap-1">
-              <span class="text-foreground leading-5 font-semibold">
+            <span class="grid gap-2">
+              <span class={editorialSubheading}>
                 {t(guide.title)}
               </span>
-              <span class="text-muted-foreground leading-5 text-pretty">
+              <span class="text-muted-foreground text-caption text-pretty">
                 {t(guide.summary)}
               </span>
             </span>
@@ -50,7 +50,7 @@
   </section>
 
   <section
-    class="guide-enter grid gap-3 [animation-delay:80ms]"
+    class="guide-enter grid gap-2 [animation-delay:80ms]"
     aria-labelledby="trainer-guide-overview"
   >
     <h3 id="trainer-guide-overview" class={guideSectionHeading}>

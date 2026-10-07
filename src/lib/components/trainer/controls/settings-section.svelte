@@ -16,7 +16,7 @@
 </script>
 
 <Field.FieldSet
-  class="[&>legend]:text-muted-foreground min-w-0 gap-0 [&+fieldset]:mt-8 [&>legend]:float-left [&>legend]:mb-1 [&>legend]:w-full"
+  class="min-w-0 gap-0 [&+fieldset]:mt-5 [&>legend]:float-left [&>legend]:mb-1 [&>legend]:w-full"
   aria-label={label}
 >
   {#if legend}

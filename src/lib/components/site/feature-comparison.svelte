@@ -2,7 +2,6 @@
   import type { Article } from "$lib/content/articles";
   import { siteMetadata } from "$lib/content/site";
   import { formatDate, t } from "$lib/i18n/translate";
-  import { cn } from "$lib/utils";
   import ArrowUpRightIcon from "@lucide/svelte/icons/arrow-up-right";
 
   import { editorialHeading, editorialLink, panelSurface } from "./styles";
@@ -17,13 +16,15 @@
   } = $props();
 </script>
 
-<section class="pt-12 sm:pt-16" aria-labelledby="feature-comparison">
-  <h2 id="feature-comparison" class={[editorialHeading, "mb-6"]}>
+<section class="pt-6" aria-labelledby="feature-comparison">
+  <h2 id="feature-comparison" class={editorialHeading}>
     {t("Feature comparison")}
   </h2>
   <!-- A table on wide screens. On phones each row stacks into a card. -->
-  <div class="ring-border/70 overflow-hidden rounded-2xl ring-1">
-    <table class="block w-full border-collapse text-left text-sm sm:table">
+  <div class="ring-border/70 mt-2 overflow-hidden rounded-2xl ring-1">
+    <table
+      class="block w-full border-collapse text-left text-pretty tabular-nums sm:table"
+    >
       <caption class="sr-only">
         {siteMetadata.name} / {comparison.alternative}: {t(
           "Feature comparison"
@@ -31,15 +32,12 @@
       </caption>
       <thead class="sr-only sm:not-sr-only sm:table-header-group">
         <tr class="border-border border-b">
-          <th scope="col" class="w-1/4 px-5 py-5 font-medium">
+          <th scope="col" class="w-1/4 px-5 py-5 font-semibold">
             {t("Feature")}
           </th>
           <th
             scope="col"
-            class={[
-              panelSurface,
-              "w-[37.5%] px-5 py-5 text-base font-semibold",
-            ]}
+            class={[panelSurface, "w-[37.5%] px-5 py-5 font-semibold"]}
           >
             <span class="flex items-center gap-2">
               <img
@@ -52,7 +50,7 @@
               {siteMetadata.name}
             </span>
           </th>
-          <th scope="col" class="w-[37.5%] px-5 py-5 text-base font-medium">
+          <th scope="col" class="w-[37.5%] px-5 py-5 font-semibold">
             {comparison.alternative}
           </th>
         </tr>
@@ -62,28 +60,23 @@
           <tr class="grid grid-cols-2 sm:table-row">
             <th
               scope="row"
-              class="bg-muted/30 col-span-2 px-4 pt-4 pb-2 font-medium sm:bg-transparent sm:px-5 sm:py-5 sm:align-top"
+              class="bg-muted/30 col-span-2 px-4 pt-4 pb-2 font-semibold sm:bg-transparent sm:px-5 sm:py-5 sm:align-top"
             >
               {t(row.feature)}
             </th>
-            <td
-              class={[
-                panelSurface,
-                "px-4 py-4 align-top leading-6 sm:px-5 sm:py-5",
-              ]}
-            >
+            <td class={[panelSurface, "px-4 py-4 align-top sm:px-5 sm:py-5"]}>
               <span
-                class="text-brand-foreground mb-2 block text-xs font-semibold sm:hidden"
+                class="text-muted-foreground text-caption mb-1 block sm:hidden"
               >
                 {siteMetadata.name}
               </span>
               {t(row.foveaflow)}
             </td>
             <td
-              class="text-muted-foreground px-4 py-4 align-top leading-6 sm:px-5 sm:py-5"
+              class="text-muted-foreground px-4 py-4 align-top sm:px-5 sm:py-5"
             >
               <span
-                class="text-foreground mb-2 block text-xs font-medium sm:hidden"
+                class="text-muted-foreground text-caption mb-1 block sm:hidden"
               >
                 {comparison.alternative}
               </span>
@@ -95,7 +88,7 @@
     </table>
   </div>
   <div
-    class="text-muted-foreground mt-5 flex flex-wrap items-baseline gap-x-4 gap-y-2 text-xs leading-5"
+    class="text-muted-foreground text-caption mt-2 flex flex-wrap items-baseline gap-x-4 gap-y-2"
   >
     <p>
       {t("Checked against the public browser interface on")}
@@ -104,7 +97,7 @@
       )}
     </p>
     <a
-      class={cn(editorialLink, "text-xs")}
+      class={editorialLink}
       href={comparison.source.href}
       target="_blank"
       rel="noopener noreferrer"

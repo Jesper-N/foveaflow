@@ -15,7 +15,12 @@
   import ReadingLayout from "./reading-layout.svelte";
   import SiteShell from "./site-shell.svelte";
   import StepList from "./step-list.svelte";
-  import { drillCard, editorialCopy, heroButton } from "./styles";
+  import {
+    drillCard,
+    editorialCopy,
+    editorialSubheading,
+    heroButton,
+  } from "./styles";
 
   let { page }: { page: Article } = $props();
 
@@ -38,7 +43,7 @@
         class={[drillCard, "flex flex-col items-center gap-3 px-4 py-5"]}
       >
         <DrillIllustration drillId={guide.drillId} class="max-w-40" />
-        <span class="text-sm font-semibold">{t(guide.title)}</span>
+        <span class={editorialSubheading}>{t(guide.title)}</span>
       </a>
     {/each}
   </nav>
@@ -90,20 +95,20 @@
         heading={t(section.heading)}
       >
         {#if section.body}
-          <div class={[editorialCopy, "mt-4 flex flex-col gap-4"]}>
+          <div class={[editorialCopy, "mt-2 flex flex-col gap-3"]}>
             {#each section.body as paragraph (paragraph)}
               <p>{t(paragraph)}</p>
             {/each}
           </div>
         {/if}
         {#if section.orderedList}
-          <StepList steps={section.orderedList} class="mt-6" />
+          <StepList steps={section.orderedList} class="mt-3" />
         {/if}
         {#if section.list}
-          <ul class="mt-6 grid gap-4">
+          <ul class="mt-3 grid gap-1">
             {#each section.list as item (item)}
               <li class="flex gap-3">
-                <CheckIcon class="text-foreground mt-1.5 size-4 shrink-0" />
+                <CheckIcon class="text-foreground mt-0.5 size-4 shrink-0" />
                 <p class={editorialCopy}>{t(item)}</p>
               </li>
             {/each}

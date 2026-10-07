@@ -1,8 +1,9 @@
 <script lang="ts" module>
-	import { tv, type VariantProps } from "tailwind-variants";
+	import type { VariantProps } from "tailwind-variants";
+	import { tv } from "$lib/utils.js";
 
 	export const itemVariants = tv({
-		base: "rounded-2xl border text-sm [a]:hover:bg-muted group/item flex w-full flex-wrap items-center transition-colors duration-100 outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 [a]:transition-colors",
+		base: "rounded-2xl border text-body [a]:hover:bg-muted group/item flex w-full flex-wrap items-center transition-colors duration-100 outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 [a]:transition-colors",
 		variants: {
 			variant: {
 				default: "border-transparent",

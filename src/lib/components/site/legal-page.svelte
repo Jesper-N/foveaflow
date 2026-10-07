@@ -34,13 +34,13 @@
         first={index === 0}
         heading={t(section.heading)}
       >
-        <div class={[editorialCopy, "mt-4 flex flex-col gap-4"]}>
+        <div class={[editorialCopy, "mt-2 flex flex-col gap-3"]}>
           {#each section.body as paragraph (paragraph)}
             <p>{t(paragraph)}</p>
           {/each}
         </div>
         {#if section.links}
-          <div class="mt-5 flex flex-wrap gap-x-6 gap-y-3">
+          <div class="mt-3 flex flex-wrap gap-x-6 gap-y-2">
             {#each section.links as link (link.url)}
               <a
                 href={link.url}

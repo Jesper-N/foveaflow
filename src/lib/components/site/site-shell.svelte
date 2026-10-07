@@ -29,7 +29,7 @@
 <div class="bg-background text-foreground selection:bg-primary/25 min-h-dvh">
   <a
     href="#content"
-    class="bg-primary text-primary-foreground fixed top-3 left-3 z-50 -translate-y-24 rounded-lg px-4 py-3 focus:translate-y-0"
+    class="bg-primary text-primary-foreground text-trim fixed top-3 left-3 z-50 -translate-y-24 rounded-lg px-4 py-3 focus:translate-y-0"
   >
     {t("Skip to content")}
   </a>
@@ -41,7 +41,7 @@
       <a
         href="/"
         aria-label={t("Open FoveaFlow")}
-        class="focus-visible:outline-ring flex shrink-0 items-center gap-2.5 rounded-sm text-xl font-semibold focus-visible:outline-2 focus-visible:outline-offset-4"
+        class="focus-visible:outline-ring text-title flex shrink-0 items-center gap-2.5 rounded-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-4"
       >
         <img
           src="/logo-render/logo.svg"
@@ -106,11 +106,11 @@
       <div class="flex flex-col gap-2">
         <a
           href="/"
-          class="focus-visible:outline-ring self-start rounded-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-4"
+          class="focus-visible:outline-ring text-subtitle self-start rounded-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-4"
         >
           {siteMetadata.name}
         </a>
-        <p class="text-muted-foreground text-sm">
+        <p class="text-muted-foreground text-caption">
           {t("FoveaFlow is free. No account, no paid plan.")}
         </p>
       </div>

@@ -1,10 +1,22 @@
 import { clsx } from "clsx";
 import type { ClassValue } from "clsx";
-import { cn as mergeClasses } from "tailwind-variants";
+import { cnMerge, createTV } from "tailwind-variants";
+
+// tailwind-merge reads unknown `text-*` classes as colors, so it would drop
+// `text-body` or `text-trim` next to `text-muted-foreground`.
+const twMergeConfig = {
+  extend: {
+    classGroups: { "text-trim": ["text-trim"] },
+    theme: { text: ["display", "title", "subtitle", "body", "caption"] },
+  },
+};
 
 // tailwind-variants ships its own copy of tailwind-merge for `tv`, so reuse
 // it here instead of bundling a second one. It returns null for no classes.
-export const cn = (...inputs: ClassValue[]) => mergeClasses(clsx(inputs)) ?? "";
+export const cn = (...inputs: ClassValue[]) =>
+  cnMerge(clsx(inputs))({ twMergeConfig }) ?? "";
+
+export const tv = createTV({ twMergeConfig });
 
 export type WithoutChild<T> = T extends { child?: unknown }
   ? Omit<T, "child">

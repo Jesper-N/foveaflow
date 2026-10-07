@@ -11,7 +11,7 @@
   import PageHero from "./page-hero.svelte";
   import ReadingLayout from "./reading-layout.svelte";
   import SiteShell from "./site-shell.svelte";
-  import { drillCard, heroButton } from "./styles";
+  import { drillCard, editorialSubheading, heroButton } from "./styles";
 
   // Each id matches a section in this page or in the two section components.
   const contents = [
@@ -60,16 +60,19 @@
               drillId={guide.drillId}
               class="sm:mx-auto sm:mb-4 sm:max-w-44"
             />
-            <span class="grid gap-1.5">
+            <span class="grid gap-2">
               <span
-                class="flex items-center justify-between gap-2 font-semibold wrap-anywhere"
+                class={[
+                  editorialSubheading,
+                  "flex items-center justify-between gap-2 wrap-anywhere",
+                ]}
               >
                 {t(guide.title)}
                 <ArrowDownIcon
                   class="text-muted-foreground group-hover:text-brand-foreground size-3.5 shrink-0 transition-colors motion-reduce:transition-none"
                 />
               </span>
-              <span class="text-muted-foreground text-sm leading-6 text-pretty">
+              <span class="text-muted-foreground text-caption text-pretty">
                 {t(guide.summary)}
               </span>
             </span>

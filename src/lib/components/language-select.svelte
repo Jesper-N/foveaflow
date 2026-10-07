@@ -106,8 +106,12 @@
           {@render languageTrigger(props)}
         {/snippet}
       </Tooltip.Trigger>
-      <Tooltip.Content side="bottom" sideOffset={6} class={contentClass}>
-        {t("Language")}
+      <Tooltip.Content
+        side="bottom"
+        sideOffset={6}
+        class={cn("supports-[text-box:trim-both]:py-2", contentClass)}
+      >
+        <span class="text-trim">{t("Language")}</span>
       </Tooltip.Content>
     </Tooltip.Root>
   {:else}

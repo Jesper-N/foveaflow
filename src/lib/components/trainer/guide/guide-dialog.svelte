@@ -1,12 +1,11 @@
 <script lang="ts">
-  import { textLink } from "$lib/components/site/styles";
+  import { heroButton, textLink } from "$lib/components/site/styles";
   import { Button } from "$lib/components/ui/button";
   import { legalPageLinks } from "$lib/content/legal";
   import { siteMetadata } from "$lib/content/site";
   import { formatDate, t } from "$lib/i18n/translate";
   import { cn } from "$lib/utils";
   import ArrowUpRightIcon from "@lucide/svelte/icons/arrow-up-right";
-  import BookOpenIcon from "@lucide/svelte/icons/book-open";
   import XIcon from "@lucide/svelte/icons/x";
   import type { Attachment } from "svelte/attachments";
 
@@ -18,7 +17,7 @@
 
   const footerLink = cn(
     textLink,
-    "inline-flex min-h-6 items-center gap-1 text-xs"
+    "text-caption inline-flex min-h-6 items-center gap-1"
   );
 
   // A native modal dialog: it traps focus, closes on Escape, and returns focus
@@ -53,7 +52,7 @@
 {#snippet pageMeta(className: string)}
   <div
     class={[
-      "text-muted-foreground flex-wrap items-center gap-x-4 gap-y-1 text-xs",
+      "text-muted-foreground text-caption flex-wrap items-center gap-x-4 gap-y-1",
       className,
     ]}
   >
@@ -84,7 +83,7 @@
   {@attach showWhenOpened}
   {@attach closeOnBackdropClick}
   id="trainer-guide"
-  class="bg-popover text-popover-foreground ring-foreground/5 dark:ring-foreground/10 m-auto max-h-[calc(100dvh-2rem)] w-[min(calc(100dvw-2rem),56rem)] max-w-[calc(100dvw-2rem)] flex-col overflow-hidden rounded-4xl text-sm shadow-xl ring-1 outline-hidden backdrop:animate-[guide-backdrop-enter_150ms_ease-out] backdrop:bg-black/30 backdrop:backdrop-blur-sm open:flex open:animate-[guide-dialog-enter_150ms_cubic-bezier(0.23,1,0.32,1)] motion-reduce:backdrop:animate-none motion-reduce:open:animate-none"
+  class="bg-popover text-popover-foreground ring-foreground/5 dark:ring-foreground/10 m-auto max-h-[calc(100dvh-2rem)] w-[min(calc(100dvw-2rem),56rem)] max-w-[calc(100dvw-2rem)] flex-col overflow-hidden rounded-4xl shadow-xl ring-1 outline-hidden backdrop:animate-[guide-backdrop-enter_150ms_ease-out] backdrop:bg-black/30 backdrop:backdrop-blur-sm open:flex open:animate-[guide-dialog-enter_150ms_cubic-bezier(0.23,1,0.32,1)] motion-reduce:backdrop:animate-none motion-reduce:open:animate-none"
   aria-labelledby="trainer-guide-title"
   onclose={() => (trainer.guideOpen = false)}
 >
@@ -121,10 +120,10 @@
     <Button
       href="/guide/"
       size="lg"
-      class="h-auto min-h-12 flex-1 gap-2 px-6 text-base whitespace-normal sm:flex-none"
+      class={[heroButton, "flex-1 sm:flex-none"]}
     >
-      <BookOpenIcon data-icon="inline-start" />
       {t("Read full guide")}
+      <ArrowUpRightIcon data-icon="inline-end" />
     </Button>
   </footer>
 </dialog>

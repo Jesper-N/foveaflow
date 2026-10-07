@@ -8,7 +8,12 @@
 
   import PageCta from "./page-cta.svelte";
   import PageSection from "./page-section.svelte";
-  import { editorialCopy, iconBadge, panelSurface } from "./styles";
+  import {
+    editorialCopy,
+    editorialSubheading,
+    iconBadge,
+    panelSurface,
+  } from "./styles";
 </script>
 
 <PageSection
@@ -18,13 +23,13 @@
     "Change speed and target size first. They usually have the biggest effect on difficulty and control."
   )}
 >
-  <div class={[panelSurface, "mt-6 flex items-start gap-4 rounded-2xl p-5"]}>
+  <div class={[panelSurface, "mt-3 flex items-start gap-4 rounded-2xl p-5"]}>
     <span class={[iconBadge, "size-10"]} aria-hidden="true">
       <SlidersHorizontalIcon class="size-4" />
     </span>
-    <div class="grid gap-1">
-      <h3 class="font-semibold">{t("Motion and target")}</h3>
-      <p class="text-muted-foreground text-sm leading-6 text-pretty">
+    <div class="grid gap-2">
+      <h3 class={editorialSubheading}>{t("Motion and target")}</h3>
+      <p class="text-muted-foreground">
         {t(
           "Speed, size, shape, color, opacity, and trail change the feel of the moving drills. Lilac Chaser has its own ball color and scale controls."
         )}
@@ -35,7 +40,7 @@
 
 <PageSection id="more-guides" heading={t("More guides")}>
   <!-- Dividers live on the wrappers so the rounded focus outline can't bend them. -->
-  <div class="divide-border mt-6 divide-y">
+  <div class="divide-border mt-2 divide-y">
     {#each articles as article (article.slug)}
       <div class="py-6 first:pt-0 last:pb-0">
         <a
@@ -43,12 +48,10 @@
           class="group focus-visible:outline-ring flex items-start gap-5 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4"
         >
           <div class="flex-1">
-            <h3
-              class="group-hover:text-brand-foreground mb-2 font-semibold transition-colors motion-reduce:transition-none"
-            >
+            <h3 class={editorialSubheading}>
               {t(article.heading)}
             </h3>
-            <p class="text-muted-foreground text-sm leading-6">
+            <p class="text-muted-foreground text-caption mt-2">
               {t(article.description)}
             </p>
           </div>
@@ -64,18 +67,18 @@
 </PageSection>
 
 <PageSection id="faq" heading={t("Guide FAQ")} data-nosnippet>
-  <div class="divide-border mt-6 divide-y">
+  <div class="divide-border mt-2 divide-y">
     {#each guideFaq as item (item.question)}
-      <details class="group py-5 first:pt-0 last:pb-0 open:pb-6">
+      <details class="group py-3 first:pt-0 last:pb-0 open:pb-6">
         <summary
-          class="focus-visible:outline-ring flex min-h-11 cursor-pointer list-none items-center justify-between gap-6 rounded-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-4 [&::-webkit-details-marker]:hidden"
+          class="focus-visible:outline-ring text-subtitle flex min-h-11 cursor-pointer list-none items-center justify-between gap-6 rounded-sm font-semibold text-balance focus-visible:outline-2 focus-visible:outline-offset-4 [&::-webkit-details-marker]:hidden"
         >
           {t(item.question)}
           <PlusIcon
             class="text-muted-foreground size-4 shrink-0 transition-transform duration-200 group-open:rotate-45 motion-reduce:transition-none"
           />
         </summary>
-        <p class={[editorialCopy, "mt-4 pr-10"]}>{t(item.answer)}</p>
+        <p class={[editorialCopy, "pr-10"]}>{t(item.answer)}</p>
       </details>
     {/each}
   </div>
@@ -88,14 +91,14 @@
     "These sources explain the eye movements and visual effects behind the drills. They do not establish that FoveaFlow improves eyesight or game performance."
   )}
 >
-  <ol class="divide-border mt-6 divide-y">
+  <ol class="divide-border mt-3 divide-y">
     {#each referenceLinks as reference (reference.url)}
       <li>
         <a
           href={reference.url}
           target="_blank"
           rel="noopener noreferrer"
-          class="hover:text-brand-foreground focus-visible:outline-ring flex items-baseline gap-4 rounded-sm py-4 text-sm leading-6 transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 motion-reduce:transition-none"
+          class="text-muted-foreground hover:text-foreground focus-visible:outline-ring flex items-baseline gap-4 rounded-sm py-3 transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 motion-reduce:transition-none"
         >
           <span class="flex-1">{t(reference.label)}</span>
           <ArrowUpRightIcon class="size-3.5 shrink-0 self-center" />

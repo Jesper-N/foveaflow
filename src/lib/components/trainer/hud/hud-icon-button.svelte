@@ -37,7 +37,11 @@
   >
     {@render children()}
   </Tooltip.Trigger>
-  <Tooltip.Content side="bottom" sideOffset={6} class="dark">
-    {tooltip}
+  <Tooltip.Content
+    side="bottom"
+    sideOffset={6}
+    class="dark supports-[text-box:trim-both]:py-2"
+  >
+    <span class="text-trim">{tooltip}</span>
   </Tooltip.Content>
 </Tooltip.Root>
