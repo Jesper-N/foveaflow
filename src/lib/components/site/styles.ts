@@ -1,21 +1,19 @@
 // Class groups shared by the content pages and the trainer guide.
 
 export const editorialTitle =
-  "text-4xl leading-[1.08] font-semibold tracking-tight text-balance wrap-anywhere hyphens-auto sm:text-5xl";
+  "text-display font-bold wrap-anywhere hyphens-auto";
 export const editorialHeading =
-  "text-2xl leading-tight font-semibold tracking-tight wrap-anywhere hyphens-auto sm:text-3xl";
-export const editorialLede =
-  "text-muted-foreground max-w-2xl text-base leading-7 text-pretty sm:text-lg sm:leading-8";
-export const editorialCopy =
-  "text-muted-foreground max-w-2xl text-base leading-7";
+  "text-title font-semibold wrap-anywhere hyphens-auto";
+export const editorialSubheading = "text-subtitle font-semibold text-balance";
+export const editorialCopy = "text-muted-foreground max-w-2xl";
 
 /** Quiet navigation link, as in a footer. The current page reads as foreground. */
 export const textLink =
-  "text-muted-foreground hover:text-foreground aria-[current=page]:text-foreground focus-visible:outline-ring rounded-sm text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 motion-reduce:transition-none";
+  "text-muted-foreground hover:text-foreground aria-[current=page]:text-foreground aria-[current=page]:font-semibold focus-visible:outline-ring rounded-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 motion-reduce:transition-none";
 
 /** Inline link inside article copy. */
 export const editorialLink =
-  "text-foreground hover:text-brand-foreground focus-visible:outline-ring inline-flex items-center gap-2 rounded-sm text-sm font-medium underline decoration-border underline-offset-4 transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 motion-reduce:transition-none";
+  "text-foreground decoration-current/35 hover:decoration-current focus-visible:outline-ring inline-flex items-center gap-2 rounded-sm underline underline-offset-[0.2em] transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 motion-reduce:transition-none";
 
 /** Size and spacing for the main action in a hero or closing panel. */
 export const heroButton = "h-11 gap-2 px-5";

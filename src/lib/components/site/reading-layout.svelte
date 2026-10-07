@@ -15,10 +15,10 @@
 
 <!-- Table of contents on the left, article on the right. -->
 <div
-  class="grid items-start gap-10 pt-12 sm:pt-16 lg:grid-cols-[12rem_minmax(0,1fr)] lg:gap-16"
+  class="grid items-start gap-6 pt-6 lg:grid-cols-[12rem_minmax(0,1fr)] lg:gap-16"
 >
   <PageToc {links} />
-  <div class="flex min-w-0 flex-col gap-12 sm:gap-16">
+  <div class="flex min-w-0 flex-col gap-6">
     {@render children()}
   </div>
 </div>

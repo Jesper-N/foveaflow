@@ -29,7 +29,7 @@
     for={id}
   >
     {@render swatch()}
-    <span class="min-w-0 truncate text-sm uppercase slashed-zero tabular-nums">
+    <span class="min-w-0 truncate slashed-zero tabular-nums">
       {value}
     </span>
     <!-- A plain input: field styles such as w-full would let it overflow the panel. -->

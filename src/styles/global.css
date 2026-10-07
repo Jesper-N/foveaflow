@@ -2,9 +2,53 @@
 @import "tw-animate-css";
 @import "shadcn-svelte/tailwind.css";
 @import "./guide-animations.css";
-@import "@fontsource-variable/inter";
+/* Inter 4.0 with its optical size axis, so each weight can carry its own. */
+@import "@fontsource-variable/inter/opsz.css";
 
 @custom-variant dark (&:is(.dark *));
+
+/*
+ * Type roles: display for page titles, title for section titles, subtitle for
+ * sub-headings and card titles, body for labels and paragraphs, caption for
+ * descriptions and meta rows. The resets remove every other size, weight, and
+ * tracking utility, so `text-sm` or `font-medium` renders nothing.
+ */
+@theme {
+  --text-*: initial;
+  --text-display: 1.75rem;
+  --text-display--line-height: 2.125rem;
+  --text-title: 1rem;
+  --text-title--line-height: 1.375rem;
+  --text-subtitle: 0.875rem;
+  --text-subtitle--line-height: 1.25rem;
+  --text-body: 0.8125rem;
+  --text-body--line-height: 1.25rem;
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1rem;
+  --font-weight-*: initial;
+  --font-weight-normal: 400;
+  --font-weight-semibold: 550;
+  --font-weight-bold: 700;
+  --tracking-*: initial;
+}
+
+/* Each weight carries its own optical size, so a label keeps its width when it turns semibold. */
+@utility font-normal {
+  font-variation-settings: "opsz" 14;
+}
+
+@utility font-semibold {
+  font-variation-settings: "opsz" 18;
+}
+
+@utility font-bold {
+  font-variation-settings: "opsz" 25;
+}
+
+/* Trims to cap height and baseline. Only works on a block container. */
+@utility text-trim {
+  text-box: trim-both cap alphabetic;
+}
 
 @theme inline {
   --font-sans: "Inter Variable", sans-serif;
@@ -146,14 +190,22 @@ html[data-i18n-pending="true"] body > * {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground text-body antialiased;
+  }
+  b,
+  strong,
+  th {
+    @apply font-semibold;
   }
   html {
     @apply font-sans;
   }
   h1,
   h2,
-  h3 {
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply text-balance;
   }
   p,

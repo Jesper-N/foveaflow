@@ -23,16 +23,11 @@
     drillId && "sm:grid-cols-[minmax(0,1fr)_13rem]",
   ]}
 >
-  <div class={["guide-enter grid gap-3 pr-12", drillId && "sm:pr-0"]}>
-    <h2
-      id="trainer-guide-title"
-      class="relative text-2xl leading-tight font-semibold tracking-tight text-balance sm:text-3xl"
-    >
+  <div class={["guide-enter grid gap-2 pr-12", drillId && "sm:pr-0"]}>
+    <h2 id="trainer-guide-title" class="text-display relative font-bold">
       {title}
     </h2>
-    <p
-      class="text-muted-foreground relative max-w-[46ch] text-base leading-7 text-pretty"
-    >
+    <p class="text-muted-foreground relative max-w-2xl">
       {lede}
     </p>
   </div>

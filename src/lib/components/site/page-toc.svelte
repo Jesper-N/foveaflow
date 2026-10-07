@@ -13,12 +13,12 @@
 {#snippet navigation()}
   <nav
     aria-label={t("On this page")}
-    class="mt-4 grid grid-cols-2 gap-x-4 gap-y-1 lg:grid-cols-1"
+    class="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 lg:grid-cols-1"
   >
     {#each links as link (link.id)}
       <a
         href={`#${link.id}`}
-        class="text-muted-foreground hover:text-foreground hover:bg-muted/60 focus-visible:outline-ring rounded-lg px-3 py-2.5 text-sm leading-5 transition-colors focus-visible:outline-2 motion-reduce:transition-none"
+        class="text-muted-foreground hover:text-foreground hover:bg-muted/60 focus-visible:outline-ring rounded-lg px-3 py-2.5 transition-colors focus-visible:outline-2 motion-reduce:transition-none"
       >
         {t(link.label)}
       </a>
@@ -29,12 +29,12 @@
 <!-- A sticky sidebar on wide screens, a collapsed list on small ones. -->
 <aside class="lg:sticky lg:top-8 lg:self-start">
   <div class="hidden lg:block">
-    <h2 class="px-3 text-sm font-semibold">{t("On this page")}</h2>
+    <h2 class="text-subtitle px-3 font-semibold">{t("On this page")}</h2>
     {@render navigation()}
   </div>
   <details class="group border-border border-b pb-4 lg:hidden">
     <summary
-      class="focus-visible:outline-ring flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 rounded-sm text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-4 [&::-webkit-details-marker]:hidden"
+      class="focus-visible:outline-ring text-subtitle flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 rounded-sm font-semibold text-balance focus-visible:outline-2 focus-visible:outline-offset-4 [&::-webkit-details-marker]:hidden"
     >
       {t("On this page")}
       <ChevronDownIcon

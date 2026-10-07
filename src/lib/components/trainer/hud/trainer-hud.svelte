@@ -77,7 +77,7 @@
       <div class="flex items-center justify-between gap-2">
         <a
           href="/"
-          class="focus-visible:border-ring focus-visible:ring-ring/30 flex h-11 min-w-11 shrink-0 items-center justify-center gap-2.5 rounded-4xl border border-transparent text-base font-semibold outline-hidden focus-visible:ring-3 min-[480px]:text-xl"
+          class="focus-visible:border-ring focus-visible:ring-ring/30 text-subtitle min-[480px]:text-title flex h-11 min-w-11 shrink-0 items-center justify-center gap-2.5 rounded-4xl border border-transparent font-semibold outline-hidden focus-visible:ring-3"
           aria-label={t("FoveaFlow home")}
         >
           <img

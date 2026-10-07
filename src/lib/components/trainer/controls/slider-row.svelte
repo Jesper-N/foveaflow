@@ -25,7 +25,7 @@
   <Field.FieldTitle>{label}</Field.FieldTitle>
   <div class="grid min-w-0 grid-cols-[minmax(0,1fr)_3rem] items-center gap-3">
     <SettingSlider {setting} label={sliderLabel} />
-    <span class="text-muted-foreground text-right text-sm tabular-nums">
+    <span class="text-muted-foreground text-right tabular-nums">
       {formatSetting(setting, trainer.settings[setting])}
     </span>
   </div>

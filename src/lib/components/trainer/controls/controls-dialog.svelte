@@ -89,7 +89,7 @@
           height="24"
           class="size-6 shrink-0 rounded-sm object-cover"
         />
-        <Dialog.Title class="text-base font-semibold">
+        <Dialog.Title>
           {t("Controls")}
         </Dialog.Title>
       </div>
@@ -100,7 +100,7 @@
         {#each sections as { id, label, icon: Icon } (id)}
           <Button
             variant={current === id ? "secondary" : "ghost"}
-            class="h-auto min-h-11 min-w-0 flex-col justify-center gap-1.5 rounded-xl px-1 py-2.5 text-xs wrap-anywhere whitespace-normal md:h-9 md:flex-row md:justify-start md:gap-3 md:px-3 md:py-0 md:text-sm"
+            class="text-caption md:text-body h-auto min-h-11 min-w-0 flex-col justify-center gap-1.5 rounded-xl px-1 py-2.5 wrap-anywhere whitespace-normal aria-pressed:font-semibold md:h-9 md:flex-row md:justify-start md:gap-3 md:px-3 md:py-0"
             data-control-section={id}
             aria-pressed={current === id}
             aria-controls="trainer-settings-panel"
@@ -116,13 +116,10 @@
     <div class="flex min-h-0 min-w-0 flex-1 flex-col">
       <!-- The selected tab already names the section on small screens. -->
       <header class="shrink-0 px-7 pt-6 pr-20 pb-3 max-md:sr-only">
-        <h2
-          id="trainer-settings-heading"
-          class="text-xl font-semibold tracking-tight"
-        >
+        <h2 id="trainer-settings-heading" class="text-title font-semibold">
           {t(section.label)}
         </h2>
-        <p class="text-muted-foreground mt-1 text-sm">
+        <p class="text-muted-foreground mt-2">
           {t(section.description)}
         </p>
       </header>
@@ -145,7 +142,7 @@
       <footer
         class="flex shrink-0 items-center justify-between gap-4 border-t px-4 py-3 md:px-7"
       >
-        <p class="text-muted-foreground flex items-center gap-2 text-xs">
+        <p class="text-muted-foreground text-caption flex items-center gap-2">
           <CheckIcon class="size-3.5 shrink-0" />
           {t("Settings save automatically.")}
         </p>

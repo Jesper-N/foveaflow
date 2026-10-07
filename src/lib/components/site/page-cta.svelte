@@ -25,9 +25,9 @@
     "grid items-center gap-8 px-6 py-10 sm:grid-cols-[minmax(0,1fr)_14rem] sm:px-10",
   ]}
 >
-  <div class="relative flex flex-col items-start gap-3">
+  <div class="relative flex flex-col items-start">
     <h2 class={editorialHeading}>{title}</h2>
-    <p class={editorialCopy}>{body}</p>
+    <p class={[editorialCopy, "mt-2"]}>{body}</p>
     <Button {href} size="lg" class={["mt-3", heroButton]}>
       {label}
       <ArrowUpRightIcon data-icon="inline-end" />

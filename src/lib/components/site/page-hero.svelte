@@ -3,7 +3,7 @@
   import ChevronRightIcon from "@lucide/svelte/icons/chevron-right";
   import type { Snippet } from "svelte";
 
-  import { contentStage, editorialLede, editorialTitle } from "./styles";
+  import { contentStage, editorialCopy, editorialTitle } from "./styles";
 
   let {
     breadcrumb,
@@ -30,7 +30,7 @@
   {#if breadcrumb}
     <nav aria-label={t("Breadcrumb")} class="mb-5 px-1">
       <ol
-        class="text-muted-foreground flex flex-wrap items-center gap-1.5 text-sm"
+        class="text-muted-foreground text-caption flex flex-wrap items-center gap-1.5"
       >
         {#each breadcrumb as crumb, index (crumb.label)}
           {#if index > 0}
@@ -64,18 +64,20 @@
         illustration && "lg:grid-cols-[minmax(0,1fr)_20rem]",
       ]}
     >
-      <div class="flex min-w-0 flex-col items-start gap-5">
+      <div class="flex min-w-0 flex-col items-start">
         <h1 class={editorialTitle}>{title}</h1>
-        <p class={editorialLede}>{lede}</p>
+        <p class={[editorialCopy, "mt-2"]}>{lede}</p>
         {#if actions}
           <div
-            class="mt-1 flex flex-col items-stretch gap-3 self-stretch sm:flex-row sm:flex-wrap sm:items-center sm:self-start"
+            class="mt-3 flex flex-col items-stretch gap-3 self-stretch sm:flex-row sm:flex-wrap sm:items-center sm:self-start"
           >
             {@render actions()}
           </div>
         {/if}
         {#if meta}
-          <p class="text-muted-foreground text-xs">{@render meta()}</p>
+          <p class="text-muted-foreground text-caption mt-2">
+            {@render meta()}
+          </p>
         {/if}
       </div>
       {#if illustration}

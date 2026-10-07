@@ -31,10 +31,7 @@
   <Field.Field
     class="grid min-w-0 grid-cols-[1fr_auto] items-center gap-x-2 gap-y-4"
   >
-    <span
-      class="text-muted-foreground min-w-0 truncate text-xs font-medium"
-      title={label}
-    >
+    <span class="text-muted-foreground min-w-0 truncate" title={label}>
       {label}
     </span>
     <SettingSlider
@@ -42,7 +39,7 @@
       label={sliderLabel}
       class="col-span-2 row-start-2 w-full"
     />
-    <span class="col-start-2 row-start-1 text-xs font-medium tabular-nums">
+    <span class="col-start-2 row-start-1 tabular-nums">
       {formatSetting(setting, trainer.settings[setting])}
     </span>
   </Field.Field>
@@ -64,7 +61,7 @@
     inert={!trainer.isLilacChaser}
   >
     <Field.Field class="gap-1">
-      <span class="text-muted-foreground text-xs font-medium">
+      <span class="text-muted-foreground">
         {t("Ball color")}
       </span>
       <Select.Root
@@ -79,7 +76,7 @@
           class="relative w-full min-w-0 px-2.5 before:absolute before:inset-x-0 before:-inset-y-1.5"
           aria-label={t("Lilac Chaser ball color")}
         >
-          <OptionLabel class="text-xs" label={lilacColorName}>
+          <OptionLabel label={lilacColorName}>
             <ColorDot color={trainer.settings.lilacChaserBallColor} />
           </OptionLabel>
         </Select.Trigger>
