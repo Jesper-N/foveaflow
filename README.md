@@ -52,18 +52,6 @@ The pre-commit hook runs `bun run format:check`. The pre-push hook runs `bun run
 - A snapshot in `tests/unit/__snapshots__/` locks every motion path. If you meant to change how a target moves, update it with `bun test tests/unit --update-snapshots`. If you didn't, the snapshot caught a bug.
 - UI text is keyed by its English wording. A new string needs an entry in all 10 files in `src/lib/i18n/dictionaries/`, and `check:i18n` names any it can't find.
 
-## Gotchas
-
-### A new host works in dev and breaks in production
-
-The Content Security Policy lives in `astro.config.mjs` under `security.csp`. Astro writes it into every built page, but the dev server skips it. So a third-party script, font, image host, or API the policy doesn't list loads fine under `bun run dev` and gets blocked on the live site. The browser tests run the built site and fail on anything blocked, which means the pre-push hook and CI catch it on the pages they visit. Check the rest with `bun run preview`.
-
-Astro hashes the scripts it bundles. An `is:inline` script needs its own hash, registered the way `base-layout.astro` does it with `inlineScriptHash` from `src/lib/csp.ts`.
-
-### The controls do nothing in dev
-
-If the console shows `504 Outdated Optimize Dep`, Vite's dependency cache is stale. Stop the server, delete `node_modules/.vite`, start it again, and hard-reload the page.
-
 ## How it's built
 
 [Astro](https://astro.build/) renders the pages. The controls are [Svelte 5](https://svelte.dev/) with [shadcn-svelte](https://www.shadcn-svelte.com/) and [Bits UI](https://bits-ui.com/), styled with [Tailwind CSS 4](https://tailwindcss.com/). The drills run on a canvas engine in plain TypeScript, with no framework code inside it. [Cloudflare Workers](https://workers.cloudflare.com/) serves the site.
