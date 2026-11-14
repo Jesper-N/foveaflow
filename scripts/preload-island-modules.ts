@@ -3,7 +3,7 @@
 // the page reaches the island, and the browser finds their imports only after
 // they download, so without preloads the scripts arrive in two rounds.
 // Dynamic imports, like translations, still load on demand. Runs after
-// `astro build`, before the CSP step.
+// `astro build`.
 import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 

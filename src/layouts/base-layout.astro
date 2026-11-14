@@ -4,6 +4,7 @@ import "../styles/page-transitions.css";
 import Favicons from "$lib/components/head/favicons.astro";
 import SeoHead from "$lib/components/head/seo-head.astro";
 import type { Props as SeoHeadProps } from "$lib/components/head/seo-head.astro";
+import { inlineScriptHash } from "$lib/csp";
 import { localeBootScript } from "$lib/i18n/boot-script";
 import { createInitialModeExpression } from "mode-watcher";
 
@@ -11,6 +12,9 @@ type Props = SeoHeadProps;
 
 // Applies the saved theme before first paint, so the page never flashes.
 const themeBootScript = createInitialModeExpression({ defaultMode: "system" });
+
+Astro.csp?.insertScriptHash(inlineScriptHash(themeBootScript));
+Astro.csp?.insertScriptHash(inlineScriptHash(localeBootScript));
 ---
 
 <html lang="en">

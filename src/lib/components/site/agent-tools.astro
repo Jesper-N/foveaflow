@@ -1,11 +1,11 @@
 ---
+import { inlineScriptHash } from "$lib/csp";
+
 // Registers WebMCP tools so AI agents in the browser can open a drill or find
 // the public docs. Browsers without WebMCP skip it. Inline scripts cannot
 // import, so the route list mirrors the main drill routes in
 // `content/drill-routes.ts`.
----
-
-<script is:inline>
+const agentToolsScript = `
   // Scoped so these names never collide with other inline scripts.
   (() => {
     const routes = {
@@ -46,7 +46,7 @@
         window.location.assign(url);
 
         return {
-          content: [{ text: `Opening ${url}`, type: "text" }],
+          content: [{ text: "Opening " + url, type: "text" }],
         };
       },
       inputSchema: {
@@ -94,4 +94,9 @@
       title: "Get FoveaFlow Resources",
     });
   })();
-</script>
+`;
+
+Astro.csp?.insertScriptHash(inlineScriptHash(agentToolsScript));
+---
+
+<script is:inline set:html={agentToolsScript} />
