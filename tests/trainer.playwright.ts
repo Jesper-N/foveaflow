@@ -219,7 +219,7 @@ test("the island hides when idle and comes back on pointer or touch", async ({
   await (hasTouch ? reveal.tap() : hoverIsland(page));
   await expect(island).not.toHaveAttribute("inert", "");
   const action = hasTouch ? "tap" : "click";
-  const drillMenu = page.getByRole("button", {
+  const drillMenu = page.getByRole("combobox", {
     exact: true,
     name: "Drill: Smooth Pursuit",
   });
@@ -255,7 +255,7 @@ test("the island offers the controls the drill supports", async ({
   const speed = page.locator(
     '[data-slot="slider"][aria-label="Header target speed"]'
   );
-  const lilacColor = page.getByRole("button", {
+  const lilacColor = page.getByRole("combobox", {
     name: "Lilac Chaser ball color",
   });
   await expect(reverse).toBeVisible();
@@ -499,7 +499,7 @@ test("Lilac color and scale redraw the paused drill and persist", async ({
   await adjustSlider(page, "Lilac Chaser scale", "ArrowRight");
   await page
     .getByRole("dialog")
-    .getByRole("button", { name: "Lilac Chaser ball color" })
+    .getByRole("combobox", { name: "Lilac Chaser ball color" })
     .click();
   await page.getByRole("option", { exact: true, name: "Blue" }).click();
   await expect.poll(() => canvasImage(page)).not.toBe(image);

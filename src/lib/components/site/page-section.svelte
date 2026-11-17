@@ -18,11 +18,13 @@
 
 <section
   {...rest}
-  class={first ? "scroll-mt-8" : "border-border scroll-mt-8 border-t pt-6"}
+  class={first
+    ? "scroll-mt-8"
+    : "border-border scroll-mt-8 border-t pt-12 sm:pt-16"}
 >
   <h2 class={editorialHeading}>{heading}</h2>
   {#if intro}
-    <p class={[editorialCopy, "mt-2"]}>{intro}</p>
+    <p class={[editorialCopy, "mt-4"]}>{intro}</p>
   {/if}
   {@render children?.()}
 </section>

@@ -3,7 +3,7 @@
 	import XIcon from '@lucide/svelte/icons/x';
 	import { Button } from "$lib/components/ui/button/index.js";
 	import { cn, type WithoutChildrenOrChild } from "$lib/utils.js";
-	import * as Dialog from "./index.js";
+	import DialogOverlay from "./dialog-overlay.svelte";
 	import DialogPortal from "./dialog-portal.svelte";
 	import type { Snippet } from "svelte";
 	import type { ComponentProps } from "svelte";
@@ -23,12 +23,12 @@
 </script>
 
 <DialogPortal {...portalProps}>
-	<Dialog.Overlay />
+	<DialogOverlay />
 	<DialogPrimitive.Content
 		bind:ref
 		data-slot="dialog-content"
 		class={cn(
-			"grid max-w-[calc(100%-2rem)] gap-6 rounded-4xl bg-popover p-6 text-body text-popover-foreground shadow-xl ring-1 ring-foreground/5 duration-100 sm:max-w-md dark:ring-foreground/10 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 fixed top-1/2 left-1/2 z-50 w-full -translate-x-1/2 -translate-y-1/2 outline-none",
+			"bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 ring-foreground/5 dark:ring-foreground/10 grid max-w-[calc(100%_-_2rem)] gap-6 rounded-4xl p-6 text-sm shadow-xl ring-1 duration-100 sm:max-w-md fixed top-1/2 left-1/2 z-50 w-full -translate-x-1/2 -translate-y-1/2 outline-none",
 			className
 		)}
 		{...restProps}

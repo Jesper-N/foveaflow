@@ -14,8 +14,8 @@ const contentPages = [
 /** Same-site links, without their query or fragment. */
 const INTERNAL_LINK_PATTERN = /<a\b[^>]*\shref="(?<href>\/[^"#?]*)/gu;
 
-const languageButton = (page: Page) =>
-  page.getByRole("button", { name: /^Change language/u });
+const languageSelect = (page: Page) =>
+  page.getByRole("combobox", { name: /^Change language/u });
 
 for (const path of contentPages) {
   test(`${path} renders one heading and fits the screen`, async ({ page }) => {
@@ -110,7 +110,7 @@ test("a language chosen in the menu is kept after a reload", async ({
 }) => {
   await openPage(page, "/guide/");
   await expect(page.locator("h1")).toHaveText("FoveaFlow Guide");
-  await languageButton(page).click();
+  await languageSelect(page).click();
   await page.getByRole("option", { name: /^Deutsch/u }).click();
   await expect(page.locator("h1")).toHaveText("FoveaFlow-Guide");
   await page.reload();
