@@ -62,15 +62,21 @@ for (const path of ["/", "/guide/"]) {
     page,
   }) => {
     await openPage(page, path);
+    await page.waitForLoadState("networkidle");
 
     const { loaded, preloaded } = await page.evaluate(() => ({
       loaded: performance
         .getEntriesByType("resource")
         .map(({ name }) => new URL(name).pathname)
         .filter((pathname) => pathname.endsWith(".js")),
-      preloaded: Array.from(
-        document.querySelectorAll<HTMLLinkElement>('link[rel="modulepreload"]'),
-        ({ href }) => new URL(href).pathname
+      preloaded: [
+        ...document.querySelectorAll<HTMLLinkElement>(
+          'link[rel="modulepreload"]'
+        ),
+      ].flatMap(({ href, media }) =>
+        media === "" || matchMedia(media).matches
+          ? [new URL(href).pathname]
+          : []
       ),
     }));
 
@@ -118,7 +124,8 @@ test("a language chosen in the menu is kept after a reload", async ({
 }) => {
   await openPage(page, "/guide/");
   await expect(page.locator("h1")).toHaveText("FoveaFlow Guide");
-  await languageSelect(page).selectOption("de");
+  await languageSelect(page).click();
+  await page.getByRole("option", { name: "Deutsch (German)" }).click();
   await expect(page.locator("h1")).toHaveText("FoveaFlow-Guide");
   await page.reload();
   await expect(page.locator("h1")).toHaveText("FoveaFlow-Guide");
