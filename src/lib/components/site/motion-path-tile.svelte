@@ -7,12 +7,13 @@
   import { pressable } from "../ui/styles";
 
   interface Props {
+    badge?: string;
     href: string;
     label: string;
     patternId: PursuitPatternId;
   }
 
-  let { href, label, patternId }: Props = $props();
+  let { badge, href, label, patternId }: Props = $props();
 
   let route = $derived(patternGlyphs[patternId]);
 
@@ -30,7 +31,16 @@
   ]}
   {href}
 >
-  <span class="canvas-grid block aspect-4/3 overflow-hidden rounded-2xl">
+  <span
+    class="canvas-grid relative block aspect-4/3 overflow-hidden rounded-2xl"
+  >
+    {#if badge}
+      <span
+        class="bg-popover text-2xs shadow-thumb absolute inset-s-2 top-2 rounded-full px-2 py-0.5 font-medium"
+      >
+        {badge}
+      </span>
+    {/if}
     <svg
       class="text-foreground size-full"
       aria-hidden="true"

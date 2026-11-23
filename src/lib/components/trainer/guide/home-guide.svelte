@@ -4,6 +4,7 @@
   import { homeCopy } from "$lib/content/home";
   import { freeUseNote } from "$lib/content/site";
   import { t } from "$lib/i18n/translate";
+  import { getDrill } from "$lib/trainer/settings/drills";
   import type { DrillId } from "$lib/trainer/settings/drills";
   import { ArrowUpRightIcon } from "@lucide/svelte";
   import { DialogDescription, DialogTitle } from "@ui-sdk/svelte/dialog";
@@ -19,24 +20,30 @@
     guideSection,
   } from "./guide-styles";
 
-  let exploring = $state<DrillId | null>(null);
+  let shown = $state<DrillId>("pursuit");
 </script>
 
 <div class={guideLayout}>
   <div class={guideAside}>
     <div
-      class="grid h-full grid-cols-2 gap-1 overflow-hidden rounded-3xl max-md:aspect-video"
+      class="relative grid h-full overflow-hidden rounded-3xl max-md:aspect-video"
     >
       {#each drillGuides as guide (guide.drillId)}
         <DrillPreview
           class={[
-            "size-full transition-opacity duration-300 ease-out",
-            exploring !== null && exploring !== guide.drillId && "opacity-40",
+            "col-start-1 row-start-1 size-full transition-opacity duration-300 ease-out",
+            shown === guide.drillId ? "opacity-100" : "opacity-0",
           ]}
           drillId={guide.drillId}
-          playing={exploring === guide.drillId}
+          playing={shown === guide.drillId}
         />
       {/each}
+      <span
+        class="bg-popover/90 shadow-thumb absolute inset-s-3 bottom-3 flex h-8 items-center gap-2 rounded-full ps-2 pe-3 text-sm font-medium backdrop-blur-md"
+      >
+        <DrillIcon class="size-4" drillId={shown} />
+        {t(getDrill(shown).name)}
+      </span>
     </div>
   </div>
 
@@ -61,16 +68,20 @@
             <a
               class={[
                 "group/row hover:bg-fill flex items-center gap-3.5 rounded-2xl p-2",
+                shown === guide.drillId && "bg-fill",
                 pressable,
               ]}
               href={mainRouteForDrill(guide.drillId)?.path ?? "/"}
-              onblur={() => (exploring = null)}
-              onfocus={() => (exploring = guide.drillId)}
-              onpointerenter={() => (exploring = guide.drillId)}
-              onpointerleave={() => (exploring = null)}
+              onfocus={() => (shown = guide.drillId)}
+              onpointerenter={() => (shown = guide.drillId)}
             >
               <span
-                class="bg-fill grid size-11 shrink-0 place-items-center rounded-xl"
+                class={[
+                  "grid size-11 shrink-0 place-items-center rounded-xl transition-[background-color,box-shadow] duration-160 ease-out",
+                  shown === guide.drillId
+                    ? "bg-popover shadow-thumb"
+                    : "bg-fill",
+                ]}
               >
                 <DrillIcon class="size-5" drillId={guide.drillId} />
               </span>

@@ -72,7 +72,7 @@
 </script>
 
 <nav
-  class="bg-background/88 sticky top-16 z-9 backdrop-blur-md"
+  class="bg-background/94 sticky top-16 z-9 backdrop-blur-xl"
   aria-labelledby="page-toc"
 >
   <div class={[pageWidth, "flex items-center gap-4"]}>

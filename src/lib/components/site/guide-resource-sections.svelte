@@ -2,29 +2,13 @@
   import { articles } from "$lib/content/articles";
   import { guideFaq, referenceLinks } from "$lib/content/guide";
   import { t } from "$lib/i18n/translate";
-  import {
-    ArrowUpRightIcon,
-    BlendIcon,
-    CircleDotIcon,
-    GaugeIcon,
-    PaletteIcon,
-    TriangleIcon,
-    SplineIcon,
-  } from "@lucide/svelte";
+  import { ArrowUpRightIcon } from "@lucide/svelte";
 
   import AccordionList from "../ui/accordion-list.svelte";
   import { pressable } from "../ui/styles";
+  import ControlsPlayground from "./controls-playground.svelte";
   import { subHeading } from "./layout";
   import PageSection from "./page-section.svelte";
-
-  const controlIcons = [
-    GaugeIcon,
-    CircleDotIcon,
-    TriangleIcon,
-    PaletteIcon,
-    BlendIcon,
-    SplineIcon,
-  ];
 
   let faq = $derived(
     guideFaq.map(({ question, answer }) => ({
@@ -41,25 +25,7 @@
     "Change speed and target size first. They usually have the biggest effect on difficulty and control."
   )}
 >
-  <div class="bg-card grid gap-8 rounded-4xl p-6 sm:p-8">
-    <div class="flex flex-wrap gap-2" aria-hidden="true">
-      {#each controlIcons as Icon (Icon)}
-        <span
-          class="bg-popover shadow-thumb grid size-12 place-items-center rounded-2xl"
-        >
-          <Icon class="size-5" />
-        </span>
-      {/each}
-    </div>
-    <div class="grid gap-1.5">
-      <h3 class={subHeading}>{t("Motion and target")}</h3>
-      <p class="text-md text-muted-foreground text-pretty">
-        {t(
-          "Speed, size, shape, color, opacity, and trail change the feel of the moving drills. Lilac Chaser has its own ball color and scale controls."
-        )}
-      </p>
-    </div>
-  </div>
+  <ControlsPlayground />
 </PageSection>
 
 <PageSection id="more-guides" heading={t("More guides")}>

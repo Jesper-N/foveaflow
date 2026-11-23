@@ -38,7 +38,7 @@
 </a>
 
 <div class="flex min-h-dvh flex-col">
-  <header class="bg-background/88 sticky top-0 z-10 backdrop-blur-md">
+  <header class="bg-background/94 sticky top-0 z-10 backdrop-blur-xl">
     <div class={[pageWidth, "flex h-16 items-center gap-1"]}>
       <a
         class="text-md me-auto flex items-center gap-2.5 rounded-full font-medium"

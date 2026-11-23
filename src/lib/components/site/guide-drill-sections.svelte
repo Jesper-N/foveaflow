@@ -9,7 +9,7 @@
   import { Gamepad2Icon, MonitorIcon, TerminalIcon } from "@lucide/svelte";
 
   import DrillShowcase from "./drill-showcase.svelte";
-  import { bodyText, eyebrow, sectionHeading, subHeading } from "./layout";
+  import { bodyText, sectionHeading, subHeading } from "./layout";
   import MotionPathTile from "./motion-path-tile.svelte";
 
   const audienceIcons = [Gamepad2Icon, TerminalIcon, MonitorIcon];
@@ -19,15 +19,14 @@
     Icon: audienceIcons[index] ?? MonitorIcon,
   }));
 
-  const pathGroups = [
-    { label: "Unpredictable", patterns: unpredictablePatterns },
-    { label: "Predictable", patterns: predictablePatterns },
-  ].map(({ label, patterns }) => ({
-    label,
-    routes: patterns.flatMap(({ id }) =>
-      patternDrillRoutes.filter((route) => route.patternId === id)
-    ),
-  }));
+  const pathRoutes = [
+    ...unpredictablePatterns.map(({ id }) => ({ id, unpredictable: true })),
+    ...predictablePatterns.map(({ id }) => ({ id, unpredictable: false })),
+  ].flatMap(({ id, unpredictable }) =>
+    patternDrillRoutes
+      .filter((route) => route.patternId === id)
+      .map((route) => ({ ...route, unpredictable }))
+  );
 </script>
 
 <DrillShowcase />
@@ -41,23 +40,19 @@
       )}
     </p>
   </div>
-  <nav class="grid gap-8" aria-label={t("Pattern routes")}>
-    {#each pathGroups as group (group.label)}
-      <div class="grid gap-3">
-        <h3 class={eyebrow}>{t(group.label)}</h3>
-        <ul class="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
-          {#each group.routes as route (route.slug)}
-            <li class="grid">
-              <MotionPathTile
-                href={route.path}
-                label={t(route.label)}
-                patternId={route.patternId}
-              />
-            </li>
-          {/each}
-        </ul>
-      </div>
-    {/each}
+  <nav aria-label={t("Pattern routes")}>
+    <ul class="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-5">
+      {#each pathRoutes as route (route.slug)}
+        <li class="grid">
+          <MotionPathTile
+            badge={route.unpredictable ? t("Unpredictable") : undefined}
+            href={route.path}
+            label={t(route.label)}
+            patternId={route.patternId}
+          />
+        </li>
+      {/each}
+    </ul>
   </nav>
 </section>
 
