@@ -53,7 +53,7 @@
     </div>
 
     <footer
-      class="border-border flex flex-wrap items-center gap-x-1 gap-y-3 border-t px-4 py-3 sm:px-5"
+      class="border-border flex flex-wrap items-center gap-x-1 gap-y-2 border-t px-4 py-3 max-sm:pb-[calc(0.75rem+env(safe-area-inset-bottom))] sm:px-5"
     >
       <p class="text-muted-foreground px-2.5 text-sm">
         {t("Updated")}
@@ -77,7 +77,13 @@
           {t(legalPageLinks.terms.label)}
         </a>
       </nav>
-      <a class={[buttonClass("primary", "lg"), "group/cta"]} href="/guide/">
+      <a
+        class={[
+          buttonClass("primary", "lg"),
+          "group/cta max-sm:order-first max-sm:w-full",
+        ]}
+        href="/guide/"
+      >
         {t("Read full guide")}
         <ArrowRightIcon
           class="ease-spring transition-transform duration-260 group-hover/cta:translate-x-0.5 rtl:-scale-x-100"
