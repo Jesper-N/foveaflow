@@ -4,13 +4,15 @@
   import { Radio, RadioGroup } from "@ui-sdk/svelte/radio";
 
   import TargetFormGlyph from "../../icons/target-form-glyph.svelte";
+  import ColorField from "../../ui/color-field.svelte";
   import { pressable, settingsGroup } from "../../ui/styles";
+  import { ballColorPresets } from "../select-options";
   import { getTrainer } from "../trainer-context";
-  import ColorRow from "./color-row.svelte";
   import LetterSettings from "./letter-settings.svelte";
   import LilacColorSwatches from "./lilac-color-swatches.svelte";
   import SettingSlider from "./setting-slider.svelte";
   import SettingsIntro from "./settings-intro.svelte";
+  import TargetPreview from "./target-preview.svelte";
 
   const trainer = getTrainer();
 </script>
@@ -27,11 +29,12 @@
     />
   </div>
 {:else}
+  <TargetPreview />
   <div class={settingsGroup}>
-    <ColorRow
-      id="trainer-color"
+    <ColorField
       label={t("Ball color")}
       onValueChange={trainer.setBallColor}
+      presets={ballColorPresets}
       value={trainer.targetColor}
     />
     <div class="grid gap-2">
@@ -51,12 +54,15 @@
         {#each targetForms as form (form.id)}
           <Radio
             class={[
-              "text-2xs text-muted-foreground hover:bg-fill-hover hover:text-foreground data-checked:bg-primary data-checked:text-primary-foreground grid cursor-pointer justify-items-center gap-1 rounded-xl py-2 font-medium",
+              "group/form text-2xs text-muted-foreground hover:bg-fill-hover hover:text-foreground data-checked:bg-primary data-checked:text-primary-foreground grid cursor-pointer justify-items-center gap-1 rounded-xl py-2 font-medium",
               pressable,
             ]}
             value={form.id}
           >
-            <TargetFormGlyph class="size-5" form={form.id} />
+            <TargetFormGlyph
+              class="ease-spring size-5 transition-[scale] duration-260 group-data-checked/form:scale-115"
+              form={form.id}
+            />
             <span class="max-w-full truncate px-0.5">{t(form.name)}</span>
           </Radio>
         {/each}

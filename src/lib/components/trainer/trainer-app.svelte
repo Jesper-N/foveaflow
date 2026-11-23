@@ -6,7 +6,7 @@
 
   import ControlsDialog from "./controls/controls-dialog.svelte";
   import GuideDialog from "./guide/guide-dialog.svelte";
-  import TrainerHud from "./hud/trainer-hud.svelte";
+  import TrainerIsland from "./island/trainer-island.svelte";
   import { setTrainer } from "./trainer-context";
   import { Trainer } from "./trainer.svelte";
 
@@ -35,7 +35,6 @@
   class="trainer-stage group/stage bg-canvas relative h-dvh overflow-hidden overscroll-none data-[cursor-hidden=true]:cursor-none data-[cursor-hidden=true]:**:cursor-none"
   aria-label={t("FoveaFlow eye trainer app")}
   data-cursor-hidden={trainer.cursor.hidden}
-  data-hud-idle={trainer.cursor.hidden && !trainer.motionPaused}
 >
   <h1 class="sr-only">{t(trainer.pageCopy.heading)}</h1>
   <p id="trainer-canvas-description" class="sr-only">
@@ -60,7 +59,7 @@
   ></canvas>
 
   {#if languageState.ready}
-    <TrainerHud />
+    <TrainerIsland />
   {/if}
   <GuideDialog />
   <ControlsDialog />

@@ -12,14 +12,14 @@
 </script>
 
 <Select
-  class="min-w-0 flex-1 lg:w-58 lg:flex-none"
+  class="min-w-0"
   controller={trainer.drillSelect}
   data-hud-select="drill"
   groups={drillGroups()}
   hideLabel
   label={t("Drill")}
   onValueChange={trainer.selectDrill}
-  triggerClass="w-full max-sm:**:data-trigger-icon:hidden"
+  triggerClass="w-full"
   value={trainer.settings.drillId}
 >
   {#snippet icon(drillId)}
@@ -29,14 +29,14 @@
 
 {#if trainer.isPursuit}
   <Select
-    class="min-w-0 flex-1 lg:w-52 lg:flex-none"
+    class="min-w-0 max-sm:col-span-full"
     controller={trainer.patternSelect}
     data-hud-select="pattern"
     groups={patternGroups()}
     hideLabel
     label={t("Motion path")}
     onValueChange={trainer.selectPattern}
-    triggerClass="w-full max-sm:**:data-trigger-icon:hidden"
+    triggerClass="w-full"
     value={trainer.settings.patternId}
   >
     {#snippet icon(patternId)}

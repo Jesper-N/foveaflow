@@ -54,12 +54,22 @@ const settle = async (locator: Locator) => {
     .toBe(true);
 };
 
+/** Opens the island at the top of the trainer by resting the pointer on it. */
+const expandIsland = async (page: Page) => {
+  const island = page.locator("section.island");
+  const box = await island.boundingBox();
+
+  await island.hover({ position: { x: (box?.width ?? 0) / 2, y: 20 } });
+  await expect(island).toHaveAttribute("data-expanded", "true");
+};
+
 /** Picks an option from a drill or path select in the trainer controls. */
 const choose = async (
   page: Page,
   select: "drill" | "pattern",
   label: string
 ) => {
+  await expandIsland(page);
   await page.locator(`[data-hud-select="${select}"]`).click();
   const listbox = page.getByRole("listbox");
   await settle(listbox);
@@ -68,6 +78,7 @@ const choose = async (
 };
 
 const openControls = async (page: Page) => {
+  await expandIsland(page);
   await page.getByRole("button", { name: "Open controls" }).click();
   await settle(page.getByRole("dialog"));
 };
@@ -99,6 +110,8 @@ const resetToDefaults = async (page: Page) => {
 };
 
 const openGuide = async (page: Page) => {
+  await expandIsland(page);
+
   const trigger = page
     .locator("#trainer-controls")
     .getByRole("button", { name: /^(?:About FoveaFlow|Open guide)$/u });
@@ -213,6 +226,7 @@ test("pause freezes the canvas and resume restarts motion", async ({
 }) => {
   await openPage(page, "/circle/");
   await expectTrainer(page, "pursuit", "circle");
+  await expandIsland(page);
   await pauseButton(page).click();
   await expect(resumeButton(page)).toBeVisible();
   // Let the frame that was already scheduled finish drawing.
@@ -229,6 +243,7 @@ test("pause freezes the canvas and resume restarts motion", async ({
   const image = await canvasImage(page);
   await page.waitForTimeout(250);
   expect(await canvasImage(page)).toBe(image);
+  await expandIsland(page);
   await resumeButton(page).click();
   await expectAnimation(page);
 });
@@ -305,6 +320,7 @@ test("settings redraw the paused drill, survive a reload, and reset", async ({
     throw new Error("The trainer did not save its settings.");
   }
 
+  await expandIsland(page);
   await pauseButton(page).click();
   await openControls(page);
   await openTab(page, "Targets");
@@ -365,10 +381,14 @@ test("the target color follows the color mode until a custom color is chosen", a
 }) => {
   await openPage(page, "/circle/");
   await expectTrainer(page, "pursuit", "circle");
+  await expandIsland(page);
   await pauseButton(page).click();
   await openControls(page);
   await openTab(page, "Targets");
-  const color = page.getByLabel("Ball color", { exact: true });
+
+  const color = page
+    .getByRole("dialog")
+    .getByRole("button", { exact: true, name: "Ball color" });
 
   /** The color picker shows the color mode's default target and the canvas draws it. */
   const expectThemeTarget = async (mode: ColorMode) => {
@@ -378,7 +398,7 @@ test("the target color follows the color mode until a custom color is chosen", a
       Number.parseInt(hex.slice(start, start + 2), 16)
     );
 
-    await expect(color).toHaveValue(hex);
+    await expect(color).toContainText(hex);
     await expect
       .poll(
         async () =>
@@ -422,7 +442,11 @@ test("the target color follows the color mode until a custom color is chosen", a
   await expectThemeTarget("dark");
 
   // The old default stays available as a chosen color.
-  await color.fill("#76d900");
+  await color.click();
+  const hexInput = page.getByRole("textbox", { name: "Hex" });
+  await hexInput.fill("#76d900");
+  await hexInput.press("Enter");
+  await page.keyboard.press("Escape");
   await expect
     .poll(async () => await readSettings(page))
     .toMatchObject({
@@ -434,7 +458,7 @@ test("the target color follows the color mode until a custom color is chosen", a
   await openTab(page, "General");
   await page.getByRole("radio", { exact: true, name: "Light" }).click();
   await openTab(page, "Targets");
-  await expect(color).toHaveValue("#76d900");
+  await expect(color).toContainText("#76d900");
 
   await resetToDefaults(page);
   await openTab(page, "Targets");
@@ -480,6 +504,7 @@ test("Lilac color and scale redraw the paused drill and persist", async ({
     throw new Error("The trainer did not save its settings.");
   }
 
+  await expandIsland(page);
   await pauseButton(page).click();
   await openControls(page);
   await openTab(page, "Targets");

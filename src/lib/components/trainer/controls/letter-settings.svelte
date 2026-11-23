@@ -1,11 +1,11 @@
 <script lang="ts">
   import { t } from "$lib/i18n/translate";
 
+  import ColorField from "../../ui/color-field.svelte";
   import Select from "../../ui/select.svelte";
   import Switch from "../../ui/switch.svelte";
-  import { letterWeightGroups } from "../select-options";
+  import { letterColorPresets, letterWeightGroups } from "../select-options";
   import { getTrainer } from "../trainer-context";
-  import ColorRow from "./color-row.svelte";
   import SettingSlider from "./setting-slider.svelte";
 
   const trainer = getTrainer();
@@ -17,10 +17,10 @@
 />
 
 {#if trainer.settings.letterEnabled}
-  <ColorRow
-    id="trainer-letter-color"
+  <ColorField
     label={t("Letter color")}
     onValueChange={trainer.setLetterColor}
+    presets={letterColorPresets}
     value={trainer.settings.letterColor}
   />
   <Select

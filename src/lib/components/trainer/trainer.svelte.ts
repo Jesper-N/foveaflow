@@ -63,6 +63,7 @@ export class Trainer {
   motionPaused = $state(false);
   controlsOpen = $state(false);
   guideOpen = $state(false);
+  islandExpanded = $state(false);
   panelReturnFocus = $state.raw<HTMLElement | "none">("none");
 
   readonly cursor = new IdleCursor();
@@ -375,6 +376,7 @@ export class Trainer {
       }
 
       case "openDrillSelect": {
+        this.islandExpanded = true;
         this.drillSelect.setOpen(true);
 
         return true;
@@ -385,6 +387,7 @@ export class Trainer {
           return false;
         }
 
+        this.islandExpanded = true;
         this.patternSelect.setOpen(true);
 
         return true;
