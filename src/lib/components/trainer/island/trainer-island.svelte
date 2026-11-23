@@ -188,6 +188,7 @@
         <DrillPreview
           class="h-12 w-16 shrink-0 rounded-xl"
           drillId={trainer.settings.drillId}
+          patternId={trainer.settings.patternId}
           playing={false}
         />
         <IslandSelects />

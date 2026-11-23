@@ -169,8 +169,15 @@ The spring curves are generated from Apple's damping/response model, not eyeball
 | Motion path tile | A dot runs the route while hovered | Shows the path's speed and shape, which a still line can't |
 | Target preview (Controls › Targets) | Form, color, size, opacity and letters update live on a spring | The canvas is dimmed behind the panel; this is the feedback |
 | Target form tile | The selected glyph pops to 1.15 | Confirms the pick |
+| Controls panel | Slides in 24 px from its edge with a fade on the drawer curve (300 ms in, 200 ms out); a bottom sheet on touch that follows the finger | Comes from where it lives; the canvas stays visible behind |
+| Guide dialog, reset dialog | Fade and 0.96 → 1 scale from the centre (220–300 ms) | A modal decision point; no travel, so it reads as "in front", not "somewhere else" |
+| Drill previews | Loop only while on screen; tiles and lists play only the one you point at; the island thumbnail is always still | Shows each drill's motion where it explains something, never in the trainer's corner of the eye |
+| Routine timeline (articles) | The segment you point at plays its drill, the rest dim to 50 % | Connects each minute block to the drill it stands for |
+| More guides cards | The two app marks part by 4 px on hover | "Versus" made physical, once, on intent |
 | 404 | The target runs its route once and stops at the break | Tells the "path ends here" story; plays once |
 | Hero | Text rises once on load | First impression only |
+
+Measured with frame sampling (Chromium, 1280 × 800, `requestAnimationFrame` per frame): island open 290 ms to full size, 760 ms to rest; island close 870 ms including the 320 ms grace and 80 ms content exit; island content fade 530 ms; menu unfold 550 ms; menu rows dealt by 440 ms; menu highlight 560 ms; tooltip first show 420 ms delay then 510 ms; tooltip travel 860 ms; tabs 600 ms; segmented 530 ms; target form highlight 600 ms; section nav pill 830 ms; switch 360 ms; color popover 560 ms; Controls drawer 320 ms; reset dialog 300 ms; guide dialog 330 ms; guide stage crossfade 370 ms; accordion 340 ms; showcase crossfade 480 ms; drill tile button 330 ms; guide card marks 360 ms; routine dim 350 ms; press 170 ms; hero 610 ms; 404 runner 2.7 s once. With reduced motion every transform, clip and position change lands in one frame and only opacity fades.
 
 Never: animation on keyboard shortcuts beyond the state change itself, staggers longer than six rows, looping motion in the trainer chrome, `transition: all`.
 
@@ -211,6 +218,31 @@ Usage rules:
 ### Agents
 
 `src/lib/components/agent-bridge.ts` creates one ui-sdk agent bridge per page and registers its `snapshot`, `act`, and `query` tools with WebMCP when the browser has it. Steps marked for a person are refused. The site's own WebMCP tools in `agent-tools.astro` stay as they were.
+
+## References per surface
+
+Every surface names the reference it was measured against and what was taken from it. bencho blocks come from the MIT source (`github.com/cabralorenzo/bencho`), designbookmark components from their published code (`designbookmark.com/motion-src/code/db-*.txt`).
+
+| Surface | Reference | Taken from it |
+| --- | --- | --- |
+| Island at rest | designbookmark morph island, bencho dynamic island | 120 × 36 notch (bencho 150 × 36, designbookmark 126 × 36), black, no content at rest |
+| Island open | designbookmark morph island, bencho dynamic island (music activity) | Width spring stiffness 380 / damping 24, height 300 / 22, shrink stiffness 390, volume give `−v / 7000` capped at 5 %; corner `min(h / 2, 28)`; content crossfade through 6 px blur; now-playing layout: 48 px art, 16 px title, 14 px byline, round play |
+| Menus | bencho picker, designbookmark spring dropdown | Card radius 20, padding 8, rows 40 (picker 48 with avatars) at radius 14, 18 px filled check badge radius 6; unfold from 0.86 × 0.72 and −10 px on stiffness 500 / damping 18; rows dealt 35 ms apart (picker 40 ms); one shared highlight with stiff lead edge (620 / 46) and soft trail (190 / 19) |
+| Sliders | bencho wake slider | Thumbless 3 px bars on a 7 px pitch, 32 % ink for empty bars, energy per bar from drag speed `1 − e^(−v / 900)`, decay `e^(−6.5 dt)`, keyboard wake 0.3 |
+| Switch | bencho liquid toggle | Off: slab track with a grey thumb; on: ink track with slab thumb; track carries the state; colour eases, thumb springs and stretches while held |
+| Segmented controls, tabs | designbookmark plan switch | Two-edge highlight: leading edge 620 / 46 (330 ms), trailing edge 190 / 19 (790 ms); direction written before layout is read |
+| Tooltips | designbookmark morph tooltip; Emil Kowalski's tooltip timing | One tooltip per toolbar; first show after 420 ms with scale from 0.72; travels with lead/trail edges; old label slides out 14 px the way it came, new one in from the far side; leave grace 140 ms |
+| Color picker | bencho picker (card), ui-sdk Color Picker | Popover radius 20 and unfold motion from the picker; 20 px thumbs with a 2 px white ring; 8 presets in one row; hex field 36 px |
+| Controls panel | bencho action node (icon tiles), iOS settings | 28 px icon tiles at radius 8, grouped rows with hairlines inset past the tile, section titles outside the card; drawer ease `0.32 0.72 0 1` |
+| Reset dialog | bencho card surfaces | Radius 28, 24 px padding, two equal 40 px actions; scale 0.96 + fade in 220 ms |
+| Home guide dialog | bencho wall cards, Apple sheets | Stage crossfades to the pointed drill; name pill on `popover/90`; full-width action on phones |
+| Drill guide dialog | bencho wall cards | Live preview stage with name pill; steps, callout, accordion; 928 px wide |
+| Guide page | bencho wall (drill tiles), Apple scrollytelling | Tiles play on hover; sticky stage with unread sections at 40 %; 20-tile route grid; live controls playground |
+| FPS article | bencho stacked bars | Routine split by minutes, each segment a drill preview; hover plays one, dims the rest |
+| BlinkCamp, EyeTrainer.gg comparisons | bencho card surfaces | FoveaFlow column raised on `popover`; per-feature cards on phones |
+| Privacy, Terms | bencho type scale | Editorial split, sticky headings, 16 / 24 body |
+| 404 | bencho one-shot story blocks | Route runs once and stops at the break; no loop |
+| Header, section nav, footer | bencho site chrome, designbookmark plan switch | Solid 64 px header; ghost icon selects with a shared morph tooltip; section pill with two-edge springs; footer with Drills and site columns |
 
 ## Layouts
 

@@ -1,18 +1,25 @@
 <script lang="ts">
   import { patternGlyphs } from "$lib/trainer/glyphs/pattern-glyphs";
   import type { DrillId } from "$lib/trainer/settings/drills";
+  import { isPursuitPattern } from "$lib/trainer/settings/patterns";
   import type { Attachment } from "svelte/attachments";
   import type { ClassValue } from "svelte/elements";
 
   interface Props {
     drillId: DrillId;
+    patternId?: string;
     playing?: boolean;
     class?: ClassValue;
   }
 
-  let { drillId, playing, class: className }: Props = $props();
+  let { drillId, patternId, playing, class: className }: Props = $props();
 
-  const pursuitRoute = patternGlyphs.figureEight;
+  let pursuitRoute = $derived(
+    patternId !== undefined && isPursuitPattern(patternId)
+      ? patternGlyphs[patternId]
+      : patternGlyphs.figureEight
+  );
+
   const pursuitTrail = [1, 2, 3, 4, 5];
 
   const jumps = [

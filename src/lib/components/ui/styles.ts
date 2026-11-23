@@ -2,7 +2,7 @@ export const pressable =
   "select-none transition-[background-color,color,opacity,scale] duration-160 ease-out active:duration-100 motion-safe:active:scale-96";
 
 export const popupSurface =
-  "rounded-2xl border-0 bg-popover p-2 text-foreground shadow-popover";
+  "rounded-2xl border-0 bg-popover p-2 text-foreground not-data-[presentation=sheet]:shadow-popover";
 
 export const listItem =
   "list-deal relative z-1 flex min-h-10 cursor-default items-center gap-3 rounded-xl ps-3 pe-2.5 text-md outline-none select-none data-disabled:opacity-50 pointer-coarse:min-h-12";

@@ -36,7 +36,11 @@
     <div
       class="relative h-full overflow-hidden rounded-3xl max-md:aspect-video"
     >
-      <DrillPreview class="size-full" drillId={route.drillId} />
+      <DrillPreview
+        class="size-full"
+        drillId={route.drillId}
+        patternId={route.patternId}
+      />
       <span
         class="bg-popover/90 shadow-thumb absolute inset-s-3 bottom-3 flex h-8 items-center gap-2 rounded-full ps-2 pe-3 text-sm font-medium backdrop-blur-md"
       >

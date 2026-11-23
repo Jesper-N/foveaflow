@@ -97,7 +97,7 @@
           {@attach followDrill(guide.drillId)}
         >
           <DrillPreview
-            class="aspect-4/3 w-full rounded-3xl lg:hidden"
+            class="ring-border aspect-4/3 w-full rounded-3xl ring-1 lg:hidden"
             drillId={guide.drillId}
           />
           <div class="grid gap-3">

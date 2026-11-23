@@ -15,7 +15,7 @@
 </script>
 
 <section
-  class="dark text-foreground grid items-center gap-2 overflow-hidden rounded-4xl bg-black p-2 md:grid-cols-[minmax(0,1fr)_minmax(0,26rem)]"
+  class="dark text-foreground ring-border grid items-center gap-2 overflow-hidden rounded-4xl bg-black p-2 ring-1 md:grid-cols-[minmax(0,1fr)_minmax(0,26rem)]"
 >
   <div class="grid justify-items-start gap-4 p-6 sm:p-10">
     <h2 class="text-2xl font-semibold text-balance sm:text-3xl">{title}</h2>

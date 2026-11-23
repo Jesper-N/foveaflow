@@ -1,6 +1,7 @@
 <script lang="ts">
   import { t } from "$lib/i18n/translate";
   import type { Attachment } from "svelte/attachments";
+  import { on } from "svelte/events";
 
   import { pageWidth } from "./layout";
 
@@ -38,29 +39,42 @@
       return target ? [target] : [];
     });
 
+    const update = () => {
+      const middle = window.innerHeight / 2;
+
+      const passed = targets.filter(
+        (target) => target.getBoundingClientRect().top < middle
+      );
+
+      activeId =
+        links.find(({ id }) => visible[id] === true)?.id ??
+        passed.at(-1)?.id ??
+        null;
+
+      const link =
+        activeId === null
+          ? null
+          : list.querySelector<HTMLElement>(`a[href="#${activeId}"]`);
+
+      placeIndicator(link, list);
+
+      if (link) {
+        list.scrollTo({
+          behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
+            ? "auto"
+            : "smooth",
+          left: link.offsetLeft - list.clientWidth / 2 + link.offsetWidth / 2,
+        });
+      }
+    };
+
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           visible[entry.target.id] = entry.isIntersecting;
         }
 
-        activeId = links.find(({ id }) => visible[id] === true)?.id ?? null;
-
-        const link =
-          activeId === null
-            ? null
-            : list.querySelector<HTMLElement>(`a[href="#${activeId}"]`);
-
-        placeIndicator(link, list);
-
-        if (link) {
-          list.scrollTo({
-            behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
-              ? "auto"
-              : "smooth",
-            left: link.offsetLeft - list.clientWidth / 2 + link.offsetWidth / 2,
-          });
-        }
+        update();
       },
       { rootMargin: "-30% 0px -60% 0px" }
     );
@@ -69,7 +83,10 @@
       observer.observe(target);
     }
 
+    const stopScrollEnd = on(window, "scrollend", update);
+
     return () => {
+      stopScrollEnd();
       observer.disconnect();
     };
   };
