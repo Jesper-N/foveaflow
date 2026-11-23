@@ -24,10 +24,10 @@ Semantic tokens follow shadcn naming. `fill*` and `border` are alpha overlays of
 | `popover` | `#ffffff` | `#262626` | Floating surfaces: HUD, dialogs, menus (component "slab") |
 | `primary` / `primary-foreground` | `#17181a` / `#fff` | `#fff` / `#0a0a0a` | Primary buttons, selected tiles, tooltips |
 | `muted-foreground` | `#646568` | `#a1a1a1` | Secondary text |
-| `faint` | `#b5b5b6` | `#6b6b6b` | Decorative strokes only, never text |
+| `faint` | `#b5b5b6` | `#6b6b6b` | Decorative strokes and empty slider ticks, never text |
 | `fill` | ink 6% | white 6% | Secondary buttons, chips, tracks, rows, settings groups |
 | `fill-hover` | ink 10% | white 10% | Hover of anything on `fill` |
-| `fill-active` | ink 12% | white 12% | Empty slider ticks, switch track off |
+| `fill-active` | ink 12% | white 12% | Setting icon tiles, switch track off |
 | `border` | ink 12% | white 12% | Table dividers, text-link underline |
 | `ring` | `#2231dd` | `#3aa9ff` | Focus outline, selection tint |
 | `target` | `#fdc700` | `#f0b100` | The drill target. Same values as `getCanvasTheme().targetColor` |
@@ -96,10 +96,11 @@ Only floating surfaces get a shadow: `shadow-popover` (a 1 px 6% ring plus a sof
 | Small button | 28 | 28 (never the only way to an action) |
 | Button, select trigger, icon button | 36 | 44 |
 | Large button | 40 | 44 |
-| Play / pause | 44 | 44 |
+| Play / pause (island) | 48 | 48 |
 | Segmented item | 32 in a 36 track | 40 |
-| List row | 36 | 44 |
-| Slider hit area | 36 | 44 |
+| Menu row | 40 | 48 |
+| Setting icon tile | 28 | 28 (the whole row is the target) |
+| Slider hit area | 40 | 44 |
 | Island notch | 36 × 120 | 44 × 136 |
 | Color swatch | 32 | 44 |
 
@@ -127,13 +128,14 @@ Custom SVGs in `src/lib/components/icons/`:
 | `ease-out` | `cubic-bezier(0.22, 1, 0.36, 1)` | Entering, reacting, fades |
 | `ease-spring` | `cubic-bezier(0.24, 1.34, 0.38, 1)` | Small things with a little life: switch thumb, hover fills, arrows, swatches |
 | `ease-spring-soft` | spring `linear()`, damping 0.78, response 0.42 s | The island opening |
-| `ease-spring-settle` | spring `linear()`, damping 1, response 0.32 s | The island closing (no overshoot) |
+| `ease-spring-settle` | spring `linear()`, damping 1, response 0.32 s | The island closing, segmented and tab thumbs (no overshoot) |
+| `ease-spring-pop` | spring `linear()`, stiffness 500, damping 18, mass 0.6 (peaks at 1.14) | Menus and the color popover unfolding from their trigger |
 | `ease-drawer` | `cubic-bezier(0.32, 0.72, 0, 1)` | Side panel |
 | `ease-in-out` | `cubic-bezier(0.65, 0, 0.2, 1)` | Movement across the screen (404 runner, equal-speed loops) |
 | `duration-160` | 160 ms | Color and opacity, popups in |
-| `duration-220` | 220 ms | Thumbs, indicators, chevrons, slider ticks |
+| `duration-220` | 220 ms | Indicators, chevrons |
 | `duration-260` | 260 ms | Springy details, accordion height, guide dialog |
-| `duration-300` | 300 ms | Side panel in (200 ms out), section-nav pill |
+| `duration-300` | 300 ms | Side panel in (200 ms out), section-nav pill, segmented and tab thumbs |
 | `animate-rise` | 620 ms, 10 px | One entrance per page: the hero text |
 
 The spring curves are generated from Apple's damping/response model, not eyeballed. CSS transitions retarget from the current value, so every interactive animation can be interrupted mid-flight.
@@ -149,15 +151,16 @@ The spring curves are generated from Apple's damping/response model, not eyeball
 | Island closes (pointer away 320 ms, outside tap, Escape) | Panel fades out fast, the clip settles back with no overshoot | Leaving is quicker than arriving; the grace delay forgives a pointer that slips off |
 | Island at rest | A blank black notch, no text, icon or motion | Nothing to read or watch while you track the target |
 | Island while training | Fades out over 700 ms with the cursor (mouse only), back in 160 ms on movement | The drill gets the whole screen; the way back is instant |
-| Slider wake | Ticks near the pointer, or near the value while dragging or focused, stretch up to 1.7× on a spring; label and value brighten | A physical instrument: you see where a click will land and how far you've moved |
+| Slider wake | Drag fast and every tick the value sweeps past jumps up (to 2.3×, scaled by drag speed) and decays back, so the run tails off behind your hand; a slow drag or a click only fills; an arrow key leaves a small wake. Label, value and icon tile brighten while you adjust | bencho's wake slider: the speed of your hand becomes visible, so the control feels physical without moving when you don't |
 | Switch | Thumb springs across; it stretches while pressed | The iOS feel of something you're physically pushing |
-| Segmented control, tabs | The thumb slides between options in 220 ms | Shows the choice moved, not swapped |
+| Segmented control, tabs | The thumb slides between options on a settling spring (300 ms) | Shows the choice moved, not swapped |
 | Section nav | The black pill slides to the section you're reading and scrolls into view | Wayfinding: where you are in a long page |
-| Select, popover | Grows from the trigger (`--transform-origin`) in 160 ms, out in 120 ms | Spatial origin; fast enough for a frequent action |
+| Select menu, color popover | Unfolds out of the trigger's corner: from 0.86 × 0.72 and 10 px up on `ease-spring-pop`, opacity in 160 ms; rows deal in 35 ms apart (first six only). Out in 120–160 ms with no bounce. Opened from the keyboard it only fades | bencho's picker: the list comes from the thing you pressed and is handed to you row by row; the overshoot is the character. Keyboard use gets no delay |
 | Tooltip | After 420 ms, then instant on neighbours, with the shortcut key | Teaches shortcuts without delaying repeat use |
 | Accordion | Height and fade in 260 ms, plus turns into × | State change you can follow |
 | Drill tile | Its preview plays and the open button scales in while hovered or focused | You explore a drill before you open it; still otherwise, so a page of tiles stays calm |
-| Guide drill list | Hovering a drill plays its preview and dims the others | Maps each name to its motion |
+| Guide drill list | Hovering or focusing a drill crossfades the stage to its preview and plays it | Maps each name to its motion |
+| Controls playground (guide) | Real Speed and Size sliders drive a target on a figure eight | Explains the two settings that matter most by letting you feel them |
 | Drill showcase | The sticky stage crossfades (blur 8 px, 0.96) to the drill you're reading | One focal motion that follows the reading |
 | Motion path tile | A dot runs the route while hovered | Shows the path's speed and shape, which a still line can't |
 | Target preview (Controls › Targets) | Form, color, size, opacity and letters update live on a spring | The canvas is dimmed behind the panel; this is the feedback |
@@ -165,7 +168,7 @@ The spring curves are generated from Apple's damping/response model, not eyeball
 | 404 | The target runs its route once and stops at the break | Tells the "path ends here" story; plays once |
 | Hero | Text rises once on load | First impression only |
 
-Never: animation on keyboard shortcuts beyond the state change itself, staggered menus or lists, looping motion in the trainer chrome, `transition: all`.
+Never: animation on keyboard shortcuts beyond the state change itself, staggers longer than six rows, looping motion in the trainer chrome, `transition: all`.
 
 **Reduced motion:** a global rule turns animations into a 1 ms jump and limits transitions to color, opacity and shadow. Components also opt out explicitly: the island swaps its morph for a fade, previews and path tiles stay still (Lilac Chaser keeps its gap), the showcase only fades, and the trainer starts paused.
 
@@ -178,14 +181,15 @@ Never: animation on keyboard shortcuts beyond the state change itself, staggered
 | `button-variants.ts` | — | `buttonClass(variant, size)` for links that look like buttons and for ui-sdk parts that render buttons |
 | `button.svelte` | ui-sdk Button | Actions. `primary`, `secondary`, `ghost`; sizes `sm`, `md`, `lg`, `icon` |
 | `icon-button.svelte` | Button + Tooltip | Icon-only actions, named by a tooltip that shows the shortcut |
-| `select.svelte` | ui-sdk Select | Every choice from a list. Groups, leading icon, check on the chosen one. Sheet on touch; `compact` stays a popover and hides the chevron on phones |
-| `slider.svelte` | ui-sdk Slider | Every number: rounded tick bars with a wake, a 3 px marker thumb, the formatted value |
+| `select.svelte` | ui-sdk Select | Every choice from a list. Groups, leading icon, an 18 px filled check badge on the chosen row, 40 px rows (48 on touch). `appearance`: `field` (filled pill), `ghost` (header and island icon triggers), `text` (the island's title and byline). `labelIcon` adds a row icon tile. Sheet on touch; `compact` stays a popover and hides the chevron on phones |
+| `slider.svelte` | ui-sdk Slider | Every number: thumbless 3 × 16 px tick bars with bencho's speed wake, the formatted value; optional `icon` tile |
+| `row-label.svelte` | — | A setting's label with its optional 28 px icon tile (inverts while the setting is being adjusted) |
 | `color-field.svelte` | ui-sdk Color Picker + Popover | Colors: swatch + hex trigger; popover with saturation area, hue slider, presets and a hex field |
 | `switch.svelte` | ui-sdk Switch | On/off settings as a whole-row label |
 | `segmented.svelte` | ui-sdk Segmented Control | Two or three visible choices (direction, theme) |
 | `accordion-list.svelte` | ui-sdk Accordion | Questions and answers (guide FAQ, quick answers) |
 | `brand-mark.svelte` | — | Logo |
-| `styles.ts` | — | Shared class groups: `pressable`, popup surface and motion, list rows, dialog surface, sheet presentation, settings group, segment track/thumb/item, backdrop |
+| `styles.ts` | — | Shared class groups: `pressable`, popup surface, list rows, dialog surface, sheet presentation, settings group (rows marked `data-setting-row` get 12 px padding and hairlines between them), segment track/thumb/item, backdrop. Popup motion lives in the `popup-unfold` and `list-deal` utilities in `global.css` |
 
 Also from ui-sdk, used directly: Dialog (controls, guide), Alert Dialog (reset), Tabs (control sections), Radio Group (target forms, Lilac swatches).
 
@@ -209,20 +213,20 @@ Usage rules:
 - Full-screen `canvas` stage with the drill.
 - **The island**, top center, always dark:
   - At rest: a 120 × 36 px black notch (136 × 44 on touch).
-  - Open, up to 688 px wide: a header (brand, Language, Guide G, Controls S), then an inner card holding play/pause (Space), reverse, the drill (M) and path (P) selects, and Size and Speed (or Lilac's Ball color and Scale).
-  - On phones it opens full width; the path select gets its own row.
-- **Controls** (S): right-side panel 416 px wide, inset 8 px, with tabs Drill / Targets / General. Targets opens with the live target preview. Footer: "Settings save automatically." and Done. On touch screens it is an 85 dvh bottom sheet.
-- **Guide** (G): 928 px dialog (sheet on touch). Left: the drill's live preview with its name pill, or on `/` all four previews, played from the drill list. Right: title, lede, steps, what it trains, quick answers, overview. Footer: updated date, Source, Privacy, Terms, and the primary Read full guide.
+  - Open, up to 432 px wide, laid out like a now-playing card: a still thumbnail of the drill, the drill (M) as the title and the path (P) as the byline (both plain-text selects), reverse, and a 48 px white play/pause (Space). Below: Size and Speed side by side (or Lilac's Ball color and Scale). Footer behind a hairline: brand, Language, Guide (G), Controls (S).
+  - On phones it opens full width with the same layout.
+- **Controls** (S): right-side panel 416 px wide, inset 8 px, with tabs Drill / Targets / General. Each tab is grouped settings rows in `fill` cards, iOS-style: a 28 px icon tile, the label, the control on the right (sliders run under the label, aligned with it), hairlines between rows, small section titles above a card. Targets opens with the live target preview. Footer: "Settings save automatically." and Done. On touch screens it is an 85 dvh bottom sheet.
+- **Guide** (G): 928 px dialog (sheet on touch). Left: the drill's live preview with its name pill; on `/` one stage that crossfades to whichever drill in the list you point at or focus. Right: title, lede, steps, what it trains, quick answers, overview. Footer: updated date, Source, Privacy, Terms, and the primary Read full guide.
 - **Reset**: an alert dialog over the controls.
 
 ### Content pages
 
-- Sticky 64 px header on a blurred `background`: brand, Guide (not on `/guide/`), Open FoveaFlow, Language, Theme.
+- Sticky 64 px header on a blurred `background` (94%): brand, Guide (not on `/guide/`), Open FoveaFlow, Language, Theme. On phones the brand and language code collapse to icons.
 - Page width 1280 px with 16 / 24 / 32 px gutters.
 - Hero, centered: breadcrumb chips, title (36 → 52), lede (16 → 20), actions, updated date. Below it, full width: the drill wall (four tiles, 1 → 2 → 4 columns) or the comparison table.
 - Section nav: a sticky chip bar under the header ("On this page") with a sliding pill for the current section.
 - Sections 112–144 px apart, in an editorial split from `lg`: heading and intro sticky on the left (352 px), content on the right.
-- Guide extras: the drill showcase (sticky live stage beside the four drill write-ups), the motion path gallery (two groups of route tiles, 5 columns on desktop), audience cards with icons, the controls card, article cards, FAQ accordion, reference list.
+- Guide extras: the drill showcase (sticky live stage beside the four drill write-ups), the motion path gallery (one grid of 20 route tiles, 2 → 4 → 5 columns, the two unpredictable paths first with a badge), audience cards with icons, the controls playground, article cards, FAQ accordion, reference list.
 - Closing call to action: a dark band with the title, line, button and a live pursuit preview.
 - Comparison table: FoveaFlow's column is raised on `popover`, the competitor's stays muted.
 - Footer: a `card` with brand, the free-use line, and Guide, Privacy, Terms.

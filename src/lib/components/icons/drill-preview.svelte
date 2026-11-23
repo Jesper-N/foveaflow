@@ -173,15 +173,15 @@
   }
 
   .trail {
-    opacity: 0.3;
+    opacity: 0;
   }
 
   .distractor {
-    fill: color-mix(in srgb, var(--target) 45%, black);
+    fill: color-mix(in srgb, var(--target) 42%, var(--canvas));
   }
 
   .jump {
-    opacity: 0;
+    opacity: 0.16;
   }
 
   .jump:last-child {
@@ -198,6 +198,10 @@
     .mover,
     .trail {
       animation: travel 5s linear infinite;
+    }
+
+    .trail {
+      opacity: 0.3;
     }
 
     .trail:nth-child(2) {
@@ -362,7 +366,7 @@
     }
 
     25% {
-      opacity: 0;
+      opacity: 0.16;
     }
   }
 

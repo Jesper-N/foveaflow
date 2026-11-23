@@ -27,10 +27,12 @@
 </script>
 
 <Select
+  appearance={compact ? "ghost" : "field"}
   {compact}
   {groups}
   hideLabel={compact}
   label={t("Language")}
+  labelIcon={compact ? undefined : LanguagesIcon}
   onValueChange={(value) => {
     if (isAppLocale(value)) {
       languageState.set(value);
@@ -41,7 +43,8 @@
   {#snippet trigger()}
     {#if compact}
       <LanguagesIcon class="size-4" aria-hidden="true" />
-      <span class="text-sm uppercase">{languageState.locale.split("-")[0]}</span
+      <span class="text-sm uppercase max-sm:hidden"
+        >{languageState.locale.split("-")[0]}</span
       >
     {:else}
       <span class="truncate">

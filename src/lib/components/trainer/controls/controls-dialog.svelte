@@ -86,13 +86,13 @@
       <div
         class="min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 pt-4 pb-2"
       >
-        <TabsPanel class="grid gap-2 outline-none" value="drill">
+        <TabsPanel class="grid gap-5 outline-none" value="drill">
           <DrillSettings />
         </TabsPanel>
-        <TabsPanel class="grid gap-2 outline-none" value="targets">
+        <TabsPanel class="grid gap-5 outline-none" value="targets">
           <TargetSettings />
         </TabsPanel>
-        <TabsPanel class="grid gap-2 outline-none" value="general">
+        <TabsPanel class="grid gap-5 outline-none" value="general">
           <GeneralSettings />
         </TabsPanel>
       </div>

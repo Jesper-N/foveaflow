@@ -1,5 +1,6 @@
 <script lang="ts">
   import { t } from "$lib/i18n/translate";
+  import type { LucideIcon } from "@lucide/svelte";
   import {
     ColorPicker,
     ColorPickerArea,
@@ -17,16 +18,18 @@
     PopoverTrigger,
   } from "@ui-sdk/svelte/popover";
 
-  import { popupMotion, popupSurface, pressable } from "./styles";
+  import RowLabel from "./row-label.svelte";
+  import { popupSurface, pressable } from "./styles";
 
   interface Props {
     label: string;
+    icon?: LucideIcon;
     value: string;
     presets: readonly string[];
     onValueChange: (color: string) => void;
   }
 
-  let { label, value, presets, onValueChange }: Props = $props();
+  let { label, icon, value, presets, onValueChange }: Props = $props();
 
   const colorThumb =
     "size-5 -translate-1/2 rounded-full bg-(--color-picker-color) shadow-[0_0_0_2px_white,0_1px_6px_rgb(0_0_0/0.35)] outline-none transition-[scale] duration-160 ease-out has-focus-visible:outline-2 has-focus-visible:outline-offset-3 has-focus-visible:outline-ring data-dragging:scale-115";
@@ -34,6 +37,7 @@
 
 <ColorPicker
   aria-label={label}
+  data-setting-row
   format="hex"
   onValueChange={(next) => {
     onValueChange(next);
@@ -42,7 +46,9 @@
   {value}
 >
   <div class="flex min-h-9 items-center justify-between gap-3">
-    <span class="text-md font-medium" aria-hidden="true">{label}</span>
+    <span class="text-md min-w-0 font-medium" aria-hidden="true">
+      <RowLabel {icon} {label} />
+    </span>
     <Popover>
       <PopoverTrigger
         class={[
@@ -61,7 +67,7 @@
         </span>
       </PopoverTrigger>
       <PopoverContent
-        class={[popupSurface, popupMotion, "grid w-64 gap-3 p-3"]}
+        class={[popupSurface, "popup-unfold grid w-64 gap-3 p-3"]}
         align="end"
         sideOffset={8}
       >

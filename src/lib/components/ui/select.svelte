@@ -1,5 +1,6 @@
 <script lang="ts">
   import { CheckIcon, ChevronDownIcon } from "@lucide/svelte";
+  import type { LucideIcon } from "@lucide/svelte";
   import {
     Select,
     SelectContent,
@@ -12,21 +13,19 @@
     SelectValue,
   } from "@ui-sdk/svelte/select";
   import type { ComponentProps, Snippet } from "svelte";
+  import type { Attachment } from "svelte/attachments";
   import type { ClassValue } from "svelte/elements";
 
+  import RowLabel from "./row-label.svelte";
   import type { SelectGroup, SelectOption } from "./select-types";
-  import {
-    listGroupLabel,
-    listItem,
-    popupMotion,
-    popupSurface,
-    pressable,
-  } from "./styles";
+  import { listGroupLabel, listItem, popupSurface, pressable } from "./styles";
 
   interface Props {
     label: string;
+    labelIcon?: LucideIcon;
     hideLabel?: boolean;
     compact?: boolean;
+    appearance?: "field" | "ghost" | "text";
     triggerLabel?: string;
     groups: readonly SelectGroup[];
     value: string;
@@ -41,8 +40,10 @@
 
   let {
     label,
+    labelIcon,
     hideLabel = false,
     compact = false,
+    appearance = "field",
     triggerLabel,
     groups,
     value,
@@ -54,6 +55,20 @@
     triggerClass,
     "data-hud-select": hudSelect,
   }: Props = $props();
+
+  let offsets = $derived(
+    groups.map((_, index) =>
+      groups
+        .slice(0, index)
+        .reduce((total, group) => total + group.options.length, 0)
+    )
+  );
+
+  const dealIndex =
+    (index: number): Attachment<HTMLElement> =>
+    (node) => {
+      node.style.setProperty("--deal-index", String(index));
+    };
 </script>
 
 <Select
@@ -66,13 +81,24 @@
   presentation={compact ? "popover" : "auto"}
   {value}
 >
-  <div class={["flex items-center justify-between gap-3", className]}>
-    <SelectLabel class={[hideLabel ? "sr-only" : "text-md font-medium"]}>
-      {label}
+  <div
+    class={["flex items-center justify-between gap-3", className]}
+    data-setting-row={hideLabel ? undefined : ""}
+  >
+    <SelectLabel
+      class={[hideLabel ? "sr-only" : "text-md min-w-0 font-medium"]}
+    >
+      <RowLabel icon={labelIcon} {label} />
     </SelectLabel>
     <SelectTrigger
       class={[
-        "group/trigger bg-fill text-md hover:bg-fill-hover data-open:bg-fill-hover inline-flex h-9 min-w-0 items-center gap-2 rounded-full ps-3 pe-2.5 font-medium pointer-coarse:h-11",
+        "group/trigger inline-flex min-w-0 items-center font-medium",
+        appearance === "field" &&
+          "bg-fill text-md hover:bg-fill-hover data-open:bg-fill-hover h-9 gap-2 rounded-full ps-3 pe-2.5 pointer-coarse:h-11",
+        appearance === "ghost" &&
+          "text-md text-muted-foreground hover:bg-fill hover:text-foreground data-open:bg-fill data-open:text-foreground h-9 gap-1.5 rounded-full px-2.5 pointer-coarse:h-11",
+        appearance === "text" &&
+          "hover:bg-fill data-open:bg-fill -mx-2 h-8 max-w-[calc(100%+1rem)] gap-1 rounded-lg px-2 pointer-coarse:h-10",
         pressable,
         compact && "max-sm:pe-3",
         triggerClass,
@@ -93,7 +119,7 @@
       <ChevronDownIcon
         class={[
           compact && "max-sm:hidden",
-          "text-muted-foreground size-4 shrink-0 transition-transform duration-220 ease-out group-data-open/trigger:rotate-180",
+          "text-muted-foreground group-hover/trigger:text-foreground group-data-open/trigger:text-foreground size-4 shrink-0 transition-[rotate,color] duration-220 ease-out group-data-open/trigger:rotate-180",
         ]}
         aria-hidden="true"
       />
@@ -102,8 +128,7 @@
   <SelectContent
     class={[
       popupSurface,
-      popupMotion,
-      "data-[presentation=sheet]:before:bg-fill-active max-h-(--available-height) min-w-(--anchor-width) overflow-y-auto overscroll-contain data-[presentation=sheet]:max-h-[85dvh] data-[presentation=sheet]:rounded-t-4xl data-[presentation=sheet]:rounded-b-none data-[presentation=sheet]:p-2 data-[presentation=sheet]:pb-[calc(0.5rem+env(safe-area-inset-bottom))] data-[presentation=sheet]:before:mx-auto data-[presentation=sheet]:before:mb-1 data-[presentation=sheet]:before:block data-[presentation=sheet]:before:h-1 data-[presentation=sheet]:before:w-9 data-[presentation=sheet]:before:rounded-full",
+      "popup-unfold data-[presentation=sheet]:before:bg-fill-active max-h-(--available-height) min-w-(--anchor-width) overflow-y-auto overscroll-contain data-[presentation=sheet]:max-h-[85dvh] data-[presentation=sheet]:rounded-t-4xl data-[presentation=sheet]:rounded-b-none data-[presentation=sheet]:p-2 data-[presentation=sheet]:pb-[calc(0.5rem+env(safe-area-inset-bottom))] data-[presentation=sheet]:before:mx-auto data-[presentation=sheet]:before:mb-1 data-[presentation=sheet]:before:block data-[presentation=sheet]:before:h-1 data-[presentation=sheet]:before:w-9 data-[presentation=sheet]:before:rounded-full",
     ]}
     collisionPadding={12}
     sideOffset={8}
@@ -114,19 +139,20 @@
           <SelectGroupLabel class={listGroupLabel}
             >{group.label}</SelectGroupLabel
           >
-          {@render options(group.options)}
+          {@render options(group.options, offsets[index] ?? 0)}
         </UiSelectGroup>
       {:else}
-        {@render options(group.options)}
+        {@render options(group.options, offsets[index] ?? 0)}
       {/if}
     {/each}
   </SelectContent>
 </Select>
 
-{#snippet options(list: readonly SelectOption[])}
-  {#each list as option (option.value)}
+{#snippet options(list: readonly SelectOption[], offset: number)}
+  {#each list as option, index (option.value)}
     <SelectItem
-      class={[listItem, "pe-2"]}
+      class={listItem}
+      {@attach dealIndex(offset + index)}
       label={option.label}
       value={option.value}
     >
@@ -136,8 +162,10 @@
         </span>
       {/if}
       <span class="min-w-0 flex-1 truncate">{option.label}</span>
-      <SelectItemIndicator class="flex shrink-0">
-        <CheckIcon class="size-4" aria-hidden="true" />
+      <SelectItemIndicator
+        class="bg-foreground text-background grid size-4.5 shrink-0 place-items-center rounded-md"
+      >
+        <CheckIcon class="size-3.5" aria-hidden="true" stroke-width={2.5} />
       </SelectItemIndicator>
     </SelectItem>
   {/each}

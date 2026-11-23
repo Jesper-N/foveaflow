@@ -1,18 +1,23 @@
 <script lang="ts">
+  import type { LucideIcon } from "@lucide/svelte";
   import { Switch, SwitchThumb } from "@ui-sdk/svelte/switch";
+
+  import RowLabel from "./row-label.svelte";
 
   interface Props {
     label: string;
+    icon?: LucideIcon;
     checked: boolean;
   }
 
-  let { label, checked = $bindable() }: Props = $props();
+  let { label, icon, checked = $bindable() }: Props = $props();
 </script>
 
 <label
   class="group/row flex min-h-9 cursor-pointer items-center justify-between gap-3 select-none"
+  data-setting-row
 >
-  <span class="text-md font-medium">{label}</span>
+  <span class="text-md min-w-0 font-medium"><RowLabel {icon} {label} /></span>
   <Switch
     class="bg-fill-active data-checked:bg-primary relative inline-flex h-6 w-10 shrink-0 items-center rounded-full p-0.75 transition-colors duration-220 ease-out"
     bind:checked

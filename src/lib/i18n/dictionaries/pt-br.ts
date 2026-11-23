@@ -66,8 +66,6 @@ export const ptBR = {
   "Choose by the controls you need": "Escolha pelos controles de que precisa",
   "Choose shape, color, opacity, trails, and letter overlays.":
     "Escolha forma, cor, opacidade, rastros e letras sobrepostas.",
-  "Choose your exercise and how it moves.":
-    "Escolha seu exercício e como ele se move.",
   Circle: "Círculo",
   "Circle Smooth Pursuit Drill": "Exercício de Rastreamento suave em círculo",
   "Circle is the easiest repeating Smooth Pursuit pattern and the best starting point for most users. The loop is predictable, which makes it useful for warmups and speed changes.":
@@ -169,7 +167,6 @@ export const ptBR = {
   "Figure Eight adds a crossover point, which means the target passes through the center and changes direction more often than a simple loop.":
     "Oito adiciona um ponto de cruzamento, então o alvo passa pelo centro e muda de direção com mais frequência do que em um laço simples.",
   "Figure eight": "Oito",
-  "Fine-tune what you follow.": "Ajuste o alvo que você acompanha.",
   "Follow it like Smooth Pursuit, but do not let the darker balls pull your eyes away.":
     "Acompanhe como no Rastreamento suave, mas não deixe as bolas mais escuras desviarem seus olhos.",
   "Follow one moving target and train steady visual tracking.":
@@ -296,8 +293,6 @@ export const ptBR = {
   "Keep your head still unless a drill says otherwise. These modes are about eye movement, attention, and focus, not neck movement.":
     "Mantenha a cabeça parada, salvo orientação diferente no exercício. Estes modos trabalham movimentos oculares, atenção e fixação do olhar, não movimentos do pescoço.",
   Language: "Idioma",
-  "Language, theme, and saved preferences.":
-    "Idioma, tema e preferências salvas.",
   "Legal pages": "Páginas legais",
   "Let the disappearing gap move around the fixed circle. With steady focus, the colored balls may fade and the missing spot can look like a moving green afterimage.":
     "Deixe a lacuna percorrer o círculo fixo. Com o olhar estável, as bolas coloridas podem desaparecer, e a lacuna pode parecer ocupada por uma pós-imagem verde em movimento.",

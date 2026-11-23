@@ -17,6 +17,7 @@
 </script>
 
 <Select
+  appearance="ghost"
   compact
   {groups}
   hideLabel

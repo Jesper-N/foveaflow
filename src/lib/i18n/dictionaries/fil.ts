@@ -70,8 +70,6 @@ export const fil = {
     "Pumili ayon sa mga kontrol na kailangan mo",
   "Choose shape, color, opacity, trails, and letter overlays.":
     "Piliin ang hugis, kulay, opacity, bakas ng galaw, at mga titik na nakapatong sa target.",
-  "Choose your exercise and how it moves.":
-    "Piliin ang ehersisyo at galaw nito.",
   Circle: "Bilog",
   "Circle Smooth Pursuit Drill":
     "Ehersisyong Bilog para sa Tuluy-tuloy na pagsunod",
@@ -177,7 +175,6 @@ export const fil = {
   "Figure Eight adds a crossover point, which means the target passes through the center and changes direction more often than a simple loop.":
     "Nagdadagdag ang Hugis-otso ng puntong tawiran, kaya dumadaan ang target sa gitna at mas madalas magbago ng direksyon kaysa sa simpleng loop.",
   "Figure eight": "Hugis-otso",
-  "Fine-tune what you follow.": "Ayusin ang target na sinusundan mo.",
   "Follow it like Smooth Pursuit, but do not let the darker balls pull your eyes away.":
     "Sundan ito gaya ng Tuluy-tuloy na pagsunod, pero huwag hayaang ilayo ng mas madidilim na bola ang tingin mo.",
   "Follow one moving target and train steady visual tracking.":
@@ -305,8 +302,6 @@ export const fil = {
   "Keep your head still unless a drill says otherwise. These modes are about eye movement, attention, and focus, not neck movement.":
     "Panatilihing hindi gumagalaw ang ulo maliban kung iba ang tagubilin. Para sa galaw ng mata, atensiyon, at pagtutok ang mga ehersisyong ito, hindi para sa paggalaw ng leeg.",
   Language: "Wika",
-  "Language, theme, and saved preferences.":
-    "Wika, tema, at mga naka-save na kagustuhan.",
   "Legal pages": "Mga legal page",
   "Let the disappearing gap move around the fixed circle. With steady focus, the colored balls may fade and the missing spot can look like a moving green afterimage.":
     "Hayaan ang nawawalang puwang na umikot sa nakapirming bilog. Kapag steady ang focus, maaaring mag-fade ang mga kulay na bola at magmukhang gumagalaw na berdeng afterimage ang nawawalang spot.",

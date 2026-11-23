@@ -65,8 +65,6 @@ export const bn = {
   "Choose by the controls you need": "প্রয়োজনের নিয়ন্ত্রণ দেখে বেছে নিন",
   "Choose shape, color, opacity, trails, and letter overlays.":
     "আকৃতি, রং, অস্বচ্ছতা, গতির রেখা ও লক্ষ্যের ওপর দেখানো অক্ষর বেছে নিন।",
-  "Choose your exercise and how it moves.":
-    "আপনার অনুশীলন ও তার গতিবিধি বেছে নিন।",
   Circle: "বৃত্ত",
   "Circle Smooth Pursuit Drill": "বৃত্ত মসৃণ অনুসরণ ড্রিল",
   "Circle is the easiest repeating Smooth Pursuit pattern and the best starting point for most users. The loop is predictable, which makes it useful for warmups and speed changes.":
@@ -159,7 +157,6 @@ export const bn = {
   "Figure Eight adds a crossover point, which means the target passes through the center and changes direction more often than a simple loop.":
     "ফিগার এইটে একটি ক্রসওভার পয়েন্ট থাকে, মানে লক্ষ্যটি মাঝখান দিয়ে যায় এবং সহজ লুপের চেয়ে বেশি বার দিক বদলায়।",
   "Figure eight": "ফিগার এইট",
-  "Fine-tune what you follow.": "যে লক্ষ্যটি অনুসরণ করছেন সেটি সামঞ্জস্য করুন।",
   "Follow it like Smooth Pursuit, but do not let the darker balls pull your eyes away.":
     "মসৃণ অনুসরণের মতো অনুসরণ করুন, তবে গাঢ় বলগুলো যেন চোখ সরিয়ে না নেয়।",
   "Follow one moving target and train steady visual tracking.":
@@ -283,7 +280,6 @@ export const bn = {
   "Keep your head still unless a drill says otherwise. These modes are about eye movement, attention, and focus, not neck movement.":
     "অনুশীলনে আলাদা নির্দেশ না থাকলে মাথা স্থির রাখুন। এই মোডগুলো চোখের নড়াচড়া, মনোযোগ ও দৃষ্টি স্থির রাখার জন্য, ঘাড় ঘোরানোর জন্য নয়।",
   Language: "ভাষা",
-  "Language, theme, and saved preferences.": "ভাষা, থিম ও সংরক্ষিত পছন্দ।",
   "Legal pages": "আইনি পেজ",
   "Let the disappearing gap move around the fixed circle. With steady focus, the colored balls may fade and the missing spot can look like a moving green afterimage.":
     "অদৃশ্য হওয়া ফাঁকটিকে স্থির বৃত্তের চারপাশে চলতে দিন। ফোকাস স্থির থাকলে রঙিন বলগুলো ফিকে লাগতে পারে এবং খালি জায়গাটি চলমান সবুজ আফটারইমেজের মতো দেখা যেতে পারে।",

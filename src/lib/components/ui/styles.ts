@@ -2,15 +2,13 @@ export const pressable =
   "select-none transition-[background-color,color,opacity,scale] duration-160 ease-out active:duration-100 motion-safe:active:scale-96";
 
 export const popupSurface =
-  "rounded-2xl border-0 bg-popover p-1.5 text-foreground shadow-popover";
-
-export const popupMotion =
-  "origin-(--transform-origin) transition-[opacity,scale] duration-160 ease-out data-ending-style:scale-96 data-ending-style:opacity-0 data-ending-style:duration-120 data-starting-style:scale-96 data-starting-style:opacity-0";
+  "rounded-2xl border-0 bg-popover p-2 text-foreground shadow-popover";
 
 export const listItem =
-  "flex min-h-9 cursor-default items-center gap-2.5 rounded-xl px-2.5 text-md outline-none select-none data-disabled:opacity-50 data-highlighted:bg-fill pointer-coarse:min-h-11";
+  "list-deal flex min-h-10 cursor-default items-center gap-3 rounded-xl ps-3 pe-2.5 text-md outline-none select-none transition-colors duration-160 ease-out data-disabled:opacity-50 data-highlighted:bg-fill pointer-coarse:min-h-12";
 
-export const listGroupLabel = "px-2.5 pt-2 pb-1 text-xs text-muted-foreground";
+export const listGroupLabel =
+  "px-3 pt-2.5 pb-1 text-xs font-medium text-muted-foreground";
 
 export const backdrop =
   "fixed inset-0 bg-black/24 transition-opacity duration-220 ease-out data-ending-style:opacity-0 data-starting-style:opacity-0 dark:bg-black/48";
@@ -21,13 +19,14 @@ export const sheetPresentation =
 export const dialogSurface =
   "m-0 flex flex-col overflow-hidden border-0 bg-popover p-0 text-foreground shadow-popover";
 
-export const settingsGroup = "grid gap-3 rounded-2xl bg-fill p-4";
+export const settingsGroup =
+  "grid rounded-2xl bg-fill ps-3 pe-4 *:data-setting-row:py-3 *:data-setting-row:not-first:border-t *:data-setting-row:border-border";
 
 export const segmentTrack =
   "relative grid auto-cols-fr grid-flow-col rounded-full bg-fill p-0.5";
 
 export const segmentThumb =
-  "absolute rounded-full bg-thumb shadow-thumb transition-[left,width] duration-220 ease-out";
+  "absolute rounded-full bg-thumb shadow-thumb transition-[left,width] duration-300 ease-spring-settle";
 
 export const segmentItem =
   "relative z-1 inline-flex h-8 min-w-0 cursor-pointer items-center justify-center gap-1.5 rounded-full px-3 text-sm font-medium text-muted-foreground transition-colors duration-160 ease-out outline-none select-none hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 pointer-coarse:h-10 [&_svg]:size-4 [&_svg]:shrink-0";

@@ -188,6 +188,29 @@
     1
   );
 
+  --ease-spring-pop: linear(
+    0,
+    0.127 3.8%,
+    0.36 7.2%,
+    0.617 10.7%,
+    0.84 14.1%,
+    1.003 17.5%,
+    1.1 21%,
+    1.14 24.4%,
+    1.138 27.8%,
+    1.112 31.3%,
+    1.076 34.7%,
+    1.041 38.1%,
+    1.012 41.6%,
+    0.993 45%,
+    0.98 51.9%,
+    0.986 58.8%,
+    0.996 65.6%,
+    1.003 75.9%,
+    1.002 86.3%,
+    1
+  );
+
   --animate-rise: rise 0.62s var(--ease-out) both;
 
   @keyframes rise {
@@ -243,14 +266,6 @@ html[data-i18n-pending="true"] body > * {
   }
 }
 
-@utility ticks {
-  background-image: repeating-linear-gradient(
-    to right,
-    currentColor 0 3px,
-    transparent 3px 6px
-  );
-}
-
 @utility canvas-grid {
   background-color: var(--canvas);
   background-image:
@@ -258,4 +273,57 @@ html[data-i18n-pending="true"] body > * {
     linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
   background-position: center;
   background-size: 2rem 2rem;
+}
+
+@utility popup-unfold {
+  &:not([data-presentation="sheet"]) {
+    transform-origin: var(--transform-origin);
+    transition:
+      opacity 160ms var(--ease-out),
+      scale 480ms var(--ease-spring-pop),
+      translate 480ms var(--ease-spring-pop);
+  }
+
+  &:not([data-presentation="sheet"])[data-starting-style] {
+    opacity: 0;
+    scale: 0.86 0.72;
+    translate: 0 -10px;
+  }
+
+  &:not([data-presentation="sheet"])[data-ending-style] {
+    opacity: 0;
+    scale: 0.92 0.86;
+    translate: 0 -8px;
+    transition-duration: 120ms, 160ms, 160ms;
+    transition-timing-function: var(--ease-out);
+  }
+
+  &[data-side="top"]:not([data-presentation="sheet"]):is(
+      [data-starting-style],
+      [data-ending-style]
+    ) {
+    translate: 0 8px;
+  }
+
+  &[data-modality="keyboard"]:not([data-presentation="sheet"]) {
+    scale: 1;
+    translate: 0;
+    transition-duration: 100ms, 0s, 0s;
+  }
+}
+
+@utility list-deal {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-open]:not([data-modality="keyboard"], [data-presentation="sheet"]) & {
+      animation: deal 260ms var(--ease-out) backwards;
+      animation-delay: calc(min(var(--deal-index, 0), 5) * 35ms + 30ms);
+    }
+  }
+}
+
+@keyframes deal {
+  from {
+    opacity: 0;
+    translate: 0 -6px;
+  }
 }

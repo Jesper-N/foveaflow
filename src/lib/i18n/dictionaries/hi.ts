@@ -65,7 +65,6 @@ export const hi = {
   "Choose by the controls you need": "ज़रूरी नियंत्रणों के अनुसार चुनें",
   "Choose shape, color, opacity, trails, and letter overlays.":
     "आकृति, रंग, अपारदर्शिता, गति का निशान और ऊपर दिखने वाले अक्षर चुनें।",
-  "Choose your exercise and how it moves.": "अपना अभ्यास और उसकी गति चुनें।",
   Circle: "सर्कल",
   "Circle Smooth Pursuit Drill": "सर्कल स्मूद ट्रैकिंग अभ्यास",
   "Circle is the easiest repeating Smooth Pursuit pattern and the best starting point for most users. The loop is predictable, which makes it useful for warmups and speed changes.":
@@ -158,7 +157,6 @@ export const hi = {
   "Figure Eight adds a crossover point, which means the target passes through the center and changes direction more often than a simple loop.":
     "फिगर आठ में एक क्रॉसओवर बिंदु होता है. लक्ष्य बीच से गुजरता है और सरल लूप से ज्यादा बार दिशा बदलता है.",
   "Figure eight": "फिगर आठ",
-  "Fine-tune what you follow.": "जिस लक्ष्य को देखते हैं, उसकी सेटिंग बदलें।",
   "Follow it like Smooth Pursuit, but do not let the darker balls pull your eyes away.":
     "इसे स्मूद ट्रैकिंग की तरह फॉलो करें, लेकिन गहरी गेंदों को आपकी नजर भटकाने न दें.",
   "Follow one moving target and train steady visual tracking.":
@@ -282,7 +280,6 @@ export const hi = {
   "Keep your head still unless a drill says otherwise. These modes are about eye movement, attention, and focus, not neck movement.":
     "जब तक अभ्यास में अलग निर्देश न हों, सिर स्थिर रखें। ये अभ्यास आँखों की गति, ध्यान और नज़र टिकाने के लिए हैं, गर्दन घुमाने के लिए नहीं।",
   Language: "भाषा",
-  "Language, theme, and saved preferences.": "भाषा, थीम और सहेजी गई प्राथमिकताएँ।",
   "Legal pages": "कानूनी पेज",
   "Let the disappearing gap move around the fixed circle. With steady focus, the colored balls may fade and the missing spot can look like a moving green afterimage.":
     "गायब होती खाली जगह को स्थिर गोल घेरे के आसपास चलने दें. नजर स्थिर रहे तो रंगीन गेंदें फीकी लग सकती हैं और खाली जगह चलती हुई हरी आफ्टरइमेज जैसी दिख सकती है.",

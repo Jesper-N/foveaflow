@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { LucideIcon } from "@lucide/svelte";
   import {
     Slider,
     SliderControl,
@@ -6,10 +7,14 @@
     SliderTrack,
     SliderValue,
   } from "@ui-sdk/svelte/slider";
+  import type { Attachment } from "svelte/attachments";
   import type { ClassValue } from "svelte/elements";
+
+  import RowLabel from "./row-label.svelte";
 
   interface Props {
     label: string;
+    icon?: LucideIcon;
     thumbLabel?: string;
     value: number;
     min: number;
@@ -23,6 +28,7 @@
 
   let {
     label,
+    icon,
     thumbLabel = label,
     value,
     min,
@@ -34,42 +40,104 @@
     class: className,
   }: Props = $props();
 
-  const wakeScale = [
-    "scale-y-170",
-    "scale-y-145",
-    "scale-y-125",
-    "scale-y-110",
-  ] as const;
+  const WAKE_HEIGHT = 1.3;
+  const WAKE_DECAY = 6.5;
+  const KEY_PUSH = 0.3;
 
-  let track = $state<HTMLDivElement>();
-  let pointerIndex = $state<number | null>(null);
+  const bars: (HTMLSpanElement | undefined)[] = [];
+  let energy = new Float32Array(0);
+  let frame = 0;
   let pressed = $state(false);
   let focused = $state(false);
+  let hovered = $state(false);
+  let lastX = 0;
+  let lastTime = 0;
+  let speed = 0;
 
   let ratio = $derived(max === min ? 0 : (value - min) / (max - min));
   let valueIndex = $derived(Math.round(ratio * (ticks - 1)));
-  let active = $derived(pressed || focused || pointerIndex !== null);
-  let wakeIndex = $derived(pressed || focused ? valueIndex : pointerIndex);
+  let active = $derived(pressed || focused || hovered);
   let indexes = $derived(Array.from({ length: ticks }, (_, index) => index));
 
-  const tickScale = (index: number) => {
-    if (wakeIndex === null) {
-      return "scale-y-100";
+  const registerBar =
+    (index: number): Attachment<HTMLSpanElement> =>
+    (node) => {
+      bars[index] = node;
+
+      return () => {
+        bars[index] = undefined;
+      };
+    };
+
+  const prefersStill = () =>
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const settle = (now: number, previous: number) => {
+    const elapsed = Math.min(0.05, (now - previous) / 1000);
+    const fall = Math.exp(-elapsed * WAKE_DECAY);
+    let moving = false;
+
+    for (const [index, bar] of bars.entries()) {
+      const next = (energy[index] ?? 0) * fall;
+      energy[index] = next < 0.002 ? 0 : next;
+      moving ||= next >= 0.002;
+      bar?.style.setProperty(
+        "scale",
+        `1 ${(1 + (energy[index] ?? 0) * WAKE_HEIGHT).toFixed(3)}`
+      );
     }
 
-    return wakeScale[Math.abs(index - wakeIndex)] ?? "scale-y-100";
+    frame =
+      moving || pressed
+        ? requestAnimationFrame((time) => {
+            settle(time, now);
+          })
+        : 0;
   };
 
-  const trackPointer = (event: PointerEvent) => {
-    if (!track || event.pointerType === "touch") {
+  const wake = (from: number, to: number, push: number) => {
+    if (push <= 0 || prefersStill()) {
       return;
     }
 
-    const box = track.getBoundingClientRect();
-    const position = (event.clientX - box.left) / box.width;
-    const clamped = Math.min(1, Math.max(0, position));
+    if (energy.length !== ticks) {
+      energy = new Float32Array(ticks);
+    }
 
-    pointerIndex = Math.round(clamped * (ticks - 1));
+    for (
+      let index = Math.min(from, to);
+      index <= Math.max(from, to);
+      index += 1
+    ) {
+      energy[index] = Math.max(energy[index] ?? 0, push);
+    }
+
+    if (frame === 0) {
+      const start = performance.now();
+      frame = requestAnimationFrame((time) => {
+        settle(time, start);
+      });
+    }
+  };
+
+  const indexOf = (next: number) =>
+    Math.round(((next - min) / (max - min || 1)) * (ticks - 1));
+
+  const trackSpeed = (event: PointerEvent) => {
+    if (!pressed) {
+      return;
+    }
+
+    const now = performance.now();
+    const elapsed = Math.max(0.008, (now - lastTime) / 1000);
+
+    speed = speed * 0.5 + (Math.abs(event.clientX - lastX) / elapsed) * 0.5;
+    lastX = event.clientX;
+    lastTime = now;
+  };
+
+  const stopWake: Attachment<HTMLElement> = () => () => {
+    cancelAnimationFrame(frame);
   };
 </script>
 
@@ -83,13 +151,19 @@
     "group/slider grid grid-cols-[1fr_auto] items-center gap-x-3",
     className,
   ]}
+  data-setting-row
   {format}
   {max}
   {min}
   onValueChange={(next) => {
-    if (typeof next === "number") {
-      onValueChange(next);
+    if (typeof next !== "number") {
+      return;
     }
+
+    const push = pressed ? 1 - Math.exp(-speed / 900) : KEY_PUSH;
+
+    wake(valueIndex, indexOf(next), push);
+    onValueChange(next);
   }}
   onfocusin={(event: FocusEvent) => {
     focused =
@@ -101,12 +175,12 @@
 >
   <span
     class={[
-      "text-md font-medium transition-colors duration-160 ease-out",
-      active ? "text-foreground" : "text-muted-foreground",
+      "text-md min-w-0 font-medium transition-colors duration-160 ease-out",
+      active || icon ? "text-foreground" : "text-muted-foreground",
     ]}
     aria-hidden="true"
   >
-    {label}
+    <RowLabel {active} {icon} {label} />
   </span>
   <SliderValue
     class={[
@@ -115,29 +189,40 @@
     ]}
   />
   <SliderControl
-    class="col-span-2 flex h-9 cursor-pointer touch-pan-y items-center pointer-coarse:h-11"
-    onpointerdown={() => (pressed = true)}
-    onpointerleave={() => (pointerIndex = null)}
-    onpointermove={trackPointer}
+    class={[
+      "col-span-2 flex h-10 cursor-pointer touch-pan-y items-center pointer-coarse:h-11",
+      icon && "ms-10",
+    ]}
+    onpointerdown={(event: PointerEvent) => {
+      pressed = true;
+      speed = 0;
+      lastX = event.clientX;
+      lastTime = performance.now();
+    }}
+    onpointerenter={(event: PointerEvent) => {
+      hovered = event.pointerType !== "touch";
+    }}
+    onpointerleave={() => (hovered = false)}
+    onpointermove={trackSpeed}
   >
-    <SliderTrack class="relative h-5 w-full">
+    <SliderTrack class="relative h-4 w-full">
       <div
-        bind:this={track}
         class="flex h-full w-full items-center justify-between"
+        {@attach stopWake}
         aria-hidden="true"
       >
         {#each indexes as index (index)}
           <span
             class={[
-              "ease-spring h-3.5 w-0.75 rounded-full transition-[scale,background-color] duration-220",
+              "h-4 w-0.75 rounded-full transition-colors duration-160 ease-out",
               index <= valueIndex ? "bg-foreground" : "bg-faint",
-              tickScale(index),
             ]}
+            {@attach registerBar(index)}
           ></span>
         {/each}
       </div>
       <SliderThumb
-        class="before:bg-foreground before:ease-spring has-focus-visible:outline-ring top-1/2 h-7 w-3 -translate-1/2 rounded-full outline-none before:absolute before:inset-y-0 before:left-1/2 before:w-0.75 before:-translate-x-1/2 before:rounded-full before:transition-[scale] before:duration-220 group-data-dragging/slider:before:scale-y-115 has-focus-visible:outline-2 has-focus-visible:outline-offset-2"
+        class="has-focus-visible:outline-ring top-1/2 h-7 w-2.5 -translate-1/2 rounded-full outline-none has-focus-visible:outline-2 has-focus-visible:outline-offset-2"
         aria-label={thumbLabel}
       />
     </SliderTrack>

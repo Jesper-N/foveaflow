@@ -67,8 +67,6 @@ export const es419 = {
   "Choose by the controls you need": "Elige según los controles que necesitas",
   "Choose shape, color, opacity, trails, and letter overlays.":
     "Elige forma, color, opacidad, estelas y letras superpuestas.",
-  "Choose your exercise and how it moves.":
-    "Elige tu ejercicio y cómo se mueve.",
   Circle: "Círculo",
   "Circle Smooth Pursuit Drill": "Ejercicio de Seguimiento suave en círculo",
   "Circle is the easiest repeating Smooth Pursuit pattern and the best starting point for most users. The loop is predictable, which makes it useful for warmups and speed changes.":
@@ -169,7 +167,6 @@ export const es419 = {
   "Figure Eight adds a crossover point, which means the target passes through the center and changes direction more often than a simple loop.":
     "Ocho agrega un punto de cruce, así que el objetivo pasa por el centro y cambia de dirección más seguido que en un bucle simple.",
   "Figure eight": "Ocho",
-  "Fine-tune what you follow.": "Ajusta el objetivo que sigues.",
   "Follow it like Smooth Pursuit, but do not let the darker balls pull your eyes away.":
     "Síguelo como en Seguimiento suave, pero no dejes que las bolas más oscuras te desvíen la mirada.",
   "Follow one moving target and train steady visual tracking.":
@@ -296,8 +293,6 @@ export const es419 = {
   "Keep your head still unless a drill says otherwise. These modes are about eye movement, attention, and focus, not neck movement.":
     "Mantén la cabeza quieta, salvo que el ejercicio indique otra cosa. Estos modos trabajan los movimientos oculares, la atención y la fijación de la mirada, no los movimientos del cuello.",
   Language: "Idioma",
-  "Language, theme, and saved preferences.":
-    "Idioma, tema y preferencias guardadas.",
   "Legal pages": "Páginas legales",
   "Let the disappearing gap move around the fixed circle. With steady focus, the colored balls may fade and the missing spot can look like a moving green afterimage.":
     "Deja que el espacio vacío recorra el círculo fijo. Al mantener la mirada estable, las bolas de colores pueden desvanecerse y el espacio vacío puede parecer ocupado por una postimagen verde en movimiento.",

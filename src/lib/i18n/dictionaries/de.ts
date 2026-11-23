@@ -67,8 +67,6 @@ export const de = {
   "Choose by the controls you need": "Wähle nach den benötigten Einstellungen",
   "Choose shape, color, opacity, trails, and letter overlays.":
     "Wähle Form, Farbe, Deckkraft, Bewegungsspuren und eingeblendete Buchstaben.",
-  "Choose your exercise and how it moves.":
-    "Wähle deine Übung und ihre Bewegung.",
   Circle: "Kreis",
   "Circle Smooth Pursuit Drill": "Kreis-Blickfolge-Drill",
   "Circle is the easiest repeating Smooth Pursuit pattern and the best starting point for most users. The loop is predictable, which makes it useful for warmups and speed changes.":
@@ -165,7 +163,6 @@ export const de = {
   "Figure Eight adds a crossover point, which means the target passes through the center and changes direction more often than a simple loop.":
     "Achter fügt einen Kreuzungspunkt hinzu. Das Ziel läuft durch die Mitte und wechselt öfter die Richtung als in einer einfachen Schleife.",
   "Figure eight": "Achter",
-  "Fine-tune what you follow.": "Passe das Ziel an, dem du folgst.",
   "Follow it like Smooth Pursuit, but do not let the darker balls pull your eyes away.":
     "Folge ihm wie bei der Blickfolge, aber lass dich von den dunkleren Bällen nicht wegziehen.",
   "Follow one moving target and train steady visual tracking.":
@@ -290,8 +287,6 @@ export const de = {
   "Keep your head still unless a drill says otherwise. These modes are about eye movement, attention, and focus, not neck movement.":
     "Halte den Kopf still, sofern die Übung nichts anderes vorgibt. Hier geht es um Augenbewegungen, Aufmerksamkeit und Blickkontrolle, nicht um Bewegungen des Nackens.",
   Language: "Sprache",
-  "Language, theme, and saved preferences.":
-    "Sprache, Design und gespeicherte Einstellungen.",
   "Legal pages": "Rechtliche Seiten",
   "Let the disappearing gap move around the fixed circle. With steady focus, the colored balls may fade and the missing spot can look like a moving green afterimage.":
     "Lass die verschwindende Lücke um den festen Kreis wandern. Bei ruhigem Fokus können die farbigen Bälle verblassen, und die fehlende Stelle kann wie ein wanderndes grünes Nachbild wirken.",

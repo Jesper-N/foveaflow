@@ -13,6 +13,7 @@
   import type { Attachment } from "svelte/attachments";
   import { on } from "svelte/events";
 
+  import DrillPreview from "../../icons/drill-preview.svelte";
   import BrandMark from "../../ui/brand-mark.svelte";
   import IconButton from "../../ui/icon-button.svelte";
   import { pressable } from "../../ui/styles";
@@ -149,7 +150,7 @@
   data-nosnippet
 >
   <section
-    class="island dark text-foreground pointer-events-auto relative w-full max-w-172 bg-black"
+    class="island dark text-foreground pointer-events-auto relative w-full max-w-108 bg-black"
     {@attach islandEvents}
     aria-label={t("Trainer controls")}
     data-expanded={expanded}
@@ -162,16 +163,64 @@
       tabindex={-1}
     ></Button>
 
-    <div class="island-panel grid gap-2 p-2">
-      <header class="flex items-center gap-1 ps-1.5">
+    <div class="island-panel grid gap-3 p-3.5">
+      <div class="flex items-center gap-3">
+        <DrillPreview
+          class="h-12 w-16 shrink-0 rounded-xl"
+          drillId={trainer.settings.drillId}
+          playing={false}
+        />
+        <IslandSelects />
+        {#if trainer.canReverse}
+          <IconButton
+            class={trainer.settings.motionDirection === -1
+              ? "bg-fill-hover text-foreground"
+              : undefined}
+            aria-describedby="trainer-motion-status"
+            label={trainer.settings.motionDirection === 1
+              ? t("Reverse motion direction")
+              : t("Use forward motion direction")}
+            onclick={trainer.toggleDirection}
+          >
+            <ArrowLeftRightIcon aria-hidden="true" />
+          </IconButton>
+        {/if}
+        <IconButton
+          class="size-12 rounded-full [&_svg]:size-5"
+          aria-describedby="trainer-motion-status"
+          label={trainer.motionPaused ? t("Resume motion") : t("Pause motion")}
+          onclick={trainer.togglePaused}
+          shortcut="space"
+          variant="primary"
+        >
+          {#if trainer.motionPaused}
+            <PlayIcon
+              class="translate-x-px fill-current stroke-0"
+              aria-hidden="true"
+            />
+          {:else}
+            <PauseIcon class="fill-current stroke-0" aria-hidden="true" />
+          {/if}
+        </IconButton>
+      </div>
+
+      <div
+        class={["grid gap-x-5 px-0.5", !trainer.isLilacChaser && "grid-cols-2"]}
+      >
+        <IslandAdjustments />
+      </div>
+
+      <footer
+        class="border-border -mx-1 flex items-center gap-1 border-t ps-1 pt-2"
+      >
         <a
           class={[
-            "text-md me-auto flex h-9 items-center gap-2.5 rounded-full pe-3 font-medium",
+            "text-muted-foreground hover:text-foreground me-auto flex h-9 items-center gap-2 rounded-full pe-2 text-sm font-medium",
             pressable,
           ]}
           href="/"
         >
-          <BrandMark class="size-7" />
+          <BrandMark class="size-6" />
           {siteMetadata.name}
         </a>
         <nav class="flex items-center gap-0.5" aria-label={t("App actions")}>
@@ -181,7 +230,6 @@
             label={trainer.route ? t("Open guide") : t("About FoveaFlow")}
             onclick={trainer.openGuide}
             shortcut="g"
-            side="bottom"
           >
             <BookOpenIcon aria-hidden="true" />
           </IconButton>
@@ -189,63 +237,11 @@
             label={t("Open controls")}
             onclick={trainer.openControls}
             shortcut="s"
-            side="bottom"
           >
             <SlidersHorizontalIcon aria-hidden="true" />
           </IconButton>
         </nav>
-      </header>
-
-      <div class="bg-fill grid gap-x-6 gap-y-2 rounded-3xl p-2">
-        <div
-          class="grid grid-cols-[auto_auto_minmax(0,1fr)] items-center gap-1.5 sm:grid-cols-[auto_auto_minmax(0,1fr)_minmax(0,1fr)]"
-        >
-          <IconButton
-            class="size-11"
-            aria-describedby="trainer-motion-status"
-            label={trainer.motionPaused
-              ? t("Resume motion")
-              : t("Pause motion")}
-            onclick={trainer.togglePaused}
-            shortcut="space"
-            variant="primary"
-          >
-            {#if trainer.motionPaused}
-              <PlayIcon
-                class="translate-x-px fill-current"
-                aria-hidden="true"
-              />
-            {:else}
-              <PauseIcon class="fill-current" aria-hidden="true" />
-            {/if}
-          </IconButton>
-          {#if trainer.canReverse}
-            <IconButton
-              class={trainer.settings.motionDirection === -1
-                ? "bg-fill-hover text-foreground"
-                : undefined}
-              aria-describedby="trainer-motion-status"
-              label={trainer.settings.motionDirection === 1
-                ? t("Reverse motion direction")
-                : t("Use forward motion direction")}
-              onclick={trainer.toggleDirection}
-            >
-              <ArrowLeftRightIcon aria-hidden="true" />
-            </IconButton>
-          {:else}
-            <span></span>
-          {/if}
-          <IslandSelects />
-        </div>
-        <div
-          class={[
-            "grid gap-x-6 px-2.5 pb-1",
-            trainer.isLilacChaser ? "sm:grid-cols-2" : "grid-cols-2",
-          ]}
-        >
-          <IslandAdjustments />
-        </div>
-      </div>
+      </footer>
     </div>
   </section>
 </div>

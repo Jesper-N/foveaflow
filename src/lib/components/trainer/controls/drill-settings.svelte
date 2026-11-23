@@ -1,12 +1,20 @@
 <script lang="ts">
   import { t } from "$lib/i18n/translate";
   import { isPursuitPattern } from "$lib/trainer/settings/patterns";
+  import {
+    ArrowLeftRightIcon,
+    AudioWaveformIcon,
+    CrosshairIcon,
+    GaugeIcon,
+    RouteIcon,
+    SplineIcon,
+  } from "@lucide/svelte";
 
   import DrillIcon from "../../icons/drill-icon.svelte";
   import PatternGlyph from "../../icons/pattern-glyph.svelte";
+  import RowLabel from "../../ui/row-label.svelte";
   import Segmented from "../../ui/segmented.svelte";
   import Select from "../../ui/select.svelte";
-  import { settingsGroup } from "../../ui/styles";
   import Switch from "../../ui/switch.svelte";
   import {
     behaviorGroups,
@@ -15,17 +23,16 @@
   } from "../select-options";
   import { getTrainer } from "../trainer-context";
   import SettingSlider from "./setting-slider.svelte";
-  import SettingsIntro from "./settings-intro.svelte";
+  import SettingsSection from "./settings-section.svelte";
 
   const trainer = getTrainer();
 </script>
 
-<SettingsIntro>{t("Choose your exercise and how it moves.")}</SettingsIntro>
-
-<div class={settingsGroup}>
+<SettingsSection id="trainer-exercise-settings">
   <Select
     groups={drillGroups()}
     label={t("Drill")}
+    labelIcon={CrosshairIcon}
     onValueChange={trainer.selectDrill}
     value={trainer.settings.drillId}
   >
@@ -37,6 +44,7 @@
     <Select
       groups={patternGroups()}
       label={t("Motion path")}
+      labelIcon={RouteIcon}
       onValueChange={trainer.selectPattern}
       value={trainer.settings.patternId}
     >
@@ -47,28 +55,23 @@
       {/snippet}
     </Select>
   {/if}
-</div>
+</SettingsSection>
 
 {#if !trainer.isLilacChaser}
-  <section class={settingsGroup} aria-labelledby="trainer-motion-settings">
-    <h3
-      id="trainer-motion-settings"
-      class="text-muted-foreground text-sm font-medium"
-    >
-      {t("Motion")}
-    </h3>
+  <SettingsSection id="trainer-motion-settings" title={t("Motion")}>
     <Select
       groups={behaviorGroups()}
       label={t("Motion feel")}
+      labelIcon={AudioWaveformIcon}
       onValueChange={trainer.selectBehavior}
       value={trainer.behavior}
     />
-    <SettingSlider label={t("Speed")} setting="speed" />
+    <SettingSlider icon={GaugeIcon} label={t("Speed")} setting="speed" />
     {#if trainer.canReverse}
-      <div class="flex items-center justify-between gap-3">
-        <span class="text-md font-medium" aria-hidden="true"
-          >{t("Direction")}</span
-        >
+      <div class="flex items-center justify-between gap-3" data-setting-row>
+        <span class="text-md min-w-0 font-medium" aria-hidden="true">
+          <RowLabel icon={ArrowLeftRightIcon} label={t("Direction")} />
+        </span>
         <Segmented
           label={t("Direction")}
           onValueChange={trainer.setDirection}
@@ -80,9 +83,10 @@
         />
       </div>
       <Switch
+        icon={SplineIcon}
         label={t("Show trail")}
         bind:checked={trainer.settings.showTrail}
       />
     {/if}
-  </section>
+  </SettingsSection>
 {/if}

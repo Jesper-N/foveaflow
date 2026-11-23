@@ -1,6 +1,7 @@
 <script lang="ts">
   import { settingRanges } from "$lib/trainer/settings/settings";
   import type { RangedSetting } from "$lib/trainer/settings/settings";
+  import type { LucideIcon } from "@lucide/svelte";
   import type { ClassValue } from "svelte/elements";
 
   import Slider from "../../ui/slider.svelte";
@@ -10,14 +11,18 @@
   interface Props {
     setting: RangedSetting;
     label: string;
+    icon?: LucideIcon;
     thumbLabel?: string;
+    ticks?: number;
     class?: ClassValue;
   }
 
   let {
     setting,
     label,
+    icon,
     thumbLabel = label,
+    ticks,
     class: className,
   }: Props = $props();
 
@@ -28,6 +33,7 @@
 <Slider
   class={className}
   format={(value) => formatSetting(setting, value)}
+  {icon}
   {label}
   max={range.max}
   min={range.min}
@@ -36,5 +42,6 @@
   }}
   step={range.step}
   {thumbLabel}
+  {ticks}
   value={trainer.settings[setting]}
 />

@@ -64,8 +64,6 @@ export const en = {
   "Choose by the controls you need": "Choose by the controls you need",
   "Choose shape, color, opacity, trails, and letter overlays.":
     "Choose shape, color, opacity, trails, and letter overlays.",
-  "Choose your exercise and how it moves.":
-    "Choose your exercise and how it moves.",
   Circle: "Circle",
   "Circle Smooth Pursuit Drill": "Circle Smooth Pursuit Drill",
   "Circle is the easiest repeating Smooth Pursuit pattern and the best starting point for most users. The loop is predictable, which makes it useful for warmups and speed changes.":
@@ -161,7 +159,6 @@ export const en = {
   "Figure Eight adds a crossover point, which means the target passes through the center and changes direction more often than a simple loop.":
     "Figure Eight adds a crossover point, which means the target passes through the center and changes direction more often than a simple loop.",
   "Figure eight": "Figure eight",
-  "Fine-tune what you follow.": "Fine-tune what you follow.",
   "Follow it like Smooth Pursuit, but do not let the darker balls pull your eyes away.":
     "Follow it like Smooth Pursuit, but do not let the darker balls pull your eyes away.",
   "Follow one moving target and train steady visual tracking.":
@@ -286,8 +283,6 @@ export const en = {
   "Keep your head still unless a drill says otherwise. These modes are about eye movement, attention, and focus, not neck movement.":
     "Keep your head still unless a drill says otherwise. These modes are about eye movement, attention, and focus, not neck movement.",
   Language: "Language",
-  "Language, theme, and saved preferences.":
-    "Language, theme, and saved preferences.",
   "Legal pages": "Legal pages",
   "Let the disappearing gap move around the fixed circle. With steady focus, the colored balls may fade and the missing spot can look like a moving green afterimage.":
     "Let the disappearing gap move around the fixed circle. With steady focus, the colored balls may fade and the missing spot can look like a moving green afterimage.",

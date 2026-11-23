@@ -64,7 +64,6 @@ export const zhHK = {
   "Choose by the controls you need": "按需要的控制項來選擇",
   "Choose shape, color, opacity, trails, and letter overlays.":
     "選擇形狀、顏色、不透明度、拖尾和字母疊加。",
-  "Choose your exercise and how it moves.": "選擇練習及其移動方式。",
   Circle: "圓形",
   "Circle Smooth Pursuit Drill": "圓形平滑追蹤練習",
   "Circle is the easiest repeating Smooth Pursuit pattern and the best starting point for most users. The loop is predictable, which makes it useful for warmups and speed changes.":
@@ -157,7 +156,6 @@ export const zhHK = {
   "Figure Eight adds a crossover point, which means the target passes through the center and changes direction more often than a simple loop.":
     "8 字形加入交叉點，目標會穿過中心，比簡單循環更頻繁地改變方向。",
   "Figure eight": "8 字形",
-  "Fine-tune what you follow.": "按需要調整追蹤目標。",
   "Follow it like Smooth Pursuit, but do not let the darker balls pull your eyes away.":
     "像平滑追蹤一樣跟隨它，但不要被較暗的球帶走視線。",
   "Follow one moving target and train steady visual tracking.":
@@ -281,7 +279,6 @@ export const zhHK = {
   "Keep your head still unless a drill says otherwise. These modes are about eye movement, attention, and focus, not neck movement.":
     "除非練習另有說明，請保持頭部不動。這些練習針對眼球運動、注意力和注視控制，不需要轉動頸部。",
   Language: "語言",
-  "Language, theme, and saved preferences.": "語言、主題及已儲存的偏好設定。",
   "Legal pages": "法律頁面",
   "Let the disappearing gap move around the fixed circle. With steady focus, the colored balls may fade and the missing spot can look like a moving green afterimage.":
     "讓消失的缺口沿固定圓圈移動。保持穩定注視時，彩色球可能會變淡，缺口位置可能看起來像一個移動的綠色殘像。",

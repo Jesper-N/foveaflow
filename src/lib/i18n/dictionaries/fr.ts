@@ -69,8 +69,6 @@ export const fr = {
     "Choisissez selon les réglages nécessaires",
   "Choose shape, color, opacity, trails, and letter overlays.":
     "Choisissez la forme, la couleur, l’opacité, les traînées et les lettres superposées.",
-  "Choose your exercise and how it moves.":
-    "Choisissez votre exercice et son mouvement.",
   Circle: "Cercle",
   "Circle Smooth Pursuit Drill": "Exercice de poursuite fluide Cercle",
   "Circle is the easiest repeating Smooth Pursuit pattern and the best starting point for most users. The loop is predictable, which makes it useful for warmups and speed changes.":
@@ -171,7 +169,6 @@ export const fr = {
   "Figure Eight adds a crossover point, which means the target passes through the center and changes direction more often than a simple loop.":
     "Huit ajoute un point de croisement : la cible passe par le centre et change de direction plus souvent que dans une boucle simple.",
   "Figure eight": "Huit",
-  "Fine-tune what you follow.": "Ajustez la cible que vous suivez.",
   "Follow it like Smooth Pursuit, but do not let the darker balls pull your eyes away.":
     "Suivez-la comme en Poursuite fluide, sans laisser les balles plus sombres attirer vos yeux.",
   "Follow one moving target and train steady visual tracking.":
@@ -298,8 +295,6 @@ export const fr = {
   "Keep your head still unless a drill says otherwise. These modes are about eye movement, attention, and focus, not neck movement.":
     "Gardez la tête immobile, sauf indication contraire. Ces exercices sollicitent les mouvements oculaires, l’attention et la fixation du regard, pas les mouvements du cou.",
   Language: "Langue",
-  "Language, theme, and saved preferences.":
-    "Langue, thème et préférences enregistrées.",
   "Legal pages": "Pages légales",
   "Let the disappearing gap move around the fixed circle. With steady focus, the colored balls may fade and the missing spot can look like a moving green afterimage.":
     "Laissez l’espace vide parcourir le cercle fixe. Avec une fixation stable, les balles colorées peuvent s’effacer et l’espace vide peut sembler occupé par une image rémanente verte en mouvement.",
