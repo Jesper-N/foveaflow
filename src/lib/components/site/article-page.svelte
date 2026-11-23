@@ -8,11 +8,11 @@
   import { buttonClass } from "../ui/button-variants";
   import DrillCard from "./drill-card.svelte";
   import FeatureComparison from "./feature-comparison.svelte";
-  import { bodyText, pageWidth } from "./layout";
+  import { bodyText, pageWidth, sectionGap } from "./layout";
   import PageCta from "./page-cta.svelte";
   import PageHero from "./page-hero.svelte";
   import PageSection from "./page-section.svelte";
-  import PageToc from "./page-toc.svelte";
+  import SectionNav from "./section-nav.svelte";
   import SiteShell from "./site-shell.svelte";
   import StepList from "./step-list.svelte";
 
@@ -33,9 +33,15 @@
     title={t(page.heading)}
   >
     {#snippet actions()}
-      <a class={buttonClass("primary", "lg")} href={page.primaryCta.href}>
+      <a
+        class={[buttonClass("primary", "lg"), "group/cta"]}
+        href={page.primaryCta.href}
+      >
         {t(page.primaryCta.label)}
-        <ArrowRightIcon class="rtl:rotate-180" aria-hidden="true" />
+        <ArrowRightIcon
+          class="ease-spring transition-transform duration-260 group-hover/cta:translate-x-0.5 rtl:-scale-x-100"
+          aria-hidden="true"
+        />
       </a>
       {#if page.secondaryCta}
         <a class={buttonClass("secondary", "lg")} href={page.secondaryCta.href}>
@@ -49,7 +55,7 @@
     {/snippet}
     {#if page.comparison === undefined}
       <nav aria-label={t("Choose a drill")}>
-        <ul class="grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-4">
+        <ul class="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
           {#each drillGuides as guide (guide.drillId)}
             <li class="grid">
               <DrillCard
@@ -62,53 +68,44 @@
           {/each}
         </ul>
       </nav>
+    {:else}
+      <FeatureComparison
+        checkedOn={page.lastModified}
+        comparison={page.comparison}
+      />
     {/if}
   </PageHero>
 
-  {#if page.comparison !== undefined}
-    <FeatureComparison
-      checkedOn={page.lastModified}
-      comparison={page.comparison}
+  <SectionNav links={contents} />
+  <div class={[pageWidth, sectionGap, "pt-20"]}>
+    {#each page.sections as section, index (section.heading)}
+      <PageSection id="section-{index}" heading={t(section.heading)}>
+        {#each section.body ?? [] as paragraph (paragraph)}
+          <p class={bodyText}>{t(paragraph)}</p>
+        {/each}
+        {#if section.orderedList}
+          <StepList steps={section.orderedList} />
+        {/if}
+        {#if section.list}
+          <ul class="bg-card grid gap-1 rounded-4xl p-2">
+            {#each section.list as item (item)}
+              <li class="text-md flex gap-3 rounded-2xl p-3 text-pretty">
+                <span
+                  class="bg-target mt-1.75 size-1.5 shrink-0 rounded-full"
+                  aria-hidden="true"
+                ></span>
+                {t(item)}
+              </li>
+            {/each}
+          </ul>
+        {/if}
+      </PageSection>
+    {/each}
+    <PageCta
+      body={t("Start slow. Adjust as you go.")}
+      href={page.primaryCta.href}
+      label={t(page.primaryCta.label)}
+      title={t("Try it with your own settings")}
     />
-  {/if}
-
-  <div
-    class={[
-      pageWidth,
-      "grid gap-10 lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-16",
-    ]}
-  >
-    <PageToc links={contents} />
-    <div class="grid max-w-2xl gap-20">
-      {#each page.sections as section, index (section.heading)}
-        <PageSection id="section-{index}" heading={t(section.heading)}>
-          {#each section.body ?? [] as paragraph (paragraph)}
-            <p class={bodyText}>{t(paragraph)}</p>
-          {/each}
-          {#if section.orderedList}
-            <StepList steps={section.orderedList} />
-          {/if}
-          {#if section.list}
-            <ul class="grid gap-2.5">
-              {#each section.list as item (item)}
-                <li class="text-md flex gap-3">
-                  <span
-                    class="bg-target mt-2 size-1.5 shrink-0 rounded-full"
-                    aria-hidden="true"
-                  ></span>
-                  <span class="text-pretty">{t(item)}</span>
-                </li>
-              {/each}
-            </ul>
-          {/if}
-        </PageSection>
-      {/each}
-      <PageCta
-        body={t("Start slow. Adjust as you go.")}
-        href={page.primaryCta.href}
-        label={t(page.primaryCta.label)}
-        title={t("Try it with your own settings")}
-      />
-    </div>
   </div>
 </SiteShell>

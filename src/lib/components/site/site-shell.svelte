@@ -66,18 +66,26 @@
     {@render children()}
   </main>
 
-  <footer class="mt-24">
+  <footer class={[pageWidth, "mt-32 pb-6"]}>
     <div
-      class={[
-        pageWidth,
-        "text-muted-foreground flex flex-col gap-4 py-8 text-sm sm:flex-row sm:items-center sm:justify-between",
-      ]}
+      class="bg-card grid gap-10 rounded-4xl p-6 sm:grid-cols-[minmax(0,1fr)_auto] sm:p-10"
     >
-      <p class="flex items-center gap-2.5">
-        <BrandMark class="size-6 rounded-md" />
-        {t("FoveaFlow is free. No account, no paid plan.")}
-      </p>
-      <nav class="-mx-3 flex flex-wrap gap-1" aria-label={t("Legal pages")}>
+      <div class="grid content-start gap-4">
+        <a
+          class="flex items-center gap-3 justify-self-start text-lg font-semibold"
+          href="/"
+        >
+          <BrandMark class="size-10 rounded-xl" />
+          {siteMetadata.name}
+        </a>
+        <p class="text-md text-muted-foreground max-w-sm text-pretty">
+          {t("FoveaFlow is free. No account, no paid plan.")}
+        </p>
+      </div>
+      <nav
+        class="-mx-3 flex flex-wrap content-start gap-1 sm:flex-col sm:items-end"
+        aria-label={t("Legal pages")}
+      >
         {#each footerLinks as link (link.href)}
           <a
             class={pillLink}

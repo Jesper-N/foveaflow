@@ -6,10 +6,10 @@ Values come from measuring [bencho.dev](https://bencho.dev/) in both themes (see
 
 ## Principles
 
-- **Fill tiers, not borders.** Surfaces separate by background shade. There are no borders; a hairline (`border`) is for table rows and dividers only.
-- **Pills and concentric corners.** Every button, chip, select trigger, and segmented track is a full pill. Nested surfaces keep corners concentric: an inner radius equals the outer radius minus the padding between them (28 → 8 px padding → 20).
-- **The drill is the content.** On trainer pages the canvas fills the screen, controls float above it, and they fade out while the target moves and the pointer rests.
-- **Quiet motion.** Short, ease-out, interruptible transitions on transform and opacity. Nothing animates on a keyboard shortcut. Everything respects reduced motion.
+- **Fill tiers, not borders.** Surfaces separate by background shade. A hairline (`border`) is for dividers only: accordion rows, table rows, the guide footer.
+- **Pills and concentric corners.** Buttons, triggers, chips and tracks are full pills. Nested surfaces keep corners concentric: inner radius = outer radius − padding (28 → 8 → 20).
+- **The drill is the content.** On trainer pages the canvas fills the screen and the controls live in one island that stays out of the way: a small black notch at rest, hidden with the cursor while the target moves.
+- **Motion has a job or it doesn't ship.** Every animation below names its purpose. Nothing loops in the corner of your eye while you train, nothing animates on a keyboard shortcut, and everything respects reduced motion.
 
 ## Color
 
@@ -20,7 +20,7 @@ Semantic tokens follow shadcn naming. `fill*` and `border` are alpha overlays of
 | `background` | `#ffffff` | `#0a0a0a` | Page |
 | `foreground` | `#17181a` | `#ffffff` | Text, icons |
 | `canvas` | `#f7f7f6` | `#0a0a0a` | Trainer stage, illustration plates |
-| `card` | `#f1f1f0` | `#181818` | Large page cards (grid-card tier) |
+| `card` | `#f1f1f0` | `#181818` | Large page cards (bencho's wall-card tier) |
 | `popover` | `#ffffff` | `#262626` | Floating surfaces: HUD, dialogs, menus (component "slab") |
 | `primary` / `primary-foreground` | `#17181a` / `#fff` | `#fff` / `#0a0a0a` | Primary buttons, selected tiles, tooltips |
 | `muted-foreground` | `#646568` | `#a1a1a1` | Secondary text |
@@ -33,8 +33,11 @@ Semantic tokens follow shadcn naming. `fill*` and `border` are alpha overlays of
 | `target` | `#fdc700` | `#f0b100` | The drill target. Same values as `getCanvasTheme().targetColor` |
 | `grid` | `rgb(16 18 22 / .075)` | `rgb(255 255 255 / .045)` | Canvas grid lines. Same values as the canvas theme |
 | `thumb` | `#ffffff` | white 16% | Segmented and tab indicator |
+| `lilac-stage` | `#d8d8da` | `#d8d8da` | Lilac Chaser previews (the illusion needs its grey) |
 
 Contrast (WCAG): text on `background`/`popover` is 15:1 or more. `muted-foreground` is at least 4.5:1 on every surface it sits on, including `fill` nested inside `card` (light 4.54:1, dark 4.89:1). bencho's own 52% muted mix (`#868788`) is 3.6:1 on white, so it was darkened. `ring` is 5.9:1 or more.
+
+The island and the closing call to action are always dark: they carry the `dark` class, which switches every token inside them (the dark token set applies to `.dark`, not only to `html.dark`). Menus opened from the island are dark too.
 
 The target stays the brand yellow from the logo rather than a bencho accent: it is the one color that must win on the canvas.
 
@@ -65,8 +68,9 @@ Tailwind's 4 px scale. The values in use, so new work picks from these:
 - **2 / 4 px** — segmented track padding, icon-button gaps in a toolbar.
 - **6 / 8 px** — popup padding, gaps between pills, list gaps, the inset between a floating panel and the screen edge on phones.
 - **12 / 16 px** — gaps between rows in a settings group, card padding, page gutter on phones.
-- **20 / 24 px** — dialog padding, page gutter from `sm`.
-- **40 / 64 / 80 px** — hero gaps, gap between TOC and content, gap between page sections.
+- **20 / 24 / 32 px** — dialog padding, card padding on large cards, page gutters from `sm` and `lg`.
+- **56 / 80 px** — hero gaps, the gap between the editorial heading column and its content.
+- **112 / 144 px** — gap between page sections (`sectionGap`), phones / desktop.
 
 ## Radius
 
@@ -78,12 +82,12 @@ Tailwind's 4 px scale. The values in use, so new work picks from these:
 | `rounded-xl` | 14 | List rows, tiles, small plates |
 | `rounded-2xl` | 20 | Cards inside a surface, popups, settings groups |
 | `rounded-3xl` | 24 | Illustration plates inside big cards, comparison table |
-| `rounded-4xl` | 28 | Floating HUD dock, dialogs, page cards |
+| `rounded-4xl` | 28 | The open island, dialogs, page cards, drill tiles |
 | `rounded-full` | — | Buttons, triggers, chips, tracks, switches, avatars |
 
 ## Elevation
 
-Only floating surfaces get a shadow: `shadow-popover` (a 1 px 6% ring plus a soft 32 px drop). Segmented and tab thumbs get `shadow-thumb`. Nothing else casts a shadow. Backdrops dim the page to black 24% (48% dark); the controls panel dims less (8% / 32%) so the drill stays readable while you tune it.
+Only floating surfaces get a shadow: `shadow-popover` (a 1 px 6% ring plus a soft 32 px drop). The island uses a `drop-shadow` filter so the shadow follows its morphing shape, plus a 0.5 px light edge so the black notch reads on a dark canvas. Segmented and tab thumbs and small raised chips get `shadow-thumb`. Nothing else casts a shadow. Backdrops dim the page to black 24% (48% dark); the controls panel dims less (8% / 32%) so the drill stays readable while you tune it.
 
 ## Sizes
 
@@ -95,63 +99,95 @@ Only floating surfaces get a shadow: `shadow-popover` (a 1 px 6% ring plus a sof
 | Play / pause | 44 | 44 |
 | Segmented item | 32 in a 36 track | 40 |
 | List row | 36 | 44 |
-| Slider hit area | 32 | 44 |
+| Slider hit area | 36 | 44 |
+| Island notch | 36 × 120 | 44 × 136 |
 | Color swatch | 32 | 44 |
 
 ## Icons
 
-[Lucide](https://lucide.dev) via `@lucide/svelte`, stroke 2 (Lucide's default, as on bencho), `currentColor`. Sizes: 16 in buttons and rows, 18 in icon buttons, 20 for tile glyphs. Icons beside text are `aria-hidden`; icon-only buttons are named by their tooltip.
+[Lucide](https://lucide.dev) via `@lucide/svelte`, stroke 2, `currentColor`. Sizes: 16 in buttons and rows, 18 in icon buttons, 20 in tiles. Icons beside text are `aria-hidden`; icon-only buttons are named by their tooltip.
 
-Custom SVGs live in `src/lib/components/icons/`:
+Custom SVGs in `src/lib/components/icons/`:
 
-- `drill-icon` — 24 px glyph per drill, stroke 1.5, faded strokes for "history" (trail, ghost positions, distractors).
-- `pattern-glyph` — the real route of each motion path in a 32 × 24 box, generated from the engine by `scripts/generate-pattern-glyphs.ts` into `src/lib/trainer/glyphs/pattern-glyphs.ts`. A unit test fails when a path changes and the data is stale.
-- `target-form-glyph` — the six target forms, drawn like the canvas draws them.
-- `drill-illustration` — a 160 × 100 scene per drill on the canvas grid, used on drill cards and guide sections. It animates only while its card is hovered or focused.
-- `path-end-art` — the 404 scene: a path that runs out before the missing target.
+- `drill-icon` — one 24 px glyph per drill in Lucide's stroke (2, round caps and joins), with the target drawn as a filled `target`-yellow dot. Smooth Pursuit: a curve that lands on the target. Reaction Jumps: a dashed jump arc from a ring to the target. Multiple Distractions: the target among rings. Lilac Chaser: a ring of dots around a fixation cross, the moving gap in yellow.
+- `drill-preview` — a live miniature of each drill on the canvas grid, drawn from the real motion data:
+  - Smooth Pursuit runs the engine's Figure eight route with a fading trail.
+  - Reaction Jumps pops between four spots with a landing ripple.
+  - Multiple Distractions moves the target along one route and six darker distractors along six others.
+  - Lilac Chaser blurs twelve dots on grey and hides one per 100 ms step, like the drill. It plays while visible, or only while its host is explored (`playing` prop). Reduced motion shows a still frame.
+- `pattern-glyph` — each motion path's real route in a 32 × 24 box, generated from the engine by `scripts/generate-pattern-glyphs.ts`. A unit test fails when the data is stale.
+- `target-form-glyph` — the six target forms as the canvas draws them.
+- `path-end-art` — the 404 scene: the target runs its route once and stops where the path breaks, beside a dashed ring where the next target should be.
 - `brand-mark` — the logo emblem.
 
 ## Motion
 
 | Token | Value | Use |
 | --- | --- | --- |
-| `ease-out` | `cubic-bezier(0.22, 1, 0.36, 1)` | Default for everything entering or reacting |
-| `ease-spring` | `cubic-bezier(0.24, 1.34, 0.38, 1)` | Small things that should feel alive: switch thumb, swatch ring |
+| `ease-out` | `cubic-bezier(0.22, 1, 0.36, 1)` | Entering, reacting, fades |
+| `ease-spring` | `cubic-bezier(0.24, 1.34, 0.38, 1)` | Small things with a little life: switch thumb, hover fills, arrows, swatches |
+| `ease-spring-soft` | spring `linear()`, damping 0.78, response 0.42 s | The island opening |
+| `ease-spring-settle` | spring `linear()`, damping 1, response 0.32 s | The island closing (no overshoot) |
 | `ease-drawer` | `cubic-bezier(0.32, 0.72, 0, 1)` | Side panel |
-| `ease-in-out` | `cubic-bezier(0.65, 0, 0.2, 1)` | Movement across the screen (illustrations) |
-| `duration-160` | 160 ms | Color and opacity changes, popups in |
-| `duration-220` | 220 ms | Thumbs, indicators, chevrons, switch |
-| `duration-300` | 300 ms | Side panel in (200 ms out) |
-| `animate-rise` | 620 ms, 10 px | One entrance per page: hero text, trainer dock |
+| `ease-in-out` | `cubic-bezier(0.65, 0, 0.2, 1)` | Movement across the screen (404 runner, equal-speed loops) |
+| `duration-160` | 160 ms | Color and opacity, popups in |
+| `duration-220` | 220 ms | Thumbs, indicators, chevrons, slider ticks |
+| `duration-260` | 260 ms | Springy details, accordion height, guide dialog |
+| `duration-300` | 300 ms | Side panel in (200 ms out), section-nav pill |
+| `animate-rise` | 620 ms, 10 px | One entrance per page: the hero text |
 
-Rules:
+The spring curves are generated from Apple's damping/response model, not eyeballed. CSS transitions retarget from the current value, so every interactive animation can be interrupted mid-flight.
 
-- **Press:** pressables scale to 0.96 (`motion-safe:active:scale-96`), the press itself runs at 100 ms. Small swatches dip to 0.9, big cards to 0.98.
-- **Hover** only on devices that hover (Tailwind's `hover:` already checks). Touch gets `:active` feedback instead.
-- **Popups** (select, tooltip) grow from `--transform-origin`: opacity 0 → 1 and scale 0.96 → 1 in 160 ms, out in 120 ms. Tooltips wait 420 ms, then appear instantly on neighbouring buttons (ui-sdk does this), sliding 4 px from their side.
-- **Dialogs:** the guide scales from the center (0.96, 260 ms in, 180 ms out). The controls slide 24 px from the right edge (300 ms in, 200 ms out). On touch screens both become bottom sheets that follow the finger and dismiss with a swipe (ui-sdk sheet presentation).
-- **Indicators** (segmented, tabs) slide between items in 220 ms; text color crossfades in 160 ms.
-- **Idle HUD:** while the target moves and a mouse rests for 2 s, the HUD fades out over 700 ms and comes back in 160 ms on movement or keyboard focus. Touch screens never hide it.
-- **No animation** on keyboard shortcuts' effects beyond the component's own state change, and no stagger on menus or lists.
-- **Reduced motion:** a global rule turns animations into a 1 ms jump and limits transitions to color, opacity, and shadow, so nothing slides or scales. The trainer also starts paused. Illustrations stay still.
+### Every interaction and why it moves
+
+| Interaction | What happens | Why |
+| --- | --- | --- |
+| Press | Pressables dip to 0.96 in 100 ms (swatches 0.9, cards 0.98) | Instant proof the press landed, before any result |
+| Hover on ghost buttons and nav pills | A fill grows in from 0.86 (bencho's header buttons) | Says "this is pressable" without shouting; mouse only |
+| Hover on links with arrows | The arrow nudges toward where the link goes | Previews direction; no other motion |
+| Island opens (hover 80 ms, tap, or keyboard focus) | The notch's clip-path grows into the panel on a soft spring; controls fade in from a 6 px blur 70 ms later | The controls come out of the thing you touched, so you always know where they live. One morph, no stagger |
+| Island closes (pointer away 320 ms, outside tap, Escape) | Panel fades out fast, the clip settles back with no overshoot | Leaving is quicker than arriving; the grace delay forgives a pointer that slips off |
+| Island at rest | A blank black notch, no text, icon or motion | Nothing to read or watch while you track the target |
+| Island while training | Fades out over 700 ms with the cursor (mouse only), back in 160 ms on movement | The drill gets the whole screen; the way back is instant |
+| Slider wake | Ticks near the pointer, or near the value while dragging or focused, stretch up to 1.7× on a spring; label and value brighten | A physical instrument: you see where a click will land and how far you've moved |
+| Switch | Thumb springs across; it stretches while pressed | The iOS feel of something you're physically pushing |
+| Segmented control, tabs | The thumb slides between options in 220 ms | Shows the choice moved, not swapped |
+| Section nav | The black pill slides to the section you're reading and scrolls into view | Wayfinding: where you are in a long page |
+| Select, popover | Grows from the trigger (`--transform-origin`) in 160 ms, out in 120 ms | Spatial origin; fast enough for a frequent action |
+| Tooltip | After 420 ms, then instant on neighbours, with the shortcut key | Teaches shortcuts without delaying repeat use |
+| Accordion | Height and fade in 260 ms, plus turns into × | State change you can follow |
+| Drill tile | Its preview plays and the open button scales in while hovered or focused | You explore a drill before you open it; still otherwise, so a page of tiles stays calm |
+| Guide drill list | Hovering a drill plays its preview and dims the others | Maps each name to its motion |
+| Drill showcase | The sticky stage crossfades (blur 8 px, 0.96) to the drill you're reading | One focal motion that follows the reading |
+| Motion path tile | A dot runs the route while hovered | Shows the path's speed and shape, which a still line can't |
+| Target preview (Controls › Targets) | Form, color, size, opacity and letters update live on a spring | The canvas is dimmed behind the panel; this is the feedback |
+| Target form tile | The selected glyph pops to 1.15 | Confirms the pick |
+| 404 | The target runs its route once and stops at the break | Tells the "path ends here" story; plays once |
+| Hero | Text rises once on load | First impression only |
+
+Never: animation on keyboard shortcuts beyond the state change itself, staggered menus or lists, looping motion in the trainer chrome, `transition: all`.
+
+**Reduced motion:** a global rule turns animations into a 1 ms jump and limits transitions to color, opacity and shadow. Components also opt out explicitly: the island swaps its morph for a fade, previews and path tiles stay still (Lilac Chaser keeps its gap), the showcase only fades, and the trainer starts paused.
 
 ## Components
 
-`src/lib/components/ui/` holds the kit. Interactive parts are [ui-sdk](https://ui-sdk.dev) (`@ui-sdk/svelte`) components with our classes; read `node_modules/@ui-sdk/svelte/docs/llms.txt` and the component page before changing one. Don't hand-roll a role that ui-sdk ships.
+`src/lib/components/ui/` holds the kit. Interactive parts are [ui-sdk](https://ui-sdk.dev) (`@ui-sdk/svelte`) components with our classes; read `node_modules/@ui-sdk/svelte/docs/llms.txt` and the component's page before changing one. Don't hand-roll a role that ui-sdk ships.
 
 | Component | Built on | Use |
 | --- | --- | --- |
-| `button-variants.ts` | — | `buttonClass(variant, size)` for links that look like buttons and for ui-sdk parts that render buttons (Dialog close, Alert Dialog actions) |
-| `button.svelte` | ui-sdk Button | Actions. Variants `primary`, `secondary`, `ghost`; sizes `sm`, `md`, `lg`, `icon` |
-| `icon-button.svelte` | Button + Tooltip | Icon-only actions. The tooltip names the button and shows its shortcut key |
-| `select.svelte` | ui-sdk Select | Every choice from a list. Groups, leading icon per option, check on the chosen one. Presents as a bottom sheet on touch screens; `compact` keeps a popover and hides the chevron on phones |
-| `slider.svelte` | ui-sdk Slider | Every number. Tick track from bencho's wake slider: filled ticks up to the value, a 3 px marker as the thumb, the formatted value above |
-| `switch.svelte` | ui-sdk Switch | On/off settings, as a whole-row label |
+| `button-variants.ts` | — | `buttonClass(variant, size)` for links that look like buttons and for ui-sdk parts that render buttons |
+| `button.svelte` | ui-sdk Button | Actions. `primary`, `secondary`, `ghost`; sizes `sm`, `md`, `lg`, `icon` |
+| `icon-button.svelte` | Button + Tooltip | Icon-only actions, named by a tooltip that shows the shortcut |
+| `select.svelte` | ui-sdk Select | Every choice from a list. Groups, leading icon, check on the chosen one. Sheet on touch; `compact` stays a popover and hides the chevron on phones |
+| `slider.svelte` | ui-sdk Slider | Every number: rounded tick bars with a wake, a 3 px marker thumb, the formatted value |
+| `color-field.svelte` | ui-sdk Color Picker + Popover | Colors: swatch + hex trigger; popover with saturation area, hue slider, presets and a hex field |
+| `switch.svelte` | ui-sdk Switch | On/off settings as a whole-row label |
 | `segmented.svelte` | ui-sdk Segmented Control | Two or three visible choices (direction, theme) |
+| `accordion-list.svelte` | ui-sdk Accordion | Questions and answers (guide FAQ, quick answers) |
 | `brand-mark.svelte` | — | Logo |
 | `styles.ts` | — | Shared class groups: `pressable`, popup surface and motion, list rows, dialog surface, sheet presentation, settings group, segment track/thumb/item, backdrop |
 
-Also from ui-sdk, used directly: Dialog (controls, guide), Alert Dialog (reset), Tabs (control sections), Radio Group (target form tiles, Lilac swatches).
+Also from ui-sdk, used directly: Dialog (controls, guide), Alert Dialog (reset), Tabs (control sections), Radio Group (target forms, Lilac swatches).
 
 Usage rules:
 
@@ -160,35 +196,36 @@ Usage rules:
 - Change state through the trainer's methods in `onValueChange`, never in DOM listeners, so agent changes take the same path.
 - Mark anything an agent must not do alone with `data-agent-confirm` (the reset confirmation does).
 - Popups render in the top layer. Never put one inside a link or a clickable card.
-- Class lists use tokens only. A value that is not on a scale above needs a reason in this file first.
+- Class lists use tokens only. A value that is not on a scale here needs a reason in this file first.
 
 ### Agents
 
-`src/lib/components/agent-bridge.ts` creates one ui-sdk agent bridge per page and registers its `snapshot`, `act`, and `query` tools with WebMCP (`document.modelContext`) when the browser has it. Steps marked for a person are refused. The site's own WebMCP tools in `agent-tools.astro` stay as they were.
+`src/lib/components/agent-bridge.ts` creates one ui-sdk agent bridge per page and registers its `snapshot`, `act`, and `query` tools with WebMCP when the browser has it. Steps marked for a person are refused. The site's own WebMCP tools in `agent-tools.astro` stay as they were.
 
 ## Layouts
 
 ### Trainer (`/` and every drill route)
 
 - Full-screen `canvas` stage with the drill.
-- **Top bar**, floating 8 px (16 px from `sm`) from the edges: brand pill on the left; an action pill on the right with Language (compact), Guide (G), and Controls (S).
-- **Dock**, floating at the bottom center, `popover` surface, radius 28, 8 px padding:
-  - Desktop (`lg`): one row — play/pause (Space), reverse, drill select (M), path select (P), then Size and Speed sliders (or Ball color swatches and Scale for Lilac Chaser).
-  - Below `lg`: two rows, full width up to 576 px — buttons and selects, then the two sliders side by side. Lilac Chaser stacks swatches over Scale on phones. Select triggers drop their icon on phones to fit the names.
-- **Controls** (S): right-side panel 416 px wide, inset 8 px, with title, close, and three tabs — Drill, Targets, General — each opening with its one-line description and grouped settings on `fill` cards. Footer: "Settings save automatically." and Done. On touch screens it is an 85 dvh bottom sheet.
-- **Guide** (G): centered 640 px dialog (sheet on touch) with the home or drill guide and a footer of updated date, Read full guide, Source, Privacy, Terms.
+- **The island**, top center, always dark:
+  - At rest: a 120 × 36 px black notch (136 × 44 on touch).
+  - Open, up to 688 px wide: a header (brand, Language, Guide G, Controls S), then an inner card holding play/pause (Space), reverse, the drill (M) and path (P) selects, and Size and Speed (or Lilac's Ball color and Scale).
+  - On phones it opens full width; the path select gets its own row.
+- **Controls** (S): right-side panel 416 px wide, inset 8 px, with tabs Drill / Targets / General. Targets opens with the live target preview. Footer: "Settings save automatically." and Done. On touch screens it is an 85 dvh bottom sheet.
+- **Guide** (G): 928 px dialog (sheet on touch). Left: the drill's live preview with its name pill, or on `/` all four previews, played from the drill list. Right: title, lede, steps, what it trains, quick answers, overview. Footer: updated date, Source, Privacy, Terms, and the primary Read full guide.
 - **Reset**: an alert dialog over the controls.
 
 ### Content pages
 
-- Sticky 64 px header on a blurred `background`: brand, Guide (not on `/guide/`), Open FoveaFlow (primary), Language and Theme (compact).
-- Page width 1152 px with 16 / 24 px gutters.
-- Hero: optional breadcrumb, title (36 → 52), lede, actions, updated date, then drill cards in 2 columns (4 from `lg`).
-- Below: a 208 px sticky table of contents beside a 672 px reading column from `lg`; on smaller screens the table of contents sits above as a `fill` card.
-- Sections 80 px apart (64 on legal pages). Section heading 30 px, intro in `muted-foreground`, content below.
-- Closing call to action: `card` with title, line, primary button, and the Smooth Pursuit illustration from `sm`.
-- Comparison pages put the feature table under the hero, in a `card` with alternating `popover` rows.
-- Footer: brand mark with the free-use line, and Guide, Privacy, Terms.
+- Sticky 64 px header on a blurred `background`: brand, Guide (not on `/guide/`), Open FoveaFlow, Language, Theme.
+- Page width 1280 px with 16 / 24 / 32 px gutters.
+- Hero, centered: breadcrumb chips, title (36 → 52), lede (16 → 20), actions, updated date. Below it, full width: the drill wall (four tiles, 1 → 2 → 4 columns) or the comparison table.
+- Section nav: a sticky chip bar under the header ("On this page") with a sliding pill for the current section.
+- Sections 112–144 px apart, in an editorial split from `lg`: heading and intro sticky on the left (352 px), content on the right.
+- Guide extras: the drill showcase (sticky live stage beside the four drill write-ups), the motion path gallery (two groups of route tiles, 5 columns on desktop), audience cards with icons, the controls card, article cards, FAQ accordion, reference list.
+- Closing call to action: a dark band with the title, line, button and a live pursuit preview.
+- Comparison table: FoveaFlow's column is raised on `popover`, the competitor's stays muted.
+- Footer: a `card` with brand, the free-use line, and Guide, Privacy, Terms.
 
 ### Not found
 

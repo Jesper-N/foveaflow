@@ -1,7 +1,7 @@
 <script lang="ts">
   import { ArrowRightIcon } from "@lucide/svelte";
 
-  import DrillIllustration from "../icons/drill-illustration.svelte";
+  import DrillPreview from "../icons/drill-preview.svelte";
   import { buttonClass } from "../ui/button-variants";
 
   interface Props {
@@ -15,18 +15,22 @@
 </script>
 
 <section
-  class="group/drill bg-card grid items-center gap-8 overflow-hidden rounded-4xl p-2 sm:grid-cols-[1fr_minmax(0,18rem)]"
+  class="dark text-foreground grid items-center gap-2 overflow-hidden rounded-4xl bg-black p-2 md:grid-cols-[minmax(0,1fr)_minmax(0,26rem)]"
 >
-  <div class="grid gap-3 p-6 sm:p-8">
-    <h2 class="text-xl font-semibold text-balance">{title}</h2>
-    <p class="text-muted-foreground text-base">{body}</p>
-    <a class={[buttonClass("primary", "lg"), "mt-2 justify-self-start"]} {href}>
+  <div class="grid justify-items-start gap-4 p-6 sm:p-10">
+    <h2 class="text-2xl font-semibold text-balance sm:text-3xl">{title}</h2>
+    <p
+      class="text-muted-foreground text-base sm:text-lg sm:leading-7 sm:tracking-normal"
+    >
+      {body}
+    </p>
+    <a class={[buttonClass("primary", "lg"), "group/cta mt-3"]} {href}>
       {label}
-      <ArrowRightIcon class="rtl:rotate-180" aria-hidden="true" />
+      <ArrowRightIcon
+        class="ease-spring transition-transform duration-260 group-hover/cta:translate-x-0.5 rtl:-scale-x-100"
+        aria-hidden="true"
+      />
     </a>
   </div>
-  <DrillIllustration
-    class="aspect-8/5 w-full rounded-3xl max-sm:hidden"
-    drillId="pursuit"
-  />
+  <DrillPreview class="aspect-4/3 w-full rounded-3xl" drillId="pursuit" />
 </section>

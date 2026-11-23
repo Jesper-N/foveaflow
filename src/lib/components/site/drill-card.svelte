@@ -1,7 +1,9 @@
 <script lang="ts">
   import type { DrillId } from "$lib/trainer/settings/drills";
+  import { ArrowUpRightIcon } from "@lucide/svelte";
 
-  import DrillIllustration from "../icons/drill-illustration.svelte";
+  import DrillIcon from "../icons/drill-icon.svelte";
+  import DrillPreview from "../icons/drill-preview.svelte";
   import { pressable } from "../ui/styles";
 
   interface Props {
@@ -12,18 +14,41 @@
   }
 
   let { drillId, href, title, summary }: Props = $props();
+
+  let exploring = $state(false);
 </script>
 
 <a
   class={[
-    "group/drill bg-fill hover:bg-fill-hover grid content-start gap-3 rounded-2xl p-2 pb-4 motion-safe:active:scale-98",
+    "group/tile bg-card grid content-start rounded-4xl p-2 motion-safe:active:scale-98",
     pressable,
   ]}
   {href}
+  onblur={() => (exploring = false)}
+  onfocus={() => (exploring = true)}
+  onpointerenter={() => (exploring = true)}
+  onpointerleave={() => (exploring = false)}
 >
-  <DrillIllustration class="aspect-8/5 w-full rounded-xl" {drillId} />
-  <span class="grid gap-1 px-2">
-    <span class="text-base font-medium tracking-tight">{title}</span>
-    <span class="text-muted-foreground text-sm text-pretty">{summary}</span>
+  <DrillPreview
+    class="aspect-4/3 w-full rounded-3xl"
+    {drillId}
+    playing={exploring}
+  />
+  <span class="flex items-start gap-3 p-3 pt-4">
+    <span class="grid min-w-0 flex-1 gap-1">
+      <span
+        class="flex items-center gap-2 text-base font-medium tracking-tight"
+      >
+        <DrillIcon class="text-muted-foreground size-4.5 shrink-0" {drillId} />
+        {title}
+      </span>
+      <span class="text-muted-foreground text-sm text-pretty">{summary}</span>
+    </span>
+    <span
+      class="bg-popover text-foreground shadow-thumb ease-spring grid size-9 shrink-0 place-items-center rounded-full transition-[opacity,scale] duration-260 pointer-fine:scale-86 pointer-fine:opacity-0 pointer-fine:group-hover/tile:scale-100 pointer-fine:group-hover/tile:opacity-100 pointer-fine:group-focus-visible/tile:scale-100 pointer-fine:group-focus-visible/tile:opacity-100"
+      aria-hidden="true"
+    >
+      <ArrowUpRightIcon class="size-4 rtl:-scale-x-100" />
+    </span>
   </span>
 </a>

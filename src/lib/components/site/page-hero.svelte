@@ -17,12 +17,14 @@
   let { breadcrumb, title, lede, actions, meta, children }: Props = $props();
 </script>
 
-<header class={[pageWidth, "grid gap-10 pt-12 pb-16 sm:pt-20"]}>
-  <div class="motion-safe:animate-rise grid max-w-3xl gap-5">
+<header class={[pageWidth, "grid gap-14 pt-14 pb-20 sm:pt-24 sm:pb-28"]}>
+  <div
+    class="motion-safe:animate-rise mx-auto grid max-w-3xl justify-items-center gap-6 text-center"
+  >
     {#if breadcrumb}
       <nav aria-label={t("Breadcrumb")}>
         <ol
-          class="text-muted-foreground flex flex-wrap items-center gap-1 text-sm"
+          class="bg-fill flex flex-wrap items-center justify-center gap-1 rounded-full p-1 text-sm"
         >
           {#each breadcrumb as crumb, index (crumb.label)}
             <li class="flex items-center gap-1">
@@ -34,15 +36,18 @@
               {/if}
               {#if crumb.href}
                 <a
-                  class="hover:text-foreground transition-colors duration-160 ease-out"
+                  class="text-muted-foreground hover:text-foreground rounded-full px-2.5 py-1 transition-colors duration-160 ease-out"
                   href={crumb.href}
                 >
                   {t(crumb.label)}
                 </a>
               {:else}
-                <span class="text-foreground" aria-current="page"
-                  >{t(crumb.label)}</span
+                <span
+                  class="bg-popover shadow-thumb rounded-full px-2.5 py-1 font-medium"
+                  aria-current="page"
                 >
+                  {t(crumb.label)}
+                </span>
               {/if}
             </li>
           {/each}
@@ -50,11 +55,13 @@
       </nav>
     {/if}
     <h1 class="text-2xl font-semibold text-balance sm:text-3xl">{title}</h1>
-    <p class="text-muted-foreground max-w-2xl text-base text-pretty">
+    <p
+      class="text-muted-foreground max-w-2xl text-base text-pretty sm:text-lg sm:leading-7 sm:tracking-normal"
+    >
       {lede}
     </p>
     {#if actions}
-      <div class="flex flex-wrap items-center gap-2 pt-1">
+      <div class="flex flex-wrap items-center justify-center gap-2 pt-2">
         {@render actions()}
       </div>
     {/if}

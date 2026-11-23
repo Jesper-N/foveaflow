@@ -13,12 +13,17 @@
   let { heading, intro, children, ...rest }: Props = $props();
 </script>
 
-<section class="grid scroll-mt-24 gap-5" {...rest}>
-  <div class="grid gap-3">
+<section
+  class="grid scroll-mt-36 gap-6 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] lg:gap-x-20"
+  {...rest}
+>
+  <div class="grid content-start gap-3 lg:sticky lg:top-36">
     <h2 class={sectionHeading}>{heading}</h2>
     {#if intro}
       <p class={bodyText}>{intro}</p>
     {/if}
   </div>
-  {@render children?.()}
+  <div class="grid min-w-0 content-start gap-5">
+    {@render children?.()}
+  </div>
 </section>
