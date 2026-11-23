@@ -231,7 +231,10 @@
       </div>
 
       <div
-        class={["grid gap-x-5 px-0.5", !trainer.isLilacChaser && "grid-cols-2"]}
+        class={[
+          "grid gap-x-5 gap-y-2 px-0.5",
+          !trainer.isLilacChaser && "grid-cols-2",
+        ]}
       >
         <IslandAdjustments />
       </div>
