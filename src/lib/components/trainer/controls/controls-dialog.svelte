@@ -16,6 +16,7 @@
     TabsPanel,
     TabsTab,
   } from "@ui-sdk/svelte/tabs";
+  import type { Attachment } from "svelte/attachments";
 
   import { buttonClass } from "../../ui/button-variants";
   import {
@@ -25,6 +26,7 @@
     segmentThumb,
     segmentTrack,
     sheetPresentation,
+    setTravelDirection,
   } from "../../ui/styles";
   import { getTrainer } from "../trainer-context";
   import DrillSettings from "./drill-settings.svelte";
@@ -40,6 +42,14 @@
   ];
 
   let tab = $state("drill");
+  let tabList = $state.raw<HTMLElement>();
+
+  const tabListElement: Attachment<HTMLElement> = (node) => {
+    tabList = node;
+  };
+
+  const tabIndex = (value: string) =>
+    tabs.findIndex((item) => item.value === value);
 </script>
 
 <Dialog presentation="auto" bind:open={trainer.controlsOpen}>
@@ -65,12 +75,25 @@
       </DialogClose>
     </header>
 
-    <Tabs class="flex min-h-0 flex-1 flex-col" bind:value={tab}>
-      <TabsList class={[segmentTrack, "mx-5"]} aria-label={t("Controls")}>
+    <Tabs
+      class="flex min-h-0 flex-1 flex-col"
+      onValueChange={(next) => {
+        if (typeof next === "string") {
+          setTravelDirection(tabList, tabIndex(tab), tabIndex(next));
+          tab = next;
+        }
+      }}
+      value={tab}
+    >
+      <TabsList
+        class={[segmentTrack, "mx-5"]}
+        {@attach tabListElement}
+        aria-label={t("Controls")}
+      >
         <TabsIndicator
           class={[
             segmentThumb,
-            "top-(--active-tab-top) left-(--active-tab-left) h-(--active-tab-height) w-(--active-tab-width)",
+            "top-(--active-tab-top) right-[calc(100%-var(--active-tab-left)-var(--active-tab-width))] left-(--active-tab-left) h-(--active-tab-height)",
           ]}
         />
         {#each tabs as item (item.value)}

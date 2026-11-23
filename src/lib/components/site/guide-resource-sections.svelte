@@ -83,7 +83,12 @@
           >
             {String(index + 1).padStart(2, "0")}
           </span>
-          <span class="flex-1 text-pretty">{t(reference.label)}</span>
+          <span class="grid flex-1 gap-0.5">
+            <span class="text-pretty">{t(reference.label)}</span>
+            <span class="text-muted-foreground text-xs">
+              {new URL(reference.url).hostname.replace(/^www\./u, "")}
+            </span>
+          </span>
           <ArrowUpRightIcon
             class="text-muted-foreground ease-spring group-hover/ref:text-foreground mt-0.5 size-4 shrink-0 transition-[translate,color] duration-260 group-hover/ref:translate-x-0.5 group-hover/ref:-translate-y-0.5 rtl:-scale-x-100"
             aria-hidden="true"

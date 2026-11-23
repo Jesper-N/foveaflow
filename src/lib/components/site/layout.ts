@@ -1,6 +1,6 @@
 export const pageWidth = "mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8";
 
-export const sectionGap = "grid gap-28 lg:gap-36";
+export const sectionGap = "grid gap-24 lg:gap-32";
 
 export const sectionHeading = "text-xl font-semibold text-balance";
 

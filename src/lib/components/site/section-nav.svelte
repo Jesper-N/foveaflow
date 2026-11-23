@@ -8,8 +8,9 @@
 
   let activeId = $state<string | null>(null);
   let indicator = $state<HTMLLIElement>();
+  let indicatorLeft = 0;
 
-  const placeIndicator = (link: HTMLElement | null) => {
+  const placeIndicator = (link: HTMLElement | null, list: HTMLElement) => {
     if (!indicator) {
       return;
     }
@@ -20,9 +21,12 @@
       return;
     }
 
+    list.dataset["direction"] =
+      link.offsetLeft >= indicatorLeft ? "right" : "left";
+    indicatorLeft = link.offsetLeft;
     indicator.style.opacity = "1";
-    indicator.style.width = `${link.offsetWidth}px`;
-    indicator.style.translate = `${link.offsetLeft}px 0`;
+    indicator.style.left = `${link.offsetLeft}px`;
+    indicator.style.right = `${list.clientWidth - link.offsetLeft - link.offsetWidth}px`;
   };
 
   const followSections: Attachment<HTMLElement> = (list) => {
@@ -47,7 +51,7 @@
             ? null
             : list.querySelector<HTMLElement>(`a[href="#${activeId}"]`);
 
-        placeIndicator(link);
+        placeIndicator(link, list);
 
         if (link) {
           list.scrollTo({
@@ -88,7 +92,7 @@
     >
       <li
         bind:this={indicator}
-        class="bg-primary pointer-events-none absolute inset-s-0 top-2.5 h-9 rounded-full opacity-0 transition-[translate,width,opacity] duration-300 ease-out pointer-coarse:h-11"
+        class="bg-primary stretch-indicator pointer-events-none absolute top-2.5 h-9 rounded-full opacity-0 pointer-coarse:h-11"
         aria-hidden="true"
       ></li>
       {#each links as link (link.id)}

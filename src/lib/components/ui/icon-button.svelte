@@ -50,7 +50,7 @@
     {/snippet}
   </TooltipTrigger>
   <TooltipContent
-    class="bg-primary text-2xs text-primary-foreground flex items-center gap-2 rounded-sm px-2.25 py-1.25 font-medium tracking-wide transition-[opacity,translate] duration-200 ease-out data-ending-style:opacity-0 data-starting-style:opacity-0 data-[side=bottom]:data-starting-style:-translate-y-1 data-[side=top]:data-starting-style:translate-y-1"
+    class="bg-primary text-2xs text-primary-foreground flex origin-(--transform-origin) items-center gap-2 rounded-sm px-2.25 py-1.25 font-medium tracking-wide transition-[opacity,scale] duration-160 ease-out data-ending-style:opacity-0 data-ending-style:duration-100 data-instant:transition-none data-starting-style:scale-94 data-starting-style:opacity-0"
     {side}
     sideOffset={8}
   >

@@ -19,6 +19,7 @@
   import { pressable } from "../../ui/styles";
   import { getTrainer } from "../trainer-context";
   import IslandAdjustments from "./island-adjustments.svelte";
+  import { createIslandMorph } from "./island-morph";
   import IslandSelects from "./island-selects.svelte";
 
   const HOVER_INTENT_MS = 80;
@@ -36,6 +37,23 @@
   let lastPointerType = "mouse";
 
   let expanded = $derived(trainer.islandExpanded);
+  let morph = $state.raw<ReturnType<typeof createIslandMorph>>();
+
+  $effect(() => {
+    morph?.setExpanded(expanded);
+  });
+
+  const islandMorph: Attachment<HTMLElement> = (node) => {
+    const notch = node.querySelector<HTMLElement>(".island-compact");
+    const created = notch === null ? undefined : createIslandMorph(node, notch);
+
+    morph = created;
+
+    return () => {
+      created?.destroy();
+      morph = undefined;
+    };
+  };
 
   const isBusy = () =>
     island !== undefined &&
@@ -152,6 +170,7 @@
   <section
     class="island dark text-foreground pointer-events-auto relative w-full max-w-108 bg-black"
     {@attach islandEvents}
+    {@attach islandMorph}
     aria-label={t("Trainer controls")}
     data-expanded={expanded}
   >
@@ -230,6 +249,7 @@
             label={trainer.route ? t("Open guide") : t("About FoveaFlow")}
             onclick={trainer.openGuide}
             shortcut="g"
+            side="bottom"
           >
             <BookOpenIcon aria-hidden="true" />
           </IconButton>
@@ -237,6 +257,7 @@
             label={t("Open controls")}
             onclick={trainer.openControls}
             shortcut="s"
+            side="bottom"
           >
             <SlidersHorizontalIcon aria-hidden="true" />
           </IconButton>
@@ -272,13 +293,7 @@
       0 var(--compact-inset) calc(100% - var(--compact-height))
         var(--compact-inset) round calc(var(--compact-height) / 2)
     );
-    transition: clip-path 420ms var(--ease-spring-settle);
-  }
-
-  .island[data-expanded="true"] {
-    clip-path: inset(0 0 0 0 round 1.75rem);
-    transition-duration: 620ms;
-    transition-timing-function: var(--ease-spring-soft);
+    transform-origin: top center;
   }
 
   @media (pointer: coarse) {
@@ -317,11 +332,6 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .island,
-    .island[data-expanded="true"] {
-      transition: none;
-    }
-
     .island-panel,
     .island[data-expanded="true"] .island-panel {
       filter: none;

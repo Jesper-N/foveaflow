@@ -89,7 +89,11 @@
       {#each drillGuides as guide, index (guide.drillId)}
         <article
           id={guide.drillId}
-          class="grid scroll-mt-36 content-center gap-6 lg:min-h-[82vh] lg:py-16"
+          class={[
+            "grid scroll-mt-36 content-center gap-6 transition-opacity duration-500 ease-out lg:min-h-[70vh] lg:py-12",
+            guide.drillId !== activeDrill &&
+              "lg:opacity-40 lg:focus-within:opacity-100 lg:hover:opacity-100",
+          ]}
           {@attach followDrill(guide.drillId)}
         >
           <DrillPreview

@@ -1,14 +1,17 @@
 <script lang="ts">
   import LanguageSelect from "$lib/components/language-select.svelte";
   import ThemeSelect from "$lib/components/theme-select.svelte";
+  import { mainRouteForDrill } from "$lib/content/drill-routes";
   import { legalPageLinks } from "$lib/content/legal";
   import { siteMetadata } from "$lib/content/site";
   import { t } from "$lib/i18n/translate";
+  import { drills } from "$lib/trainer/settings/drills";
   import { ModeWatcher } from "mode-watcher";
   import { onMount } from "svelte";
   import type { Snippet } from "svelte";
 
   import { startAgentBridge } from "../agent-bridge";
+  import DrillIcon from "../icons/drill-icon.svelte";
   import BrandMark from "../ui/brand-mark.svelte";
   import { buttonClass } from "../ui/button-variants";
   import { pageWidth, pillLink } from "./layout";
@@ -22,6 +25,15 @@
       label,
     })),
   ];
+
+  const drillLinks = drills.map((drill) => ({
+    href: mainRouteForDrill(drill.id)?.path ?? "/",
+    id: drill.id,
+    label: drill.name,
+  }));
+
+  const footerLink =
+    "flex items-center gap-2.5 text-md text-muted-foreground transition-colors duration-160 ease-out hover:text-foreground aria-[current=page]:text-foreground";
 
   onMount(startAgentBridge);
 </script>
@@ -66,11 +78,11 @@
     {@render children()}
   </main>
 
-  <footer class={[pageWidth, "mt-32 pb-6"]}>
+  <footer class={[pageWidth, "mt-24 pb-6 lg:mt-32"]}>
     <div
-      class="bg-card grid gap-10 rounded-4xl p-6 sm:grid-cols-[minmax(0,1fr)_auto] sm:p-10"
+      class="bg-card grid grid-cols-2 gap-x-6 gap-y-10 rounded-4xl p-6 sm:p-10 md:grid-cols-[minmax(0,1fr)_auto_auto] md:gap-16"
     >
-      <div class="grid content-start gap-4">
+      <div class="col-span-2 grid content-start gap-4 md:col-span-1">
         <a
           class="flex items-center gap-3 justify-self-start text-lg font-semibold"
           href="/"
@@ -82,13 +94,26 @@
           {t("FoveaFlow is free. No account, no paid plan.")}
         </p>
       </div>
-      <nav
-        class="-mx-3 flex flex-wrap content-start gap-1 sm:flex-col sm:items-end"
-        aria-label={t("Legal pages")}
-      >
+      <nav class="grid content-start gap-3" aria-labelledby="footer-drills">
+        <h2 id="footer-drills" class="text-xs font-medium">{t("Drills")}</h2>
+        {#each drillLinks as link (link.id)}
+          <a
+            class={footerLink}
+            aria-current={path === link.href ? "page" : undefined}
+            href={link.href}
+          >
+            <DrillIcon class="size-4" drillId={link.id} />
+            {t(link.label)}
+          </a>
+        {/each}
+      </nav>
+      <nav class="grid content-start gap-3" aria-labelledby="footer-pages">
+        <h2 id="footer-pages" class="text-xs font-medium">
+          {siteMetadata.name}
+        </h2>
         {#each footerLinks as link (link.href)}
           <a
-            class={pillLink}
+            class={footerLink}
             aria-current={path === link.href ? "page" : undefined}
             href={link.href}
           >

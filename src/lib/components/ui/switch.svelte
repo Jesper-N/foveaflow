@@ -19,11 +19,11 @@
 >
   <span class="text-md min-w-0 font-medium"><RowLabel {icon} {label} /></span>
   <Switch
-    class="bg-fill-active data-checked:bg-primary relative inline-flex h-6 w-10 shrink-0 items-center rounded-full p-0.75 transition-colors duration-220 ease-out"
+    class="bg-popover data-checked:bg-primary relative inline-flex h-7 w-12 shrink-0 items-center rounded-full p-1 shadow-[inset_0_0_0_1px_var(--border)] transition-[background-color,box-shadow] duration-300 ease-out data-checked:shadow-none"
     bind:checked
   >
     <SwitchThumb
-      class="bg-background shadow-thumb ease-spring data-checked:bg-primary-foreground dark:bg-muted-foreground dark:data-checked:bg-primary-foreground h-4.5 w-4.5 rounded-full transition-[translate,width,background-color] duration-220 group-active/row:w-5.5 data-checked:translate-x-4 group-active/row:data-checked:translate-x-3 rtl:data-checked:-translate-x-4 rtl:group-active/row:data-checked:-translate-x-3"
+      class="bg-faint ease-spring data-checked:bg-popover size-5 rounded-full transition-[translate,width,background-color] duration-300 group-active/row:w-6.5 data-checked:translate-x-5 group-active/row:data-checked:translate-x-3.5 rtl:data-checked:-translate-x-5 rtl:group-active/row:data-checked:-translate-x-3.5"
     />
   </Switch>
 </label>

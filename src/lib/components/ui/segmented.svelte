@@ -5,9 +5,15 @@
     SegmentedControlItem,
   } from "@ui-sdk/svelte/segmented-control";
   import type { Snippet } from "svelte";
+  import type { Attachment } from "svelte/attachments";
   import type { ClassValue } from "svelte/elements";
 
-  import { segmentItem, segmentThumb, segmentTrack } from "./styles";
+  import {
+    segmentItem,
+    segmentThumb,
+    segmentTrack,
+    setTravelDirection,
+  } from "./styles";
 
   interface SegmentedOption {
     value: string;
@@ -31,13 +37,24 @@
     icon,
     class: className,
   }: Props = $props();
+
+  let track = $state.raw<HTMLElement>();
+
+  const trackElement: Attachment<HTMLElement> = (node) => {
+    track = node;
+  };
+
+  const indexOf = (option: string) =>
+    options.findIndex((candidate) => candidate.value === option);
 </script>
 
 <SegmentedControl
   class={[segmentTrack, className]}
+  {@attach trackElement}
   aria-label={label}
   onValueChange={(next) => {
     if (typeof next === "string") {
+      setTravelDirection(track, indexOf(value), indexOf(next));
       onValueChange(next);
     }
   }}
@@ -46,7 +63,7 @@
   <SegmentedControlIndicator
     class={[
       segmentThumb,
-      "top-(--segmented-control-indicator-top) left-(--segmented-control-indicator-left) h-(--segmented-control-indicator-height) w-(--segmented-control-indicator-width)",
+      "top-(--segmented-control-indicator-top) right-[calc(100%-var(--segmented-control-indicator-left)-var(--segmented-control-indicator-width))] left-(--segmented-control-indicator-left) h-(--segmented-control-indicator-height)",
     ]}
   />
   {#each options as option (option.value)}
