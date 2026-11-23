@@ -19,7 +19,6 @@ Browser app for vision training: visual tracking, focus, reaction speed, and per
 
 - Use Tailwind utilities for all supported styling, including responsive layouts and interaction states. Keep custom CSS for unsupported styling and keyframes.
 - Reuse repeated utility groups through component variants, shared class constants, or Tailwind utilities. Keep one-off layouts local to their component.
-- Aim for agency-grade polish: dense layouts with a clear focal point, consistent radii, spacing, and type scale. Don't pile on effects.
 - Check UI changes in a browser at desktop and mobile widths, in light and dark themes.
 
 ## Gotchas

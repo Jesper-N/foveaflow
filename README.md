@@ -1,5 +1,5 @@
 <a href="https://foveaflow.com/">
-  <img src="docs/images/preview.avif" width="100%" alt="FoveaFlow open in a browser, with a yellow tracking target and floating controls on a dark grid, against an orange background" />
+  <img src="docs/images/preview.avif" width="100%" alt="FoveaFlow open in a browser" />
 </a>
 
 # <img src="public/logo-render/logo.svg" width="32" height="32" alt="" align="absmiddle" /> FoveaFlow
