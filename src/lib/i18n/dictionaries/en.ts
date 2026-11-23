@@ -17,7 +17,6 @@ export const en = {
   "A short break from the usual screen": "A short break from the usual screen",
   "A warmup you can adjust": "A warmup you can adjust",
   "About FoveaFlow": "About FoveaFlow",
-  "About FoveaFlow eye trainer": "About FoveaFlow eye trainer",
   "Acceptable use": "Acceptable use",
   "Add distractors when you want to practice staying with one target through clutter.":
     "Add distractors when you want to practice staying with one target through clutter.",
@@ -28,7 +27,6 @@ export const en = {
     "Also free in the browser, with no sign-in needed to start.",
   "Alternating pace": "Alternating pace",
   "App actions": "App actions",
-  Appearance: "Appearance",
   "Availability and warranty": "Availability and warranty",
   "Ball color": "Ball color",
   BlinkCamp: "BlinkCamp",
@@ -50,7 +48,6 @@ export const en = {
   "By using FoveaFlow, you agree to these terms. If you do not agree, do not use the site.":
     "By using FoveaFlow, you agree to these terms. If you do not agree, do not use the site.",
   Cancel: "Cancel",
-  "Change language": "Change language",
   "Change speed and target size first. They usually have the biggest effect on difficulty and control.":
     "Change speed and target size first. They usually have the biggest effect on difficulty and control.",
   "Change your saved FoveaFlow settings.":
@@ -90,7 +87,6 @@ export const en = {
     "Compare FoveaFlow with EyeTrainer.gg’s browser version for FPS warmups. Explore drill modes, motion controls, target customization, and local settings.",
   Comparison: "Comparison",
   Contact: "Contact",
-  "Control sections": "Control sections",
   Controls: "Controls",
   Cookies: "Cookies",
   "Corner Tour Smooth Pursuit Drill": "Corner Tour Smooth Pursuit Drill",
@@ -187,7 +183,6 @@ export const en = {
   "FoveaFlow eye trainer animation for visual tracking practice. Use Pause motion to stop target movement before changing controls.":
     "FoveaFlow eye trainer animation for visual tracking practice. Use Pause motion to stop target movement before changing controls.",
   "FoveaFlow eye trainer app": "FoveaFlow eye trainer app",
-  "FoveaFlow home": "FoveaFlow home",
   "FoveaFlow is a free browser tool for visual tracking practice. It shows moving targets, reaction jumps, Lilac Chaser fixation practice, and distractor tracking patterns on a screen.":
     "FoveaFlow is a free browser tool for visual tracking practice. It shows moving targets, reaction jumps, Lilac Chaser fixation practice, and distractor tracking patterns on a screen.",
   "FoveaFlow is a free browser tool. Use it safely, stop if it feels bad, and do not treat it as medical care.":
@@ -350,7 +345,6 @@ export const en = {
   "Not medical care": "Not medical care",
   "On this page": "On this page",
   Opacity: "Opacity",
-  Open: "Open",
   "Open FoveaFlow": "Open FoveaFlow",
   "Open controls": "Open controls",
   "Open guide": "Open guide",
@@ -395,7 +389,6 @@ export const en = {
   "Restore the selected drill to its default behavior, visuals, and saved local settings.":
     "Restore the selected drill to its default behavior, visuals, and saved local settings.",
   "Resume motion": "Resume motion",
-  "Reveal controls": "Reveal controls",
   Reverse: "Reverse",
   "Reverse motion direction": "Reverse motion direction",
   Ring: "Ring",
@@ -724,7 +717,6 @@ export const en = {
   "Zigzag adds frequent directional switching, so it feels more aggressive than Wave or Diagonal.":
     "Zigzag adds frequent directional switching, so it feels more aggressive than Wave or Diagonal.",
   forward: "forward",
-  guide: "guide",
   paused: "paused",
   playing: "playing",
   reverse: "reverse",

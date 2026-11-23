@@ -1,9 +1,6 @@
 <script lang="ts">
   import { t } from "$lib/i18n/translate";
-  import ChevronRightIcon from "@lucide/svelte/icons/chevron-right";
   import type { Snippet } from "svelte";
-
-  import { contentStage, editorialLede, editorialTitle } from "./styles";
 
   let {
     breadcrumb,
@@ -11,8 +8,7 @@
     lede,
     actions,
     meta,
-    illustration,
-    footer,
+    children,
   }: {
     /** Trail to this page, in English. Labels are translated here; the last one has no link. */
     breadcrumb?: readonly { href?: string; label: string }[];
@@ -20,68 +16,33 @@
     lede: string;
     actions?: Snippet;
     meta?: Snippet;
-    illustration?: Snippet;
-    /** Content that sits inside the stage, below the title. */
-    footer?: Snippet;
+    children?: Snippet;
   } = $props();
 </script>
 
-<section class="pt-8 pb-4 sm:pt-12">
+<header>
   {#if breadcrumb}
-    <nav class="mb-5 px-1" aria-label={t("Breadcrumb")}>
-      <ol class="flex flex-wrap items-center gap-1.5 text-sm">
-        {#each breadcrumb as crumb, index (crumb.label)}
-          {#if index > 0}
-            <li aria-hidden="true">
-              <ChevronRightIcon class="size-3.5" />
-            </li>
-          {/if}
+    <nav aria-label={t("Breadcrumb")}>
+      <ol>
+        {#each breadcrumb as crumb (crumb.label)}
           <li>
             {#if crumb.href}
-              <a
-                class="rounded-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 motion-reduce:transition-none"
-                href={crumb.href}
-              >
-                {t(crumb.label)}
-              </a>
+              <a href={crumb.href}>{t(crumb.label)}</a>
             {:else}
-              <span aria-current="page">
-                {t(crumb.label)}
-              </span>
+              <span aria-current="page">{t(crumb.label)}</span>
             {/if}
           </li>
         {/each}
       </ol>
     </nav>
   {/if}
-
-  <div class={contentStage}>
-    <div
-      class={[
-        "relative grid items-center gap-10 px-6 py-10 sm:px-10 sm:py-14",
-        illustration && "lg:grid-cols-[minmax(0,1fr)_20rem]",
-      ]}
-    >
-      <div class="flex min-w-0 flex-col items-start gap-5">
-        <h1 class={editorialTitle}>{title}</h1>
-        <p class={editorialLede}>{lede}</p>
-        {#if actions}
-          <div
-            class="mt-1 flex flex-col items-stretch gap-3 self-stretch sm:flex-row sm:flex-wrap sm:items-center sm:self-start"
-          >
-            {@render actions()}
-          </div>
-        {/if}
-        {#if meta}
-          <p class="text-xs">{@render meta()}</p>
-        {/if}
-      </div>
-      {#if illustration}
-        <div class="hidden lg:block">{@render illustration()}</div>
-      {/if}
-    </div>
-    {#if footer}
-      <div class="relative px-3 pb-3">{@render footer()}</div>
-    {/if}
-  </div>
-</section>
+  <h1>{title}</h1>
+  <p>{lede}</p>
+  {#if actions}
+    <p>{@render actions()}</p>
+  {/if}
+  {#if meta}
+    <p>{@render meta()}</p>
+  {/if}
+  {@render children?.()}
+</header>

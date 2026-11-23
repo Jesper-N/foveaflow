@@ -16,7 +16,6 @@
 
 <input
   {id}
-  class="w-full min-w-0"
   aria-label={label}
   max={range.max}
   min={range.min}

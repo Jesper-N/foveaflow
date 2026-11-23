@@ -1,14 +1,11 @@
 <script lang="ts">
   import LanguageSelect from "$lib/components/language-select.svelte";
   import { t } from "$lib/i18n/translate";
-  import RotateCcwIcon from "@lucide/svelte/icons/rotate-ccw";
   import { userPrefersMode } from "mode-watcher";
 
   import { selectTheme, themeOptions } from "../../theme-options";
   import { getTrainer } from "../trainer-context";
   import RadioGroup from "./radio-group.svelte";
-  import SettingsRow from "./settings-row.svelte";
-  import SettingsSection from "./settings-section.svelte";
 
   const trainer = getTrainer();
   let resetDialog = $state<HTMLDialogElement>();
@@ -27,11 +24,11 @@
   );
 </script>
 
-<SettingsSection label={t("General")}>
-  <SettingsRow>
-    <label for="trainer-language">{t("Language")}</label>
-    <LanguageSelect id="trainer-language" />
-  </SettingsRow>
+<section aria-labelledby="trainer-general-settings">
+  <h3 id="trainer-general-settings">{t("General")}</h3>
+  <p>{t("Language, theme, and saved preferences.")}</p>
+
+  <LanguageSelect />
 
   <RadioGroup
     name="trainer-theme"
@@ -41,32 +38,26 @@
     value={userPrefersMode.current}
   />
 
-  <SettingsRow>
-    <p>{t("Defaults")}</p>
+  <div>
+    <h4>{t("Defaults")}</h4>
     <p>{resetDescription}</p>
-    <button
-      class="inline-flex min-h-11 items-center gap-2 self-start"
-      onclick={() => resetDialog?.showModal()}
-      type="button"
-    >
-      <RotateCcwIcon class="size-4" aria-hidden="true" />
+    <button onclick={() => resetDialog?.showModal()} type="button">
       {t("Reset to defaults")}
     </button>
-  </SettingsRow>
-</SettingsSection>
+  </div>
+</section>
 
 <dialog
   bind:this={resetDialog}
-  class="m-auto max-w-sm p-6"
   aria-describedby="trainer-reset-description"
   aria-labelledby="trainer-reset-title"
   role="alertdialog"
 >
   <h2 id="trainer-reset-title">{t("Reset to defaults?")}</h2>
   <p id="trainer-reset-description">{resetDescription}</p>
-  <form class="mt-4 flex justify-end gap-2" method="dialog">
-    <button class="min-h-11" type="submit">{t("Cancel")}</button>
-    <button class="min-h-11" onclick={trainer.resetSettings} type="submit">
+  <form method="dialog">
+    <button type="submit">{t("Cancel")}</button>
+    <button onclick={trainer.resetSettings} type="submit">
       {t("Reset to defaults")}
     </button>
   </form>

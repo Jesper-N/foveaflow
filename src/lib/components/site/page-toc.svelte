@@ -1,6 +1,5 @@
 <script lang="ts">
   import { t } from "$lib/i18n/translate";
-  import ChevronDownIcon from "@lucide/svelte/icons/chevron-down";
 
   let {
     links,
@@ -10,37 +9,11 @@
   } = $props();
 </script>
 
-{#snippet navigation()}
-  <nav
-    class="mt-4 grid grid-cols-2 gap-x-4 gap-y-1 lg:grid-cols-1"
-    aria-label={t("On this page")}
-  >
+<nav aria-labelledby="page-toc">
+  <h2 id="page-toc">{t("On this page")}</h2>
+  <ul>
     {#each links as link (link.id)}
-      <a
-        class="rounded-lg px-3 py-2.5 text-sm leading-5 transition-colors focus-visible:outline-2 motion-reduce:transition-none"
-        href="#{link.id}"
-      >
-        {t(link.label)}
-      </a>
+      <li><a href="#{link.id}">{t(link.label)}</a></li>
     {/each}
-  </nav>
-{/snippet}
-
-<!-- A sticky sidebar on wide screens, a collapsed list on small ones. -->
-<aside class="lg:sticky lg:top-8 lg:self-start">
-  <div class="hidden lg:block">
-    <h2 class="px-3 text-sm font-semibold">{t("On this page")}</h2>
-    {@render navigation()}
-  </div>
-  <details class="group border-b pb-4 lg:hidden">
-    <summary
-      class="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 rounded-sm text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-4 [&::-webkit-details-marker]:hidden"
-    >
-      {t("On this page")}
-      <ChevronDownIcon
-        class="size-4 transition-transform duration-200 group-open:rotate-180 motion-reduce:transition-none"
-      />
-    </summary>
-    {@render navigation()}
-  </details>
-</aside>
+  </ul>
+</nav>

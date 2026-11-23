@@ -2,13 +2,9 @@
   import { articles } from "$lib/content/articles";
   import { referenceLinks, guideFaq } from "$lib/content/guide";
   import { t } from "$lib/i18n/translate";
-  import ArrowUpRightIcon from "@lucide/svelte/icons/arrow-up-right";
-  import PlusIcon from "@lucide/svelte/icons/plus";
-  import SlidersHorizontalIcon from "@lucide/svelte/icons/sliders-horizontal";
 
   import PageCta from "./page-cta.svelte";
   import PageSection from "./page-section.svelte";
-  import { editorialCopy, iconBadge } from "./styles";
 </script>
 
 <PageSection
@@ -18,67 +14,26 @@
     "Change speed and target size first. They usually have the biggest effect on difficulty and control."
   )}
 >
-  <div class={["mt-6 flex items-start gap-4 rounded-2xl p-5"]}>
-    <span class={[iconBadge, "size-10"]} aria-hidden="true">
-      <SlidersHorizontalIcon class="size-4" />
-    </span>
-    <div class="grid gap-1">
-      <h3 class="font-semibold">{t("Motion and target")}</h3>
-      <p class="text-sm leading-6 text-pretty">
-        {t(
-          "Speed, size, shape, color, opacity, and trail change the feel of the moving drills. Lilac Chaser has its own ball color and scale controls."
-        )}
-      </p>
-    </div>
-  </div>
+  <h3>{t("Motion and target")}</h3>
+  <p>
+    {t(
+      "Speed, size, shape, color, opacity, and trail change the feel of the moving drills. Lilac Chaser has its own ball color and scale controls."
+    )}
+  </p>
 </PageSection>
 
 <PageSection id="more-guides" heading={t("More guides")}>
-  <!-- Dividers live on the wrappers so the rounded focus outline can't bend them. -->
-  <div class="mt-6 divide-y">
-    {#each articles as article (article.slug)}
-      <div class="py-6 first:pt-0 last:pb-0">
-        <a
-          class="group flex items-start gap-5 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4"
-          href={article.path}
-        >
-          <div class="flex-1">
-            <h3
-              class="mb-2 font-semibold transition-colors motion-reduce:transition-none"
-            >
-              {t(article.heading)}
-            </h3>
-            <p class="text-sm leading-6">
-              {t(article.description)}
-            </p>
-          </div>
-          <span
-            class="flex size-9 shrink-0 items-center justify-center rounded-full transition-colors motion-reduce:transition-none"
-          >
-            <ArrowUpRightIcon class="size-4" />
-          </span>
-        </a>
-      </div>
-    {/each}
-  </div>
+  {#each articles as article (article.slug)}
+    <h3><a href={article.path}>{t(article.heading)}</a></h3>
+    <p>{t(article.description)}</p>
+  {/each}
 </PageSection>
 
 <PageSection id="faq" data-nosnippet heading={t("Guide FAQ")}>
-  <div class="mt-6 divide-y">
-    {#each guideFaq as item (item.question)}
-      <details class="group py-5 first:pt-0 last:pb-0 open:pb-6">
-        <summary
-          class="flex min-h-11 cursor-pointer list-none items-center justify-between gap-6 rounded-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-4 [&::-webkit-details-marker]:hidden"
-        >
-          {t(item.question)}
-          <PlusIcon
-            class="size-4 shrink-0 transition-transform duration-200 group-open:rotate-45 motion-reduce:transition-none"
-          />
-        </summary>
-        <p class={[editorialCopy, "mt-4 pr-10"]}>{t(item.answer)}</p>
-      </details>
-    {/each}
-  </div>
+  {#each guideFaq as item (item.question)}
+    <h3>{t(item.question)}</h3>
+    <p>{t(item.answer)}</p>
+  {/each}
 </PageSection>
 
 <PageSection
@@ -88,17 +43,11 @@
     "These sources explain the eye movements and visual effects behind the drills. They do not establish that FoveaFlow improves eyesight or game performance."
   )}
 >
-  <ol class="mt-6 divide-y">
+  <ol>
     {#each referenceLinks as reference (reference.url)}
       <li>
-        <a
-          class="flex items-baseline gap-4 rounded-sm py-4 text-sm leading-6 transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 motion-reduce:transition-none"
-          href={reference.url}
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          <span class="flex-1">{t(reference.label)}</span>
-          <ArrowUpRightIcon class="size-3.5 shrink-0 self-center" />
+        <a href={reference.url} rel="noopener noreferrer" target="_blank">
+          {t(reference.label)}
         </a>
       </li>
     {/each}

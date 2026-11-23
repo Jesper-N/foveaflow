@@ -4,7 +4,6 @@
   import { getTrainer } from "../trainer-context";
   import { formatSetting } from "./format-setting";
   import SettingSlider from "./setting-slider.svelte";
-  import SettingsRow from "./settings-row.svelte";
 
   let {
     setting,
@@ -21,12 +20,8 @@
   const id = $props.id();
 </script>
 
-<SettingsRow>
+<div>
   <label for={id}>{label}</label>
-  <div class="grid min-w-0 grid-cols-[minmax(0,1fr)_3rem] items-center gap-3">
-    <SettingSlider {id} label={sliderLabel} {setting} />
-    <output class="text-right tabular-nums" for={id}>
-      {formatSetting(setting, trainer.settings[setting])}
-    </output>
-  </div>
-</SettingsRow>
+  <SettingSlider {id} label={sliderLabel} {setting} />
+  <output for={id}>{formatSetting(setting, trainer.settings[setting])}</output>
+</div>

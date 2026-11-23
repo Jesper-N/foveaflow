@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "./guide-animations.css";
 
 /* mode-watcher sets the `dark` class. The browser's default colors follow it. */
 :root {

@@ -66,12 +66,11 @@ src/lib/trainer/engine/      Motion paths, speed, and seeded randomness
 src/lib/trainer/canvas/      Render loop, targets, trail, and grid
 src/lib/trainer/settings/    Drills, options, and saved settings
 src/lib/components/trainer/  The trainer app: state, controls, and guide
-src/lib/components/drills/   Drill icons and illustrations
 src/lib/components/site/     Guide, article, and legal pages
 src/lib/content/             Page copy, routes, and guides
 src/lib/i18n/                Dictionaries for 10 languages
 src/lib/seo/                 Structured data and machine-readable files
-src/styles/                  Global styles and keyframes
+src/styles/                  Global styles
 scripts/                     Build, lint, translation, and profiling scripts
 tests/unit/                  Unit tests, run by Bun
 tests/*.playwright.ts        Browser tests, run by Playwright

@@ -7,10 +7,8 @@
   import ColorRow from "./color-row.svelte";
   import LetterSettings from "./letter-settings.svelte";
   import RadioGroup from "./radio-group.svelte";
-  import SettingsRow from "./settings-row.svelte";
   import SettingsSection from "./settings-section.svelte";
   import SliderRow from "./slider-row.svelte";
-  import TargetGlyph from "./target-glyph.svelte";
 
   const trainer = getTrainer();
 
@@ -19,13 +17,15 @@
   );
 </script>
 
-<SettingsSection label={t("Appearance")}>
+<section aria-labelledby="trainer-target-settings">
+  <h3 id="trainer-target-settings">{t("Targets")}</h3>
+  <p>{t("Fine-tune what you follow.")}</p>
+
   {#if trainer.isLilacChaser}
-    <SettingsRow>
+    <div>
       <label for="trainer-lilac-color">{t("Ball color")}</label>
       <select
         id="trainer-lilac-color"
-        class="min-h-11"
         aria-label={t("Lilac Chaser ball color")}
         onchange={(event) => {
           trainer.setLilacChaserColor(event.currentTarget.value);
@@ -34,7 +34,7 @@
       >
         <LilacColorOptions />
       </select>
-    </SettingsRow>
+    </div>
     <SliderRow
       label={t("Scale")}
       setting="lilacChaserScale"
@@ -46,31 +46,14 @@
       label={t("Ball color")}
       onValueChange={trainer.setBallColor}
       value={trainer.targetColor}
-    >
-      {#snippet swatch()}
-        <span class="size-6 shrink-0" aria-hidden="true">
-          <TargetGlyph
-            color={trainer.targetColor}
-            filled
-            form={trainer.settings.targetForm}
-            opacity={trainer.settings.targetOpacity}
-          />
-        </span>
-      {/snippet}
-    </ColorRow>
+    />
     <RadioGroup
       name="trainer-target-form"
       legend={t("Target form")}
       onValueChange={trainer.setTargetForm}
       options={formOptions}
       value={trainer.settings.targetForm}
-    >
-      {#snippet item(form)}
-        <span class="size-5" aria-hidden="true">
-          <TargetGlyph {form} />
-        </span>
-      {/snippet}
-    </RadioGroup>
+    />
     <SliderRow
       label={t("Size")}
       setting="baseRadiusPx"
@@ -83,16 +66,16 @@
     />
     <LetterSettings />
   {/if}
-</SettingsSection>
 
-{#if trainer.isDistractions}
-  <SettingsSection legend={t("Distractions")}>
-    <SliderRow label={t("Targets")} setting="targetCount" />
-    <SliderRow label={t("Distractors")} setting="distractorCount" />
-    <SliderRow
-      label={t("Distractor color")}
-      setting="distractorBrightness"
-      sliderLabel={t("Distractor color brightness")}
-    />
-  </SettingsSection>
-{/if}
+  {#if trainer.isDistractions}
+    <SettingsSection legend={t("Distractions")}>
+      <SliderRow label={t("Targets")} setting="targetCount" />
+      <SliderRow label={t("Distractors")} setting="distractorCount" />
+      <SliderRow
+        label={t("Distractor color")}
+        setting="distractorBrightness"
+        sliderLabel={t("Distractor color brightness")}
+      />
+    </SettingsSection>
+  {/if}
+</section>

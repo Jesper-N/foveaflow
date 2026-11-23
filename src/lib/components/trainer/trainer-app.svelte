@@ -28,7 +28,7 @@
 <svelte:document onvisibilitychange={trainer.handleVisibilityChange} />
 
 <main
-  class="trainer-stage relative h-dvh w-dvw overflow-hidden overscroll-none data-[cursor-hidden=true]:cursor-none data-[cursor-hidden=true]:**:cursor-none"
+  class="trainer-stage relative h-dvh overflow-hidden data-[cursor-hidden=true]:cursor-none data-[cursor-hidden=true]:**:cursor-none"
   aria-label={t("FoveaFlow eye trainer app")}
   data-cursor-hidden={trainer.cursor.hidden}
 >
@@ -46,7 +46,7 @@
   </p>
 
   <canvas
-    class="absolute inset-0 block h-full w-full touch-none"
+    class="absolute inset-0 size-full touch-none"
     {@attach trainer.attachCanvas}
     aria-describedby="trainer-canvas-description trainer-motion-status"
     aria-label={t(
@@ -54,7 +54,7 @@
     )}
   ></canvas>
 
-  <!-- The island waits for translations so its labels never flash in English. -->
+  <!-- The controls wait for translations so their labels never flash in English. -->
   {#if languageState.ready}
     <TrainerHud />
   {/if}

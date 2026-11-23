@@ -20,7 +20,6 @@ export const fil = {
     "Maikling pahinga sa karaniwang gawain sa screen",
   "A warmup you can adjust": "Warmup na naaangkop sa iyo",
   "About FoveaFlow": "Tungkol sa FoveaFlow",
-  "About FoveaFlow eye trainer": "Tungkol sa FoveaFlow pampagsanay ng mata",
   "Acceptable use": "Tamang paggamit",
   "Add distractors when you want to practice staying with one target through clutter.":
     "Magdagdag ng mga distractor para masanay na manatili sa isang target kahit magulo ang nakikita.",
@@ -32,7 +31,6 @@ export const fil = {
     "Libre rin sa browser at hindi kailangang mag-sign in para magsimula.",
   "Alternating pace": "Palit-palit na bilis",
   "App actions": "Mga aksyon ng app",
-  Appearance: "Hitsura",
   "Availability and warranty": "Availability at warranty",
   "Ball color": "Kulay ng bola",
   BlinkCamp: "BlinkCamp",
@@ -55,7 +53,6 @@ export const fil = {
   "By using FoveaFlow, you agree to these terms. If you do not agree, do not use the site.":
     "Sa paggamit ng FoveaFlow, sumasang-ayon ka sa mga tuntuning ito. Kung hindi ka sang-ayon, huwag gamitin ang site.",
   Cancel: "Kanselahin",
-  "Change language": "Palitan ang wika",
   "Change speed and target size first. They usually have the biggest effect on difficulty and control.":
     "Unahin ang bilis at laki ng target. Karaniwan, sila ang may pinakamalaking epekto sa hirap at control.",
   "Change your saved FoveaFlow settings.":
@@ -99,7 +96,6 @@ export const fil = {
     "Ihambing ang FoveaFlow sa browser version ng EyeTrainer.gg para sa FPS warmup: mga mode, galaw, pag-aayos ng target, at lokal na setting.",
   Comparison: "Paghahambing",
   Contact: "Makipag-ugnayan",
-  "Control sections": "Mga control section",
   Controls: "Mga control",
   Cookies: "Cookies",
   "Corner Tour Smooth Pursuit Drill":
@@ -203,7 +199,6 @@ export const fil = {
   "FoveaFlow eye trainer animation for visual tracking practice. Use Pause motion to stop target movement before changing controls.":
     "Animation ng FoveaFlow para sa pagsasanay sa pagsubaybay ng tingin. Gamitin ang Pause motion para ihinto ang galaw ng target bago baguhin ang controls.",
   "FoveaFlow eye trainer app": "FoveaFlow pampagsanay ng mata app",
-  "FoveaFlow home": "Home ng FoveaFlow",
   "FoveaFlow is a free browser tool for visual tracking practice. It shows moving targets, reaction jumps, Lilac Chaser fixation practice, and distractor tracking patterns on a screen.":
     "Ang FoveaFlow ay libreng browser tool para magsanay ng pagsubaybay ng tingin. Nagpapakita ito ng gumagalaw na target, mabilis na lipat-tingin, fixation practice sa Tagahabol ng lila, at mga pattern na may distractors sa screen.",
   "FoveaFlow is a free browser tool. Use it safely, stop if it feels bad, and do not treat it as medical care.":
@@ -370,7 +365,6 @@ export const fil = {
   "Not medical care": "Hindi pangangalagang medikal",
   "On this page": "Sa page na ito",
   Opacity: "Opacity",
-  Open: "Buksan",
   "Open FoveaFlow": "Buksan ang FoveaFlow",
   "Open controls": "Buksan ang controls",
   "Open guide": "Buksan ang gabay",
@@ -416,7 +410,6 @@ export const fil = {
   "Restore the selected drill to its default behavior, visuals, and saved local settings.":
     "Ibalik ang napiling ehersisyo sa default behavior, visuals, at naka-save na local settings nito.",
   "Resume motion": "Ipagpatuloy ang galaw",
-  "Reveal controls": "Ipakita ang controls",
   Reverse: "Baligtad",
   "Reverse motion direction": "Baligtarin ang direksyon ng galaw",
   Ring: "Singsing",
@@ -755,7 +748,6 @@ export const fil = {
   "Zigzag adds frequent directional switching, so it feels more aggressive than Wave or Diagonal.":
     "Nagdadagdag ang Zigzag ng madalas na directional switching, kaya mas agresibo ang pakiramdam nito kaysa Alon o Pahilis.",
   forward: "paharap",
-  guide: "gabay",
   paused: "naka-pause",
   playing: "tumatakbo",
   reverse: "baligtad",

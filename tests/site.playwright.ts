@@ -15,7 +15,7 @@ const contentPages = [
 const INTERNAL_LINK_PATTERN = /<a\b[^>]*\shref="(?<href>\/[^"#?]*)/gu;
 
 const languageSelect = (page: Page) =>
-  page.getByRole("combobox", { name: /^Change language/u });
+  page.getByRole("combobox", { exact: true, name: "Language" });
 
 for (const path of contentPages) {
   test(`${path} renders one heading and fits the screen`, async ({ page }) => {

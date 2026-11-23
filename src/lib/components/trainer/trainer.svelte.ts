@@ -44,17 +44,13 @@ import { mode, setMode } from "mode-watcher";
 import { tick, untrack } from "svelte";
 import type { Attachment } from "svelte/attachments";
 
-import { HudVisibility } from "./hud/hud-visibility.svelte";
 import { IdleCursor } from "./idle-cursor.svelte";
 import { getShortcutAction, isKeyCapturedBy } from "./shortcuts";
 import type { ShortcutAction } from "./shortcuts";
 
 type HudSelect = "drill" | "pattern";
 
-/** The island stays up a little longer on the first visit. */
-const FIRST_REVEAL_MS = 1800;
-
-/** Focuses a select in the island once it has rendered, and opens its picker. */
+/** Focuses a drill or path select once it has rendered, and opens its picker. */
 const openHudSelectPicker = async (select: HudSelect) => {
   await tick();
 
@@ -89,15 +85,12 @@ export class Trainer {
   controlsOpen = $state(false);
   guideOpen = $state(false);
 
-  readonly hud = new HudVisibility(() => this.overlayOpen);
   readonly cursor = new IdleCursor();
 
   /** Settings save only after the saved ones have loaded, so defaults never overwrite them. */
   #settingsLoaded = $state(false);
   readonly #saver = new SettingsSaver();
   readonly #canvas = new TrainerCanvas(() => this.#scene);
-
-  overlayOpen = $derived(this.controlsOpen || this.guideOpen);
 
   colorMode = $derived.by((): ColorMode => {
     const { current } = mode;
@@ -143,7 +136,6 @@ export class Trainer {
       : (routeForDrill(settings.drillId, settings.patternId) ?? route);
   });
 
-  guideCopy = $derived(this.guideRoute?.copy ?? this.pageCopy);
   guideLastModified = $derived(
     this.guideRoute?.lastModified ?? siteMetadata.homepageLastModified
   );
@@ -207,18 +199,7 @@ export class Trainer {
     this.#followBrowserRoute(loadSettings() ?? this.settings);
     this.#settingsLoaded = true;
 
-    let mounted = true;
-
-    // The island renders once translations load, so its first auto-hide starts then.
-    const revealHudOnceTranslated = async () => {
-      await languageState.init();
-
-      if (mounted) {
-        this.hud.showBriefly(FIRST_REVEAL_MS);
-      }
-    };
-
-    void revealHudOnceTranslated();
+    void languageState.init();
     this.cursor.wake();
 
     // Pause for visitors who ask for less motion. They can still press play.
@@ -234,10 +215,8 @@ export class Trainer {
     reducedMotion.addEventListener("change", pauseForReducedMotion);
 
     return () => {
-      mounted = false;
       reducedMotion.removeEventListener("change", pauseForReducedMotion);
       this.#saver.flush();
-      this.hud.dispose();
       this.cursor.stop();
     };
   }
@@ -328,12 +307,10 @@ export class Trainer {
   };
 
   openControls = () => {
-    this.hud.reveal();
     this.controlsOpen = true;
   };
 
   openGuide = () => {
-    this.hud.reveal();
     this.guideOpen = true;
   };
 
@@ -401,7 +378,7 @@ export class Trainer {
       }
 
       case "openDrillSelect": {
-        this.#openHudSelect("drill");
+        void openHudSelectPicker("drill");
 
         return true;
       }
@@ -411,7 +388,7 @@ export class Trainer {
           return false;
         }
 
-        this.#openHudSelect("pattern");
+        void openHudSelectPicker("pattern");
 
         return true;
       }
@@ -434,12 +411,6 @@ export class Trainer {
         );
       }
     }
-  }
-
-  /** Opens a select in the island from the keyboard and focuses it. */
-  #openHudSelect(select: HudSelect) {
-    this.hud.reveal();
-    void openHudSelectPicker(select);
   }
 
   /** Restarts motion after the drill or path changed, and updates the URL. */

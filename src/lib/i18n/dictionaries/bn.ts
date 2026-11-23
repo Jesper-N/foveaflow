@@ -19,7 +19,6 @@ export const bn = {
   "A short break from the usual screen": "রোজকার স্ক্রিনের কাজ থেকে ছোট বিরতি",
   "A warmup you can adjust": "নিজের মতো সাজানো ওয়ার্মআপ",
   "About FoveaFlow": "FoveaFlow সম্পর্কে",
-  "About FoveaFlow eye trainer": "FoveaFlow চোখের অনুশীলন টুল সম্পর্কে",
   "Acceptable use": "গ্রহণযোগ্য ব্যবহার",
   "Add distractors when you want to practice staying with one target through clutter.":
     "ব্যস্ত দৃশ্যে একই লক্ষ্য অনুসরণ করার অনুশীলনে বিক্ষেপকারী বস্তু যোগ করুন।",
@@ -30,7 +29,6 @@ export const bn = {
     "এটিও ব্রাউজারে বিনামূল্যে ব্যবহার করা যায়, শুরু করতে সাইন ইন লাগে না।",
   "Alternating pace": "পাল্টানো গতি",
   "App actions": "অ্যাপের কাজ",
-  Appearance: "চেহারা",
   "Availability and warranty": "ব্যবহারযোগ্যতা ও ওয়ারেন্টি",
   "Ball color": "বলের রং",
   BlinkCamp: "BlinkCamp",
@@ -52,7 +50,6 @@ export const bn = {
   "By using FoveaFlow, you agree to these terms. If you do not agree, do not use the site.":
     "FoveaFlow ব্যবহার করলে আপনি এই শর্তগুলো মেনে নিচ্ছেন। একমত না হলে সাইট ব্যবহার করবেন না।",
   Cancel: "বাতিল করুন",
-  "Change language": "ভাষা বদলান",
   "Change speed and target size first. They usually have the biggest effect on difficulty and control.":
     "প্রথমে গতি ও লক্ষ্যের সাইজ বদলান। সাধারণত কঠিনতা ও নিয়ন্ত্রণে এগুলোর প্রভাব সবচেয়ে বেশি।",
   "Change your saved FoveaFlow settings.": "সংরক্ষিত FoveaFlow সেটিং বদলান।",
@@ -91,7 +88,6 @@ export const bn = {
     "FPS ওয়ার্মআপের জন্য FoveaFlow ও EyeTrainer.gg-এর ব্রাউজার সংস্করণ তুলনা করুন: অনুশীলনের মোড, চলাচল, লক্ষ্যের চেহারা ও স্থানীয় সেটিং।",
   Comparison: "তুলনা",
   Contact: "যোগাযোগ",
-  "Control sections": "কন্ট্রোল বিভাগ",
   Controls: "কন্ট্রোল",
   Cookies: "কুকি",
   "Corner Tour Smooth Pursuit Drill": "কর্নার ট্যুর মসৃণ অনুসরণ ড্রিল",
@@ -185,7 +181,6 @@ export const bn = {
   "FoveaFlow eye trainer animation for visual tracking practice. Use Pause motion to stop target movement before changing controls.":
     "ভিজ্যুয়াল ট্র্যাকিং অনুশীলনের জন্য FoveaFlow অ্যানিমেশন। কন্ট্রোল বদলানোর আগে লক্ষ্য থামাতে ‘চলন থামান’ ব্যবহার করুন।",
   "FoveaFlow eye trainer app": "FoveaFlow চোখের অনুশীলন অ্যাপ",
-  "FoveaFlow home": "FoveaFlow হোম",
   "FoveaFlow is a free browser tool for visual tracking practice. It shows moving targets, reaction jumps, Lilac Chaser fixation practice, and distractor tracking patterns on a screen.":
     "FoveaFlow ভিজ্যুয়াল ট্র্যাকিং অনুশীলনের জন্য বিনা খরচের ব্রাউজার টুল। এটি স্ক্রিনে চলমান লক্ষ্য, দ্রুত ফোকাস বদল, লাইলাক চেজার ফিক্সেশন অনুশীলন এবং বিভ্রান্তিকারী ট্র্যাকিং প্যাটার্ন দেখায়।",
   "FoveaFlow is a free browser tool. Use it safely, stop if it feels bad, and do not treat it as medical care.":
@@ -345,7 +340,6 @@ export const bn = {
   "Not medical care": "চিকিৎসা নয়",
   "On this page": "এই পেজে",
   Opacity: "অস্বচ্ছতা",
-  Open: "খুলুন",
   "Open FoveaFlow": "FoveaFlow খুলুন",
   "Open controls": "কন্ট্রোল খুলুন",
   "Open guide": "গাইড খুলুন",
@@ -390,7 +384,6 @@ export const bn = {
   "Restore the selected drill to its default behavior, visuals, and saved local settings.":
     "নির্বাচিত ড্রিলকে তার ডিফল্ট আচরণ, ভিজ্যুয়াল এবং সংরক্ষিত লোকাল সেটিংয়ে ফিরিয়ে নিন।",
   "Resume motion": "চলন আবার চালু করুন",
-  "Reveal controls": "কন্ট্রোল দেখান",
   Reverse: "উল্টো",
   "Reverse motion direction": "চলনের দিক উল্টান",
   Ring: "রিং",
@@ -697,7 +690,6 @@ export const bn = {
   "Zigzag adds frequent directional switching, so it feels more aggressive than Wave or Diagonal.":
     "জিগজ্যাগ বারবার দিক বদল যোগ করে, তাই এটি ওয়েভ বা তির্যক-এর চেয়ে বেশি আক্রমণাত্মক লাগে।",
   forward: "সামনে",
-  guide: "গাইড",
   paused: "বিরত",
   playing: "চলছে",
   reverse: "উল্টো",

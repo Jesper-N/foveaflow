@@ -19,7 +19,6 @@ export const zhHK = {
   "A short break from the usual screen": "暫時換換屏幕上的內容",
   "A warmup you can adjust": "可以自行調整的熱身",
   "About FoveaFlow": "關於 FoveaFlow",
-  "About FoveaFlow eye trainer": "關於 FoveaFlow 眼部訓練工具",
   "Acceptable use": "可接受的使用方式",
   "Add distractors when you want to practice staying with one target through clutter.":
     "想練習在雜亂畫面中持續追蹤同一目標時，可以增加干擾物。",
@@ -30,7 +29,6 @@ export const zhHK = {
     "同樣可在瀏覽器中免費使用，無需登入即可開始。",
   "Alternating pace": "交替節奏",
   "App actions": "應用程式操作",
-  Appearance: "外觀",
   "Availability and warranty": "可用性及保證",
   "Ball color": "球的顏色",
   BlinkCamp: "BlinkCamp",
@@ -52,7 +50,6 @@ export const zhHK = {
   "By using FoveaFlow, you agree to these terms. If you do not agree, do not use the site.":
     "使用 FoveaFlow 即表示你同意這些條款。如果不同意，請不要使用本站。",
   Cancel: "取消",
-  "Change language": "更改語言",
   "Change speed and target size first. They usually have the biggest effect on difficulty and control.":
     "先改速度和目標大小。它們通常最影響難度和控制感。",
   "Change your saved FoveaFlow settings.": "更改已儲存的 FoveaFlow 設定。",
@@ -89,7 +86,6 @@ export const zhHK = {
     "比較 FoveaFlow 與 EyeTrainer.gg 瀏覽器版的 FPS 熱身功能，了解練習模式、運動控制、目標自訂和本機設定。",
   Comparison: "比較",
   Contact: "聯絡",
-  "Control sections": "控制分區",
   Controls: "控制項",
   Cookies: "Cookie",
   "Corner Tour Smooth Pursuit Drill": "四角巡遊平滑追蹤練習",
@@ -183,7 +179,6 @@ export const zhHK = {
   "FoveaFlow eye trainer animation for visual tracking practice. Use Pause motion to stop target movement before changing controls.":
     "用於視覺追蹤練習的 FoveaFlow 眼部訓練動畫。更改控制項前，請使用暫停運動來停止目標移動。",
   "FoveaFlow eye trainer app": "FoveaFlow 眼部訓練應用程式",
-  "FoveaFlow home": "FoveaFlow 首頁",
   "FoveaFlow is a free browser tool for visual tracking practice. It shows moving targets, reaction jumps, Lilac Chaser fixation practice, and distractor tracking patterns on a screen.":
     "FoveaFlow 是一個免費的瀏覽器視覺追蹤練習工具。它會在屏幕上顯示移動目標、反應跳點、丁香追逐者注視練習和干擾物追蹤圖案。",
   "FoveaFlow is a free browser tool. Use it safely, stop if it feels bad, and do not treat it as medical care.":
@@ -343,7 +338,6 @@ export const zhHK = {
   "Not medical care": "不是醫療護理",
   "On this page": "本頁內容",
   Opacity: "不透明度",
-  Open: "打開",
   "Open FoveaFlow": "開啟 FoveaFlow",
   "Open controls": "打開控制項",
   "Open guide": "打開指南",
@@ -388,7 +382,6 @@ export const zhHK = {
   "Restore the selected drill to its default behavior, visuals, and saved local settings.":
     "將所選練習恢復為預設行為、視覺效果和已儲存的本機設定。",
   "Resume motion": "繼續運動",
-  "Reveal controls": "顯示控制項",
   Reverse: "反向",
   "Reverse motion direction": "反轉運動方向",
   Ring: "圓環",
@@ -691,7 +684,6 @@ export const zhHK = {
   "Zigzag adds frequent directional switching, so it feels more aggressive than Wave or Diagonal.":
     "鋸齒路徑加入頻繁方向切換，因此感覺比波浪或對角線更強烈。",
   forward: "正向",
-  guide: "指南",
   paused: "已暫停",
   playing: "播放中",
   reverse: "反向",

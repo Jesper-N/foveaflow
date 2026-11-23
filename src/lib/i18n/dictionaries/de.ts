@@ -19,7 +19,6 @@ export const de = {
   "A short break from the usual screen": "Eine kurze Abwechslung am Bildschirm",
   "A warmup you can adjust": "Ein anpassbares Aufwärmprogramm",
   "About FoveaFlow": "Über FoveaFlow",
-  "About FoveaFlow eye trainer": "Über den FoveaFlow-Augentrainer",
   "Acceptable use": "Zulässige Nutzung",
   "Add distractors when you want to practice staying with one target through clutter.":
     "Füge Ablenkungen hinzu, um auch in unübersichtlichen Bildern bei einem Ziel zu bleiben.",
@@ -31,7 +30,6 @@ export const de = {
     "Ebenfalls kostenlos im Browser, ohne Anmeldung zum Start.",
   "Alternating pace": "Wechselndes Tempo",
   "App actions": "App-Aktionen",
-  Appearance: "Aussehen",
   "Availability and warranty": "Verfügbarkeit und Gewährleistung",
   "Ball color": "Ballfarbe",
   BlinkCamp: "BlinkCamp",
@@ -53,7 +51,6 @@ export const de = {
   "By using FoveaFlow, you agree to these terms. If you do not agree, do not use the site.":
     "Mit der Nutzung von FoveaFlow stimmst du diesen Bedingungen zu. Wenn du nicht zustimmst, nutze die Seite nicht.",
   Cancel: "Abbrechen",
-  "Change language": "Sprache ändern",
   "Change speed and target size first. They usually have the biggest effect on difficulty and control.":
     "Ändere zuerst Tempo und Zielgröße. Sie beeinflussen Schwierigkeit und Kontrolle meist am stärksten.",
   "Change your saved FoveaFlow settings.":
@@ -94,7 +91,6 @@ export const de = {
     "Vergleiche FoveaFlow mit der Browserversion von EyeTrainer.gg für FPS-Aufwärmübungen: Übungsmodi, Bewegung, Zieldarstellung und lokale Einstellungen.",
   Comparison: "Vergleich",
   Contact: "Kontakt",
-  "Control sections": "Einstellungsbereiche",
   Controls: "Regler",
   Cookies: "Cookies",
   "Corner Tour Smooth Pursuit Drill": "Ecken-Tour-Blickfolge-Drill",
@@ -191,7 +187,6 @@ export const de = {
   "FoveaFlow eye trainer animation for visual tracking practice. Use Pause motion to stop target movement before changing controls.":
     "FoveaFlow-Augentrainer-Animation für visuelles Tracking. Nutze Bewegung pausieren, um die Zielbewegung vor Änderungen an den Reglern zu stoppen.",
   "FoveaFlow eye trainer app": "FoveaFlow-Augentrainer-App",
-  "FoveaFlow home": "FoveaFlow-Startseite",
   "FoveaFlow is a free browser tool for visual tracking practice. It shows moving targets, reaction jumps, Lilac Chaser fixation practice, and distractor tracking patterns on a screen.":
     "FoveaFlow ist ein kostenloses Browser-Tool für visuelles Tracking. Es zeigt bewegte Ziele, Reaktionssprünge, Fliederverfolger-Fixation und Ablenkungstracking-Muster auf dem Bildschirm.",
   "FoveaFlow is a free browser tool. Use it safely, stop if it feels bad, and do not treat it as medical care.":
@@ -354,7 +349,6 @@ export const de = {
   "Not medical care": "Keine medizinische Versorgung",
   "On this page": "Auf dieser Seite",
   Opacity: "Deckkraft",
-  Open: "Öffnen",
   "Open FoveaFlow": "FoveaFlow öffnen",
   "Open controls": "Regler öffnen",
   "Open guide": "Guide öffnen",
@@ -399,7 +393,6 @@ export const de = {
   "Restore the selected drill to its default behavior, visuals, and saved local settings.":
     "Setzt Verhalten, Darstellung und lokal gespeicherte Einstellungen der ausgewählten Übung auf die Standardwerte zurück.",
   "Resume motion": "Bewegung fortsetzen",
-  "Reveal controls": "Regler anzeigen",
   Reverse: "Rückwärts",
   "Reverse motion direction": "Bewegungsrichtung umkehren",
   Ring: "Ring",
@@ -729,7 +722,6 @@ export const de = {
   "Zigzag adds frequent directional switching, so it feels more aggressive than Wave or Diagonal.":
     "Zickzack fügt häufige Richtungswechsel hinzu und wirkt dadurch aggressiver als Welle oder Diagonal.",
   forward: "vorwärts",
-  guide: "Anleitung",
   paused: "pausiert",
   playing: "läuft",
   reverse: "rückwärts",

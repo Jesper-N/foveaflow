@@ -3,10 +3,6 @@
   import type { DrillRoute } from "$lib/content/drill-routes";
   import { freeUseNote } from "$lib/content/site";
   import { t } from "$lib/i18n/translate";
-  import PlusIcon from "@lucide/svelte/icons/plus";
-
-  import GuideHeader from "./guide-header.svelte";
-  import { guideCopy, guideSectionHeading } from "./styles";
 
   let { route }: { route: DrillRoute } = $props();
 
@@ -14,79 +10,31 @@
   let copy = $derived(route.copy);
 </script>
 
-<GuideHeader
-  drillId={drillGuide.drillId}
-  lede={t(copy.hero)}
-  title={t(copy.heading)}
-/>
+<h2 id="trainer-guide-title">{t(copy.heading)}</h2>
+<p>{t(copy.hero)}</p>
 
-<div
-  class="grid gap-8 px-6 py-7 sm:grid-cols-[minmax(0,1fr)_17rem] sm:grid-rows-[auto_1fr] sm:gap-x-10 sm:px-8"
->
-  <section
-    class="guide-enter grid content-start gap-3 [animation-delay:40ms]"
-    aria-labelledby="trainer-guide-steps"
-  >
-    <h3 id="trainer-guide-steps" class={guideSectionHeading}>
-      {t("How to practice")}
-    </h3>
-    <ol class="grid gap-3">
-      {#each drillGuide.steps as step, index (step)}
-        <li class="grid grid-cols-[1.25rem_minmax(0,1fr)] items-baseline">
-          <span class="font-semibold tabular-nums" aria-hidden="true">
-            {index + 1}
-          </span>
-          <span class={guideCopy}>{t(step)}</span>
-        </li>
-      {/each}
-    </ol>
-  </section>
-
-  <!-- Spans both rows so the answers sit beside the steps and the overview. -->
-  <div
-    class="guide-enter grid content-start gap-8 [animation-delay:80ms] sm:row-span-2"
-  >
-    <p class={["rounded-2xl p-5", guideCopy]}>
-      <span class="font-medium">{t("What it trains:")}</span>
-      {t(drillGuide.benefits)}
-    </p>
-
-    <section aria-labelledby="trainer-guide-faq">
-      <h3 id="trainer-guide-faq" class={guideSectionHeading}>
-        {t("Quick answers")}
-      </h3>
-      <div class="mt-1 divide-y">
-        {#each copy.faq as item (item.question)}
-          <!-- Sharing a name makes the answers an accordion: opening one closes the rest. -->
-          <details
-            name="trainer-guide-faq"
-            class="group [interpolate-size:allow-keywords] details-content:h-0 details-content:overflow-clip details-content:transition-[height,content-visibility] details-content:transition-discrete details-content:duration-200 details-content:ease-out open:details-content:h-auto motion-reduce:details-content:transition-none"
-          >
-            <summary
-              class="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 rounded-sm py-2 text-left text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-4 [&::-webkit-details-marker]:hidden"
-            >
-              <span>{t(item.question)}</span>
-              <PlusIcon
-                class="size-4 shrink-0 transition-transform duration-200 ease-out group-open:rotate-45 motion-reduce:transition-none"
-              />
-            </summary>
-            <p class={["pb-3 text-sm", guideCopy]}>{t(item.answer)}</p>
-          </details>
-        {/each}
-      </div>
-    </section>
-  </div>
-
-  <section
-    class="guide-enter grid content-start gap-3 [animation-delay:80ms]"
-    aria-labelledby="trainer-guide-overview"
-  >
-    <h3 id="trainer-guide-overview" class={guideSectionHeading}>
-      {t("Overview")}
-    </h3>
-    {#each copy.body as paragraph (paragraph)}
-      <p class={guideCopy}>{t(paragraph)}</p>
+<section aria-labelledby="trainer-guide-steps">
+  <h3 id="trainer-guide-steps">{t("How to practice")}</h3>
+  <ol>
+    {#each drillGuide.steps as step (step)}
+      <li>{t(step)}</li>
     {/each}
-    <p class={guideCopy}>{t(freeUseNote)}</p>
-  </section>
-</div>
+  </ol>
+  <p>{t("What it trains:")} {t(drillGuide.benefits)}</p>
+</section>
+
+<section aria-labelledby="trainer-guide-faq">
+  <h3 id="trainer-guide-faq">{t("Quick answers")}</h3>
+  {#each copy.faq as item (item.question)}
+    <h4>{t(item.question)}</h4>
+    <p>{t(item.answer)}</p>
+  {/each}
+</section>
+
+<section aria-labelledby="trainer-guide-overview">
+  <h3 id="trainer-guide-overview">{t("Overview")}</h3>
+  {#each copy.body as paragraph (paragraph)}
+    <p>{t(paragraph)}</p>
+  {/each}
+  <p>{t(freeUseNote)}</p>
+</section>
