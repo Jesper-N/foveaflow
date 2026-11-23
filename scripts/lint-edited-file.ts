@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { z } from "zod";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
+
 const hookInput = z.object({
   tool_input: z.object({ file_path: z.string() }),
 });
@@ -21,19 +22,26 @@ if (filePath.startsWith("..") || path.isAbsolute(filePath)) {
 const commands = [
   ["bunx", "ultracite", "fix", "--no-error-on-unmatched-pattern", filePath],
 ];
-if (filePath.endsWith(".astro")) {
-  commands.push([
+
+if (filePath.endsWith(".svelte")) {
+  commands.unshift([
     "bunx",
-    "prettier",
-    "--write",
-    "--plugin=prettier-plugin-astro",
+    "eslint",
+    "--config",
+    "eslint.svelte.config.ts",
+    "--fix",
+    "--max-warnings",
+    "0",
+    "--no-warn-ignored",
     filePath,
   ]);
 }
 
 let failed = false;
+
 for (const command of commands) {
   const result = Bun.spawnSync(command, { cwd: root });
+
   if (result.exitCode !== 0) {
     failed = true;
     process.stderr.write(result.stdout);

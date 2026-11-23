@@ -95,20 +95,30 @@ export const behaviorFromProfiles = (
   if (sizeProfile.kind === "pulse") {
     return "sizePulse";
   }
+
   switch (speedProfile.kind) {
     case "loopRamp": {
       return "climbPattern";
     }
+
     case "steps": {
       return speedProfile.intervalSec <= MAX_BURST_INTERVAL_SEC
         ? "surgePattern"
         : "alternatingPattern";
     }
+
     case "sine": {
       return "wavePattern";
     }
-    default: {
+
+    case "constant": {
       return "constant";
+    }
+
+    default: {
+      throw new Error(
+        `Unsupported speed profile: ${String(speedProfile satisfies never)}`
+      );
     }
   }
 };
@@ -116,6 +126,7 @@ export const behaviorFromProfiles = (
 /** Fresh copies, so settings never share profile objects with this table. */
 export const profilesForBehavior = (id: BehaviorId): BehaviorProfiles => {
   const { sizeProfile, speedProfile } = profilesByBehavior[id];
+
   return {
     sizeProfile: { ...sizeProfile },
     speedProfile:

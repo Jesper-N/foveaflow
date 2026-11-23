@@ -3,6 +3,17 @@ export const TAU = Math.PI * 2;
 export const clamp = (value: number, min: number, max: number) =>
   Math.min(max, Math.max(min, value));
 
+/** Reads an index the caller has already bounded, and throws if it is out of range. */
+export const itemAt = <T>(items: ArrayLike<T>, index: number): T => {
+  const item = items[index];
+
+  if (item === undefined) {
+    throw new RangeError(`Index ${index} is out of range`);
+  }
+
+  return item;
+};
+
 /** Remainder that is never negative, unlike the `%` operator. */
 export const positiveModulo = (value: number, divisor: number) =>
   ((value % divisor) + divisor) % divisor;
@@ -12,6 +23,8 @@ export const pingPong = (value: number, length: number) => {
   if (length <= 0) {
     return 0;
   }
+
   const wrapped = positiveModulo(value, length * 2);
+
   return wrapped <= length ? wrapped : length * 2 - wrapped;
 };

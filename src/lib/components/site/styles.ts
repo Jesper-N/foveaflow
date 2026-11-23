@@ -2,10 +2,13 @@
 
 export const editorialTitle =
   "text-4xl leading-[1.08] font-semibold text-balance wrap-anywhere hyphens-auto sm:text-5xl";
+
 export const editorialHeading =
   "text-2xl leading-tight font-semibold wrap-anywhere hyphens-auto sm:text-3xl";
+
 export const editorialLede =
   "text-muted-foreground max-w-2xl text-base leading-7 text-pretty sm:text-lg sm:leading-8";
+
 export const editorialCopy =
   "text-muted-foreground max-w-2xl text-base leading-7";
 

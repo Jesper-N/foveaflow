@@ -11,8 +11,8 @@
   import { t } from "$lib/i18n/translate";
   import { cn } from "$lib/utils";
   import LanguagesIcon from "@lucide/svelte/icons/languages";
+  import type { Select as SelectPrimitive } from "bits-ui";
   import { onMount } from "svelte";
-  import type { HTMLButtonAttributes } from "svelte/elements";
 
   let {
     triggerClass,
@@ -56,10 +56,9 @@
   };
 </script>
 
-{#snippet languageTrigger(props: HTMLButtonAttributes = {})}
+{#snippet languageTrigger(props: SelectPrimitive.TriggerProps = {})}
   <Select.Trigger
     {...props}
-    {size}
     class={cn(
       "shrink-0",
       variant === "ghost" && buttonVariants({ size, variant }),
@@ -73,7 +72,8 @@
         "text-muted-foreground min-w-0 justify-center gap-2 bg-transparent",
       triggerClass
     )}
-    aria-label={`${t("Change language")}: ${selectedLanguage.nativeLabel}`}
+    aria-label="{t('Change language')}: {selectedLanguage.nativeLabel}"
+    {size}
     title={showTooltip
       ? undefined
       : `${t("Language")}: ${selectedLanguage.nativeLabel}`}
@@ -93,11 +93,11 @@
 {/snippet}
 
 <Select.Root
-  bind:open
+  {onOpenChange}
+  onValueChange={handleLanguageChange}
   type="single"
   value={languageState.locale}
-  onValueChange={handleLanguageChange}
-  {onOpenChange}
+  bind:open
 >
   {#if showTooltip}
     <Tooltip.Root disabled={open || tooltipDisabled}>
@@ -106,7 +106,7 @@
           {@render languageTrigger(props)}
         {/snippet}
       </Tooltip.Trigger>
-      <Tooltip.Content side="bottom" sideOffset={6} class={contentClass}>
+      <Tooltip.Content class={contentClass} side="bottom" sideOffset={6}>
         {t("Language")}
       </Tooltip.Content>
     </Tooltip.Root>

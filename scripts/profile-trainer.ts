@@ -9,12 +9,14 @@ const [baseUrl = "http://127.0.0.1:8787", route = "/smooth-pursuit/"] =
   process.argv.slice(2);
 
 const browser = await chromium.launch();
+
 try {
   const context = await browser.newContext({
     locale: "en-US",
     reducedMotion: "no-preference",
     viewport: { height: 1080, width: 1920 },
   });
+
   const page = await context.newPage();
   await page.coverage.startJSCoverage();
   await page.goto(new URL(route, baseUrl).href);
@@ -22,6 +24,7 @@ try {
     .getByRole("button", { exact: true, name: "Pause motion" })
     .waitFor();
   const coverage = await page.coverage.stopJSCoverage();
+
   const scripts = coverage
     .filter(({ url }) => url.includes("/_astro/"))
     .map(({ url, source }) => ({
@@ -38,18 +41,24 @@ try {
   const after = await session.send("Performance.getMetrics");
   const { profile } = await session.send("Profiler.stop");
   const sampleCounts = new Map<number, number>();
+
   for (const id of profile.samples ?? []) {
     sampleCounts.set(id, (sampleCounts.get(id) ?? 0) + 1);
   }
+
   const hotFunctions = profile.nodes
     .map(({ id, callFrame }) => ({
       name: callFrame.functionName,
       samples: sampleCounts.get(id) ?? 0,
       script: callFrame.url.split("/").at(-1),
     }))
-    .filter(({ samples, script }) => samples > 0 && script)
+    .filter(
+      ({ samples, script }) =>
+        samples > 0 && script !== undefined && script !== ""
+    )
     .toSorted((a, b) => b.samples - a.samples)
     .slice(0, 8);
+
   const metrics = Object.fromEntries(
     after.metrics
       .filter(({ name }) =>
@@ -66,6 +75,7 @@ try {
           (before.metrics.find((metric) => metric.name === name)?.value ?? 0),
       ])
   );
+
   process.stdout.write(
     `${JSON.stringify({ hotFunctions, metrics, route, scripts })}\n`
   );

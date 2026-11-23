@@ -40,6 +40,7 @@ const copyWalkState = (target: WalkState, source: WalkState) => {
 
 const shortestAngleDelta = (from: number, to: number) => {
   const delta = to - from;
+
   return delta > -Math.PI && delta < Math.PI
     ? delta
     : Math.atan2(Math.sin(delta), Math.cos(delta));
@@ -75,6 +76,7 @@ const reflectIntoBox = (state: WalkState, box: Box) => {
     state.heading = Math.PI - state.heading;
     state.targetHeading = state.heading;
   }
+
   if (reflectedY) {
     state.heading = -state.heading;
     state.targetHeading = state.heading;
@@ -87,9 +89,11 @@ const reflectIntoBox = (state: WalkState, box: Box) => {
  */
 const turn = (state: WalkState, rng: Rng, travelPx: number, box: Box) => {
   state.turnCount += 1;
+
   const wander =
     Math.sin((travelPx + rng.seed * 0.17) / 180) * 0.28 +
     Math.sin((travelPx + rng.seed * 0.31) / 310) * 0.18;
+
   const randomHeading =
     state.heading +
     wander +
@@ -99,8 +103,10 @@ const turn = (state: WalkState, rng: Rng, travelPx: number, box: Box) => {
   const centerY = (box.top + box.bottom) / 2;
   const offsetX = (state.x - centerX) / Math.max(1, (box.right - box.left) / 2);
   const offsetY = (state.y - centerY) / Math.max(1, (box.bottom - box.top) / 2);
+
   const centerBias =
     clamp((Math.hypot(offsetX, offsetY) - 0.35) / 0.65, 0, 1) * 0.75;
+
   const centerHeading = Math.atan2(centerY - state.y, centerX - state.x);
 
   state.targetHeading =
@@ -124,6 +130,7 @@ const step = (
   const drift =
     Math.sin((travelPx + rng.seed * 0.41) / 220) * 0.0018 +
     Math.sin((travelPx + rng.seed * 0.73) / 380) * 0.0012;
+
   state.heading +=
     shortestAngleDelta(state.heading, state.targetHeading) *
       Math.min(1, stepPx / 150) +
@@ -170,6 +177,7 @@ export class RandomWalker {
     const state = this.#state;
     this.#lastTravelPx = travelPx;
     reflectIntoBox(state, box);
+
     if (travelPx <= state.committedTravelPx) {
       return state;
     }
@@ -181,6 +189,7 @@ export class RandomWalker {
     }
 
     const remainderPx = travelPx - state.committedTravelPx;
+
     if (remainderPx <= 0) {
       return state;
     }
@@ -188,6 +197,7 @@ export class RandomWalker {
     // Finish the partial step on a copy so the committed walk stays on the grid.
     copyWalkState(this.#preview, state);
     step(this.#preview, this.#rng, travelPx, remainderPx, box);
+
     return this.#preview;
   }
 }

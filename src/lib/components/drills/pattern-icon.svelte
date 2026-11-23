@@ -12,6 +12,7 @@
   }: { patternId: PatternId; class?: string } = $props();
 
   let path = $derived(patternIconPaths[patternId]);
+
   // Dense paths read better with a thinner line.
   let strokeWidth = $derived(
     patternId === "lissajous" || patternId === "stairStep" ? 1.3 : undefined
@@ -23,7 +24,7 @@
     <path d={path} stroke-width={strokeWidth} />
   {/if}
   {#if patternId === "randomWalk"}
-    <circle cx="21" cy="7" r="1.8" fill="currentColor" stroke="none" />
+    <circle cx="21" cy="7" fill="currentColor" r="1.8" stroke="none" />
   {:else if patternId === "teleport"}
     <JumpGlyph />
   {:else if patternId === "multipleObjectTracking"}

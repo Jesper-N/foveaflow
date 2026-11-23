@@ -99,15 +99,18 @@ export class PatternSampler {
       this.reset();
       this.#patternId = id;
     }
+
     const radiusPx = Number.isFinite(params.radiusPx)
       ? Math.max(1, params.radiusPx)
       : 1;
+
     const travelPx = Number.isFinite(params.travelPx) ? params.travelPx : 0;
     const bounds = this.#resolveBounds(arena, radiusPx, params.pathMarginPx);
 
     if (isPathPattern(id)) {
       this.#path ??= new PathSampler(id);
       const [x, y] = this.#path.sample(travelPx, bounds);
+
       return writeTargetFrame(frames, 0, x, y, radiusPx);
     }
 
@@ -115,27 +118,34 @@ export class PatternSampler {
       case "circle": {
         return this.#sampleCircle(frames, bounds, travelPx, radiusPx);
       }
+
       case "diagonal": {
         return this.#sampleDiagonal(frames, bounds, travelPx, radiusPx);
       }
+
       case "bounce": {
         return this.#sampleBounce(frames, bounds, travelPx, radiusPx);
       }
+
       case "horizontalSweep":
       case "verticalSweep":
       case "downRightSweep":
       case "downLeftSweep": {
         return this.#sampleSweep(frames, id, bounds, travelPx, radiusPx);
       }
+
       case "randomWalk": {
         return this.#sampleRandomWalk(frames, bounds, travelPx, radiusPx, rng);
       }
+
       case "directionChange": {
         return this.#sampleHardTurns(frames, bounds, travelPx, radiusPx, rng);
       }
+
       case "teleport": {
         return this.#sampleTeleport(frames, bounds, travelPx, radiusPx, rng);
       }
+
       case "multipleObjectTracking": {
         return this.#sampleSwarm(
           frames,
@@ -146,8 +156,9 @@ export class PatternSampler {
           rng
         );
       }
+
       default: {
-        throw new Error(`Unsupported pattern: ${id satisfies never}`);
+        throw new Error(`Unsupported pattern: ${String(id satisfies never)}`);
       }
     }
   }
@@ -155,6 +166,7 @@ export class PatternSampler {
   #resolveBounds(arena: Arena, radiusPx: number, pathMarginPx: number) {
     const margin = resolvePathMargin(radiusPx, pathMarginPx);
     const cache = this.#boundsCache;
+
     if (
       cache?.width === arena.width &&
       cache.height === arena.height &&
@@ -173,6 +185,7 @@ export class PatternSampler {
       margin,
       width: arena.width,
     };
+
     return this.#boundsCache.bounds;
   }
 
@@ -185,6 +198,7 @@ export class PatternSampler {
     const radius = Math.min(radiusX, radiusY);
     const angleRadius = Math.max(1, radius);
     const angle = this.#travel.resolve(travelPx, angleRadius) / angleRadius;
+
     return writeTargetFrame(
       frames,
       0,
@@ -204,10 +218,12 @@ export class PatternSampler {
       travelPx * DIAGONAL_X_RATE * DIAGONAL_SPEED_SCALE,
       width
     );
+
     const travelY = this.#travelY.resolve(
       travelPx * DIAGONAL_Y_RATE * DIAGONAL_SPEED_SCALE,
       height
     );
+
     return writeTargetFrame(
       frames,
       0,
@@ -227,10 +243,12 @@ export class PatternSampler {
       travelPx * BOUNCE_X_RATE * BOUNCE_SPEED_SCALE,
       width
     );
+
     const travelY = this.#travelY.resolve(
       travelPx * BOUNCE_Y_RATE * BOUNCE_SPEED_SCALE,
       height
     );
+
     // The offsets start the ball away from a corner.
     return writeTargetFrame(
       frames,
@@ -253,8 +271,10 @@ export class PatternSampler {
     radiusPx: number
   ) {
     const { left, top, right, width, height, centerX, centerY } = bounds;
+
     if (id === "horizontalSweep") {
       const sweepTravelPx = this.#travel.resolve(travelPx, width);
+
       return writeTargetFrame(
         frames,
         0,
@@ -263,8 +283,10 @@ export class PatternSampler {
         radiusPx
       );
     }
+
     if (id === "verticalSweep") {
       const sweepTravelPx = this.#travel.resolve(travelPx, height);
+
       return writeTargetFrame(
         frames,
         0,
@@ -277,6 +299,7 @@ export class PatternSampler {
     const { diagonalLength } = bounds;
     const sweepTravelPx = this.#travel.resolve(travelPx, diagonalLength);
     const progress = pingPong(sweepTravelPx, diagonalLength) / diagonalLength;
+
     return writeTargetFrame(
       frames,
       0,
@@ -302,7 +325,9 @@ export class PatternSampler {
     ) {
       this.#walker = new RandomWalker(rng, travelPx, bounds);
     }
+
     const { x, y } = this.#walker.advance(travelPx, bounds);
+
     return writeTargetFrame(frames, 0, x, y, radiusPx);
   }
 
@@ -314,13 +339,16 @@ export class PatternSampler {
     rng: Rng
   ) {
     const distancePx = Math.max(0, travelPx);
+
     if (
       this.#hardTurns?.seed !== rng.seed ||
       distancePx < this.#hardTurns.lastTravelPx
     ) {
       this.#hardTurns = new HardTurnPath(rng, distancePx, bounds);
     }
+
     const { x, y } = this.#hardTurns.advance(distancePx, bounds);
+
     return writeTargetFrame(frames, 0, x, y, radiusPx);
   }
 
@@ -336,6 +364,7 @@ export class PatternSampler {
     const jumpIndex = Math.floor(jumpTravelPx / jumpPx);
     const phase = (jumpTravelPx - jumpIndex * jumpPx) / jumpPx;
     this.#jumpIndex = jumpIndex;
+
     return writeTargetFrame(
       frames,
       0,
@@ -357,6 +386,7 @@ export class PatternSampler {
     if (this.#swarm?.seed !== rng.seed || travelPx < this.#swarm.lastTravelPx) {
       this.#swarm = new TrackingSwarm(rng.seed, travelPx);
     }
+
     return this.#swarm.sample(
       frames,
       bounds,

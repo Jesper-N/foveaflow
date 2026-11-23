@@ -19,8 +19,8 @@
 <SiteShell path={page.path}>
   <PageHero
     breadcrumb={[{ href: "/", label: "FoveaFlow" }, { label: page.label }]}
-    title={t(page.title)}
     lede={t(page.summary)}
+    title={t(page.title)}
   >
     {#snippet meta()}
       {t("Updated")}
@@ -43,10 +43,10 @@
           <div class="mt-5 flex flex-wrap gap-x-6 gap-y-3">
             {#each section.links as link (link.url)}
               <a
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
                 class={editorialLink}
+                href={link.url}
+                rel="noopener noreferrer"
+                target="_blank"
               >
                 {t(link.label)}
                 <ArrowUpRightIcon class="size-3.5" />

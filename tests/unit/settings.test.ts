@@ -45,6 +45,7 @@ describe("settings", () => {
       ...createDefaultSettings(getDrill("mot")),
       distractorCount: 3,
     };
+
     expect(withDrill(distractions, "mot").distractorCount).toBe(3);
   });
 
@@ -54,6 +55,7 @@ describe("settings", () => {
       motionDirection: -1 as const,
       patternId: "circle" as const,
     };
+
     expect(withPattern(reversed, "ellipse").motionDirection).toBe(-1);
     expect(withPattern(reversed, "randomWalk").motionDirection).toBe(1);
   });
@@ -64,6 +66,7 @@ describe("settings", () => {
       baseRadiusPx: 80,
       patternId: "wave" as const,
     };
+
     expect(resetToDefaults(settings)).toMatchObject({
       baseRadiusPx: 40,
       patternId: "wave",
@@ -85,6 +88,7 @@ describe("catalogs", () => {
     const grouped = [...predictablePatterns, ...unpredictablePatterns].map(
       ({ id }) => id
     );
+
     expect(grouped.toSorted()).toEqual(
       pursuitPatterns.map(({ id }) => id).toSorted()
     );

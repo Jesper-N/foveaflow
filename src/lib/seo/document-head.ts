@@ -19,16 +19,20 @@ const setStructuredData = (data: StructuredData | undefined) => {
   let script = document.head.querySelector<HTMLScriptElement>(
     "script[data-seo-structured-data]"
   );
+
   if (!data) {
     script?.remove();
+
     return;
   }
+
   if (!script) {
     script = document.createElement("script");
     script.type = "application/ld+json";
-    script.dataset.seoStructuredData = "";
+    script.dataset["seoStructuredData"] = "";
     document.head.append(script);
   }
+
   script.textContent = JSON.stringify(data);
 };
 
@@ -42,9 +46,12 @@ export const syncDocumentHead = (path: string) => {
   const title = route?.title ?? siteMetadata.title;
   const description = route?.description ?? siteMetadata.description;
   const ogDescription = route?.description ?? siteMetadata.ogDescription;
+
   const twitterDescription =
     route?.description ?? siteMetadata.twitterDescription;
+
   const canonicalUrl = absoluteUrl(route?.path ?? "/", site);
+
   const robots =
     route?.indexable === false ? robotsMeta.noindex : robotsMeta.index;
 

@@ -14,11 +14,11 @@
     {#snippet child({ props })}
       <Button
         {...props}
-        variant="ghost"
-        size="icon-lg"
         class="text-muted-foreground relative"
         aria-label={t("Theme")}
+        size="icon-lg"
         title={t("Theme")}
+        variant="ghost"
       >
         <!-- The sun turns into the moon in dark mode. -->
         <SunIcon
@@ -30,15 +30,15 @@
       </Button>
     {/snippet}
   </DropdownMenu.Trigger>
-  <DropdownMenu.Content align="end" sideOffset={8} class="min-w-40">
+  <DropdownMenu.Content class="min-w-40" align="end" sideOffset={8}>
     <DropdownMenu.Group>
       <DropdownMenu.GroupHeading>{t("Theme")}</DropdownMenu.GroupHeading>
       <DropdownMenu.RadioGroup
-        value={userPrefersMode.current}
         onValueChange={selectTheme}
+        value={userPrefersMode.current}
       >
         {#each themeOptions as option (option.value)}
-          <DropdownMenu.RadioItem value={option.value} class="min-h-10 gap-2">
+          <DropdownMenu.RadioItem class="min-h-10 gap-2" value={option.value}>
             <option.icon />{t(option.label)}
           </DropdownMenu.RadioItem>
         {/each}

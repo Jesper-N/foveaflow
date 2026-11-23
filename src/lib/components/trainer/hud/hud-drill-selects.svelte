@@ -32,17 +32,17 @@
   data-has-pattern={trainer.isPursuit}
 >
   <Select.Root
-    bind:open={trainer.drillSelectOpen}
+    onOpenChange={trainer.hud.handleMenuOpenChange}
+    onValueChange={trainer.selectDrill}
     type="single"
     value={trainer.settings.drillId}
-    onValueChange={trainer.selectDrill}
-    onOpenChange={trainer.hud.handleMenuOpenChange}
+    bind:open={trainer.drillSelectOpen}
   >
     <Select.Trigger
-      data-hud-select="drill"
       class={triggerClass}
-      aria-label={`${t("Drill")}: ${drillName}`}
-      title={`${t("Drill")}: ${drillName}`}
+      aria-label="{t('Drill')}: {drillName}"
+      data-hud-select="drill"
+      title="{t('Drill')}: {drillName}"
     >
       <HudSelectLabel caption={t("Drill")} value={drillName}>
         <DrillIcon drillId={trainer.settings.drillId} />
@@ -61,17 +61,17 @@
     inert={!trainer.isPursuit}
   >
     <Select.Root
-      bind:open={trainer.patternSelectOpen}
+      onOpenChange={trainer.hud.handleMenuOpenChange}
+      onValueChange={trainer.selectPattern}
       type="single"
       value={trainer.settings.patternId}
-      onValueChange={trainer.selectPattern}
-      onOpenChange={trainer.hud.handleMenuOpenChange}
+      bind:open={trainer.patternSelectOpen}
     >
       <Select.Trigger
-        data-hud-select="pattern"
         class={cn(triggerClass, "w-[calc(50cqw-0.25rem)] shrink-0")}
-        aria-label={`${t("Motion path")}: ${patternName}`}
-        title={`${t("Motion path")}: ${patternName}`}
+        aria-label="{t('Motion path')}: {patternName}"
+        data-hud-select="pattern"
+        title="{t('Motion path')}: {patternName}"
       >
         <HudSelectLabel caption={t("Motion path")} value={patternName}>
           <PatternIcon patternId={trainer.settings.patternId} />

@@ -9,6 +9,7 @@
   import BookOpenIcon from "@lucide/svelte/icons/book-open";
   import XIcon from "@lucide/svelte/icons/x";
   import type { Attachment } from "svelte/attachments";
+  import { on } from "svelte/events";
 
   import { getTrainer } from "../trainer-context";
   import DrillGuide from "./drill-guide.svelte";
@@ -33,19 +34,23 @@
   // and releasing outside the panel keeps the guide open.
   const closeOnBackdropClick: Attachment<HTMLDialogElement> = (dialog) => {
     let pressedBackdrop = false;
+
     const handlePointerDown = (event: PointerEvent) => {
       pressedBackdrop = event.target === dialog;
     };
+
     const handleClick = (event: MouseEvent) => {
       if (pressedBackdrop && event.target === dialog) {
         dialog.close();
       }
     };
-    dialog.addEventListener("pointerdown", handlePointerDown);
-    dialog.addEventListener("click", handleClick);
+
+    const offPointerDown = on(dialog, "pointerdown", handlePointerDown);
+    const offClick = on(dialog, "click", handleClick);
+
     return () => {
-      dialog.removeEventListener("pointerdown", handlePointerDown);
-      dialog.removeEventListener("click", handleClick);
+      offPointerDown();
+      offClick();
     };
   };
 </script>
@@ -64,38 +69,38 @@
       </time>
     </span>
     <a
-      href={siteMetadata.repositoryUrl}
-      target="_blank"
-      rel="noopener noreferrer"
       class={footerLink}
+      href={siteMetadata.repositoryUrl}
+      rel="noopener noreferrer"
+      target="_blank"
     >
       {t("Source")}<ArrowUpRightIcon class="size-3" />
     </a>
-    <a href={legalPageLinks.privacy.path} class={footerLink}>
+    <a class={footerLink} href={legalPageLinks.privacy.path}>
       {t(legalPageLinks.privacy.label)}
     </a>
-    <a href={legalPageLinks.terms.path} class={footerLink}>
+    <a class={footerLink} href={legalPageLinks.terms.path}>
       {t(legalPageLinks.terms.label)}
     </a>
   </div>
 {/snippet}
 
 <dialog
-  {@attach showWhenOpened}
-  {@attach closeOnBackdropClick}
   id="trainer-guide"
   class="bg-popover text-popover-foreground ring-foreground/5 dark:ring-foreground/10 m-auto max-h-[calc(100dvh-2rem)] w-[min(calc(100dvw-2rem),56rem)] max-w-[calc(100dvw-2rem)] flex-col overflow-hidden rounded-4xl text-sm shadow-xl ring-1 outline-hidden backdrop:animate-[guide-backdrop-enter_150ms_ease-out] backdrop:bg-black/30 backdrop:backdrop-blur-sm open:flex open:animate-[guide-dialog-enter_150ms_cubic-bezier(0.23,1,0.32,1)] motion-reduce:backdrop:animate-none motion-reduce:open:animate-none"
+  {@attach showWhenOpened}
+  {@attach closeOnBackdropClick}
   aria-labelledby="trainer-guide-title"
   onclose={() => (trainer.guideOpen = false)}
 >
   <!-- Floats over the scrolling body; the blur keeps passing text from looking clipped. -->
-  <form method="dialog" class="absolute top-4 right-4 z-10 sm:top-5 sm:right-5">
+  <form class="absolute top-4 right-4 z-10 sm:top-5 sm:right-5" method="dialog">
     <Button
-      type="submit"
-      variant="secondary"
-      size="icon"
       class="bg-secondary/80 size-11 backdrop-blur-md"
       aria-label={t("Close")}
+      size="icon"
+      type="submit"
+      variant="secondary"
     >
       <XIcon />
     </Button>
@@ -119,9 +124,9 @@
   >
     {@render pageMeta("hidden sm:flex")}
     <Button
+      class="h-auto min-h-12 flex-1 gap-2 px-6 text-base whitespace-normal sm:flex-none"
       href="/guide/"
       size="lg"
-      class="h-auto min-h-12 flex-1 gap-2 px-6 text-base whitespace-normal sm:flex-none"
     >
       <BookOpenIcon data-icon="inline-start" />
       {t("Read full guide")}

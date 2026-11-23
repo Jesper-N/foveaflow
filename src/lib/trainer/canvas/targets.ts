@@ -1,5 +1,5 @@
 import { letterAt } from "../engine/letters";
-import { TAU } from "../engine/math";
+import { TAU, itemAt } from "../engine/math";
 import type { TargetForm } from "../settings/options";
 import type { TrainerSettings } from "../settings/settings";
 import type { FrameSample } from "./frame-sampler";
@@ -15,6 +15,7 @@ const letterScaleByForm = {
 } satisfies Record<TargetForm, number>;
 
 const MIN_LETTER_FONT_PX = 6;
+
 /** Optical nudge: glyphs sit slightly high when centered on their middle baseline. */
 const LETTER_BASELINE_SHIFT = 0.04;
 const POINTED_FORM_REACH = 1.25;
@@ -25,19 +26,30 @@ const ringStrokeWidth = (radiusPx: number) => Math.max(3, radiusPx * 0.28);
 /** How far a target's outline reaches from its center, including strokes. */
 export const targetExtentPx = (radiusPx: number, form: TargetForm) => {
   const radius = Number.isFinite(radiusPx) ? Math.max(0, radiusPx) : 0;
+
   switch (form) {
     case "diamond":
     case "triangle": {
       return radius * POINTED_FORM_REACH;
     }
+
     case "cross": {
       return radius + crossStrokeWidth(radius) / 2;
     }
+
     case "ring": {
       return radius + ringStrokeWidth(radius) / 2;
     }
-    default: {
+
+    case "circle":
+    case "square": {
       return radius;
+    }
+
+    default: {
+      throw new Error(
+        `Unsupported target form: ${String(form satisfies never)}`
+      );
     }
   }
 };
@@ -52,11 +64,13 @@ const drawForm = (
 ) => {
   if (form === "square") {
     ctx.fillRect(x - radiusPx, y - radiusPx, radiusPx * 2, radiusPx * 2);
+
     return;
   }
 
   const reach = radiusPx * POINTED_FORM_REACH;
   ctx.beginPath();
+
   switch (form) {
     case "diamond": {
       ctx.moveTo(x, y - reach);
@@ -65,16 +79,20 @@ const drawForm = (
       ctx.lineTo(x - reach, y);
       ctx.closePath();
       ctx.fill();
+
       return;
     }
+
     case "triangle": {
       ctx.moveTo(x, y - reach);
       ctx.lineTo(x + radiusPx * 1.15, y + radiusPx);
       ctx.lineTo(x - radiusPx * 1.15, y + radiusPx);
       ctx.closePath();
       ctx.fill();
+
       return;
     }
+
     case "cross": {
       ctx.lineWidth = crossStrokeWidth(radiusPx);
       ctx.lineCap = "round";
@@ -84,18 +102,30 @@ const drawForm = (
       ctx.moveTo(x, y - radiusPx);
       ctx.lineTo(x, y + radiusPx);
       ctx.stroke();
+
       return;
     }
+
     case "ring": {
       ctx.arc(x, y, radiusPx, 0, TAU);
       ctx.lineWidth = ringStrokeWidth(radiusPx);
       ctx.strokeStyle = ctx.fillStyle;
       ctx.stroke();
+
       return;
     }
-    default: {
+
+    case "circle": {
       ctx.arc(x, y, radiusPx, 0, TAU);
       ctx.fill();
+
+      return;
+    }
+
+    default: {
+      throw new Error(
+        `Unsupported target form: ${String(form satisfies never)}`
+      );
     }
   }
 };
@@ -126,8 +156,9 @@ export const drawTargets = (
   ctx.textBaseline = "middle";
 
   for (let index = 0; index < count; index += 1) {
-    const { x, y, radiusPx, role, alpha } = frames[index];
+    const { x, y, radiusPx, role, alpha } = itemAt(frames, index);
     const opacity = alpha * targetOpacity;
+
     if (opacity <= 0) {
       continue;
     }
@@ -140,10 +171,12 @@ export const drawTargets = (
     if (letterEnabled) {
       const fontSize = letterFontSize(radiusPx, settings);
       const letterFont = `${settings.letterWeight} ${fontSize}px ${paint.fontFamily}`;
+
       if (letterFont !== font) {
         font = letterFont;
         ctx.font = font;
       }
+
       ctx.fillStyle = settings.letterColor;
       ctx.fillText(
         letterAt(seed, index, letterBucket),

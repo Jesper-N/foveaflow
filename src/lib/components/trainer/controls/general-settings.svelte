@@ -37,14 +37,14 @@
   <SettingsRow>
     <Field.FieldTitle id="trainer-theme-label">{t("Theme")}</Field.FieldTitle>
     <ToggleGroup.Root
-      type="single"
       class="grid w-full grid-cols-3"
-      bind:value={() => userPrefersMode.current, selectTheme}
-      variant="outline"
       aria-labelledby="trainer-theme-label"
+      type="single"
+      variant="outline"
+      bind:value={() => userPrefersMode.current, selectTheme}
     >
       {#each themeOptions as option (option.value)}
-        <ToggleGroup.Item value={option.value} class="min-h-11 px-2">
+        <ToggleGroup.Item class="min-h-11 px-2" value={option.value}>
           <option.icon data-icon="inline-start" />{t(option.label)}
         </ToggleGroup.Item>
       {/each}
@@ -79,7 +79,7 @@
           </AlertDialog.Header>
           <AlertDialog.Footer>
             <AlertDialog.Cancel>{t("Cancel")}</AlertDialog.Cancel>
-            <AlertDialog.Action variant="destructive" onclick={confirmReset}>
+            <AlertDialog.Action onclick={confirmReset} variant="destructive">
               {t("Reset to defaults")}
             </AlertDialog.Action>
           </AlertDialog.Footer>

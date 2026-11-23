@@ -1,4 +1,4 @@
-import { TAU } from "../engine/math";
+import { TAU, itemAt } from "../engine/math";
 import type { Arena } from "../engine/types";
 
 // Proportions and timing of the classic illusion: twelve dots on a ring,
@@ -9,6 +9,7 @@ const ORBIT_RATIO = 0.3381;
 const DOT_RATIO = 0.0399;
 const CROSS_ARM_RATIO = 0.0132;
 const CROSS_STROKE_RATIO = 0.0125;
+
 /** The illusion needs a neutral gray field, whatever the app theme. */
 const BACKGROUND_COLOR = "#d8d8da";
 const CROSS_COLOR = "#050505";
@@ -16,6 +17,7 @@ const CROSS_COLOR = "#050505";
 /** Dot directions, starting at 12 o'clock and going clockwise. */
 const DOT_DIRECTIONS = Array.from({ length: DOT_COUNT }, (_, index) => {
   const angle = -Math.PI / 2 + (index / DOT_COUNT) * TAU;
+
   return [Math.cos(angle), Math.sin(angle)] as const;
 });
 
@@ -26,6 +28,7 @@ export const lilacChaserHiddenDot = (elapsedSec: number) =>
 const measure = (arena: Arena, sizeScale: number) => {
   const minSide = Math.min(arena.width, arena.height);
   const dotRadius = minSide * DOT_RATIO * sizeScale;
+
   return {
     centerX: arena.width / 2,
     centerY: arena.height / 2,
@@ -42,7 +45,8 @@ const dotCenter = (
   { centerX, centerY, orbitRadius }: RingGeometry,
   dot: number
 ) => {
-  const [directionX, directionY] = DOT_DIRECTIONS[dot];
+  const [directionX, directionY] = itemAt(DOT_DIRECTIONS, dot);
+
   return [
     centerX + directionX * orbitRadius,
     centerY + directionY * orbitRadius,
@@ -75,6 +79,7 @@ export const drawLilacChaser = (
   ctx.fillRect(0, 0, arena.width, arena.height);
 
   ctx.fillStyle = dotColor;
+
   for (let dot = 0; dot < DOT_COUNT; dot += 1) {
     if (dot !== hiddenDot) {
       drawDot(ctx, ring, dot);

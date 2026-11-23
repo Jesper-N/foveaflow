@@ -1,7 +1,6 @@
 import { expect, test as base } from "@playwright/test";
 import type { Page } from "@playwright/test";
-
-import type { TrainerSettings } from "../src/lib/trainer/settings/settings";
+import { z } from "zod";
 
 /**
  * Pages start in English and fail the test on any browser error or failed
@@ -9,9 +8,10 @@ import type { TrainerSettings } from "../src/lib/trainer/settings/settings";
  */
 export const test = base.extend({
   page: async ({ page, baseURL }, use) => {
-    if (!baseURL) {
+    if (baseURL === undefined) {
       throw new Error("Browser tests need a baseURL.");
     }
+
     await page
       .context()
       .addCookies([{ name: "PARAGLIDE_LOCALE", url: baseURL, value: "en" }]);
@@ -49,13 +49,23 @@ export const openPage = async (page: Page, path: string) => {
   await expect(page.locator("astro-island[ssr]")).toHaveCount(0);
 };
 
-export const readSettings = (page: Page): Promise<TrainerSettings | null> =>
-  page.evaluate(() =>
-    JSON.parse(localStorage.getItem("foveaflow.settings.v3") ?? "null")
+const savedSettingsSchema = z.looseObject({
+  baseRadiusPx: z.number(),
+  letterEnabled: z.boolean(),
+  lilacChaserScale: z.number(),
+  targetForm: z.string(),
+});
+
+export const readSettings = async (page: Page) => {
+  const value = await page.evaluate(() =>
+    localStorage.getItem("foveaflow.settings.v3")
   );
 
-export const canvasImage = (page: Page) =>
-  page
+  return value === null ? null : savedSettingsSchema.parse(JSON.parse(value));
+};
+
+export const canvasImage = async (page: Page) =>
+  await page
     .locator("canvas")
     .evaluate((node: HTMLCanvasElement) => node.toDataURL());
 
@@ -64,18 +74,21 @@ export const expectAnimation = async (page: Page) => {
   const canvas = page.locator("canvas");
   await expect(canvas).toBeVisible();
   await expect
-    .poll(() =>
-      canvas.evaluate(
-        (node: HTMLCanvasElement) =>
-          node
-            .getContext("2d")
-            ?.getImageData(0, 0, node.width, node.height)
-            .data.some((value) => value !== 0) ?? false
-      )
+    .poll(
+      async () =>
+        await canvas.evaluate(
+          (node: HTMLCanvasElement) =>
+            node
+              .getContext("2d")
+              ?.getImageData(0, 0, node.width, node.height)
+              .data.some((value) => value !== 0) ?? false
+        )
     )
     .toBe(true);
   const image = await canvasImage(page);
-  await expect.poll(() => canvasImage(page), { timeout: 4000 }).not.toBe(image);
+  await expect
+    .poll(async () => await canvasImage(page), { timeout: 4000 })
+    .not.toBe(image);
 };
 
 /** Fails when the page scrolls sideways, which usually means something overflows. */

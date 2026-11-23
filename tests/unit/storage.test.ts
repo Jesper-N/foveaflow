@@ -12,8 +12,11 @@ const SETTINGS_KEY = "foveaflow.settings.v3";
 const LEGACY_SETTINGS_KEY = "foveaflow.settings.v2";
 
 const storage = new Map<string, string>();
+
 globalThis.localStorage = {
-  clear: () => storage.clear(),
+  clear: () => {
+    storage.clear();
+  },
   getItem: (key) => storage.get(key) ?? null,
   key: (index) => [...storage.keys()][index] ?? null,
   get length() {
@@ -30,6 +33,7 @@ globalThis.localStorage = {
 /** Stores raw JSON, as an older version or a hand edit would have it, then loads it. */
 const loadFrom = (key: string, json: string) => {
   storage.set(key, json);
+
   return loadSettings();
 };
 
@@ -48,6 +52,7 @@ test("saving writes after a pause and loads back the same settings", () => {
     ballColor: "#2488cc",
     speed: 35,
   };
+
   const saver = new SettingsSaver();
   saver.schedule(settings);
   expect(storage.has(SETTINGS_KEY)).toBe(false);
@@ -60,8 +65,8 @@ test("saves keep the stored drill field name", () => {
   const saver = new SettingsSaver();
   saver.schedule(createDefaultSettings(getDrill("mot")));
   saver.flush();
-  const saved = JSON.parse(storage.get(SETTINGS_KEY) ?? "{}");
-  expect(saved.presetId).toBe("mot");
+  const saved: unknown = JSON.parse(storage.get(SETTINGS_KEY) ?? "{}");
+  expect(saved).toHaveProperty("presetId", "mot");
   expect(saved).not.toHaveProperty("drillId");
 });
 
@@ -156,5 +161,6 @@ test("a size pulse always runs at a steady speed", () => {
       speedProfile: profilesForBehavior("wavePattern").speedProfile,
     })
   );
+
   expect(settings?.speedProfile).toEqual({ kind: "constant" });
 });

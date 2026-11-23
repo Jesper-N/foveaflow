@@ -26,21 +26,21 @@
   <ColorRow
     id="trainer-letter-color"
     label={t("Letter color")}
-    value={trainer.settings.letterColor}
     onValueChange={trainer.setLetterColor}
+    value={trainer.settings.letterColor}
   >
     {#snippet swatch()}
       <!-- The letter on the ball, as the drill draws it. -->
-      <svg viewBox="0 0 24 24" class="size-6 shrink-0" aria-hidden="true">
-        <circle cx="12" cy="12" r="12" fill={trainer.targetColor} />
+      <svg class="size-6 shrink-0" aria-hidden="true" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" fill={trainer.targetColor} r="12" />
         <text
-          x="12"
-          y="12"
           dominant-baseline="middle"
-          text-anchor="middle"
           fill={trainer.settings.letterColor}
           font-size="15"
           font-weight={trainer.settings.letterWeight}
+          text-anchor="middle"
+          x="12"
+          y="12"
         >
           A
         </text>
@@ -53,9 +53,9 @@
       {t("Weight")}
     </Field.FieldLabel>
     <Select.Root
+      onValueChange={trainer.setLetterWeight}
       type="single"
       value={String(trainer.settings.letterWeight)}
-      onValueChange={trainer.setLetterWeight}
     >
       <Select.Trigger
         id="trainer-letter-weight"
@@ -76,8 +76,8 @@
   </SettingsRow>
 
   <SliderRow
-    setting="letterScale"
     label={t("Text size")}
+    setting="letterScale"
     sliderLabel={t("Letter text size")}
   />
 {/if}

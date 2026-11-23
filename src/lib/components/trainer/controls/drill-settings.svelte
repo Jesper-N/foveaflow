@@ -25,9 +25,9 @@
   <SettingsRow>
     <Field.FieldLabel for="trainer-drill">{t("Drill")}</Field.FieldLabel>
     <Select.Root
+      onValueChange={trainer.selectDrill}
       type="single"
       value={trainer.settings.drillId}
-      onValueChange={trainer.selectDrill}
     >
       <Select.Trigger id="trainer-drill" class="min-h-11 w-full">
         <OptionLabel label={t(getDrill(trainer.settings.drillId).name)}>
@@ -44,9 +44,9 @@
         {t("Motion path")}
       </Field.FieldLabel>
       <Select.Root
+        onValueChange={trainer.selectPattern}
         type="single"
         value={trainer.settings.patternId}
-        onValueChange={trainer.selectPattern}
       >
         <Select.Trigger id="trainer-pattern" class="min-h-11 w-full">
           <OptionLabel label={t(getPatternName(trainer.settings.patternId))}>
@@ -67,9 +67,9 @@
         {t("Motion feel")}
       </Field.FieldLabel>
       <Select.Root
+        onValueChange={trainer.selectBehavior}
         type="single"
         value={trainer.behavior}
-        onValueChange={trainer.selectBehavior}
       >
         <Select.Trigger id="trainer-behavior" class="min-h-11 w-full">
           {t(getBehaviorName(trainer.behavior))}
@@ -84,7 +84,7 @@
       </Select.Root>
     </SettingsRow>
 
-    <SliderRow setting="speed" label={t("Speed")} />
+    <SliderRow label={t("Speed")} setting="speed" />
 
     {#if trainer.canReverse}
       <SettingsRow>
@@ -92,20 +92,20 @@
           {t("Direction")}
         </Field.FieldLabel>
         <ToggleGroup.Root
-          type="single"
           class="grid w-full grid-cols-2"
+          aria-labelledby="trainer-direction-label"
+          type="single"
+          variant="outline"
           bind:value={
             () =>
               trainer.settings.motionDirection === 1 ? "forward" : "reverse",
             trainer.setDirection
           }
-          variant="outline"
-          aria-labelledby="trainer-direction-label"
         >
-          <ToggleGroup.Item value="forward" class="min-h-11">
+          <ToggleGroup.Item class="min-h-11" value="forward">
             {t("Forward")}
           </ToggleGroup.Item>
-          <ToggleGroup.Item value="reverse" class="min-h-11">
+          <ToggleGroup.Item class="min-h-11" value="reverse">
             {t("Reverse")}
           </ToggleGroup.Item>
         </ToggleGroup.Root>

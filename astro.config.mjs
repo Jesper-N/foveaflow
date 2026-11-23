@@ -29,7 +29,7 @@ export default defineConfig({
       },
     },
   },
-  site: process.env.SITE_URL ?? "https://foveaflow.com",
+  site: process.env["SITE_URL"] ?? "https://foveaflow.com",
   vite: {
     plugins: [tailwindcss()],
   },

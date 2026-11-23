@@ -12,7 +12,7 @@
   import { guideCopy, guideSectionHeading } from "./styles";
 </script>
 
-<GuideHeader title={t(homeCopy.heading)} lede={t(homeCopy.hero)} />
+<GuideHeader lede={t(homeCopy.hero)} title={t(homeCopy.heading)} />
 
 <div class="grid gap-10 px-6 py-7 sm:px-8">
   <section
@@ -26,11 +26,11 @@
       {#each drillGuides as guide (guide.drillId)}
         <li>
           <a
-            href={mainRouteForDrill(guide.drillId)?.path ?? "/"}
             class={cn(
               drillCard,
               "grid h-full grid-cols-[6.5rem_minmax(0,1fr)] items-center gap-4 rounded-2xl p-3"
             )}
+            href={mainRouteForDrill(guide.drillId)?.path ?? "/"}
           >
             <span class="px-2 py-1.5">
               <DrillIllustration drillId={guide.drillId} />

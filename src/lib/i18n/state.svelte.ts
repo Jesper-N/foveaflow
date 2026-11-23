@@ -11,9 +11,10 @@ class LanguageState {
   #latestRequest = 0;
 
   /** Resolves the visitor's language once. Safe to call from every component. */
-  init() {
+  async init() {
     this.#initPromise ??= this.#initialize();
-    return this.#initPromise;
+
+    await this.#initPromise;
   }
 
   set(locale: AppLocale) {
@@ -35,13 +36,16 @@ class LanguageState {
       if (request === this.#latestRequest) {
         this.#show(defaultLocale);
       }
+
       return;
     }
+
     if (request !== this.#latestRequest) {
       return;
     }
 
     this.#show(locale);
+
     if (persist) {
       await setResolvedLocale(locale);
     }
@@ -52,12 +56,14 @@ class LanguageState {
     this.ready = true;
 
     const root = globalThis.document?.documentElement;
-    if (!root) {
+
+    if (root === undefined) {
       return;
     }
+
     root.lang = locale;
     // Reveals the page that the boot script hid while the language loaded.
-    delete root.dataset.i18nPending;
+    delete root.dataset["i18nPending"];
   }
 }
 

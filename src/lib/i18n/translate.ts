@@ -9,9 +9,11 @@ import { languageState } from "./state.svelte";
  */
 export const t = (message: string): string => {
   const { locale } = languageState;
+
   if (locale === defaultLocale) {
     return message;
   }
+
   return getDictionary(locale)?.get(message) ?? message;
 };
 

@@ -6,6 +6,7 @@ import {
   letterAt,
   timeLetterBucket,
 } from "../../src/lib/trainer/engine/letters";
+import { itemAt } from "../../src/lib/trainer/engine/math";
 import { MotionClock } from "../../src/lib/trainer/engine/motion-clock";
 import { PatternSampler } from "../../src/lib/trainer/engine/pattern-sampler";
 import type { PatternParams } from "../../src/lib/trainer/engine/pattern-sampler";
@@ -34,6 +35,7 @@ const ALL_PATTERNS: PatternId[] = [
   "teleport",
   "multipleObjectTracking",
 ];
+
 const ARENA = { height: 1080, width: 1920 };
 const SEED = 12_345;
 
@@ -54,6 +56,7 @@ const samplePositions = (
   const sampler = new PatternSampler();
   const rng = createRng(SEED);
   const frames: TargetFrame[] = [];
+
   return travels.map((travelPx) => {
     const count = sampler.sample(
       frames,
@@ -62,6 +65,7 @@ const samplePositions = (
       params(travelPx),
       rng
     );
+
     return frames.slice(0, count).map((frame) => ({ ...frame }));
   });
 };
@@ -88,15 +92,18 @@ describe("speed", () => {
     "%s: distance does not depend on how time is split",
     (behavior) => {
       const { speedProfile } = profilesForBehavior(behavior);
+
       for (const [start, middle, end] of [
         [0, 0.3, 1],
         [0.5, 2.2, 7.9],
         [3.1, 3.9, 30],
-      ]) {
+      ] as const) {
         const whole = integrateSpeedProfile(speedProfile, start, end, 50);
+
         const parts =
           integrateSpeedProfile(speedProfile, start, middle, 50) +
           integrateSpeedProfile(speedProfile, middle, end, 50);
+
         expect(parts).toBeCloseTo(whole, 6);
       }
     }
@@ -109,17 +116,20 @@ describe("speed", () => {
       minMultiplier: 0.5,
       periodSec: 4,
     };
+
     expect(integrateSpeedProfile(profile, 0, 4, 10)).toBeCloseTo(40, 9);
   });
 
   test("a size pulse stays within its range", () => {
     const { sizeProfile } = profilesForBehavior("sizePulse");
     const largest = maxSizeProfileRadius(sizeProfile, 40);
+
     for (let elapsedSec = 0; elapsedSec < 10; elapsedSec += 0.1) {
       expect(
         sampleSizeProfile(sizeProfile, elapsedSec, 40)
       ).toBeLessThanOrEqual(largest + 1e-9);
     }
+
     expect(largest).toBe(56);
   });
 });
@@ -152,6 +162,7 @@ describe("patterns", () => {
   test.each(ALL_PATTERNS)("%s: targets stay inside the arena", (patternId) => {
     const bounds = resolvePatternBounds(ARENA, 30, 16);
     const travels = Array.from({ length: 400 }, (_, index) => index * 37.5);
+
     for (const frames of samplePositions(patternId, travels)) {
       for (const { x, y } of frames) {
         expect(x).toBeGreaterThanOrEqual(bounds.left - 1e-6);
@@ -169,16 +180,19 @@ describe("patterns", () => {
         patternId,
         Array.from({ length: 601 }, (_, index) => index * 5)
       );
+
       const coarse = samplePositions(
         patternId,
         Array.from({ length: 21 }, (_, index) => index * 150)
       );
+
       for (const [index, frames] of coarse.entries()) {
-        const expected = fine[index * 30];
+        const expected = itemAt(fine, index * 30);
         expect(frames).toHaveLength(expected.length);
+
         for (const [frameIndex, { x, y }] of frames.entries()) {
-          expect(x).toBeCloseTo(expected[frameIndex].x, 6);
-          expect(y).toBeCloseTo(expected[frameIndex].y, 6);
+          expect(x).toBeCloseTo(itemAt(expected, frameIndex).x, 6);
+          expect(y).toBeCloseTo(itemAt(expected, frameIndex).y, 6);
         }
       }
     }
@@ -188,13 +202,14 @@ describe("patterns", () => {
     const sampler = new PatternSampler();
     const rng = createRng(SEED);
     const frames: TargetFrame[] = [];
+
     const angleAt = (arena: typeof ARENA, travelPx: number) => {
       sampler.sample(frames, "circle", arena, params(travelPx), rng);
-      return Math.atan2(
-        frames[0].y - arena.height / 2,
-        frames[0].x - arena.width / 2
-      );
+      const { x, y } = itemAt(frames, 0);
+
+      return Math.atan2(y - arena.height / 2, x - arena.width / 2);
     };
+
     const before = angleAt(ARENA, 1000);
     const after = angleAt({ height: 540, width: 960 }, 1000);
     expect(after).toBeCloseTo(before, 9);
@@ -205,30 +220,31 @@ describe("patterns", () => {
     const rng = createRng(SEED);
     const frames: TargetFrame[] = [];
     const jumps: { x: number; y: number; alphas: number[] }[] = [];
+
     for (let travelPx = 0; travelPx < 3000; travelPx += 5) {
       sampler.sample(frames, "teleport", ARENA, params(travelPx), rng);
-      const [{ x, y, alpha }] = frames;
+      const { x, y, alpha } = itemAt(frames, 0);
       jumps[sampler.jumpIndex] ??= { alphas: [], x, y };
-      const jump = jumps[sampler.jumpIndex];
+      const jump = itemAt(jumps, sampler.jumpIndex);
       expect([x, y]).toEqual([jump.x, jump.y]);
       jump.alphas.push(alpha);
     }
 
     expect(jumps.length).toBeGreaterThan(3);
+
     for (const [index, jump] of jumps.entries()) {
       expect(jump.alphas[0]).toBeLessThan(1);
       expect(jump.alphas.at(-1)).toBe(1);
+
       if (index > 0) {
-        expect([jump.x, jump.y]).not.toEqual([
-          jumps[index - 1].x,
-          jumps[index - 1].y,
-        ]);
+        const previous = itemAt(jumps, index - 1);
+        expect([jump.x, jump.y]).not.toEqual([previous.x, previous.y]);
       }
     }
   });
 
   test("Multiple Distractions lists targets before distractors", () => {
-    const [frames] = samplePositions("multipleObjectTracking", [100]);
+    const frames = itemAt(samplePositions("multipleObjectTracking", [100]), 0);
     expect(frames.map(({ role }) => role)).toEqual([
       "target",
       "target",
@@ -254,6 +270,7 @@ describe("patterns", () => {
         ),
       ])
     );
+
     expect(routes).toMatchSnapshot();
   });
 });
@@ -271,6 +288,7 @@ describe("frames", () => {
         periodSec: 2,
       } as const,
     };
+
     const sample = new FrameSampler().sample(
       settings,
       ARENA,
@@ -278,8 +296,9 @@ describe("frames", () => {
       0,
       createRng(SEED)
     );
+
     // The route starts at the left edge, inset by the 90 px peak radius plus the gap.
-    expect(sample.frames[0].x).toBe(98);
+    expect(itemAt(sample.frames, 0).x).toBe(98);
   });
 
   test("letters change every two seconds", () => {
@@ -293,8 +312,10 @@ describe("frames", () => {
     const settings = createDefaultSettings(getDrill("reactionTime"));
     const sampler = new FrameSampler();
     const rng = createRng(SEED);
+
     const bucketAt = (elapsedSec: number, travelPx: number) =>
       sampler.sample(settings, ARENA, elapsedSec, travelPx, rng).letterBucket;
+
     expect(bucketAt(0, 10)).toBe(0);
     expect(bucketAt(30, 10)).toBe(0);
     expect(bucketAt(30, 3000)).toBeGreaterThan(0);

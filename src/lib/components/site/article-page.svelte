@@ -29,15 +29,15 @@
 
 {#snippet drillLinks()}
   <nav
-    aria-label={t("Choose a drill")}
     class="grid grid-cols-2 gap-3 lg:grid-cols-4"
+    aria-label={t("Choose a drill")}
   >
     {#each drillGuides as guide (guide.drillId)}
       <a
-        href={mainRouteForDrill(guide.drillId)?.path ?? "/"}
         class={[drillCard, "flex flex-col items-center gap-3 px-4 py-5"]}
+        href={mainRouteForDrill(guide.drillId)?.path ?? "/"}
       >
-        <DrillIllustration drillId={guide.drillId} class="max-w-40" />
+        <DrillIllustration class="max-w-40" drillId={guide.drillId} />
         <span class="text-sm font-semibold">{t(guide.title)}</span>
       </a>
     {/each}
@@ -48,21 +48,21 @@
   <!-- Comparison pages lead with the table instead of the drill links. -->
   <PageHero
     breadcrumb={[{ href: "/guide/", label: "Guide" }, { label: page.kicker }]}
-    title={t(page.heading)}
-    lede={t(page.summary)}
     footer={"comparison" in page ? undefined : drillLinks}
+    lede={t(page.summary)}
+    title={t(page.heading)}
   >
     {#snippet actions()}
-      <Button href={page.primaryCta.href} size="lg" class={heroButton}>
+      <Button class={heroButton} href={page.primaryCta.href} size="lg">
         {t(page.primaryCta.label)}
         <ArrowUpRightIcon data-icon="inline-end" />
       </Button>
       {#if page.secondaryCta}
         <Button
-          href={page.secondaryCta.href}
-          variant="ghost"
-          size="lg"
           class="h-11 gap-2"
+          href={page.secondaryCta.href}
+          size="lg"
+          variant="ghost"
         >
           {t(page.secondaryCta.label)}
           <ArrowUpRightIcon data-icon="inline-end" />
@@ -75,17 +75,17 @@
     {/snippet}
   </PageHero>
 
-  {#if "comparison" in page}
+  {#if page.comparison !== undefined}
     <FeatureComparison
-      comparison={page.comparison}
       checkedOn={page.lastModified}
+      comparison={page.comparison}
     />
   {/if}
 
   <ReadingLayout links={contents}>
     {#each page.sections as section, index (section.heading)}
       <PageSection
-        id={`section-${index}`}
+        id="section-{index}"
         first={index === 0}
         heading={t(section.heading)}
       >
@@ -97,7 +97,7 @@
           </div>
         {/if}
         {#if section.orderedList}
-          <StepList steps={section.orderedList} class="mt-6" />
+          <StepList class="mt-6" steps={section.orderedList} />
         {/if}
         {#if section.list}
           <ul class="mt-6 grid gap-4">
@@ -112,10 +112,10 @@
       </PageSection>
     {/each}
     <PageCta
-      title={t("Try it with your own settings")}
       body={t("Start slow. Adjust as you go.")}
       href={page.primaryCta.href}
       label={t(page.primaryCta.label)}
+      title={t("Try it with your own settings")}
     />
   </ReadingLayout>
 </SiteShell>

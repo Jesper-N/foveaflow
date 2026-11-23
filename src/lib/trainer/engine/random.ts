@@ -17,6 +17,7 @@ const RANDOM_OFFSET = 1_234_567;
 
 const normalizeSeed = (seed: number) => {
   const normalized = Math.trunc(Math.abs(seed)) % MAX_SEED;
+
   return normalized === 0 ? 1 : normalized;
 };
 
@@ -24,10 +25,13 @@ const seededRandom = (seedOffset: number, index: number) => {
   const normalizedIndex = Number.isFinite(index)
     ? Math.trunc(Math.abs(index)) % RANDOM_MODULUS
     : 0;
+
   const value =
     (seedOffset + normalizedIndex * INDEX_MULTIPLIER) % RANDOM_MODULUS;
+
   const squared = (value * value) % RANDOM_MODULUS;
   const cubed = (squared * value) % RANDOM_MODULUS;
+
   return cubed / RANDOM_MODULUS;
 };
 
@@ -37,6 +41,7 @@ export const createSessionSeed = (random = Math.random) =>
 export const createRng = (seed: number): Rng => {
   const normalizedSeed = normalizeSeed(seed);
   const seedOffset = normalizedSeed * SEED_MULTIPLIER + RANDOM_OFFSET;
+
   return {
     rangeAt: (index, min, max) =>
       min + (max - min) * seededRandom(seedOffset, index),

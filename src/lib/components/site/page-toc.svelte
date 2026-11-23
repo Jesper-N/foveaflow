@@ -12,13 +12,13 @@
 
 {#snippet navigation()}
   <nav
-    aria-label={t("On this page")}
     class="mt-4 grid grid-cols-2 gap-x-4 gap-y-1 lg:grid-cols-1"
+    aria-label={t("On this page")}
   >
     {#each links as link (link.id)}
       <a
-        href={`#${link.id}`}
         class="text-muted-foreground hover:text-foreground hover:bg-muted/60 focus-visible:outline-ring rounded-lg px-3 py-2.5 text-sm leading-5 transition-colors focus-visible:outline-2 motion-reduce:transition-none"
+        href="#{link.id}"
       >
         {t(link.label)}
       </a>

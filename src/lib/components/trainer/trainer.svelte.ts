@@ -100,12 +100,17 @@ export class Trainer {
 
   colorMode = $derived.by((): ColorMode => {
     const { current } = mode;
+
     if (current === "light" || current === "dark") {
       return current;
     }
+
     // Before mode-watcher resolves, trust the class its head script set.
     const root = globalThis.document?.documentElement;
-    return root && !root.classList.contains("dark") ? "light" : "dark";
+
+    return root !== undefined && !root.classList.contains("dark")
+      ? "light"
+      : "dark";
   });
 
   targetColor = $derived(
@@ -121,12 +126,15 @@ export class Trainer {
   /** On a drill page, the guide follows the drill that is actually selected. */
   guideRoute = $derived.by(() => {
     const { route, settings } = this;
+
     if (!route) {
       return null;
     }
+
     const isCurrent =
       route.drillId === settings.drillId &&
       (route.patternId === undefined || route.patternId === settings.patternId);
+
     return isCurrent
       ? route
       : (routeForDrill(settings.drillId, settings.patternId) ?? route);
@@ -147,11 +155,11 @@ export class Trainer {
   isLilacChaser = $derived(this.settings.drillId === "lilacChaser");
 
   /** The panels cover the drill, so it holds still while one is open. */
-  #canvasPaused = $derived(
+  readonly #canvasPaused = $derived(
     this.motionPaused || this.controlsOpen || this.guideOpen
   );
-  #snapshot = $derived($state.snapshot(this.settings));
-  #scene = $derived<CanvasScene>({
+  readonly #snapshot = $derived($state.snapshot(this.settings));
+  readonly #scene = $derived<CanvasScene>({
     colorMode: this.colorMode,
     distractorColor: this.distractorColor,
     paused: this.#canvasPaused,
@@ -173,15 +181,20 @@ export class Trainer {
     $effect(() => {
       // Reading the paused state subscribes this effect to it.
       void this.#canvasPaused;
-      untrack(() => this.#canvas.syncPlayback());
+      untrack(() => {
+        this.#canvas.syncPlayback();
+      });
     });
     $effect(() => {
       const { paused, settings } = this.#scene;
+
       // Moving drills repaint every frame anyway. A paused drill, or the
       // stepping Lilac Chaser, repaints only when asked, so ask on each change.
       // A paused drill also drops its old trail.
       if (paused || settings.drillId === "lilacChaser") {
-        untrack(() => this.#canvas.requestDraw({ clearTrail: paused }));
+        untrack(() => {
+          this.#canvas.requestDraw({ clearTrail: paused });
+        });
       }
     });
   }
@@ -194,29 +207,36 @@ export class Trainer {
     // The default target color follows the theme's primary color.
     const root = document.documentElement;
     this.#themeTargetColor = readThemeTargetColor(root);
+
     const themeObserver = new MutationObserver(() => {
       this.#themeTargetColor = readThemeTargetColor(root);
     });
+
     themeObserver.observe(root, { attributeFilter: ["class", "style"] });
 
     let mounted = true;
+
     // The island renders once translations load, so its first auto-hide starts then.
     const revealHudOnceTranslated = async () => {
       await languageState.init();
+
       if (mounted) {
         this.hud.showBriefly(FIRST_REVEAL_MS);
       }
     };
+
     void revealHudOnceTranslated();
     this.cursor.wake();
 
     // Pause for visitors who ask for less motion. They can still press play.
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
     const pauseForReducedMotion = () => {
       if (reducedMotion.matches) {
         this.motionPaused = true;
       }
     };
+
     pauseForReducedMotion();
     reducedMotion.addEventListener("change", pauseForReducedMotion);
 
@@ -271,6 +291,7 @@ export class Trainer {
 
   setLetterWeight = (weight: string) => {
     const value = Number(weight);
+
     if (isLetterWeight(value)) {
       this.settings.letterWeight = value;
     }
@@ -326,9 +347,11 @@ export class Trainer {
 
   handleKeydown = (event: KeyboardEvent) => {
     const action = getShortcutAction(event);
+
     if (!action || isKeyCapturedBy(event.target, action)) {
       return;
     }
+
     if (this.#runShortcut(action)) {
       event.preventDefault();
     }
@@ -364,45 +387,64 @@ export class Trainer {
     switch (action) {
       case "togglePause": {
         this.togglePaused();
+
         return true;
       }
+
       case "growTarget":
       case "shrinkTarget": {
         const delta = action === "growTarget" ? 1 : -1;
         this.setRanged("baseRadiusPx", this.settings.baseRadiusPx + delta);
+
         return true;
       }
+
       case "speedUp":
       case "slowDown": {
         const delta = action === "speedUp" ? 1 : -1;
         this.setRanged("speed", this.settings.speed + delta);
+
         return true;
       }
+
       case "toggleTheme": {
         setMode(this.colorMode === "dark" ? "light" : "dark");
+
         return true;
       }
+
       case "openDrillSelect": {
         this.#openHudSelect("drill");
+
         return true;
       }
+
       case "openPatternSelect": {
         if (!this.isPursuit) {
           return false;
         }
+
         this.#openHudSelect("pattern");
+
         return true;
       }
+
       case "openControls": {
         this.openControls();
+
         return true;
       }
+
       case "openGuide": {
         this.openGuide();
+
         return true;
       }
+
       default: {
-        throw new Error(`Unsupported shortcut: ${action satisfies never}`);
+        throw new Error(
+          `Unsupported shortcut: ${String(action satisfies never)}`
+        );
       }
     }
   }
@@ -414,6 +456,7 @@ export class Trainer {
     } else {
       this.patternSelectOpen = true;
     }
+
     this.hud.reveal();
     void focusHudSelect(select);
   }
@@ -439,9 +482,11 @@ export class Trainer {
     const route = routeForDrill(this.settings.drillId, this.settings.patternId);
     const path = route?.path ?? "/";
     this.routeSlug = slugFromPath(path);
+
     if (window.location.pathname !== path) {
       window.history.pushState({}, "", path);
     }
+
     syncDocumentHead(path);
   }
 }

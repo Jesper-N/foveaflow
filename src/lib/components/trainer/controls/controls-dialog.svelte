@@ -16,6 +16,7 @@
   type ControlSection = "drill" | "targets" | "general";
 
   const trainer = getTrainer();
+
   // The dialog stays mounted, so the last section reopens next time.
   let current = $state<ControlSection>("targets");
 
@@ -38,7 +39,12 @@
       id: "general",
       label: "General",
     },
-  ] as const satisfies readonly { id: ControlSection }[];
+  ] as const satisfies readonly {
+    description: string;
+    icon: typeof RouteIcon;
+    id: ControlSection;
+    label: string;
+  }[];
 
   let section = $derived(
     sections.find(({ id }) => id === current) ?? sections[0]
@@ -58,8 +64,8 @@
 <Dialog.Root bind:open={trainer.controlsOpen}>
   <Dialog.Content
     class="flex h-[calc(100dvh-1rem)] max-h-none w-[calc(100dvw-1rem)] max-w-none flex-col gap-0 overflow-hidden rounded-3xl p-0 motion-reduce:transition-none motion-reduce:data-closed:animate-none motion-reduce:data-open:animate-none motion-reduce:**:data-[slot=button]:animate-none motion-reduce:**:data-[slot=button]:transition-none motion-reduce:**:data-[slot=toggle-group-item]:animate-none motion-reduce:**:data-[slot=toggle-group-item]:transition-none sm:max-w-none md:h-[min(40rem,calc(100dvh-2rem))] md:w-[min(55rem,calc(100dvw-2rem))] md:flex-row md:rounded-4xl"
-    showCloseButton={false}
     onOpenAutoFocus={focusSelectedTab}
+    showCloseButton={false}
   >
     <Dialog.Description class="sr-only">
       {t("Change your saved FoveaFlow settings.")}
@@ -68,10 +74,10 @@
       {#snippet child({ props })}
         <Button
           {...props}
-          variant="secondary"
-          size="icon"
           class="absolute top-3 right-3 z-10 size-11 md:top-4 md:right-4"
           aria-label={t("Close")}
+          size="icon"
+          variant="secondary"
         >
           <XIcon />
         </Button>
@@ -83,11 +89,11 @@
     >
       <div class="flex min-h-11 items-center gap-2.5 px-2 pr-14 md:px-3">
         <img
-          src="/logo-render/logo.svg"
-          alt=""
-          width="24"
-          height="24"
           class="size-6 shrink-0 rounded-sm object-cover"
+          alt=""
+          height="24"
+          src="/logo-render/logo.svg"
+          width="24"
         />
         <Dialog.Title class="text-base font-semibold">
           {t("Controls")}
@@ -99,12 +105,12 @@
       >
         {#each sections as { id, label, icon: Icon } (id)}
           <Button
-            variant={current === id ? "secondary" : "ghost"}
             class="h-auto min-h-11 min-w-0 flex-col justify-center gap-1.5 rounded-xl px-1 py-2.5 text-xs wrap-anywhere whitespace-normal md:h-9 md:flex-row md:justify-start md:gap-3 md:px-3 md:py-0 md:text-sm"
-            data-control-section={id}
-            aria-pressed={current === id}
             aria-controls="trainer-settings-panel"
+            aria-pressed={current === id}
+            data-control-section={id}
             onclick={() => (current = id)}
+            variant={current === id ? "secondary" : "ghost"}
           >
             <span data-icon="inline-start"><Icon /></span>
             {t(label)}
@@ -127,8 +133,8 @@
       {#key section.id}
         <section
           id="trainer-settings-panel"
-          aria-labelledby="trainer-settings-heading"
           class="min-h-0 flex-1 scrollbar-thin [scrollbar-color:var(--border)_transparent] scrollbar-gutter-stable overflow-y-auto overscroll-contain px-4 py-2 md:px-7 md:pt-0 md:pb-6"
+          aria-labelledby="trainer-settings-heading"
         >
           {#if section.id === "drill"}
             <DrillSettings />
@@ -148,7 +154,7 @@
         </p>
         <Dialog.Close>
           {#snippet child({ props })}
-            <Button {...props} variant="secondary" class="min-h-11 min-w-20">
+            <Button {...props} class="min-h-11 min-w-20" variant="secondary">
               {t("Done")}
             </Button>
           {/snippet}

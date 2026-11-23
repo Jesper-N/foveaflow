@@ -1,6 +1,8 @@
+import { itemAt } from "../engine/math";
 import type { Arena } from "../engine/types";
 
 const TILE_SIZE_PX = 128;
+
 /** Frames a tile keeps fading after its last paint, before it is cleared. */
 const MAX_TILE_AGE = 20;
 
@@ -42,11 +44,14 @@ export class TrailTiles {
   mark(regions: readonly Region[]) {
     for (const region of regions) {
       const firstColumn = Math.max(0, Math.floor(region.x / TILE_SIZE_PX));
+
       const lastColumn = Math.min(
         this.#columns - 1,
         Math.floor((region.x + region.width - 1) / TILE_SIZE_PX)
       );
+
       const firstRow = Math.max(0, Math.floor(region.y / TILE_SIZE_PX));
+
       const lastRow = Math.min(
         this.#rows - 1,
         Math.floor((region.y + region.height - 1) / TILE_SIZE_PX)
@@ -55,10 +60,12 @@ export class TrailTiles {
       for (let row = firstRow; row <= lastRow; row += 1) {
         for (let column = firstColumn; column <= lastColumn; column += 1) {
           const index = row * this.#columns + column;
+
           if (this.#ages[index] === 0) {
             this.#active[this.#activeCount] = index;
             this.#activeCount += 1;
           }
+
           this.#ages[index] = 1;
         }
       }
@@ -71,19 +78,21 @@ export class TrailTiles {
     ctx.globalCompositeOperation = "destination-out";
     ctx.globalAlpha = alpha;
     let activeIndex = 0;
+
     while (activeIndex < this.#activeCount) {
-      const index = this.#active[activeIndex];
-      const age = this.#ages[index];
+      const index = itemAt(this.#active, activeIndex);
+      const age = itemAt(this.#ages, index);
       const x = (index % this.#columns) * TILE_SIZE_PX;
       const y = Math.floor(index / this.#columns) * TILE_SIZE_PX;
       const width = Math.min(TILE_SIZE_PX, arena.width - x);
       const height = Math.min(TILE_SIZE_PX, arena.height - y);
+
       if (age >= MAX_TILE_AGE) {
         ctx.clearRect(x, y, width, height);
         this.#ages[index] = 0;
         // Swap-remove: move the last active tile into this slot.
         this.#activeCount -= 1;
-        this.#active[activeIndex] = this.#active[this.#activeCount];
+        this.#active[activeIndex] = itemAt(this.#active, this.#activeCount);
         continue;
       }
 
@@ -91,6 +100,7 @@ export class TrailTiles {
       this.#ages[index] = age + 1;
       activeIndex += 1;
     }
+
     ctx.restore();
   }
 }

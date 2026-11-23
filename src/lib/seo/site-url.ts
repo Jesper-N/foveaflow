@@ -3,6 +3,7 @@ export const getSiteOrigin = (site: URL | undefined) => {
   if (!site) {
     throw new Error("Set `site` in astro.config.mjs.");
   }
+
   return new URL(site.origin);
 };
 

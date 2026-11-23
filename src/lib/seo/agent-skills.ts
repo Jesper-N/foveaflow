@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { absoluteUrl } from "./site-url";
 
 const agentSkillName = "foveaflow";
+
 const agentSkillDescription =
   "Use when helping users choose a FoveaFlow drill, understand its controls, or find its guide and safety notes.";
 
@@ -51,5 +52,6 @@ export const agentSkillsIndexJson = (site: URL) => {
       },
     ],
   };
+
   return JSON.stringify(index, null, 2);
 };

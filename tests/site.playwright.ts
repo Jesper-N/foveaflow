@@ -28,24 +28,30 @@ for (const path of contentPages) {
 test("content pages link only to pages that exist", async ({ request }) => {
   const fetchHtml = async (path: string) => {
     const response = await request.get(path);
-    return response.text();
+
+    return await response.text();
   };
+
   const pages = await Promise.all(contentPages.map(fetchHtml));
+
   const links = new Set(
     pages.flatMap((html) =>
       [...html.matchAll(INTERNAL_LINK_PATTERN)].map(
-        ({ groups }) => groups?.href ?? ""
+        ({ groups }) => groups?.["href"] ?? ""
       )
     )
   );
+
   expect(links.size, "The pages should have links to check").toBeGreaterThan(0);
 
   const statuses = await Promise.all(
     [...links].map(async (href) => {
       const response = await request.get(href);
+
       return `${href} ${response.status()}`;
     })
   );
+
   expect(statuses).toEqual([...links].map((href) => `${href} 200`));
 });
 
@@ -56,6 +62,7 @@ for (const path of ["/", "/guide/"]) {
     page,
   }) => {
     await openPage(page, path);
+
     const { loaded, preloaded } = await page.evaluate(() => ({
       loaded: performance
         .getEntriesByType("resource")
@@ -66,6 +73,7 @@ for (const path of ["/", "/guide/"]) {
         ({ href }) => new URL(href).pathname
       ),
     }));
+
     expect(loaded.length, "The page should load scripts").toBeGreaterThan(0);
     expect([...new Set(loaded)].toSorted()).toEqual(preloaded.toSorted());
   });

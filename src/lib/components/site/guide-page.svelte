@@ -27,17 +27,17 @@
 
 <SiteShell path="/guide/">
   <PageHero
-    title={t("FoveaFlow Guide")}
     lede={t(
       "Your guide to FoveaFlow’s free online eye trainer. Choose a drill for visual tracking, quick refocus, or peripheral awareness, then make it your own."
     )}
+    title={t("FoveaFlow Guide")}
   >
     {#snippet actions()}
-      <Button href="/smooth-pursuit/" size="lg" class={heroButton}>
+      <Button class={heroButton} href="/smooth-pursuit/" size="lg">
         {t("Try Smooth Pursuit")}
         <ArrowUpRightIcon data-icon="inline-end" />
       </Button>
-      <Button href="#practice" variant="ghost" size="lg" class="h-11 gap-2">
+      <Button class="h-11 gap-2" href="#practice" size="lg" variant="ghost">
         {t("How to practice")}
         <ArrowDownIcon data-icon="inline-end" />
       </Button>
@@ -45,20 +45,20 @@
     {#snippet footer()}
       <nav
         id="drills"
-        aria-label={t("Choose a drill")}
         class="grid scroll-mt-8 gap-3 sm:grid-cols-2 lg:grid-cols-4"
+        aria-label={t("Choose a drill")}
       >
         {#each drillGuides as guide (guide.drillId)}
           <a
-            href={`#${guide.drillId}`}
             class={[
               drillCard,
               "group grid grid-cols-[6rem_minmax(0,1fr)] items-center gap-x-5 p-4 sm:flex sm:flex-col sm:items-stretch sm:p-5",
             ]}
+            href="#{guide.drillId}"
           >
             <DrillIllustration
-              drillId={guide.drillId}
               class="sm:mx-auto sm:mb-4 sm:max-w-44"
+              drillId={guide.drillId}
             />
             <span class="grid gap-1.5">
               <span

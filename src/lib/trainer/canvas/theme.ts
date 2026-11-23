@@ -38,14 +38,17 @@ export const readThemeTargetColor = (element: HTMLElement): string => {
   sample.width = 1;
   sample.height = 1;
   const context = sample.getContext("2d");
+
   if (!context) {
     return "#000000";
   }
+
   // Painting one pixel converts any CSS color space to sRGB.
   context.fillStyle = getComputedStyle(element)
     .getPropertyValue("--primary")
     .trim();
   context.fillRect(0, 0, 1, 1);
   const channels = context.getImageData(0, 0, 1, 1).data.slice(0, 3);
+
   return `#${Array.from(channels, (channel) => channel.toString(16).padStart(2, "0")).join("")}`;
 };

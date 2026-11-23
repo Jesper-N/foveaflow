@@ -6,6 +6,7 @@ const CSS_PX_PER_CM = 37.8;
 export const speedToPixelsPerSecond = (speed: number) => {
   const degrees = Number.isFinite(speed) ? Math.max(0, speed) : 0;
   const cm = 2 * VIEWING_DISTANCE_CM * Math.tan((degrees * Math.PI) / 360);
+
   return cm * CSS_PX_PER_CM;
 };
 

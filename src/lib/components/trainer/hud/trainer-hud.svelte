@@ -22,45 +22,48 @@
   let playbackLabel = $derived(
     trainer.motionPaused ? t("Resume motion") : t("Pause motion")
   );
+
   let directionLabel = $derived(
     trainer.settings.motionDirection === 1
       ? t("Reverse motion direction")
       : t("Use forward motion direction")
   );
+
   let guideLabel = $derived(
     trainer.route
       ? `${t("Open")} ${t(trainer.guideCopy.heading)} ${t("guide")}`
       : t("About FoveaFlow eye trainer")
   );
+
   let guideTooltip = $derived(
     trainer.route ? t("Open guide") : t("About FoveaFlow")
   );
 </script>
 
 <svelte:window
+  onpointercancel={hud.handleWindowPointerEnd}
   onpointerdown={hud.handleWindowPointerDown}
   onpointermove={hud.handleWindowPointerMove}
   onpointerup={hud.handleWindowPointerEnd}
-  onpointercancel={hud.handleWindowPointerEnd}
 />
 
 {#if hud.hidden}
   <button
-    type="button"
     class="focus-visible:ring-foreground absolute top-[max(0px,calc(env(safe-area-inset-top)-0.75rem))] left-1/2 z-30 h-12 w-36 -translate-x-1/2 rounded-full outline-hidden focus-visible:ring-3"
-    aria-label={t("Reveal controls")}
     aria-controls="trainer-island"
     aria-expanded="false"
-    onpointerdown={hud.handleRevealPointerDown}
+    aria-label={t("Reveal controls")}
     onfocus={hud.handleRevealFocus}
+    onpointerdown={hud.handleRevealPointerDown}
+    type="button"
   ></button>
 {/if}
 
 <!-- The island always uses the dark theme. Its menus and tooltips render in a
      portal outside it, so they take `class="dark"` as well. -->
 <div
-  {@attach hud.attach}
   class="group/island dark absolute top-[max(0.75rem,env(safe-area-inset-top))] left-1/2 z-20 w-[min(35rem,calc(100dvw-1.5rem))] -translate-x-1/2 data-[hidden=true]:pointer-events-none"
+  {@attach hud.attach}
   data-hidden={hud.hidden}
   data-instant-reveal={hud.instantReveal}
   data-nosnippet
@@ -76,16 +79,16 @@
     >
       <div class="flex items-center justify-between gap-2">
         <a
-          href="/"
           class="focus-visible:border-ring focus-visible:ring-ring/30 flex h-11 min-w-11 shrink-0 items-center justify-center gap-2.5 rounded-4xl border border-transparent text-base font-semibold outline-hidden focus-visible:ring-3 min-[480px]:text-xl"
           aria-label={t("FoveaFlow home")}
+          href="/"
         >
           <img
-            src="/logo-render/logo.svg"
-            alt=""
-            width="24"
-            height="24"
             class="size-5 shrink-0 rounded-sm object-cover min-[480px]:size-7"
+            alt=""
+            height="24"
+            src="/logo-render/logo.svg"
+            width="24"
           />
           <!-- Five actions and the wordmark only share one row from 400px. -->
           <span class="hidden min-[400px]:inline">{siteMetadata.name}</span>
@@ -94,11 +97,11 @@
         <nav class="flex shrink-0 items-center" aria-label={t("App actions")}>
           <Tooltip.Provider delayDuration={450} skipDelayDuration={300}>
             <HudIconButton
-              label={playbackLabel}
-              variant="default"
-              data-hud-focus-target
               aria-describedby="trainer-motion-status"
+              data-hud-focus-target
+              label={playbackLabel}
               onclick={trainer.togglePaused}
+              variant="default"
             >
               {#if trainer.motionPaused}
                 <PlayIcon />
@@ -121,9 +124,9 @@
                 data-visible={trainer.canReverse}
               >
                 <HudIconButton
-                  label={directionLabel}
-                  disabled={!trainer.canReverse}
                   aria-describedby="trainer-motion-status"
+                  disabled={!trainer.canReverse}
+                  label={directionLabel}
                   onclick={trainer.toggleDirection}
                 >
                   <ArrowLeftRightIcon />
@@ -132,10 +135,10 @@
             </div>
 
             <HudIconButton
-              label={guideLabel}
-              tooltip={guideTooltip}
               aria-controls="trainer-guide"
+              label={guideLabel}
               onclick={trainer.openGuide}
+              tooltip={guideTooltip}
             >
               <BookOpenIcon />
             </HudIconButton>
@@ -148,12 +151,12 @@
             </HudIconButton>
 
             <LanguageSelect
+              contentClass="dark"
+              onOpenChange={hud.handleMenuOpenChange}
               showTooltip
               tooltipDisabled={hud.hidden}
               triggerClass="min-h-11 min-w-11 border-transparent bg-transparent hover:bg-muted/50 aria-expanded:bg-muted"
-              contentClass="dark"
               bind:open={trainer.languageSelectOpen}
-              onOpenChange={hud.handleMenuOpenChange}
             />
           </Tooltip.Provider>
         </nav>

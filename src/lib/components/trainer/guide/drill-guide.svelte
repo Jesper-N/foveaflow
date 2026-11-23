@@ -16,9 +16,9 @@
 </script>
 
 <GuideHeader
-  title={t(copy.heading)}
-  lede={t(copy.hero)}
   drillId={drillGuide.drillId}
+  lede={t(copy.hero)}
+  title={t(copy.heading)}
 />
 
 <div

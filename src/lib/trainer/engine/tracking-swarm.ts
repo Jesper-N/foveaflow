@@ -1,4 +1,5 @@
 import type { Box } from "./bounds";
+import { itemAt } from "./math";
 import { createRng } from "./random";
 import { RandomWalker } from "./random-walk";
 import { writeTargetFrame } from "./target-frames";
@@ -35,9 +36,11 @@ export class TrackingSwarm {
     const total = targetCount + distractorCount;
     const walkers = this.#walkers;
     this.#lastTravelPx = travelPx;
+
     if (walkers.length > total) {
       walkers.length = total;
     }
+
     // Objects added mid-drill start walking from the current distance.
     for (let index = walkers.length; index < total; index += 1) {
       const rng = createRng(this.seed + SEED_OFFSET + index * SEED_STRIDE);
@@ -45,7 +48,7 @@ export class TrackingSwarm {
     }
 
     for (let index = 0; index < total; index += 1) {
-      const { x, y } = walkers[index].advance(travelPx, box);
+      const { x, y } = itemAt(walkers, index).advance(travelPx, box);
       writeTargetFrame(
         frames,
         index,
@@ -56,6 +59,7 @@ export class TrackingSwarm {
         index < targetCount ? "target" : "distractor"
       );
     }
+
     return total;
   }
 }

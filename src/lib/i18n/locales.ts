@@ -1,6 +1,8 @@
 export const defaultLocale = "en";
+
 /** 400 days, the longest cookie lifetime browsers allow. */
 export const localeCookieMaxAge = 34_560_000;
+
 /** Also the local storage key. Kept from an earlier i18n library so saved choices survive. */
 export const localeCookieName = "PARAGLIDE_LOCALE";
 
@@ -62,6 +64,7 @@ export const languageOptions = [
 }[];
 
 export type LanguageOption = (typeof languageOptions)[number];
+
 export type AppLocale = LanguageOption["locale"];
 
 const supportedLocaleSet: ReadonlySet<string> = new Set(
@@ -118,17 +121,19 @@ export const localePrefixAliases = [
 const resolveSupportedLocale = (
   value: string | null | undefined
 ): AppLocale | null => {
-  if (!value) {
+  if (value === null || value === undefined || value === "") {
     return null;
   }
 
   const locale = value.replaceAll("_", "-");
+
   if (isAppLocale(locale)) {
     return locale;
   }
 
   const lower = locale.toLowerCase();
   const alias = localeAliasMap.get(lower);
+
   if (alias) {
     return alias;
   }
@@ -141,12 +146,14 @@ const resolveSupportedLocale = (
 
 const readCookieLocale = async () => {
   const browserCookieStore = globalThis.cookieStore;
-  if (!browserCookieStore) {
+
+  if (browserCookieStore === undefined) {
     return null;
   }
 
   try {
     const cookie = await browserCookieStore.get(localeCookieName);
+
     return cookie?.value ?? null;
   } catch {
     return null;
@@ -163,7 +170,8 @@ const readLocalStorageLocale = () => {
 
 const readPreferredLocale = (): AppLocale | null => {
   const browserNavigator = globalThis.navigator;
-  if (!browserNavigator) {
+
+  if (browserNavigator === undefined) {
     return null;
   }
 
@@ -171,8 +179,10 @@ const readPreferredLocale = (): AppLocale | null => {
     ...(browserNavigator.languages ?? []),
     browserNavigator.language,
   ];
+
   for (const language of preferredLanguages) {
     const locale = resolveSupportedLocale(language);
+
     if (locale) {
       return locale;
     }
@@ -191,7 +201,8 @@ export const getResolvedLocale = async (): Promise<AppLocale> =>
 /** Remembers the language in local storage and a cookie the boot script can read. */
 export const setResolvedLocale = async (locale: AppLocale) => {
   const browserWindow = globalThis.window;
-  if (!browserWindow) {
+
+  if (browserWindow === undefined) {
     return;
   }
 
@@ -202,7 +213,8 @@ export const setResolvedLocale = async (locale: AppLocale) => {
   }
 
   const browserCookieStore = globalThis.cookieStore;
-  if (!browserCookieStore) {
+
+  if (browserCookieStore === undefined) {
     return;
   }
 

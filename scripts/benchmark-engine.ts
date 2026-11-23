@@ -2,6 +2,7 @@
 // compare: `bun scripts/benchmark-engine.ts`. Checksums must match between
 // runs when a change should not move any target.
 import { FrameSampler } from "../src/lib/trainer/canvas/frame-sampler";
+import { itemAt } from "../src/lib/trainer/engine/math";
 import { integrateSpeedProfile } from "../src/lib/trainer/engine/profiles";
 import { createRng } from "../src/lib/trainer/engine/random";
 import type { PatternId } from "../src/lib/trainer/engine/types";
@@ -23,11 +24,13 @@ const median = (values: number[]) =>
 const time = (run: () => number) => {
   const times: number[] = [];
   let checksum = 0;
+
   for (let round = 0; round < ROUNDS; round += 1) {
     const start = performance.now();
     checksum += run();
     times.push(performance.now() - start);
   }
+
   return { checksum, milliseconds: median(times), samples: SAMPLE_COUNT };
 };
 
@@ -44,11 +47,14 @@ const patternResults = patterns.map(({ drillId, patternId }) => {
     patternId,
     targetCount: 6,
   };
+
   const arena = { height: 1080, width: 1920 };
+
   const result = time(() => {
     const sampler = new FrameSampler();
     const rng = createRng(SEED);
     let checksum = 0;
+
     for (let index = 0; index < SAMPLE_COUNT; index += 1) {
       const sample = sampler.sample(
         settings,
@@ -57,17 +63,23 @@ const patternResults = patterns.map(({ drillId, patternId }) => {
         index * 3,
         rng
       );
-      checksum += sample.frames[0].x + sample.frames[sample.count - 1].y;
+
+      checksum +=
+        itemAt(sample.frames, 0).x + itemAt(sample.frames, sample.count - 1).y;
     }
+
     return checksum;
   });
+
   return { pattern: patternId, ...result };
 });
 
 const profileResults = behaviors.map(({ id }) => {
   const { speedProfile } = profilesForBehavior(id);
+
   const result = time(() => {
     let checksum = 0;
+
     for (let index = 0; index < SAMPLE_COUNT; index += 1) {
       checksum += integrateSpeedProfile(
         speedProfile,
@@ -76,8 +88,10 @@ const profileResults = behaviors.map(({ id }) => {
         360
       );
     }
+
     return checksum;
   });
+
   return { behavior: id, ...result };
 });
 

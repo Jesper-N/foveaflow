@@ -1,4 +1,4 @@
-import { TAU, clamp, positiveModulo } from "./math";
+import { TAU, clamp, itemAt, positiveModulo } from "./math";
 
 /**
  * How speed changes over time, as multipliers of the base speed. Motion
@@ -38,11 +38,14 @@ export type SizeProfile =
     };
 
 type SineProfile = Extract<SpeedProfile, { kind: "sine" }>;
+
 type StepsProfile = Extract<SpeedProfile, { kind: "steps" }>;
+
 type LoopRampProfile = Extract<SpeedProfile, { kind: "loopRamp" }>;
 
 const MIN_RADIUS_PX = 1;
 const MAX_RADIUS_PX = 100;
+
 /** Floor for periods and intervals, so the math never divides by zero. */
 const MIN_PERIOD_SEC = 0.1;
 
@@ -52,6 +55,7 @@ const clampRadius = (radiusPx: number) =>
 /** Integral of the smoothstep-like ease `3p² - 2p³` from 0 to `progress`. */
 const easeIntegral = (progress: number) => {
   const clamped = clamp(progress, 0, 1);
+
   return clamped ** 3 - clamped ** 4 / 2;
 };
 
@@ -63,6 +67,7 @@ const integrateSine = (profile: SineProfile, elapsedSec: number) => {
   const angularFrequency = TAU / profile.periodSec;
   const midpoint = (profile.minMultiplier + profile.maxMultiplier) / 2;
   const amplitude = (profile.maxMultiplier - profile.minMultiplier) / 2;
+
   return (
     midpoint * elapsedSec -
     (amplitude * Math.cos(angularFrequency * elapsedSec)) / angularFrequency +
@@ -83,11 +88,13 @@ const integrateStep = (
   }
 
   const transitionStartSec = intervalSec - transitionSec;
+
   if (elapsedSec <= transitionStartSec) {
     return current * elapsedSec;
   }
 
   const transitionElapsedSec = elapsedSec - transitionStartSec;
+
   return (
     current * elapsedSec +
     (next - current) *
@@ -104,8 +111,8 @@ const integrateStepAt = (
   transitionSec: number
 ) =>
   integrateStep(
-    multipliers[stepIndex],
-    multipliers[(stepIndex + 1) % multipliers.length],
+    itemAt(multipliers, stepIndex),
+    itemAt(multipliers, (stepIndex + 1) % multipliers.length),
     elapsedSec,
     intervalSec,
     transitionSec
@@ -119,6 +126,7 @@ const stepTransitionSec = (profile: StepsProfile, intervalSec: number) =>
 
 const integrateSteps = (profile: StepsProfile, elapsedSec: number) => {
   const stepCount = profile.multipliers.length;
+
   if (stepCount === 0 || profile.intervalSec <= 0) {
     return elapsedSec;
   }
@@ -130,6 +138,7 @@ const integrateSteps = (profile: StepsProfile, elapsedSec: number) => {
   const cycleRemainderSec = elapsedSec - fullCycleCount * cycleSec;
 
   let integral = 0;
+
   for (let index = 0; index < stepCount; index += 1) {
     integral += integrateStepAt(
       profile,
@@ -139,12 +148,14 @@ const integrateSteps = (profile: StepsProfile, elapsedSec: number) => {
       transitionSec
     );
   }
+
   integral *= fullCycleCount;
 
   const fullStepCount = Math.min(
     stepCount,
     Math.floor(cycleRemainderSec / intervalSec)
   );
+
   for (let index = 0; index < fullStepCount; index += 1) {
     integral += integrateStepAt(
       profile,
@@ -154,6 +165,7 @@ const integrateSteps = (profile: StepsProfile, elapsedSec: number) => {
       transitionSec
     );
   }
+
   if (fullStepCount === stepCount) {
     return integral;
   }
@@ -178,6 +190,7 @@ const integrateStepsBetween = (
   const stepCount = profile.multipliers.length;
   const intervalSec = stepIntervalSec(profile);
   const startStep = Math.floor(startSec / intervalSec);
+
   const isWithinOneStep =
     stepCount > 0 &&
     profile.intervalSec > 0 &&
@@ -189,6 +202,7 @@ const integrateStepsBetween = (
     const stepIndex = startStep % stepCount;
     const transitionSec = stepTransitionSec(profile, intervalSec);
     const stepStartSec = startStep * intervalSec;
+
     return (
       integrateStepAt(
         profile,
@@ -218,6 +232,7 @@ const integrateLoopRampCycle = (
   const resetSec = Math.min(Math.max(0, profile.resetSec), periodSec);
   const rampSec = Math.max(MIN_PERIOD_SEC, periodSec - resetSec);
   const rampElapsedSec = Math.min(elapsedSec, rampSec);
+
   const rampIntegral =
     profile.fromMultiplier * rampElapsedSec +
     (profile.toMultiplier - profile.fromMultiplier) *
@@ -229,6 +244,7 @@ const integrateLoopRampCycle = (
   }
 
   const resetElapsedSec = elapsedSec - rampSec;
+
   return (
     rampIntegral +
     profile.toMultiplier * resetElapsedSec +
@@ -242,6 +258,7 @@ const integrateLoopRamp = (profile: LoopRampProfile, elapsedSec: number) => {
   const periodSec = Math.max(MIN_PERIOD_SEC, profile.periodSec);
   const fullCycleCount = Math.floor(elapsedSec / periodSec);
   const cycleRemainderSec = elapsedSec - fullCycleCount * periodSec;
+
   return (
     fullCycleCount * integrateLoopRampCycle(profile, periodSec) +
     integrateLoopRampCycle(profile, cycleRemainderSec)
@@ -257,20 +274,26 @@ const integrateMultiplier = (
     case "constant": {
       return endSec - startSec;
     }
+
     case "sine": {
       return integrateSine(profile, endSec) - integrateSine(profile, startSec);
     }
+
     case "steps": {
       return integrateStepsBetween(profile, startSec, endSec);
     }
+
     case "loopRamp": {
       return (
         integrateLoopRamp(profile, endSec) -
         integrateLoopRamp(profile, startSec)
       );
     }
+
     default: {
-      throw new Error(`Unsupported speed profile: ${profile satisfies never}`);
+      throw new Error(
+        `Unsupported speed profile: ${String(profile satisfies never)}`
+      );
     }
   }
 };
@@ -293,8 +316,10 @@ export const integrateSpeedProfile = (
   const startSec = Math.max(0, Math.min(fromSec, toSec));
   const endSec = Math.max(0, Math.max(fromSec, toSec));
   const direction = toSec < fromSec ? -1 : 1;
+
   const distancePx =
     Math.max(0, basePxPerSec) * integrateMultiplier(profile, startSec, endSec);
+
   return distancePx * direction;
 };
 
@@ -309,9 +334,11 @@ export const sampleSizeProfile = (
 
   const phase = positiveModulo(elapsedSec, profile.periodSec);
   const wave = (Math.sin((phase / profile.periodSec) * TAU) + 1) / 2;
+
   const multiplier =
     profile.minMultiplier +
     (profile.maxMultiplier - profile.minMultiplier) * wave;
+
   return clampRadius(baseRadiusPx * multiplier);
 };
 

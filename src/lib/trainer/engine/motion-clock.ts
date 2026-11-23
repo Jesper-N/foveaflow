@@ -44,7 +44,9 @@ export class MotionClock {
           MAX_FRAME_DELTA_MS,
           Math.max(0, timestamp - this.#lastTimestamp)
         ) / 1000;
+
     const nextElapsedSec = this.elapsedSec + deltaSec;
+
     const distancePx = integrateSpeedProfile(
       speedProfile,
       this.elapsedSec,
@@ -66,6 +68,7 @@ export class MotionClock {
     if (!this.isStopped) {
       this.elapsedSec += Math.max(0, timestamp - this.#lastTimestamp) / 1000;
     }
+
     this.#lastTimestamp = timestamp;
   }
 }

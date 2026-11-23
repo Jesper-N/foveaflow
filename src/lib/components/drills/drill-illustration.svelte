@@ -16,58 +16,58 @@
 </script>
 
 <svg
+  class={cn("text-foreground aspect-12/7 h-auto w-full shrink-0", className)}
+  aria-hidden="true"
   data-slot="drill-illustration"
-  viewBox="0 0 240 140"
-  width="240"
+  fill="none"
   height="140"
   preserveAspectRatio="xMidYMid meet"
-  fill="none"
-  aria-hidden="true"
-  class={cn("text-foreground aspect-12/7 h-auto w-full shrink-0", className)}
+  viewBox="0 0 240 140"
+  width="240"
 >
   <path
-    d="M20 70H220M120 14V126"
     class="stroke-border"
+    d="M20 70H220M120 14V126"
     stroke-dasharray="2 5"
   />
   {#if drillId === "pursuit"}
     <path
       d="M40 108C14 83 52 22 81 34S60 108 107 113S187 96 183 74S140 55 151 33S213 45 204 67"
+      opacity=".8"
       stroke="currentColor"
       stroke-width="2"
-      opacity=".8"
     />
     <path
       d="M151 33C162 11 213 45 204 67"
       stroke="currentColor"
-      stroke-width="2"
       stroke-linecap="round"
+      stroke-width="2"
     />
-    <circle cx="204" cy="67" r="7" class="fill-primary" />
-    <circle cx="204" cy="67" r="13" stroke="currentColor" opacity=".25" />
+    <circle class="fill-primary" cx="204" cy="67" r="7" />
+    <circle cx="204" cy="67" opacity=".25" r="13" stroke="currentColor" />
   {:else if drillId === "reactionTime"}
     <circle
       cx="52"
       cy="104"
+      opacity=".55"
       r="9"
       stroke="currentColor"
       stroke-width="2"
-      opacity=".55"
     />
     <path
       d="m72 93 77-44"
       stroke="currentColor"
-      stroke-width="2"
       stroke-linecap="round"
+      stroke-width="2"
     />
     <path
       d="m139 46 10 3-3 10"
       stroke="currentColor"
-      stroke-width="2"
       stroke-linecap="round"
       stroke-linejoin="round"
+      stroke-width="2"
     />
-    <circle cx="183" cy="30" r="9" class="fill-primary" />
+    <circle class="fill-primary" cx="183" cy="30" r="9" />
   {:else if drillId === "mot"}
     <g stroke="currentColor" stroke-width="2">
       <circle cx="47" cy="40" r="8.5" />
@@ -78,22 +78,22 @@
     </g>
     <path
       d="M70 75C104 106 138 39 163 65"
-      stroke="currentColor"
-      stroke-width="1.5"
       opacity=".8"
+      stroke="currentColor"
       stroke-dasharray="3 5"
+      stroke-width="1.5"
     />
-    <circle cx="163" cy="65" r="9" class="fill-primary" />
+    <circle class="fill-primary" cx="163" cy="65" r="9" />
   {:else}
     {#each ring as dot (dot.index)}
       <!-- One dot is missing, like the moving gap in the drill. -->
       {#if dot.index !== 10}
-        <circle cx={dot.x} cy={dot.y} r="6" class="fill-primary" />
+        <circle class="fill-primary" cx={dot.x} cy={dot.y} r="6" />
       {/if}
     {/each}
     <path
-      d="M115 70h10M120 65v10"
       class="stroke-foreground"
+      d="M115 70h10M120 65v10"
       stroke-width="1.5"
     />
   {/if}

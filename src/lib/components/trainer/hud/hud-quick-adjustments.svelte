@@ -38,9 +38,9 @@
       {label}
     </span>
     <SettingSlider
-      {setting}
-      label={sliderLabel}
       class="col-span-2 row-start-2 w-full"
+      label={sliderLabel}
+      {setting}
     />
     <span class="col-start-2 row-start-1 text-xs font-medium tabular-nums">
       {formatSetting(setting, trainer.settings[setting])}
@@ -68,16 +68,16 @@
         {t("Ball color")}
       </span>
       <Select.Root
-        bind:open={trainer.lilacColorSelectOpen}
+        onOpenChange={trainer.hud.handleMenuOpenChange}
+        onValueChange={trainer.setLilacChaserColor}
         type="single"
         value={trainer.settings.lilacChaserBallColor}
-        onValueChange={trainer.setLilacChaserColor}
-        onOpenChange={trainer.hud.handleMenuOpenChange}
+        bind:open={trainer.lilacColorSelectOpen}
       >
         <Select.Trigger
-          size="sm"
           class="relative w-full min-w-0 px-2.5 before:absolute before:inset-x-0 before:-inset-y-1.5"
           aria-label={t("Lilac Chaser ball color")}
+          size="sm"
         >
           <OptionLabel class="text-xs" label={lilacColorName}>
             <ColorDot color={trainer.settings.lilacChaserBallColor} />

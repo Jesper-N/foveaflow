@@ -31,28 +31,28 @@
       </caption>
       <thead class="sr-only sm:not-sr-only sm:table-header-group">
         <tr class="border-border border-b">
-          <th scope="col" class="w-1/4 px-5 py-5 font-medium">
+          <th class="w-1/4 px-5 py-5 font-medium" scope="col">
             {t("Feature")}
           </th>
           <th
-            scope="col"
             class={[
               panelSurface,
               "w-[37.5%] px-5 py-5 text-base font-semibold",
             ]}
+            scope="col"
           >
             <span class="flex items-center gap-2">
               <img
-                src="/logo-render/logo.svg"
-                alt=""
-                width="22"
-                height="22"
                 class="size-5.5 rounded-sm"
+                alt=""
+                height="22"
+                src="/logo-render/logo.svg"
+                width="22"
               />
               {siteMetadata.name}
             </span>
           </th>
-          <th scope="col" class="w-[37.5%] px-5 py-5 text-base font-medium">
+          <th class="w-[37.5%] px-5 py-5 text-base font-medium" scope="col">
             {comparison.alternative}
           </th>
         </tr>
@@ -61,8 +61,8 @@
         {#each comparison.rows as row (row.feature)}
           <tr class="grid grid-cols-2 sm:table-row">
             <th
-              scope="row"
               class="bg-muted/30 col-span-2 px-4 pt-4 pb-2 font-medium sm:bg-transparent sm:px-5 sm:py-5 sm:align-top"
+              scope="row"
             >
               {t(row.feature)}
             </th>
@@ -106,8 +106,8 @@
     <a
       class={cn(editorialLink, "text-xs")}
       href={comparison.source.href}
-      target="_blank"
       rel="noopener noreferrer"
+      target="_blank"
     >
       {t(comparison.source.label)}
       <ArrowUpRightIcon class="size-3.5" />

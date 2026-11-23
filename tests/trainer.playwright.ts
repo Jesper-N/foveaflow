@@ -33,16 +33,18 @@ const expectTrainer = async (
     getDrill(drillId).name
   );
   await expect
-    .poll(() => readSettings(page))
+    .poll(async () => await readSettings(page))
     .toMatchObject({ patternId, presetId: drillId });
   await expectAnimation(page);
 };
 
 const hoverIsland = async (page: Page) => {
   const bounds = await page.locator("#trainer-island").boundingBox();
+
   if (!bounds) {
     throw new Error("The island has no rendered bounds.");
   }
+
   await page.mouse.move(bounds.x + bounds.width / 2, bounds.y + 20);
 };
 
@@ -61,6 +63,7 @@ const choose = async (
   await option.scrollIntoViewIfNeeded();
   await option[action]();
   await expect(page.locator('[data-slot="select-content"]')).toHaveCount(0);
+
   if (!hasTouch) {
     await hoverIsland(page);
   }
@@ -71,15 +74,17 @@ const openControls = async (page: Page, section: string) => {
   await page.locator(`[data-control-section="${section}"]:visible`).click();
 };
 
-const showSection = (page: Page, section: string) =>
-  page.locator(`[data-control-section="${section}"]:visible`).click();
+const showSection = async (page: Page, section: string) => {
+  await page.locator(`[data-control-section="${section}"]:visible`).click();
+};
 
-const adjustSlider = (page: Page, name: string, key: string) =>
-  page
+const adjustSlider = async (page: Page, name: string, key: string) => {
+  await page
     .getByRole("dialog")
     .locator(`[data-slot="slider"][aria-label="${name}"]`)
     .getByRole("slider")
     .press(key);
+};
 
 const resetToDefaults = async (page: Page) => {
   await page.getByRole("button", { name: "Reset to defaults" }).click();
@@ -94,9 +99,11 @@ const openGuide = async (page: Page) => {
   const trigger = page.locator(
     '#trainer-island [aria-controls="trainer-guide"]'
   );
+
   await trigger.click();
   const guide = page.locator("#trainer-guide");
   await expect(guide).toBeVisible();
+
   return { guide, trigger };
 };
 
@@ -194,10 +201,15 @@ test("pause freezes the canvas and resume restarts motion", async ({
   await pauseButton(page).click();
   await expect(resumeButton(page)).toBeVisible();
   // Let the frame that was already scheduled finish drawing.
-  await page.evaluate(() => {
+  await page.evaluate(async () => {
     const { promise, resolve } = Promise.withResolvers<undefined>();
-    requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
-    return promise;
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        resolve();
+      });
+    });
+
+    await promise;
   });
   const image = await canvasImage(page);
   await page.waitForTimeout(250);
@@ -219,15 +231,19 @@ test("the island hides when idle and comes back on pointer or touch", async ({
   await (hasTouch ? reveal.tap() : hoverIsland(page));
   await expect(island).not.toHaveAttribute("inert", "");
   const action = hasTouch ? "tap" : "click";
+
   const drillMenu = page.getByRole("combobox", {
     exact: true,
     name: "Drill: Smooth Pursuit",
   });
+
   await drillMenu[action]();
+
   const reactionJumps = page.getByRole("option", {
     exact: true,
     name: "Reaction Jumps",
   });
+
   await reactionJumps[action]();
   await expect(page).toHaveURL(/\/reaction-jumps\/$/u);
   await expect(page.getByRole("listbox")).toHaveCount(0);
@@ -238,6 +254,7 @@ test("the island hides when idle and comes back on pointer or touch", async ({
     await expect(island).not.toHaveAttribute("inert", "");
     await page.mouse.move(0, 0);
   }
+
   await expect(reveal).toBeVisible({ timeout: hasTouch ? 4500 : 1000 });
   await expect(island).toHaveAttribute("inert", "");
 });
@@ -247,17 +264,22 @@ test("the island offers the controls the drill supports", async ({
   hasTouch,
 }) => {
   await openPage(page, "/circle/");
+
   const reverse = page.getByRole("button", {
     exact: true,
     name: "Reverse motion direction",
   });
+
   const pattern = page.locator('[data-hud-select="pattern"]');
+
   const speed = page.locator(
     '[data-slot="slider"][aria-label="Header target speed"]'
   );
+
   const lilacColor = page.getByRole("combobox", {
     name: "Lilac Chaser ball color",
   });
+
   await expect(reverse).toBeVisible();
 
   await choose(page, "pattern", "Random", hasTouch);
@@ -280,6 +302,7 @@ test("the island offers the controls the drill supports", async ({
 test("the controls fit the panel in every section", async ({ page }) => {
   await openPage(page, "/circle/");
   await page.getByRole("button", { name: "Open controls" }).click();
+
   const expectSectionFits = async (section: string) => {
     await showSection(page, section);
     expect(
@@ -292,6 +315,7 @@ test("the controls fit the panel in every section", async ({ page }) => {
       `The ${section} section must not scroll sideways`
     ).toBe(true);
   };
+
   await expectSectionFits("drill");
   await expectSectionFits("targets");
   await expectSectionFits("general");
@@ -304,12 +328,16 @@ test("speed moves in whole steps and the controls reopen on the last section", a
   await openPage(page, "/circle/");
   await openControls(page, "drill");
   await adjustSlider(page, "Speed", "ArrowRight");
-  await expect.poll(() => readSettings(page)).toMatchObject({ speed: 21 });
+  await expect
+    .poll(async () => await readSettings(page))
+    .toMatchObject({ speed: 21 });
   await page.getByRole("button", { exact: true, name: "Done" }).click();
   await expect(page.getByRole("dialog")).not.toBeVisible();
+
   if (!hasTouch) {
     await hoverIsland(page);
   }
+
   await page.getByRole("button", { name: "Open controls" }).click();
   await expect(
     page.getByRole("heading", { exact: true, level: 2, name: "Drill" })
@@ -323,26 +351,34 @@ test("settings redraw the paused drill, survive a reload, and reset", async ({
   await openPage(page, "/circle/");
   await expectTrainer(page, "pursuit", "circle");
   const initial = await readSettings(page);
+
   if (!initial) {
     throw new Error("The trainer did not save its settings.");
   }
+
   await pauseButton(page).click();
   await openControls(page, "targets");
   const image = await canvasImage(page);
   await adjustSlider(page, "Target size", "ArrowRight");
   await page.getByRole("radio", { exact: true, name: "Ring" }).click();
   await page.getByRole("switch", { name: "Show target letters" }).click();
+
   const changed = {
     baseRadiusPx: initial.baseRadiusPx + 1,
     letterEnabled: true,
     targetForm: "ring",
   };
-  await expect.poll(() => readSettings(page)).toMatchObject(changed);
-  await expect.poll(() => canvasImage(page)).not.toBe(image);
+
+  await expect
+    .poll(async () => await readSettings(page))
+    .toMatchObject(changed);
+  await expect.poll(async () => await canvasImage(page)).not.toBe(image);
 
   await page.reload();
   await expectTrainer(page, "pursuit", "circle");
-  await expect.poll(() => readSettings(page)).toMatchObject(changed);
+  await expect
+    .poll(async () => await readSettings(page))
+    .toMatchObject(changed);
   await openControls(page, "targets");
   await expect(
     page.getByRole("switch", { name: "Show target letters" })
@@ -351,7 +387,7 @@ test("settings redraw the paused drill, survive a reload, and reset", async ({
   await showSection(page, "general");
   await resetToDefaults(page);
   await expect
-    .poll(() => readSettings(page))
+    .poll(async () => await readSettings(page))
     .toMatchObject({
       baseRadiusPx: initial.baseRadiusPx,
       letterEnabled: initial.letterEnabled,
@@ -365,7 +401,7 @@ test("settings redraw the paused drill, survive a reload, and reset", async ({
   await adjustSlider(page, "Distractors", "ArrowLeft");
   const distractions = createDefaultSettings(getDrill("mot"));
   await expect
-    .poll(() => readSettings(page))
+    .poll(async () => await readSettings(page))
     .toMatchObject({
       distractorCount: distractions.distractorCount - 1,
       presetId: "mot",
@@ -386,45 +422,52 @@ test("the target color follows the theme until a custom color is chosen", async 
   const expectThemeTarget = async () => {
     const primary = await page.evaluate(() => {
       const context = document.createElement("canvas").getContext("2d");
+
       if (!context) {
         throw new Error("No canvas context");
       }
+
       context.fillStyle = getComputedStyle(document.documentElement)
         .getPropertyValue("--primary")
         .trim();
       context.fillRect(0, 0, 1, 1);
-      const [red, green, blue] = context.getImageData(0, 0, 1, 1).data;
-      return [red, green, blue];
+
+      return [...context.getImageData(0, 0, 1, 1).data.subarray(0, 3)];
     });
+
     const hex = `#${primary.map((channel) => channel.toString(16).padStart(2, "0")).join("")}`;
     await expect(color).toHaveValue(hex);
     await expect
-      .poll(() =>
-        page
-          .locator("canvas")
-          .evaluate((canvas: HTMLCanvasElement, [red, green, blue]) => {
-            const pixels = canvas
-              .getContext("2d")
-              ?.getImageData(0, 0, canvas.width, canvas.height).data;
-            if (!pixels) {
-              return false;
-            }
-            for (let index = 0; index < pixels.length; index += 4) {
-              if (
-                pixels[index] === red &&
-                pixels[index + 1] === green &&
-                pixels[index + 2] === blue &&
-                pixels[index + 3] === 255
-              ) {
-                return true;
+      .poll(
+        async () =>
+          await page
+            .locator("canvas")
+            .evaluate((canvas: HTMLCanvasElement, [red, green, blue]) => {
+              const pixels = canvas
+                .getContext("2d")
+                ?.getImageData(0, 0, canvas.width, canvas.height).data;
+
+              if (!pixels) {
+                return false;
               }
-            }
-            return false;
-          }, primary)
+
+              for (let index = 0; index < pixels.length; index += 4) {
+                if (
+                  pixels[index] === red &&
+                  pixels[index + 1] === green &&
+                  pixels[index + 2] === blue &&
+                  pixels[index + 3] === 255
+                ) {
+                  return true;
+                }
+              }
+
+              return false;
+            }, primary)
       )
       .toBe(true);
     await expect
-      .poll(() => readSettings(page))
+      .poll(async () => await readSettings(page))
       .toMatchObject({
         ballColor: null,
       });
@@ -439,7 +482,7 @@ test("the target color follows the theme until a custom color is chosen", async 
   // The old default stays available as a chosen color.
   await color.fill("#76d900");
   await expect
-    .poll(() => readSettings(page))
+    .poll(async () => await readSettings(page))
     .toMatchObject({
       ballColor: "#76d900",
     });
@@ -472,7 +515,7 @@ test("a version 2 save is migrated when the trainer loads", async ({
   });
   await openPage(page, "/circle/");
   await expect
-    .poll(() => readSettings(page))
+    .poll(async () => await readSettings(page))
     .toMatchObject({
       ballColor: null,
       baseRadiusPx: 51,
@@ -490,9 +533,11 @@ test("Lilac color and scale redraw the paused drill and persist", async ({
   await openPage(page, "/lilac-chaser/");
   await expectTrainer(page, "lilacChaser", "circle");
   const initial = await readSettings(page);
+
   if (!initial) {
     throw new Error("The trainer did not save its settings.");
   }
+
   await pauseButton(page).click();
   await openControls(page, "targets");
   const image = await canvasImage(page);
@@ -502,13 +547,19 @@ test("Lilac color and scale redraw the paused drill and persist", async ({
     .getByRole("combobox", { name: "Lilac Chaser ball color" })
     .click();
   await page.getByRole("option", { exact: true, name: "Blue" }).click();
-  await expect.poll(() => canvasImage(page)).not.toBe(image);
+  await expect.poll(async () => await canvasImage(page)).not.toBe(image);
+
   const changed = {
     lilacChaserBallColor: "#245cff",
     lilacChaserScale: initial.lilacChaserScale + 0.05,
   };
-  await expect.poll(() => readSettings(page)).toMatchObject(changed);
+
+  await expect
+    .poll(async () => await readSettings(page))
+    .toMatchObject(changed);
   await page.reload();
   await expectTrainer(page, "lilacChaser", "circle");
-  await expect.poll(() => readSettings(page)).toMatchObject(changed);
+  await expect
+    .poll(async () => await readSettings(page))
+    .toMatchObject(changed);
 });

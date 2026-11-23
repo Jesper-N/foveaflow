@@ -14,6 +14,7 @@ type Props = SeoHeadProps;
 const themeBootScript = createInitialModeExpression({ defaultMode: "system" });
 
 Astro.csp?.insertScriptHash(inlineScriptHash(themeBootScript));
+
 Astro.csp?.insertScriptHash(inlineScriptHash(localeBootScript));
 ---
 

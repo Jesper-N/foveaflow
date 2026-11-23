@@ -28,10 +28,10 @@
   <div class="relative flex flex-col items-start gap-3">
     <h2 class={editorialHeading}>{title}</h2>
     <p class={editorialCopy}>{body}</p>
-    <Button {href} size="lg" class={["mt-3", heroButton]}>
+    <Button class={["mt-3", heroButton]} {href} size="lg">
       {label}
       <ArrowUpRightIcon data-icon="inline-end" />
     </Button>
   </div>
-  <DrillIllustration drillId="pursuit" class="relative hidden sm:block" />
+  <DrillIllustration class="relative hidden sm:block" drillId="pursuit" />
 </section>

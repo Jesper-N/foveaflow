@@ -96,9 +96,11 @@ export const getShortcutAction = (
 
   const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
   const action = actionsByKey.get(key);
+
   if (!action || (event.repeat && !repeatableActions.has(action))) {
     return null;
   }
+
   return action;
 };
 
@@ -110,8 +112,10 @@ export const isKeyCapturedBy = (
   if (!(target instanceof Element) || target.closest(closingSurfaceSelector)) {
     return false;
   }
+
   if (target.closest("[data-slot='select-trigger']")) {
     return selectTriggerActions.has(action);
   }
+
   return target.closest(keyCapturingSelector) !== null;
 };

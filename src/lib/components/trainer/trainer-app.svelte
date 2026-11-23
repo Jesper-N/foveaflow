@@ -14,10 +14,11 @@
 
   // The route only seeds the first render. After that the trainer follows the URL.
   const trainer = setTrainer(new Trainer(untrack(() => routeSlug)));
+
   onMount(() => trainer.mount());
 </script>
 
-<ModeWatcher track={false} defaultMode="system" />
+<ModeWatcher defaultMode="system" track={false} />
 <svelte:window
   onkeydown={trainer.handleKeydown}
   onpagehide={trainer.flushSettings}
@@ -28,8 +29,8 @@
 
 <main
   class="trainer-stage bg-background text-foreground relative h-dvh w-dvw overflow-hidden overscroll-none data-[cursor-hidden=true]:cursor-none data-[cursor-hidden=true]:**:cursor-none"
-  data-cursor-hidden={trainer.cursor.hidden}
   aria-label={t("FoveaFlow eye trainer app")}
+  data-cursor-hidden={trainer.cursor.hidden}
 >
   <h1 class="sr-only">{t(trainer.pageCopy.heading)}</h1>
   <p id="trainer-canvas-description" class="sr-only">
@@ -45,12 +46,12 @@
   </p>
 
   <canvas
-    {@attach trainer.attachCanvas}
     class="bg-background absolute inset-0 block h-full w-full touch-none"
+    {@attach trainer.attachCanvas}
+    aria-describedby="trainer-canvas-description trainer-motion-status"
     aria-label={t(
       "FoveaFlow eye trainer animation for visual tracking practice"
     )}
-    aria-describedby="trainer-canvas-description trainer-motion-status"
   ></canvas>
 
   <!-- The island waits for translations so its labels never flash in English. -->

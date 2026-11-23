@@ -39,8 +39,8 @@
     {#each articles as article (article.slug)}
       <div class="py-6 first:pt-0 last:pb-0">
         <a
-          href={article.path}
           class="group focus-visible:outline-ring flex items-start gap-5 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4"
+          href={article.path}
         >
           <div class="flex-1">
             <h3
@@ -63,7 +63,7 @@
   </div>
 </PageSection>
 
-<PageSection id="faq" heading={t("Guide FAQ")} data-nosnippet>
+<PageSection id="faq" data-nosnippet heading={t("Guide FAQ")}>
   <div class="divide-border mt-6 divide-y">
     {#each guideFaq as item (item.question)}
       <details class="group py-5 first:pt-0 last:pb-0 open:pb-6">
@@ -92,10 +92,10 @@
     {#each referenceLinks as reference (reference.url)}
       <li>
         <a
-          href={reference.url}
-          target="_blank"
-          rel="noopener noreferrer"
           class="hover:text-brand-foreground focus-visible:outline-ring flex items-baseline gap-4 rounded-sm py-4 text-sm leading-6 transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 motion-reduce:transition-none"
+          href={reference.url}
+          rel="noopener noreferrer"
+          target="_blank"
         >
           <span class="flex-1">{t(reference.label)}</span>
           <ArrowUpRightIcon class="size-3.5 shrink-0 self-center" />
@@ -106,8 +106,8 @@
 </PageSection>
 
 <PageCta
-  title={t("Ready to try a drill?")}
   body={t("Start slow. Adjust as you go.")}
   href="/"
   label={t("Open FoveaFlow")}
+  title={t("Ready to try a drill?")}
 />

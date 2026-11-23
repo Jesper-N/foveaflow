@@ -1,22 +1,31 @@
 <script lang="ts">
   import type { TargetForm } from "$lib/trainer/settings/options";
 
-  let { form, filled = false }: { form: TargetForm; filled?: boolean } =
-    $props();
+  let {
+    form,
+    filled = false,
+    color,
+    opacity,
+  }: {
+    form: TargetForm;
+    filled?: boolean;
+    color?: string;
+    opacity?: number;
+  } = $props();
 </script>
 
-<svg viewBox="0 0 32 32" class="size-full" aria-hidden="true">
+<svg class="size-full" aria-hidden="true" {color} {opacity} viewBox="0 0 32 32">
   <g
     fill={filled && form !== "ring" ? "currentColor" : "none"}
     stroke="currentColor"
-    stroke-width={form === "ring" && filled ? 4 : 1.5}
     stroke-linejoin="round"
+    stroke-width={form === "ring" && filled ? 4 : 1.5}
   >
     {#if form === "circle" || form === "ring"}
       <circle cx="16" cy="16" r={form === "ring" ? 10 : 12} />
       {#if form === "ring" && !filled}<circle cx="16" cy="16" r="6" />{/if}
     {:else if form === "square"}
-      <rect x="5" y="5" width="22" height="22" />
+      <rect height="22" width="22" x="5" y="5" />
     {:else if form === "diamond"}
       <path d="M16 3 29 16 16 29 3 16Z" />
     {:else if form === "triangle"}

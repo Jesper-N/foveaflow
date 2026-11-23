@@ -156,6 +156,7 @@ export const homeStructuredData = (site: URL) =>
 
 export const guideStructuredData = (site: URL) => {
   const guideUrl = absoluteUrl("/guide/", site);
+
   return graph([
     webPageNode({
       citation: referenceLinks.map((reference) => reference.url),
@@ -184,6 +185,7 @@ export const guideStructuredData = (site: URL) => {
 
 export const articleStructuredData = (article: Article, site: URL) => {
   const pageUrl = absoluteUrl(article.path, site);
+
   return graph([
     webPageNode({
       citation: article.comparison
@@ -202,6 +204,7 @@ export const articleStructuredData = (article: Article, site: URL) => {
 
 export const drillRouteStructuredData = (route: DrillRoute, site: URL) => {
   const pageUrl = absoluteUrl(route.path, site);
+
   return graph([
     webPageNode({
       description: route.description,
@@ -217,6 +220,7 @@ export const drillRouteStructuredData = (route: DrillRoute, site: URL) => {
 
 export const legalStructuredData = (page: LegalPage, site: URL) => {
   const pageUrl = absoluteUrl(page.path, site);
+
   return graph([
     webPageNode({
       description: page.description,

@@ -1,3 +1,4 @@
+import { itemAt } from "../engine/math";
 import { MotionClock } from "../engine/motion-clock";
 import { createRng, createSessionSeed } from "../engine/random";
 import { speedToPixelsPerSecond } from "../engine/speed";
@@ -91,8 +92,11 @@ export class TrainerCanvas {
     this.#canvas = canvas;
     ({ fontFamily: this.#fontFamily } = getComputedStyle(canvas));
     this.#context = canvas.getContext("2d", { alpha: true });
+
     if (!this.#context) {
-      return () => this.#detach(canvas);
+      return () => {
+        this.#detach(canvas);
+      };
     }
 
     this.#resizeObserver = new ResizeObserver(this.#resize);
@@ -101,7 +105,10 @@ export class TrainerCanvas {
     this.#resize();
     this.requestDraw();
     this.#startLoop();
-    return () => this.#detach(canvas);
+
+    return () => {
+      this.#detach(canvas);
+    };
   }
 
   /** Draws the next frame even when paused. `clearTrail` wipes the trail first. */
@@ -116,8 +123,10 @@ export class TrainerCanvas {
     if (this.#getScene().paused) {
       this.#stopLoop();
       this.requestDraw();
+
       return;
     }
+
     this.#clock.start(performance.now());
     this.#startLoop();
   }
@@ -125,8 +134,10 @@ export class TrainerCanvas {
   handleVisibilityChange() {
     if (document.hidden) {
       this.#stopLoop();
+
       return;
     }
+
     this.requestDraw();
     this.#startLoop();
   }
@@ -148,28 +159,36 @@ export class TrainerCanvas {
     this.#lilacChaserHiddenDot = -1;
   }
 
-  #tick = (timestamp: number) => {
+  readonly #tick = (timestamp: number) => {
     this.#animationFrame = 0;
+
     if (document.hidden) {
       this.#stopLoop();
+
       return;
     }
+
     // Handle each display frame once, even if a callback is queued twice.
     if (timestamp === this.#lastFrameTimestamp) {
       this.#animationFrame = requestAnimationFrame(this.#tick);
+
       return;
     }
+
     this.#lastFrameTimestamp = timestamp;
 
     const scene = this.#getScene();
     const { settings, paused } = scene;
+
     if (scene.colorMode !== this.#colorMode) {
       // Repaint everything, trail included, in the new theme.
       this.#useColorMode(scene.colorMode);
       this.#drawRequested = true;
       this.#clearRequested = true;
     }
+
     const isLilacChaser = settings.drillId === "lilacChaser";
+
     if (!paused) {
       if (isLilacChaser) {
         this.#clock.advanceTime(timestamp);
@@ -188,6 +207,7 @@ export class TrainerCanvas {
       !isLilacChaser ||
       lilacChaserHiddenDot(this.#clock.elapsedSec) !==
         this.#lilacChaserHiddenDot;
+
     if (this.#drawRequested || (!paused && hasNewFrame)) {
       this.#render(scene, this.#drawRequested, this.#clearRequested);
       this.#drawRequested = false;
@@ -197,6 +217,7 @@ export class TrainerCanvas {
     if (paused) {
       return;
     }
+
     if (isLilacChaser) {
       this.#scheduleLilacChaserStep(timestamp);
     } else {
@@ -219,29 +240,36 @@ export class TrainerCanvas {
   #requestFrame() {
     window.clearTimeout(this.#stepTimeout);
     this.#stepTimeout = 0;
+
     if (!this.#context || this.#animationFrame !== 0 || document.hidden) {
       return;
     }
+
     if (this.#clock.isStopped && !this.#getScene().paused) {
       this.#clock.start(performance.now());
     }
+
     this.#animationFrame = requestAnimationFrame(this.#tick);
   }
 
   #startLoop() {
     const isRunning = this.#animationFrame !== 0 || this.#stepTimeout !== 0;
+
     if (isRunning || this.#getScene().paused || document.hidden) {
       return;
     }
+
     this.#requestFrame();
   }
 
   #stopLoop() {
     window.clearTimeout(this.#stepTimeout);
     this.#stepTimeout = 0;
+
     if (this.#animationFrame !== 0) {
       cancelAnimationFrame(this.#animationFrame);
     }
+
     this.#animationFrame = 0;
     this.#clock.stop();
   }
@@ -249,21 +277,26 @@ export class TrainerCanvas {
   #render(scene: CanvasScene, force: boolean, clearTrail: boolean) {
     const ctx = this.#context;
     const theme = this.#theme;
+
     if (!ctx || !theme) {
       return;
     }
 
     const { settings } = scene;
+
     if (settings.drillId === "lilacChaser") {
       this.#renderLilacChaser(ctx, settings, force);
+
       return;
     }
 
     const showTrail = settings.showTrail && isReversible(settings.patternId);
+
     const mustClear =
       clearTrail ||
       this.#lastFrameWasLilacChaser ||
       showTrail !== this.#lastFrameUsedTrail;
+
     const sample = this.#frameSampler.sample(
       settings,
       this.#arena,
@@ -271,10 +304,13 @@ export class TrainerCanvas {
       this.#clock.travelPx,
       this.#rng
     );
+
     const isTeleport = settings.patternId === "teleport";
     const [target] = sample.frames;
+
     if (
       isTeleport &&
+      target !== undefined &&
       !force &&
       !mustClear &&
       this.#isSameTeleportFrame(scene, target)
@@ -298,13 +334,16 @@ export class TrainerCanvas {
     paint.fontFamily = this.#fontFamily;
     drawTargets(ctx, sample, settings, paint);
     this.#recordPaintedRegions(sample, settings);
+
     if (showTrail) {
       this.#trail.mark(this.#paintedRegions);
     }
+
     this.#lastFrameWasLilacChaser = false;
     this.#lastFrameUsedTrail = showTrail;
     this.#lastScene = scene;
-    if (isTeleport) {
+
+    if (isTeleport && target !== undefined) {
       this.#rememberTeleportFrame(target);
     }
   }
@@ -316,6 +355,7 @@ export class TrainerCanvas {
   ) {
     const hiddenDot = lilacChaserHiddenDot(this.#clock.elapsedSec);
     const previousHiddenDot = this.#lilacChaserHiddenDot;
+
     if (force || !this.#lastFrameWasLilacChaser || previousHiddenDot < 0) {
       drawLilacChaser(
         ctx,
@@ -335,6 +375,7 @@ export class TrainerCanvas {
         this.#pixelScale
       );
     }
+
     this.#lilacChaserHiddenDot = hiddenDot;
     this.#paintedRegions.length = 0;
     this.#lastFrameWasLilacChaser = true;
@@ -350,38 +391,46 @@ export class TrainerCanvas {
   #recordPaintedRegions(sample: FrameSample, settings: TrainerSettings) {
     const regions = this.#paintedRegions;
     let regionCount = 0;
+
     for (let index = 0; index < sample.count; index += 1) {
-      const { x, y, radiusPx, alpha } = sample.frames[index];
+      const { x, y, radiusPx, alpha } = itemAt(sample.frames, index);
+
       if (alpha * settings.targetOpacity <= 0) {
         continue;
       }
 
       const formExtent = targetExtentPx(radiusPx, settings.targetForm);
+
       const letterExtent = settings.letterEnabled
         ? radiusPx * settings.letterScale
         : 0;
+
       const extent = Math.max(formExtent, letterExtent) + ERASE_PADDING_PX;
       const left = Math.floor(x - extent);
       const top = Math.floor(y - extent);
       const width = Math.ceil(x + extent) - left;
       const height = Math.ceil(y + extent) - top;
       const region = regions[regionCount];
-      if (region) {
+
+      if (region === undefined) {
+        regions[regionCount] = { height, width, x: left, y: top };
+      } else {
         region.x = left;
         region.y = top;
         region.width = width;
         region.height = height;
-      } else {
-        regions[regionCount] = { height, width, x: left, y: top };
       }
+
       regionCount += 1;
     }
+
     regions.length = regionCount;
   }
 
   /** A new jump moves the target, so the same position means the same picture. */
   #isSameTeleportFrame(scene: CanvasScene, target: TargetFrame) {
     const last = this.#lastTarget;
+
     return (
       this.#lastScene === scene &&
       last?.x === target.x &&
@@ -411,46 +460,57 @@ export class TrainerCanvas {
     }
   }
 
-  #resize = (entries?: ResizeObserverEntry[]) => {
+  readonly #resize = (entries?: ResizeObserverEntry[]) => {
     const canvas = this.#canvas;
     const ctx = this.#context;
+
     if (!canvas || !ctx) {
       return;
     }
 
     const rect = entries?.[0]?.contentRect ?? canvas.getBoundingClientRect();
+
     const layout = resolveCanvasLayout(
       rect.width,
       rect.height,
       window.devicePixelRatio
     );
+
     const arenaChanged =
       layout.arena.width !== this.#arena.width ||
       layout.arena.height !== this.#arena.height;
+
     const backingStoreChanged =
       canvas.width !== layout.canvasWidth ||
       canvas.height !== layout.canvasHeight;
+
     const scaleChanged = this.#pixelScale !== layout.scale;
+
     if (!arenaChanged && !backingStoreChanged && !scaleChanged) {
       return;
     }
 
     this.#arena = layout.arena;
+
     if (canvas.width !== layout.canvasWidth) {
       canvas.width = layout.canvasWidth;
     }
+
     if (canvas.height !== layout.canvasHeight) {
       canvas.height = layout.canvasHeight;
     }
+
     // Resizing the backing store also resets the context transform.
     if (backingStoreChanged || scaleChanged) {
       this.#pixelScale = layout.scale;
       ctx.setTransform(layout.scale, 0, 0, layout.scale, 0, 0);
     }
+
     if (arenaChanged) {
       this.#trail.resize(this.#arena);
       this.#lilacChaserHiddenDot = -1;
     }
+
     this.#applyBackground();
     this.requestDraw({ clearTrail: true });
   };

@@ -13,8 +13,10 @@ export class ScaledTravel {
    */
   resolve(travelPx: number, routeSizePx: number) {
     const previousSizePx = this.#routeSizePx;
+
     if (previousSizePx === null) {
       this.#routeSizePx = routeSizePx;
+
       return travelPx;
     }
 

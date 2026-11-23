@@ -52,11 +52,13 @@ export class FrameSampler {
       elapsedSec,
       settings.baseRadiusPx
     );
+
     // Size the route for the largest radius, so pulsing targets never clip.
     const largestRadiusPx = maxSizeProfileRadius(
       settings.sizeProfile,
       settings.baseRadiusPx
     );
+
     params.pathMarginPx = resolvePathMargin(
       targetExtentPx(largestRadiusPx, settings.targetForm)
     );
@@ -78,6 +80,7 @@ export class FrameSampler {
       settings.patternId === "teleport"
         ? this.#patterns.jumpIndex
         : timeLetterBucket(elapsedSec);
+
     return sample;
   }
 }

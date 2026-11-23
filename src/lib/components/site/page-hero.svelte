@@ -28,7 +28,7 @@
 
 <section class="pt-8 pb-4 sm:pt-12">
   {#if breadcrumb}
-    <nav aria-label={t("Breadcrumb")} class="mb-5 px-1">
+    <nav class="mb-5 px-1" aria-label={t("Breadcrumb")}>
       <ol
         class="text-muted-foreground flex flex-wrap items-center gap-1.5 text-sm"
       >
@@ -41,8 +41,8 @@
           <li>
             {#if crumb.href}
               <a
-                href={crumb.href}
                 class="hover:text-foreground focus-visible:outline-ring rounded-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 motion-reduce:transition-none"
+                href={crumb.href}
               >
                 {t(crumb.label)}
               </a>

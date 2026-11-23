@@ -21,7 +21,7 @@ Each drill has its own URL, so bookmark the one you use most. Start with a big t
 
 ## Run it locally
 
-You need [Bun](https://bun.com/) 1.4.1 and Node.js 24, the version in `.node-version`. Node 22.12.0 is the minimum.
+You need [Bun](https://bun.com/) 1.4.5 and Node.js 26, the version in `.node-version`. Node 22.22.2 or 24.15.0 is the minimum.
 
 ```bash
 git clone https://github.com/Jesper-N/foveaflow.git
@@ -36,9 +36,9 @@ Other scripts run the same way, as `bun run <script>`:
 | :-- | :-- |
 | `build` | Builds the site into `dist/` |
 | `preview` | Builds, then serves `dist/` through Wrangler the way production does |
-| `lint` | Checks code and formatting with Ultracite |
-| `fix` | Applies Ultracite fixes and formats `.astro` files |
-| `check` | Type-checks Astro, Svelte, and TypeScript |
+| `lint` | Checks code and formatting with Ultracite, including type-aware rules, then Svelte components with ESLint |
+| `fix` | Applies Ultracite fixes and formats every file |
+| `check` | Type-checks Astro, Svelte, and TypeScript with `astro check` and `svelte-check` |
 | `check:i18n` | Checks that every UI string is translated into all 10 languages and still in use |
 | `test:unit` | Runs the unit tests in `tests/unit/` |
 | `test:browser` | Builds, then runs Playwright in desktop and mobile Chromium |
@@ -46,7 +46,7 @@ Other scripts run the same way, as `bun run <script>`:
 
 ## Tests and deploys
 
-The pre-commit hook runs `bun run format:check`. The pre-push hook runs `bun run verify`, and so does GitHub Actions on every pull request. Each push to `main` deploys to Cloudflare Workers once `verify` passes.
+The pre-commit hook runs `bun run lint`. The pre-push hook runs `bun run verify`. GitHub Actions runs the same checks as parallel jobs on every pull request, plus a weekly dependency audit. Each push to `main` deploys to Cloudflare Workers once every job passes.
 
 - Install Chromium for the browser tests once with `bunx playwright install chromium`. They serve the build on port 4323. Set `TEST_PORT` if something else has it.
 - A snapshot in `tests/unit/__snapshots__/` locks every motion path. If you meant to change how a target moves, update it with `bun test tests/unit --update-snapshots`. If you didn't, the snapshot caught a bug.

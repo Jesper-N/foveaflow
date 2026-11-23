@@ -41,7 +41,7 @@
       >
         <header class="flex flex-col items-start gap-3">
           <span class={[iconBadge, "size-11"]} aria-hidden="true">
-            <DrillIcon drillId={guide.drillId} class="text-brand-foreground" />
+            <DrillIcon class="text-brand-foreground" drillId={guide.drillId} />
           </span>
           <h3 class="text-xl font-semibold">
             {t(guide.title)}
@@ -50,9 +50,9 @@
             {t(guide.summary)}
           </p>
           <Button
+            class="mt-1 gap-2"
             href={mainRouteForDrill(guide.drillId)?.path}
             variant="outline"
-            class="mt-1 gap-2"
           >
             {t("Try this drill")}
             <ArrowUpRightIcon data-icon="inline-end" />
@@ -85,20 +85,20 @@
   )}
 >
   <nav
-    aria-label={t("Pattern routes")}
     class="mt-6 grid grid-cols-2 gap-2 md:grid-cols-4"
+    aria-label={t("Pattern routes")}
   >
     {#each patternDrillRoutes as route (route.slug)}
       <a
-        href={route.path}
         class={[
           panelSurface,
           "group hover:ring-primary/60 focus-visible:outline-ring flex min-h-14 items-center gap-3 rounded-xl px-4 py-3 text-sm ring-1 ring-transparent transition-shadow focus-visible:outline-2 motion-reduce:transition-none",
         ]}
+        href={route.path}
       >
         <PatternIcon
-          patternId={route.patternId}
           class="group-hover:text-brand-foreground transition-colors motion-reduce:transition-none"
+          patternId={route.patternId}
         />
         <span>{t(route.label)}</span>
       </a>

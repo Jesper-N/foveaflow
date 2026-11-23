@@ -9,7 +9,8 @@ export const letterAt = (seed: number, objectIndex: number, bucket: number) => {
   const index = Math.abs(
     Math.trunc(seed) + Math.trunc(objectIndex) * 11 + Math.trunc(bucket) * 7
   );
-  return LETTERS[index % LETTERS.length];
+
+  return LETTERS.charAt(index % LETTERS.length);
 };
 
 /** Letters on moving targets change every two seconds. */

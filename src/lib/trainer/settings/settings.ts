@@ -58,7 +58,8 @@ export type RangedSetting = keyof typeof settingRanges;
 export const clampSetting = (setting: RangedSetting, value: number) => {
   const range: SettingRange = settingRanges[setting];
   const clamped = clamp(value, range.min, range.max);
-  return range.integer ? Math.round(clamped) : clamped;
+
+  return range.integer === true ? Math.round(clamped) : clamped;
 };
 
 export const createDefaultSettings = (
@@ -102,8 +103,10 @@ export const withDrill = (
   drillId: string
 ): TrainerSettings => {
   const drill = getDrill(drillId);
+
   const isEnteringDistractions =
     drill.id === "mot" && settings.drillId !== "mot";
+
   return withPattern(
     {
       ...settings,
@@ -122,6 +125,7 @@ export const withRoute = (
   route: { drillId: DrillId; patternId?: PatternId } | null
 ) => {
   const next = withDrill(settings, route?.drillId ?? defaultDrill.id);
+
   return route?.drillId === "pursuit" && route.patternId
     ? withPattern(next, route.patternId)
     : next;

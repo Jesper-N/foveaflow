@@ -1,5 +1,5 @@
 import type { PatternBounds } from "./bounds";
-import { TAU, positiveModulo } from "./math";
+import { TAU, itemAt, positiveModulo } from "./math";
 import type { PatternId } from "./types";
 
 type Point = [x: number, y: number];
@@ -37,6 +37,7 @@ export const pathDefinitions = {
     pointAt: (phase, { centerX, centerY, radiusX, radiusY }) => {
       const angle = phase * TAU;
       const petal = 0.58 + 0.3 * Math.cos(angle * 4);
+
       return [
         centerX + Math.cos(angle) * radiusX * petal,
         centerY + Math.sin(angle) * radiusY * petal,
@@ -49,13 +50,15 @@ export const pathDefinitions = {
     pointAt: (index, { left, top, right, bottom, width, height }) => {
       const insetX = width * 0.18;
       const insetY = height * 0.18;
+
       const corners: Point[] = [
         [left, top],
         [right - insetX, top + insetY],
         [right, bottom],
         [left + insetX, bottom - insetY],
       ];
-      return corners[index];
+
+      return itemAt(corners, index);
     },
     samples: 4,
   },
@@ -68,7 +71,8 @@ export const pathDefinitions = {
         [centerX, bottom],
         [left, centerY],
       ];
-      return corners[index];
+
+      return itemAt(corners, index);
     },
     samples: 4,
   },
@@ -76,6 +80,7 @@ export const pathDefinitions = {
     kind: "curve",
     pointAt: (phase, { centerX, centerY, radiusX, radiusY }) => {
       const angle = phase * TAU;
+
       return [
         centerX + Math.cos(angle) * radiusX,
         centerY + Math.sin(angle) * radiusY,
@@ -87,6 +92,7 @@ export const pathDefinitions = {
     kind: "curve",
     pointAt: (phase, { centerX, centerY, radiusX, radiusY }) => {
       const angle = phase * TAU;
+
       return [
         centerX + Math.sin(angle) * radiusX,
         centerY + Math.sin(angle * 2) * radiusY * 0.72,
@@ -100,6 +106,7 @@ export const pathDefinitions = {
       const angle = phase * TAU;
       const vertical = Math.sin(angle);
       const pinch = 0.22 + 0.74 * Math.abs(vertical);
+
       return [
         centerX + Math.sin(angle * 2) * radiusX * pinch,
         centerY + vertical * radiusY,
@@ -111,6 +118,7 @@ export const pathDefinitions = {
     kind: "curve",
     pointAt: (phase, { centerX, centerY, radiusX, radiusY }) => {
       const angle = phase * TAU;
+
       return [
         centerX + Math.sin(angle * 3 + Math.PI / 2) * radiusX,
         centerY + Math.sin(angle * 2) * radiusY,
@@ -127,7 +135,8 @@ export const pathDefinitions = {
         [right, bottom],
         [left, bottom],
       ];
-      return corners[index];
+
+      return itemAt(corners, index);
     },
     samples: 4,
   },
@@ -136,6 +145,7 @@ export const pathDefinitions = {
     pointAt: (index, { left, top, width, height }) => {
       const row = index % 4;
       const column = Math.floor(index / 4) % 5;
+
       return [left + (column * width) / 4, top + (row * height) / 3];
     },
     samples: 20,
@@ -144,6 +154,7 @@ export const pathDefinitions = {
     kind: "curve",
     pointAt: (phase, { centerX, centerY, radiusX, radiusY }) => {
       const angle = phase * TAU;
+
       return [
         centerX + Math.cos(angle) * radiusX,
         centerY + Math.sin(angle * 3) * radiusY * 0.42,
@@ -179,6 +190,7 @@ const buildPath = (
   bounds: PatternBounds
 ): BuiltPath => {
   const points: Point[] = [];
+
   if (kind === "curve") {
     for (let index = 0; index <= samples; index += 1) {
       points.push(pointAt(index / samples, bounds));
@@ -187,15 +199,17 @@ const buildPath = (
     for (let index = 0; index < samples; index += 1) {
       points.push(pointAt(index, bounds));
     }
+
     points.push(points[0] ?? [0, 0]);
   }
 
   const lengths: number[] = [];
   const cumulativeLengths: number[] = [];
   let totalLength = 0;
+
   for (let index = 0; index < points.length - 1; index += 1) {
-    const [startX, startY] = points[index];
-    const [endX, endY] = points[index + 1];
+    const [startX, startY] = itemAt(points, index);
+    const [endX, endY] = itemAt(points, index + 1);
     const length = Math.hypot(endX - startX, endY - startY);
     lengths.push(length);
     totalLength += length;
@@ -223,25 +237,30 @@ const resizeTravelOffset = (
   const lapCount = Math.floor(previousTravelPx / previous.totalLength);
   let remainingPx = positiveModulo(previousTravelPx, previous.totalLength);
   let nextLapTravelPx = 0;
+
   for (let index = 0; index < previous.lengths.length; index += 1) {
-    const previousLength = previous.lengths[index];
+    const previousLength = itemAt(previous.lengths, index);
     const nextLength = next.lengths[index] ?? 0;
+
     if (remainingPx <= previousLength) {
       const progress = previousLength <= 0 ? 0 : remainingPx / previousLength;
       nextLapTravelPx += nextLength * progress;
       break;
     }
+
     remainingPx -= previousLength;
     nextLapTravelPx += nextLength;
   }
+
   return lapCount * next.totalLength + nextLapTravelPx - travelPx;
 };
 
 const pointAlongPath = (path: BuiltPath, travelPx: number, out: Point) => {
   if (path.totalLength <= 0) {
-    const [[x, y]] = path.points;
+    const [x, y] = itemAt(path.points, 0);
     out[0] = x;
     out[1] = y;
+
     return out;
   }
 
@@ -249,22 +268,25 @@ const pointAlongPath = (path: BuiltPath, travelPx: number, out: Point) => {
   const distance = positiveModulo(travelPx, path.totalLength);
   let low = 0;
   let high = path.cumulativeLengths.length - 1;
+
   while (low < high) {
     const middle = Math.floor((low + high) / 2);
-    if (distance <= path.cumulativeLengths[middle]) {
+
+    if (distance <= itemAt(path.cumulativeLengths, middle)) {
       high = middle;
     } else {
       low = middle + 1;
     }
   }
 
-  const length = path.lengths[low];
-  const segmentStart = low === 0 ? 0 : path.cumulativeLengths[low - 1];
+  const length = itemAt(path.lengths, low);
+  const segmentStart = low === 0 ? 0 : itemAt(path.cumulativeLengths, low - 1);
   const progress = length <= 0 ? 0 : (distance - segmentStart) / length;
-  const [startX, startY] = path.points[low];
-  const [endX, endY] = path.points[low + 1];
+  const [startX, startY] = itemAt(path.points, low);
+  const [endX, endY] = itemAt(path.points, low + 1);
   out[0] = startX + (endX - startX) * progress;
   out[1] = startY + (endY - startY) * progress;
+
   return out;
 };
 
@@ -283,8 +305,10 @@ export class PathSampler {
   /** Returns the point `travelPx` along the path. The next call reuses the returned point. */
   sample(travelPx: number, bounds: PatternBounds): Readonly<Point> {
     let path = this.#path;
+
     if (this.#bounds !== bounds || !path) {
       const key = `${Math.round(bounds.left)}:${Math.round(bounds.top)}:${Math.round(bounds.right)}:${Math.round(bounds.bottom)}`;
+
       if (path?.key !== key) {
         const nextPath = buildPath(this.#definition, key, bounds);
         this.#offsetPx = path
@@ -293,8 +317,10 @@ export class PathSampler {
         path = nextPath;
         this.#path = path;
       }
+
       this.#bounds = bounds;
     }
+
     return pointAlongPath(path, travelPx + this.#offsetPx, this.#position);
   }
 }

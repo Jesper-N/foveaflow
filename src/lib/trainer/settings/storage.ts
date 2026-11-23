@@ -13,11 +13,13 @@ import type { RangedSetting, TrainerSettings } from "./settings";
 // drills. Only this file knows that name.
 const SETTINGS_KEY = "foveaflow.settings.v3";
 const LEGACY_SETTINGS_KEY = "foveaflow.settings.v2";
+
 /** Version 2 stored the default target color instead of following the theme. */
 const LEGACY_DEFAULT_BALL_COLOR = "#76d900";
 const SAVE_DELAY_MS = 250;
 
 const multiplierSchema = z.number().check(z.minimum(0), z.maximum(4));
+
 const isOrderedRange = (profile: {
   minMultiplier: number;
   maxMultiplier: number;
@@ -74,9 +76,11 @@ const legacySpeedSchema = z.pipe(
     if (unit === "deg/s") {
       return value;
     }
+
     if (unit === "cm/s") {
       return centimetersPerSecondToSpeed(value);
     }
+
     return null;
   })
 );
@@ -117,12 +121,15 @@ type StoredSettings = z.infer<typeof storedSettingsSchema>;
 const fromStored = (stored: StoredSettings): TrainerSettings => {
   const drill = getDrill(stored.presetId ?? defaultDrill.id);
   const defaults = createDefaultSettings(drill);
+
   const ranged = (setting: RangedSetting, value: number | null = null) => {
     const number = value ?? Number.NaN;
+
     return Number.isFinite(number)
       ? clampSetting(setting, number)
       : defaults[setting];
   };
+
   // Only Smooth Pursuit lets you pick a path. Other drills always use their own.
   const patternId =
     drill.id === "pursuit" &&
@@ -130,6 +137,7 @@ const fromStored = (stored: StoredSettings): TrainerSettings => {
     isPursuitPattern(stored.patternId)
       ? stored.patternId
       : drill.patternId;
+
   const sizeProfile = stored.sizeProfile ?? defaults.sizeProfile;
 
   return {
@@ -180,19 +188,25 @@ const fromStored = (stored: StoredSettings): TrainerSettings => {
 /** Saved settings, or null when there are none or they cannot be read. */
 export const loadSettings = (): TrainerSettings | null => {
   try {
-    const value = globalThis.localStorage?.getItem(SETTINGS_KEY);
-    if (value) {
+    const value = globalThis.localStorage?.getItem(SETTINGS_KEY) ?? "";
+
+    if (value !== "") {
       return fromStored(storedSettingsSchema.parse(JSON.parse(value)));
     }
 
-    const legacyValue = globalThis.localStorage?.getItem(LEGACY_SETTINGS_KEY);
-    if (!legacyValue) {
+    const legacyValue =
+      globalThis.localStorage?.getItem(LEGACY_SETTINGS_KEY) ?? "";
+
+    if (legacyValue === "") {
       return null;
     }
+
     const stored = storedSettingsSchema.parse(JSON.parse(legacyValue));
+
     if (stored.ballColor?.toLowerCase() === LEGACY_DEFAULT_BALL_COLOR) {
       stored.ballColor = null;
     }
+
     return fromStored(stored);
   } catch {
     return null;
@@ -226,6 +240,7 @@ export class SettingsSaver {
   flush = () => {
     globalThis.clearTimeout(this.#timeout);
     this.#timeout = undefined;
+
     if (this.#pending) {
       saveSettings(this.#pending);
       this.#pending = undefined;

@@ -14,14 +14,16 @@ export const writeTargetFrame = (
   role: TargetRole = "target"
 ) => {
   const frame = frames[index];
-  if (frame) {
+
+  if (frame === undefined) {
+    frames[index] = { alpha, radiusPx, role, x, y };
+  } else {
     frame.x = x;
     frame.y = y;
     frame.radiusPx = radiusPx;
     frame.alpha = alpha;
     frame.role = role;
-  } else {
-    frames[index] = { alpha, radiusPx, role, x, y };
   }
+
   return index + 1;
 };

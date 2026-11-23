@@ -14,7 +14,9 @@ const resolveScale = (
   const preferredScale = isPositiveFinite(devicePixelRatio)
     ? Math.min(devicePixelRatio, MAX_DEVICE_PIXEL_RATIO)
     : 1;
+
   const budgetScale = Math.sqrt(MAX_CANVAS_PIXELS / (cssWidth * cssHeight));
+
   return Math.min(preferredScale, budgetScale);
 };
 
@@ -41,5 +43,6 @@ export const resolveCanvasLayout = (
   }
 
   const arena: Arena = { height, width };
+
   return { arena, canvasHeight, canvasWidth, scale };
 };

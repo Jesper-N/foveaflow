@@ -20,13 +20,16 @@ const iconBounds: PatternBounds = {
 /** Draws an icon from the same path the trainer animates, so the two always match. */
 const tracePath = (id: PathPatternId) => {
   const { kind, samples, pointAt } = pathDefinitions[id];
+
   const points = Array.from({ length: samples }, (_, index) => {
     const [x, y] = pointAt(
       kind === "curve" ? index / samples : index,
       iconBounds
     );
+
     return `${index === 0 ? "M" : "L"}${x.toFixed(2)} ${y.toFixed(2)}`;
   });
+
   return `${points.join(" ")} Z`;
 };
 

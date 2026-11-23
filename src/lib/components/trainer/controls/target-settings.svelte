@@ -27,9 +27,9 @@
         {t("Ball color")}
       </Field.FieldLabel>
       <Select.Root
+        onValueChange={trainer.setLilacChaserColor}
         type="single"
         value={trainer.settings.lilacChaserBallColor}
-        onValueChange={trainer.setLilacChaserColor}
       >
         <Select.Trigger
           id="trainer-lilac-color"
@@ -42,25 +42,25 @@
       </Select.Root>
     </SettingsRow>
     <SliderRow
-      setting="lilacChaserScale"
       label={t("Scale")}
+      setting="lilacChaserScale"
       sliderLabel={t("Lilac Chaser scale")}
     />
   {:else}
     <ColorRow
       id="trainer-color"
       label={t("Ball color")}
-      value={trainer.targetColor}
       onValueChange={trainer.setBallColor}
+      value={trainer.targetColor}
     >
       {#snippet swatch()}
-        <span
-          class="size-6 shrink-0"
-          style:color={trainer.targetColor}
-          style:opacity={trainer.settings.targetOpacity}
-          aria-hidden="true"
-        >
-          <TargetGlyph form={trainer.settings.targetForm} filled />
+        <span class="size-6 shrink-0" aria-hidden="true">
+          <TargetGlyph
+            color={trainer.targetColor}
+            filled
+            form={trainer.settings.targetForm}
+            opacity={trainer.settings.targetOpacity}
+          />
         </span>
       {/snippet}
     </ColorRow>
@@ -70,17 +70,17 @@
       </Field.FieldLabel>
       <ToggleGroup.Root
         class="grid w-full grid-cols-6"
-        type="single"
-        bind:value={() => trainer.settings.targetForm, trainer.setTargetForm}
         aria-labelledby="trainer-shape-label"
+        type="single"
         variant="outline"
+        bind:value={() => trainer.settings.targetForm, trainer.setTargetForm}
       >
         {#each targetForms as form (form.id)}
           <ToggleGroup.Item
-            value={form.id}
             class="min-h-11 px-0"
             aria-label={t(form.name)}
             title={t(form.name)}
+            value={form.id}
           >
             <span class="size-5"><TargetGlyph form={form.id} /></span>
           </ToggleGroup.Item>
@@ -88,13 +88,13 @@
       </ToggleGroup.Root>
     </SettingsRow>
     <SliderRow
-      setting="baseRadiusPx"
       label={t("Size")}
+      setting="baseRadiusPx"
       sliderLabel={t("Target size")}
     />
     <SliderRow
-      setting="targetOpacity"
       label={t("Opacity")}
+      setting="targetOpacity"
       sliderLabel={t("Target opacity")}
     />
     <LetterSettings />
@@ -103,11 +103,11 @@
 
 {#if trainer.isDistractions}
   <SettingsSection legend={t("Distractions")}>
-    <SliderRow setting="targetCount" label={t("Targets")} />
-    <SliderRow setting="distractorCount" label={t("Distractors")} />
+    <SliderRow label={t("Targets")} setting="targetCount" />
+    <SliderRow label={t("Distractors")} setting="distractorCount" />
     <SliderRow
-      setting="distractorBrightness"
       label={t("Distractor color")}
+      setting="distractorBrightness"
       sliderLabel={t("Distractor color brightness")}
     />
   </SettingsSection>

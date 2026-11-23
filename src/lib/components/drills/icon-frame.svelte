@@ -12,13 +12,13 @@
     "text-foreground in-data-highlighted:text-accent-foreground size-5 shrink-0",
     className
   )}
-  viewBox="0 0 24 24"
+  aria-hidden="true"
   fill="none"
   stroke="currentColor"
-  stroke-width="1.65"
   stroke-linecap="round"
   stroke-linejoin="round"
-  aria-hidden="true"
+  stroke-width="1.65"
+  viewBox="0 0 24 24"
 >
   {@render children()}
 </svg>

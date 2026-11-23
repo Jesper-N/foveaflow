@@ -37,6 +37,6 @@
     </p>
   </div>
   {#if drillId}
-    <DrillIllustration {drillId} class="relative hidden sm:block" />
+    <DrillIllustration class="relative hidden sm:block" {drillId} />
   {/if}
 </header>

@@ -2,6 +2,7 @@
   // Twelve dots on a ring, starting at 12 o'clock.
   const lilacChaserDots = Array.from({ length: 12 }, (_, index) => {
     const angle = -Math.PI / 2 + (index / 12) * Math.PI * 2;
+
     return {
       index,
       x: 12 + Math.cos(angle) * 8.5,
@@ -25,10 +26,10 @@
   {#if drillId === "pursuit"}
     <path
       d="M3.5 19a10 10 0 0 1 10-10"
-      stroke-width="2.25"
       stroke-dasharray="0.1 4"
+      stroke-width="2.25"
     />
-    <circle cx="17.5" cy="9" r="3" fill="currentColor" stroke="none" />
+    <circle cx="17.5" cy="9" fill="currentColor" r="3" stroke="none" />
   {:else if drillId === "reactionTime"}
     <JumpGlyph />
   {:else if drillId === "mot"}
@@ -40,8 +41,8 @@
         <circle
           cx={dot.x}
           cy={dot.y}
-          r="1.25"
           fill="currentColor"
+          r="1.25"
           stroke="none"
         />
       {/if}

@@ -20,12 +20,15 @@ export class IdleCursor {
     this.#deadline = 0;
   }
 
-  #hideWhenIdle = () => {
+  readonly #hideWhenIdle = () => {
     const remainingMs = this.#deadline - performance.now();
+
     if (remainingMs > 0) {
       this.#timeout = window.setTimeout(this.#hideWhenIdle, remainingMs);
+
       return;
     }
+
     this.#timeout = undefined;
     this.hidden = true;
   };

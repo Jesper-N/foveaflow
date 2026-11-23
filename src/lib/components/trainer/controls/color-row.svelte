@@ -36,10 +36,12 @@
     <input
       {id}
       class="sr-only"
+      aria-label={label}
+      oninput={(event) => {
+        onValueChange(event.currentTarget.value);
+      }}
       type="color"
       {value}
-      oninput={(event) => onValueChange(event.currentTarget.value)}
-      aria-label={label}
     />
   </label>
 </SettingsRow>

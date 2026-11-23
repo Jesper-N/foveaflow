@@ -53,14 +53,12 @@ const ogImageUrl = absoluteUrl(siteMetadata.imagePath, site);
 <meta name="twitter:description" content={twitterDescription} />
 <meta name="twitter:image" content={ogImageUrl} />
 <meta name="twitter:image:alt" content={siteMetadata.imageAlt} />
-{
-  structuredData && (
-    <script
-      is:inline
-      type="application/ld+json"
-      data-seo-structured-data
-      set:html={JSON.stringify(structuredData)}
-    />
-  )
-}
+{structuredData && (
+  <script
+    is:inline
+    type="application/ld+json"
+    data-seo-structured-data
+    set:html={JSON.stringify(structuredData)}
+  />
+)}
 <title>{title}</title>

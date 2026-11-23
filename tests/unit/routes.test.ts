@@ -24,6 +24,7 @@ test("every drill and Smooth Pursuit path has its own page", () => {
       patternId: id,
     })),
   ];
+
   for (const { drillId, patternId } of choices) {
     const route = routeForDrill(drillId, patternId);
     expect(route?.drillId).toBe(drillId);
@@ -37,6 +38,7 @@ test("every drill and Smooth Pursuit path has its own page", () => {
 test("page slugs are unique and found from their URL", () => {
   const slugs = drillRoutes.map(({ slug }) => slug);
   expect(new Set(slugs).size).toBe(slugs.length);
+
   for (const route of drillRoutes) {
     expect(route.path).toBe(`/${route.slug}/`);
     expect(findDrillRoute(slugFromPath(`${route.path}?ref=test`))).toBe(route);
