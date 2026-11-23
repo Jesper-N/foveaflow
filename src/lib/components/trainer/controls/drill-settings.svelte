@@ -1,74 +1,76 @@
 <script lang="ts">
   import { t } from "$lib/i18n/translate";
-  import { behaviors } from "$lib/trainer/settings/behaviors";
+  import { isPursuitPattern } from "$lib/trainer/settings/patterns";
 
-  import DrillOptions from "../selects/drill-options.svelte";
-  import PatternOptions from "../selects/pattern-options.svelte";
+  import DrillIcon from "../../icons/drill-icon.svelte";
+  import PatternGlyph from "../../icons/pattern-glyph.svelte";
+  import Segmented from "../../ui/segmented.svelte";
+  import Select from "../../ui/select.svelte";
+  import { settingsGroup } from "../../ui/styles";
+  import Switch from "../../ui/switch.svelte";
+  import {
+    behaviorGroups,
+    drillGroups,
+    patternGroups,
+  } from "../select-options";
   import { getTrainer } from "../trainer-context";
-  import RadioGroup from "./radio-group.svelte";
-  import SettingsSection from "./settings-section.svelte";
-  import SliderRow from "./slider-row.svelte";
-  import SwitchRow from "./switch-row.svelte";
+  import SettingSlider from "./setting-slider.svelte";
+  import SettingsIntro from "./settings-intro.svelte";
 
   const trainer = getTrainer();
 </script>
 
-<section aria-labelledby="trainer-drill-settings">
-  <h3 id="trainer-drill-settings">{t("Drill")}</h3>
-  <p>{t("Choose your exercise and how it moves.")}</p>
+<SettingsIntro>{t("Choose your exercise and how it moves.")}</SettingsIntro>
 
-  <div>
-    <label for="trainer-drill">{t("Drill")}</label>
-    <select
-      id="trainer-drill"
-      onchange={(event) => {
-        trainer.selectDrill(event.currentTarget.value);
-      }}
-      value={trainer.settings.drillId}
-    >
-      <DrillOptions />
-    </select>
-  </div>
-
+<div class={settingsGroup}>
+  <Select
+    groups={drillGroups()}
+    label={t("Drill")}
+    onValueChange={trainer.selectDrill}
+    value={trainer.settings.drillId}
+  >
+    {#snippet icon(drillId)}
+      <DrillIcon class="size-4.5" {drillId} />
+    {/snippet}
+  </Select>
   {#if trainer.isPursuit}
-    <div>
-      <label for="trainer-pattern">{t("Motion path")}</label>
-      <select
-        id="trainer-pattern"
-        onchange={(event) => {
-          trainer.selectPattern(event.currentTarget.value);
-        }}
-        value={trainer.settings.patternId}
-      >
-        <PatternOptions />
-      </select>
-    </div>
+    <Select
+      groups={patternGroups()}
+      label={t("Motion path")}
+      onValueChange={trainer.selectPattern}
+      value={trainer.settings.patternId}
+    >
+      {#snippet icon(patternId)}
+        {#if isPursuitPattern(patternId)}
+          <PatternGlyph class="h-4 w-5.5" {patternId} />
+        {/if}
+      {/snippet}
+    </Select>
   {/if}
+</div>
 
-  <!-- Lilac Chaser does not move, so it has no motion settings. -->
-  {#if !trainer.isLilacChaser}
-    <SettingsSection legend={t("Motion")}>
-      <div>
-        <label for="trainer-behavior">{t("Motion feel")}</label>
-        <select
-          id="trainer-behavior"
-          onchange={(event) => {
-            trainer.selectBehavior(event.currentTarget.value);
-          }}
-          value={trainer.behavior}
+{#if !trainer.isLilacChaser}
+  <section class={settingsGroup} aria-labelledby="trainer-motion-settings">
+    <h3
+      id="trainer-motion-settings"
+      class="text-muted-foreground text-sm font-medium"
+    >
+      {t("Motion")}
+    </h3>
+    <Select
+      groups={behaviorGroups()}
+      label={t("Motion feel")}
+      onValueChange={trainer.selectBehavior}
+      value={trainer.behavior}
+    />
+    <SettingSlider label={t("Speed")} setting="speed" />
+    {#if trainer.canReverse}
+      <div class="flex items-center justify-between gap-3">
+        <span class="text-md font-medium" aria-hidden="true"
+          >{t("Direction")}</span
         >
-          {#each behaviors as behavior (behavior.id)}
-            <option value={behavior.id}>{t(behavior.name)}</option>
-          {/each}
-        </select>
-      </div>
-
-      <SliderRow label={t("Speed")} setting="speed" />
-
-      {#if trainer.canReverse}
-        <RadioGroup
-          name="trainer-direction"
-          legend={t("Direction")}
+        <Segmented
+          label={t("Direction")}
           onValueChange={trainer.setDirection}
           options={[
             { label: t("Forward"), value: "forward" },
@@ -76,12 +78,11 @@
           ]}
           value={trainer.settings.motionDirection === 1 ? "forward" : "reverse"}
         />
-        <SwitchRow
-          id="trainer-show-trail"
-          label={t("Show trail")}
-          bind:checked={trainer.settings.showTrail}
-        />
-      {/if}
-    </SettingsSection>
-  {/if}
-</section>
+      </div>
+      <Switch
+        label={t("Show trail")}
+        bind:checked={trainer.settings.showTrail}
+      />
+    {/if}
+  </section>
+{/if}

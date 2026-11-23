@@ -9,21 +9,34 @@ interface Props {
 const { heading, description, showHomeLink = false } = Astro.props;
 ---
 
-<!-- The drills need JavaScript. Without it, this replaces the empty trainer. -->
 <noscript>
   <style is:inline>
     .trainer-stage {
       display: none !important;
     }
   </style>
-  <main>
-    <h2>{heading}</h2>
-    <p>{description}</p>
-    <p>
+  <main class="mx-auto grid min-h-dvh max-w-lg content-center gap-4 px-4">
+    <h2 class="text-2xl font-semibold text-balance">{heading}</h2>
+    <p class="text-muted-foreground text-base">{description}</p>
+    <p class="text-muted-foreground text-base">
       FoveaFlow needs JavaScript to run its moving-target drills. The guide
       works without it.
     </p>
-    {showHomeLink && <a href="/">Open the FoveaFlow home page</a>}
-    <a href="/guide/">Read the FoveaFlow guide</a>
+    <div class="flex flex-wrap gap-2 pt-2">
+      {showHomeLink && (
+        <a
+          class="bg-fill text-md inline-flex h-10 items-center rounded-full px-5 font-medium"
+          href="/"
+        >
+          Open the FoveaFlow home page
+        </a>
+      )}
+      <a
+        class="bg-primary text-md text-primary-foreground inline-flex h-10 items-center rounded-full px-5 font-medium"
+        href="/guide/"
+      >
+        Read the FoveaFlow guide
+      </a>
+    </div>
   </main>
 </noscript>

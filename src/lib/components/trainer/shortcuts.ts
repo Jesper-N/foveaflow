@@ -87,9 +87,11 @@ export const getShortcutAction = (
   return action;
 };
 
+const closingPanelSelector = "[role='dialog'][data-closed]";
+
 /** Whether the focused element should get the key instead of the shortcut. */
 export const isKeyCapturedBy = (target: EventTarget | null) => {
-  if (!(target instanceof Element)) {
+  if (!(target instanceof Element) || target.closest(closingPanelSelector)) {
     return false;
   }
 

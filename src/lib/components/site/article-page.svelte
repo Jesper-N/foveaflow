@@ -3,8 +3,12 @@
   import { drillGuides } from "$lib/content/drill-guides";
   import { mainRouteForDrill } from "$lib/content/drill-routes";
   import { formatDate, t } from "$lib/i18n/translate";
+  import { ArrowRightIcon } from "@lucide/svelte";
 
+  import { buttonClass } from "../ui/button-variants";
+  import DrillCard from "./drill-card.svelte";
   import FeatureComparison from "./feature-comparison.svelte";
+  import { bodyText, pageWidth } from "./layout";
   import PageCta from "./page-cta.svelte";
   import PageHero from "./page-hero.svelte";
   import PageSection from "./page-section.svelte";
@@ -29,24 +33,31 @@
     title={t(page.heading)}
   >
     {#snippet actions()}
-      <a href={page.primaryCta.href}>{t(page.primaryCta.label)}</a>
+      <a class={buttonClass("primary", "lg")} href={page.primaryCta.href}>
+        {t(page.primaryCta.label)}
+        <ArrowRightIcon class="rtl:rotate-180" aria-hidden="true" />
+      </a>
       {#if page.secondaryCta}
-        <a href={page.secondaryCta.href}>{t(page.secondaryCta.label)}</a>
+        <a class={buttonClass("secondary", "lg")} href={page.secondaryCta.href}>
+          {t(page.secondaryCta.label)}
+        </a>
       {/if}
     {/snippet}
     {#snippet meta()}
       {t("Updated")}
       <time datetime={page.lastModified}>{formatDate(page.lastModified)}</time>
     {/snippet}
-    <!-- Comparison pages lead with the table instead of the drill links. -->
     {#if page.comparison === undefined}
       <nav aria-label={t("Choose a drill")}>
-        <ul>
+        <ul class="grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-4">
           {#each drillGuides as guide (guide.drillId)}
-            <li>
-              <a href={mainRouteForDrill(guide.drillId)?.path ?? "/"}>
-                {t(guide.title)}
-              </a>
+            <li class="grid">
+              <DrillCard
+                drillId={guide.drillId}
+                href={mainRouteForDrill(guide.drillId)?.path ?? "/"}
+                summary={t(guide.summary)}
+                title={t(guide.title)}
+              />
             </li>
           {/each}
         </ul>
@@ -61,28 +72,43 @@
     />
   {/if}
 
-  <PageToc links={contents} />
-  {#each page.sections as section, index (section.heading)}
-    <PageSection id="section-{index}" heading={t(section.heading)}>
-      {#each section.body ?? [] as paragraph (paragraph)}
-        <p>{t(paragraph)}</p>
-      {/each}
-      {#if section.orderedList}
-        <StepList steps={section.orderedList} />
-      {/if}
-      {#if section.list}
-        <ul>
-          {#each section.list as item (item)}
-            <li>{t(item)}</li>
+  <div
+    class={[
+      pageWidth,
+      "grid gap-10 lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-16",
+    ]}
+  >
+    <PageToc links={contents} />
+    <div class="grid max-w-2xl gap-20">
+      {#each page.sections as section, index (section.heading)}
+        <PageSection id="section-{index}" heading={t(section.heading)}>
+          {#each section.body ?? [] as paragraph (paragraph)}
+            <p class={bodyText}>{t(paragraph)}</p>
           {/each}
-        </ul>
-      {/if}
-    </PageSection>
-  {/each}
-  <PageCta
-    body={t("Start slow. Adjust as you go.")}
-    href={page.primaryCta.href}
-    label={t(page.primaryCta.label)}
-    title={t("Try it with your own settings")}
-  />
+          {#if section.orderedList}
+            <StepList steps={section.orderedList} />
+          {/if}
+          {#if section.list}
+            <ul class="grid gap-2.5">
+              {#each section.list as item (item)}
+                <li class="text-md flex gap-3">
+                  <span
+                    class="bg-target mt-2 size-1.5 shrink-0 rounded-full"
+                    aria-hidden="true"
+                  ></span>
+                  <span class="text-pretty">{t(item)}</span>
+                </li>
+              {/each}
+            </ul>
+          {/if}
+        </PageSection>
+      {/each}
+      <PageCta
+        body={t("Start slow. Adjust as you go.")}
+        href={page.primaryCta.href}
+        label={t(page.primaryCta.label)}
+        title={t("Try it with your own settings")}
+      />
+    </div>
+  </div>
 </SiteShell>

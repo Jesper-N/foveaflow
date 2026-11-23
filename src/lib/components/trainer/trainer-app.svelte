@@ -18,7 +18,11 @@
   onMount(() => trainer.mount());
 </script>
 
-<ModeWatcher defaultMode="system" track={false} />
+<ModeWatcher
+  defaultMode="system"
+  themeColors={{ dark: "#0a0a0a", light: "#f7f7f6" }}
+  track={false}
+/>
 <svelte:window
   onkeydown={trainer.handleKeydown}
   onpagehide={trainer.flushSettings}
@@ -28,9 +32,10 @@
 <svelte:document onvisibilitychange={trainer.handleVisibilityChange} />
 
 <main
-  class="trainer-stage relative h-dvh overflow-hidden data-[cursor-hidden=true]:cursor-none data-[cursor-hidden=true]:**:cursor-none"
+  class="trainer-stage group/stage bg-canvas relative h-dvh overflow-hidden overscroll-none data-[cursor-hidden=true]:cursor-none data-[cursor-hidden=true]:**:cursor-none"
   aria-label={t("FoveaFlow eye trainer app")}
   data-cursor-hidden={trainer.cursor.hidden}
+  data-hud-idle={trainer.cursor.hidden && !trainer.motionPaused}
 >
   <h1 class="sr-only">{t(trainer.pageCopy.heading)}</h1>
   <p id="trainer-canvas-description" class="sr-only">
@@ -54,7 +59,6 @@
     )}
   ></canvas>
 
-  <!-- The controls wait for translations so their labels never flash in English. -->
   {#if languageState.ready}
     <TrainerHud />
   {/if}

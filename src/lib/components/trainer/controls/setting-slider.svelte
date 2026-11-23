@@ -1,28 +1,40 @@
 <script lang="ts">
   import { settingRanges } from "$lib/trainer/settings/settings";
   import type { RangedSetting } from "$lib/trainer/settings/settings";
+  import type { ClassValue } from "svelte/elements";
 
+  import Slider from "../../ui/slider.svelte";
   import { getTrainer } from "../trainer-context";
+  import { formatSetting } from "./format-setting";
+
+  interface Props {
+    setting: RangedSetting;
+    label: string;
+    thumbLabel?: string;
+    class?: ClassValue;
+  }
 
   let {
-    id,
     setting,
     label,
-  }: { id?: string; setting: RangedSetting; label: string } = $props();
+    thumbLabel = label,
+    class: className,
+  }: Props = $props();
 
   const trainer = getTrainer();
   let range = $derived(settingRanges[setting]);
 </script>
 
-<input
-  {id}
-  aria-label={label}
+<Slider
+  class={className}
+  format={(value) => formatSetting(setting, value)}
+  {label}
   max={range.max}
   min={range.min}
-  oninput={(event) => {
-    trainer.setRanged(setting, event.currentTarget.valueAsNumber);
+  onValueChange={(value) => {
+    trainer.setRanged(setting, value);
   }}
   step={range.step}
-  type="range"
+  {thumbLabel}
   value={trainer.settings[setting]}
 />

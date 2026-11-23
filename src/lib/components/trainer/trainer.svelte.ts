@@ -40,36 +40,15 @@ import type {
   TrainerSettings,
 } from "$lib/trainer/settings/settings";
 import { SettingsSaver, loadSettings } from "$lib/trainer/settings/storage";
+import { createSelectController } from "@ui-sdk/svelte/select";
 import { mode, setMode } from "mode-watcher";
-import { tick, untrack } from "svelte";
+import { untrack } from "svelte";
 import type { Attachment } from "svelte/attachments";
 
+import { startAgentBridge } from "../agent-bridge";
 import { IdleCursor } from "./idle-cursor.svelte";
 import { getShortcutAction, isKeyCapturedBy } from "./shortcuts";
 import type { ShortcutAction } from "./shortcuts";
-
-type HudSelect = "drill" | "pattern";
-
-/** Focuses a drill or path select once it has rendered, and opens its picker. */
-const openHudSelectPicker = async (select: HudSelect) => {
-  await tick();
-
-  const element = document.querySelector<HTMLSelectElement>(
-    `select[data-hud-select="${select}"]`
-  );
-
-  if (!element) {
-    return;
-  }
-
-  element.focus({ preventScroll: true });
-
-  try {
-    element.showPicker();
-  } catch {
-    // Browsers without showPicker on selects leave it focused for the arrow keys.
-  }
-};
 
 /**
  * State and actions for the trainer page: the settings, the drill canvas,
@@ -84,8 +63,12 @@ export class Trainer {
   motionPaused = $state(false);
   controlsOpen = $state(false);
   guideOpen = $state(false);
+  panelReturnFocus = $state.raw<HTMLElement | "none">("none");
 
   readonly cursor = new IdleCursor();
+  /** Open the drill and path menus from the M and P shortcuts. */
+  readonly drillSelect = createSelectController<unknown>();
+  readonly patternSelect = createSelectController<unknown>();
 
   /** Settings save only after the saved ones have loaded, so defaults never overwrite them. */
   #settingsLoaded = $state(false);
@@ -200,6 +183,7 @@ export class Trainer {
     this.#settingsLoaded = true;
 
     void languageState.init();
+    startAgentBridge();
     this.cursor.wake();
 
     // Pause for visitors who ask for less motion. They can still press play.
@@ -307,12 +291,25 @@ export class Trainer {
   };
 
   openControls = () => {
+    this.#rememberFocus();
     this.controlsOpen = true;
   };
 
   openGuide = () => {
+    this.#rememberFocus();
     this.guideOpen = true;
   };
+
+  #rememberFocus() {
+    const { activeElement } = document;
+
+    this.panelReturnFocus =
+      activeElement instanceof HTMLElement &&
+      activeElement !== document.body &&
+      activeElement.closest("[role='dialog']") === null
+        ? activeElement
+        : "none";
+  }
 
   handleKeydown = (event: KeyboardEvent) => {
     const action = getShortcutAction(event);
@@ -378,7 +375,7 @@ export class Trainer {
       }
 
       case "openDrillSelect": {
-        void openHudSelectPicker("drill");
+        this.drillSelect.setOpen(true);
 
         return true;
       }
@@ -388,7 +385,7 @@ export class Trainer {
           return false;
         }
 
-        void openHudSelectPicker("pattern");
+        this.patternSelect.setOpen(true);
 
         return true;
       }

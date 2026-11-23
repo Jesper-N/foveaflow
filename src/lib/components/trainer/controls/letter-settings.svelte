@@ -1,17 +1,17 @@
 <script lang="ts">
   import { t } from "$lib/i18n/translate";
-  import { letterWeights } from "$lib/trainer/settings/options";
 
+  import Select from "../../ui/select.svelte";
+  import Switch from "../../ui/switch.svelte";
+  import { letterWeightGroups } from "../select-options";
   import { getTrainer } from "../trainer-context";
   import ColorRow from "./color-row.svelte";
-  import SliderRow from "./slider-row.svelte";
-  import SwitchRow from "./switch-row.svelte";
+  import SettingSlider from "./setting-slider.svelte";
 
   const trainer = getTrainer();
 </script>
 
-<SwitchRow
-  id="trainer-letter-enabled"
+<Switch
   label={t("Show target letters")}
   bind:checked={trainer.settings.letterEnabled}
 />
@@ -23,26 +23,16 @@
     onValueChange={trainer.setLetterColor}
     value={trainer.settings.letterColor}
   />
-
-  <div>
-    <label for="trainer-letter-weight">{t("Weight")}</label>
-    <select
-      id="trainer-letter-weight"
-      aria-label={t("Letter weight")}
-      onchange={(event) => {
-        trainer.setLetterWeight(event.currentTarget.value);
-      }}
-      value={String(trainer.settings.letterWeight)}
-    >
-      {#each letterWeights as weight (weight.id)}
-        <option value={String(weight.id)}>{t(weight.name)}</option>
-      {/each}
-    </select>
-  </div>
-
-  <SliderRow
+  <Select
+    groups={letterWeightGroups()}
+    label={t("Weight")}
+    onValueChange={trainer.setLetterWeight}
+    triggerLabel={t("Letter weight")}
+    value={String(trainer.settings.letterWeight)}
+  />
+  <SettingSlider
     label={t("Text size")}
     setting="letterScale"
-    sliderLabel={t("Letter text size")}
+    thumbLabel={t("Letter text size")}
   />
 {/if}

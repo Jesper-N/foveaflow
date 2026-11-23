@@ -1,40 +1,29 @@
 <script lang="ts">
   import { t } from "$lib/i18n/translate";
 
-  import SliderRow from "../controls/slider-row.svelte";
-  import LilacColorOptions from "../selects/lilac-color-options.svelte";
+  import LilacColorSwatches from "../controls/lilac-color-swatches.svelte";
+  import SettingSlider from "../controls/setting-slider.svelte";
   import { getTrainer } from "../trainer-context";
 
   const trainer = getTrainer();
 </script>
 
 {#if trainer.isLilacChaser}
-  <label>
-    {t("Ball color")}
-    <select
-      aria-label={t("Lilac Chaser ball color")}
-      onchange={(event) => {
-        trainer.setLilacChaserColor(event.currentTarget.value);
-      }}
-      value={trainer.settings.lilacChaserBallColor}
-    >
-      <LilacColorOptions />
-    </select>
-  </label>
-  <SliderRow
+  <LilacColorSwatches />
+  <SettingSlider
     label={t("Scale")}
     setting="lilacChaserScale"
-    sliderLabel={t("Lilac Chaser scale")}
+    thumbLabel={t("Lilac Chaser scale")}
   />
 {:else}
-  <SliderRow
+  <SettingSlider
     label={t("Size")}
     setting="baseRadiusPx"
-    sliderLabel={t("Header target size")}
+    thumbLabel={t("Header target size")}
   />
-  <SliderRow
+  <SettingSlider
     label={t("Speed")}
     setting="speed"
-    sliderLabel={t("Header target speed")}
+    thumbLabel={t("Header target speed")}
   />
 {/if}

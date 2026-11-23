@@ -1,14 +1,26 @@
 <script lang="ts">
   import LanguageSelect from "$lib/components/language-select.svelte";
   import { t } from "$lib/i18n/translate";
+  import { MonitorIcon, MoonIcon, SunIcon } from "@lucide/svelte";
+  import {
+    AlertDialog,
+    AlertDialogBackdrop,
+    AlertDialogClose,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+  } from "@ui-sdk/svelte/alert-dialog";
   import { userPrefersMode } from "mode-watcher";
 
   import { selectTheme, themeOptions } from "../../theme-options";
+  import { buttonClass } from "../../ui/button-variants";
+  import Segmented from "../../ui/segmented.svelte";
+  import { backdrop, dialogSurface, settingsGroup } from "../../ui/styles";
   import { getTrainer } from "../trainer-context";
-  import RadioGroup from "./radio-group.svelte";
+  import SettingsIntro from "./settings-intro.svelte";
 
   const trainer = getTrainer();
-  let resetDialog = $state<HTMLDialogElement>();
 
   let resetDescription = $derived(
     t(
@@ -24,41 +36,70 @@
   );
 </script>
 
-<section aria-labelledby="trainer-general-settings">
-  <h3 id="trainer-general-settings">{t("General")}</h3>
-  <p>{t("Language, theme, and saved preferences.")}</p>
+<SettingsIntro>{t("Language, theme, and saved preferences.")}</SettingsIntro>
 
+<div class={settingsGroup}>
   <LanguageSelect />
-
-  <RadioGroup
-    name="trainer-theme"
-    legend={t("Theme")}
-    onValueChange={selectTheme}
-    options={themeChoices}
-    value={userPrefersMode.current}
-  />
-
-  <div>
-    <h4>{t("Defaults")}</h4>
-    <p>{resetDescription}</p>
-    <button onclick={() => resetDialog?.showModal()} type="button">
-      {t("Reset to defaults")}
-    </button>
+  <div class="grid gap-2">
+    <span class="text-md font-medium" aria-hidden="true">{t("Theme")}</span>
+    <Segmented
+      label={t("Theme")}
+      onValueChange={selectTheme}
+      options={themeChoices}
+      value={userPrefersMode.current}
+    >
+      {#snippet icon(value)}
+        {#if value === "light"}
+          <SunIcon aria-hidden="true" />
+        {:else if value === "dark"}
+          <MoonIcon aria-hidden="true" />
+        {:else}
+          <MonitorIcon aria-hidden="true" />
+        {/if}
+      {/snippet}
+    </Segmented>
   </div>
-</section>
+</div>
 
-<dialog
-  bind:this={resetDialog}
-  aria-describedby="trainer-reset-description"
-  aria-labelledby="trainer-reset-title"
-  role="alertdialog"
->
-  <h2 id="trainer-reset-title">{t("Reset to defaults?")}</h2>
-  <p id="trainer-reset-description">{resetDescription}</p>
-  <form method="dialog">
-    <button type="submit">{t("Cancel")}</button>
-    <button onclick={trainer.resetSettings} type="submit">
+<section class={settingsGroup} aria-labelledby="trainer-defaults">
+  <h3 id="trainer-defaults" class="text-muted-foreground text-sm font-medium">
+    {t("Defaults")}
+  </h3>
+  <p class="text-muted-foreground text-sm">{resetDescription}</p>
+  <AlertDialog>
+    <AlertDialogTrigger
+      class={[buttonClass("secondary", "md"), "justify-self-start"]}
+    >
       {t("Reset to defaults")}
-    </button>
-  </form>
-</dialog>
+    </AlertDialogTrigger>
+    <AlertDialogBackdrop class={backdrop} />
+    <AlertDialogContent
+      class={[
+        dialogSurface,
+        "fixed inset-0 m-auto h-fit w-88 max-w-[calc(100vw-2rem)] gap-5 rounded-4xl p-6 transition-[opacity,scale] duration-220 ease-out data-ending-style:scale-96 data-ending-style:opacity-0 data-ending-style:duration-160 data-starting-style:scale-96 data-starting-style:opacity-0",
+      ]}
+    >
+      <div class="grid gap-1.5">
+        <AlertDialogTitle class="text-lg font-semibold">
+          {t("Reset to defaults?")}
+        </AlertDialogTitle>
+        <AlertDialogDescription class="text-muted-foreground text-sm">
+          {resetDescription}
+        </AlertDialogDescription>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <AlertDialogClose class={buttonClass("secondary", "lg")}>
+          {t("Cancel")}
+        </AlertDialogClose>
+        <AlertDialogClose
+          class={buttonClass("primary", "lg")}
+          action={trainer.resetSettings}
+          data-agent-confirm={resetDescription}
+          value="confirm"
+        >
+          {t("Reset to defaults")}
+        </AlertDialogClose>
+      </div>
+    </AlertDialogContent>
+  </AlertDialog>
+</section>

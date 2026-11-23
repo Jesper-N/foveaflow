@@ -2,33 +2,52 @@
   import { isAppLocale, languageOptions } from "$lib/i18n/locales";
   import { languageState } from "$lib/i18n/state.svelte";
   import { t } from "$lib/i18n/translate";
+  import { LanguagesIcon } from "@lucide/svelte";
   import { onMount } from "svelte";
 
-  // Content pages have no trainer to start the language, so the select does.
+  import Select from "./ui/select.svelte";
+
+  let { compact = false }: { compact?: boolean } = $props();
+
   onMount(() => {
     void languageState.init();
   });
 
-  const handleChange = (
-    event: Event & { currentTarget: HTMLSelectElement }
-  ) => {
-    const { value } = event.currentTarget;
+  const groups = [
+    {
+      options: languageOptions.map((option) => ({
+        label:
+          option.nativeLabel === option.label
+            ? option.nativeLabel
+            : `${option.nativeLabel} (${option.label})`,
+        value: option.locale,
+      })),
+    },
+  ];
+</script>
 
+<Select
+  {compact}
+  {groups}
+  hideLabel={compact}
+  label={t("Language")}
+  onValueChange={(value) => {
     if (isAppLocale(value)) {
       languageState.set(value);
     }
-  };
-</script>
-
-<label>
-  {t("Language")}
-  <select onchange={handleChange} value={languageState.locale}>
-    {#each languageOptions as option (option.locale)}
-      <option value={option.locale}>
-        {option.nativeLabel === option.label
-          ? option.nativeLabel
-          : `${option.nativeLabel} (${option.label})`}
-      </option>
-    {/each}
-  </select>
-</label>
+  }}
+  value={languageState.locale}
+>
+  {#snippet trigger()}
+    {#if compact}
+      <LanguagesIcon class="size-4" aria-hidden="true" />
+      <span class="text-sm uppercase">{languageState.locale.split("-")[0]}</span
+      >
+    {:else}
+      <span class="truncate">
+        {languageOptions.find(({ locale }) => locale === languageState.locale)
+          ?.nativeLabel}
+      </span>
+    {/if}
+  {/snippet}
+</Select>
