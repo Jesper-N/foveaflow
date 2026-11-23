@@ -235,6 +235,7 @@ export const en = {
   "Header target size": "Header target size",
   "Header target speed": "Header target speed",
   Heavy: "Heavy",
+  Hex: "Hex",
   "Hold steady at the center and notice change around it.":
     "Hold steady at the center and notice change around it.",
   "Hold the right target even when the screen gets busy.":
@@ -521,6 +522,7 @@ export const en = {
     "Train smooth visual tracking by following one moving target.",
   "Train visual tracking, quick refocus, peripheral awareness, and focus under distraction in your browser.":
     "Train visual tracking, quick refocus, peripheral awareness, and focus under distraction in your browser.",
+  "Trainer controls": "Trainer controls",
   "Treat this as a starting routine, not a target you have to finish. Choose a comfortable speed and shorten or skip any drill that does not feel right.":
     "Treat this as a starting routine, not a target you have to finish. Choose a comfortable speed and shorten or skip any drill that does not feel right.",
   Triangle: "Triangle",

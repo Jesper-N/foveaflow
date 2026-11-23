@@ -231,6 +231,7 @@ export const zhCN = {
   "Header target size": "页眉目标大小",
   "Header target speed": "页眉目标速度",
   Heavy: "特粗",
+  Hex: "十六进制",
   "Hold steady at the center and notice change around it.":
     "稳定盯住中心，留意周围变化。",
   "Hold the right target even when the screen gets busy.":
@@ -513,6 +514,7 @@ export const zhCN = {
     "跟随一个移动目标，训练平稳视觉追踪。",
   "Train visual tracking, quick refocus, peripheral awareness, and focus under distraction in your browser.":
     "在浏览器中训练视觉追踪、快速转移视线、周边视觉感知和干扰下专注。",
+  "Trainer controls": "训练控制",
   "Treat this as a starting routine, not a target you have to finish. Choose a comfortable speed and shorten or skip any drill that does not feel right.":
     "把这套流程当作起点，不必勉强做完。选择舒适的速度，任何练习让你不适时，都可以缩短或跳过。",
   Triangle: "三角形",

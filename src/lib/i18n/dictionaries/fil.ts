@@ -252,6 +252,7 @@ export const fil = {
   "Header target size": "Laki ng target sa header",
   "Header target speed": "Bilis ng target sa header",
   Heavy: "Mas makapal",
+  Hex: "Hex",
   "Hold steady at the center and notice change around it.":
     "Panatilihin ang tingin sa gitna at mapansin ang pagbabago sa paligid nito.",
   "Hold the right target even when the screen gets busy.":
@@ -546,6 +547,7 @@ export const fil = {
     "Sanayin ang maayos na pagsubaybay ng tingin habang sumusunod sa isang gumagalaw na target.",
   "Train visual tracking, quick refocus, peripheral awareness, and focus under distraction in your browser.":
     "Sanayin ang pagsubaybay ng tingin, mabilis na paglipat ng focus, pansin sa gilid ng paningin, at focus sa gitna ng distraction sa browser mo.",
+  "Trainer controls": "Mga kontrol ng trainer",
   "Treat this as a starting routine, not a target you have to finish. Choose a comfortable speed and shorten or skip any drill that does not feel right.":
     "Gamitin ito bilang panimulang rutina. Hindi kailangang tapusin kung hindi na komportable. Pumili ng angkop na bilis at paikliin o laktawan ang anumang ehersisyong hindi maganda sa pakiramdam.",
   Triangle: "Tatsulok",

@@ -244,6 +244,7 @@ export const es419 = {
   "Header target size": "Tamaño del objetivo en el encabezado",
   "Header target speed": "Velocidad del objetivo en el encabezado",
   Heavy: "Extranegrita",
+  Hex: "Hex",
   "Hold steady at the center and notice change around it.":
     "Mantén el foco estable en el centro y nota los cambios alrededor.",
   "Hold the right target even when the screen gets busy.":
@@ -534,6 +535,7 @@ export const es419 = {
     "Entrena seguimiento visual suave siguiendo un objetivo en movimiento.",
   "Train visual tracking, quick refocus, peripheral awareness, and focus under distraction in your browser.":
     "Entrena seguimiento visual, reenfoque rápido, percepción periférica y foco bajo distracción en tu navegador.",
+  "Trainer controls": "Controles del entrenador",
   "Treat this as a starting routine, not a target you have to finish. Choose a comfortable speed and shorten or skip any drill that does not feel right.":
     "Toma esta rutina como un punto de partida. No tienes que terminarla a toda costa. Elige una velocidad cómoda y acorta u omite cualquier ejercicio que te cause molestias.",
   Triangle: "Triángulo",

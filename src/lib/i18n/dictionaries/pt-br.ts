@@ -244,6 +244,7 @@ export const ptBR = {
   "Header target size": "Tamanho do alvo no cabeçalho",
   "Header target speed": "Velocidade do alvo no cabeçalho",
   Heavy: "Extranegrito",
+  Hex: "Hex",
   "Hold steady at the center and notice change around it.":
     "Mantenha o foco no centro e perceba mudanças ao redor.",
   "Hold the right target even when the screen gets busy.":
@@ -535,6 +536,7 @@ export const ptBR = {
     "Treine rastreamento visual suave seguindo um alvo em movimento.",
   "Train visual tracking, quick refocus, peripheral awareness, and focus under distraction in your browser.":
     "Treine rastreamento visual, refoco rápido, percepção periférica e foco sob distração no navegador.",
+  "Trainer controls": "Controles do treino",
   "Treat this as a starting routine, not a target you have to finish. Choose a comfortable speed and shorten or skip any drill that does not feel right.":
     "Use esta rotina como ponto de partida. Não precisa terminar a qualquer custo. Escolha uma velocidade confortável e encurte ou pule qualquer exercício que cause desconforto.",
   Triangle: "Triângulo",

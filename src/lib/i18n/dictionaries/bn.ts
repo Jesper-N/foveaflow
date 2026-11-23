@@ -233,6 +233,7 @@ export const bn = {
   "Header target size": "হেডারে লক্ষ্যের সাইজ",
   "Header target speed": "হেডারে লক্ষ্যের গতি",
   Heavy: "এক্সট্রা বোল্ড",
+  Hex: "হেক্স",
   "Hold steady at the center and notice change around it.":
     "মাঝখানে স্থির থাকুন এবং চারপাশের বদল খেয়াল করুন।",
   "Hold the right target even when the screen gets busy.":
@@ -516,6 +517,7 @@ export const bn = {
     "একটি চলমান লক্ষ্য অনুসরণ করে মসৃণ ভিজ্যুয়াল ট্র্যাকিং অনুশীলন করুন।",
   "Train visual tracking, quick refocus, peripheral awareness, and focus under distraction in your browser.":
     "ব্রাউজারেই ভিজ্যুয়াল ট্র্যাকিং, দ্রুত রিফোকাস, পারিপার্শ্বিক সচেতনতা এবং বিভ্রান্তির মধ্যে ফোকাস অনুশীলন করুন।",
+  "Trainer controls": "ট্রেনার নিয়ন্ত্রণ",
   "Treat this as a starting routine, not a target you have to finish. Choose a comfortable speed and shorten or skip any drill that does not feel right.":
     "এটিকে শুরুর রুটিন হিসেবে নিন, যেকোনোভাবে শেষ করার লক্ষ্য হিসেবে নয়। আরামদায়ক গতি বেছে নিন। কোনো অনুশীলন ভালো না লাগলে সময় কমিয়ে দিন বা বাদ দিন।",
   Triangle: "ত্রিভুজ",

@@ -246,6 +246,7 @@ export const fr = {
   "Header target size": "Taille de cible dans l'en-tête",
   "Header target speed": "Vitesse de cible dans l'en-tête",
   Heavy: "Épais",
+  Hex: "Hex",
   "Hold steady at the center and notice change around it.":
     "Gardez le regard stable au centre et remarquez ce qui change autour.",
   "Hold the right target even when the screen gets busy.":
@@ -539,6 +540,7 @@ export const fr = {
     "Travaillez le suivi visuel fluide en suivant une cible mobile.",
   "Train visual tracking, quick refocus, peripheral awareness, and focus under distraction in your browser.":
     "Travaillez le suivi visuel, la mise au point rapide, la perception périphérique et la concentration malgré les distractions dans votre navigateur.",
+  "Trainer controls": "Commandes de l’entraîneur",
   "Treat this as a starting routine, not a target you have to finish. Choose a comfortable speed and shorten or skip any drill that does not feel right.":
     "Prenez ce programme comme un point de départ. Vous n’avez pas à le terminer à tout prix. Choisissez une vitesse confortable et raccourcissez ou sautez tout exercice qui vous gêne.",
   Triangle: "Triangle",

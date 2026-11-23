@@ -239,6 +239,7 @@ export const de = {
   "Header target size": "Zielgröße in der Kopfzeile",
   "Header target speed": "Zieltempo in der Kopfzeile",
   Heavy: "Kräftig",
+  Hex: "Hex",
   "Hold steady at the center and notice change around it.":
     "Halte den Blick ruhig in der Mitte und nimm Veränderungen darum herum wahr.",
   "Hold the right target even when the screen gets busy.":
@@ -527,6 +528,7 @@ export const de = {
     "Trainiere ruhiges visuelles Tracking, indem du einem bewegten Ziel folgst.",
   "Train visual tracking, quick refocus, peripheral awareness, and focus under distraction in your browser.":
     "Trainiere visuelles Tracking, schnelles Nachfokussieren, periphere Wahrnehmung und Fokus unter Ablenkung in deinem Browser.",
+  "Trainer controls": "Trainer-Steuerung",
   "Treat this as a starting routine, not a target you have to finish. Choose a comfortable speed and shorten or skip any drill that does not feel right.":
     "Nimm diesen Ablauf als Einstieg. Du musst ihn nicht vollständig absolvieren. Wähle ein angenehmes Tempo und kürze oder überspringe jede Übung, die sich nicht gut anfühlt.",
   Triangle: "Dreieck",
