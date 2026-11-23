@@ -1,5 +1,13 @@
+import type { DrillId } from "$lib/trainer/settings/drills";
+
+interface RoutineStep {
+  drillId: DrillId;
+  minutes: number;
+}
+
 interface ArticleSection {
   heading: string;
+  routine?: readonly RoutineStep[];
   body?: readonly string[];
   list?: readonly string[];
   orderedList?: readonly string[];
@@ -57,6 +65,12 @@ export const articles = [
           "Treat this as a starting routine, not a target you have to finish. Choose a comfortable speed and shorten or skip any drill that does not feel right.",
         ],
         heading: "A 7-minute FPS eye warmup",
+        routine: [
+          { drillId: "pursuit", minutes: 3 },
+          { drillId: "reactionTime", minutes: 2 },
+          { drillId: "mot", minutes: 1 },
+          { drillId: "lilacChaser", minutes: 1 },
+        ],
         orderedList: [
           "3 minutes of Smooth Pursuit. Follow one moving target with your eyes. Start with Circle or Ellipse and aim for steady tracking.",
           "2 minutes of Reaction Jumps. Find the target after each jump, then settle your gaze before it moves again.",

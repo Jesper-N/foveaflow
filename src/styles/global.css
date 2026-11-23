@@ -379,6 +379,10 @@ html[data-i18n-pending="true"] body > * {
       right 790ms var(--ease-edge-trail),
       opacity 160ms var(--ease-out);
   }
+
+  &[data-snap] {
+    transition: opacity 160ms var(--ease-out);
+  }
 }
 
 @utility stretch-indicator-y {

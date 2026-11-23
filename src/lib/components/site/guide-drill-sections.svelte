@@ -67,18 +67,18 @@
   </div>
   <div class="grid gap-2 md:grid-cols-3">
     {#each audienceCards as audience (audience.title)}
-      <div class="bg-card grid content-start gap-10 rounded-4xl p-6">
-        <span
-          class="bg-popover shadow-thumb grid size-11 place-items-center rounded-2xl"
-        >
-          <audience.Icon class="size-5" aria-hidden="true" />
-        </span>
-        <div class="grid gap-1.5">
+      <div class="bg-card grid content-start gap-3 rounded-3xl p-6">
+        <div class="flex items-center gap-3">
+          <span
+            class="bg-popover shadow-thumb grid size-10 shrink-0 place-items-center rounded-xl"
+          >
+            <audience.Icon class="size-4.5" aria-hidden="true" />
+          </span>
           <h3 class={subHeading}>{t(audience.title)}</h3>
-          <p class="text-md text-muted-foreground text-pretty">
-            {t(audience.body)}
-          </p>
         </div>
+        <p class="text-md text-muted-foreground text-pretty">
+          {t(audience.body)}
+        </p>
       </div>
     {/each}
   </div>

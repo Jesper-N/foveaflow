@@ -156,6 +156,7 @@ The spring curves are generated from Apple's damping/response model, not eyeball
 | Slider wake | Drag fast and every tick the value sweeps past jumps up (to 2.3×, scaled by drag speed) and decays back, so the run tails off behind your hand; a slow drag or a click only fills; an arrow key leaves a small wake. Label, value and icon tile brighten while you adjust | bencho's wake slider: the speed of your hand becomes visible, so the control feels physical without moving when you don't |
 | Switch | Thumb springs across; it stretches while pressed | The iOS feel of something you're physically pushing |
 | Segmented control, tabs, section nav | The highlight's two edges ride two springs: the edge facing the new option is stiff, the trailing edge soft, so it stretches across and lands with a small squash. Direction is written to the track before ui-sdk measures, so the right edge always leads | designbookmark's plan switch: reads as one object travelling, not a box swapped |
+| Target form tiles | One black highlight travels to the chosen form with the two-edge springs; the glyph's colour follows 100 ms later | bencho's aspect picker: the choice moves rather than blinking |
 | Menu highlight | One highlight shared by the whole list moves between rows with a stiff leading edge and a soft trailing edge; it snaps on the first row and when you use the keyboard | designbookmark's spring dropdown: your pointer drags a single object through the list |
 | Select menu, color popover | Unfolds out of the trigger's corner: from 0.86 × 0.72 and 10 px up on `ease-spring-pop`, opacity in 160 ms; rows deal in 35 ms apart (first six only). Out in 120–160 ms with no bounce. Opened from the keyboard it only fades | bencho's picker: the list comes from the thing you pressed and is handed to you row by row; the overshoot is the character. Keyboard use gets no delay |
 | Tooltip (single) | After 420 ms it scales in from its trigger (160 ms); a neighbour's tooltip (`data-instant`) appears with no animation | Teaches shortcuts without delaying repeat use |
@@ -184,6 +185,7 @@ Never: animation on keyboard shortcuts beyond the state change itself, staggers 
 | `button-variants.ts` | — | `buttonClass(variant, size)` for links that look like buttons and for ui-sdk parts that render buttons |
 | `button.svelte` | ui-sdk Button | Actions. `primary`, `secondary`, `ghost`; sizes `sm`, `md`, `lg`, `icon` |
 | `icon-button.svelte` | Button + Tooltip | Icon-only actions, named by a tooltip that shows the shortcut. `grouped` hands the tooltip to the surrounding `tooltip-group` |
+| `follow-indicator.ts` | — | Attachment for one shared highlight that travels to the active item (`[data-indicator]` child, `axis` x or y); used by menus and target forms |
 | `tooltip-group.svelte` | Popover API | Wraps a toolbar; every descendant with `data-tip` (and optional `data-tip-key`) shares one travelling tooltip. Triggers carry `aria-label` and `aria-keyshortcuts`, so the tooltip itself is `aria-hidden` |
 | `select.svelte` | ui-sdk Select | Every choice from a list. Groups, leading icon, an 18 px filled check badge on the chosen row, 40 px rows (48 on touch). `appearance`: `field` (filled pill), `ghost` (header and island icon triggers), `text` (the island's title and byline). `labelIcon` adds a row icon tile. Sheet on touch; `compact` stays a popover and hides the chevron on phones |
 | `slider.svelte` | ui-sdk Slider | Every number: thumbless 3 × 16 px tick bars with bencho's speed wake, the formatted value; optional `icon` tile |
@@ -225,7 +227,7 @@ Usage rules:
 
 ### Content pages
 
-- Sticky 64 px header on a blurred `background` (94%): brand, Guide (not on `/guide/`), Open FoveaFlow, Language, Theme. On phones the brand and language code collapse to icons.
+- Sticky 64 px header on solid `background`: brand, Guide (not on `/guide/`), Open FoveaFlow, Language, Theme. On phones the brand and language code collapse to icons.
 - Page width 1280 px with 16 / 24 / 32 px gutters.
 - Hero, centered: breadcrumb chips, title (36 → 52), lede (16 → 20), actions, updated date. Below it, full width: the drill wall (four tiles, 1 → 2 → 4 columns) or the comparison table.
 - Section nav: a sticky chip bar under the header ("On this page") with a sliding pill for the current section.
@@ -235,6 +237,8 @@ Usage rules:
 - Comparison table: FoveaFlow's column is raised on `popover`, the competitor's stays muted. Below `md` it becomes one card per feature with the FoveaFlow answer raised above the competitor's.
 - Footer: a `card` with brand and the free-use line, a Drills column (icon + name) and a FoveaFlow column (Guide, Privacy, Terms).
 - References list: numbered rows with each source's domain under the title.
+- More guides: three cards with a visual header: the warmup shows its routine as a strip of drill icons sized by minutes, comparisons show both app marks stacked (they part on hover).
+- Article routines (FPS warmup): a timeline bar split by minutes, each segment the drill's preview with a localized duration (`Intl` minutes, no dictionary strings); the hovered segment plays and the others dim. On phones it is a slim icon bar.
 
 ### Not found
 

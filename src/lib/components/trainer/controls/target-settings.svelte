@@ -14,6 +14,7 @@
 
   import TargetFormGlyph from "../../icons/target-form-glyph.svelte";
   import ColorField from "../../ui/color-field.svelte";
+  import { followIndicator } from "../../ui/follow-indicator";
   import RowLabel from "../../ui/row-label.svelte";
   import { pressable } from "../../ui/styles";
   import { ballColorPresets } from "../select-options";
@@ -25,6 +26,12 @@
   import TargetPreview from "./target-preview.svelte";
 
   const trainer = getTrainer();
+
+  const followChecked = followIndicator({
+    axis: "x",
+    item: "[role='radio'][data-checked]",
+    watch: "data-checked",
+  });
 </script>
 
 {#if trainer.isLilacChaser}
@@ -52,7 +59,8 @@
         <RowLabel icon={TriangleIcon} label={t("Target form")} />
       </span>
       <RadioGroup
-        class="grid grid-cols-6 gap-1"
+        class="relative grid grid-cols-6 gap-1"
+        {@attach followChecked}
         aria-labelledby="trainer-target-form"
         onValueChange={(value) => {
           if (typeof value === "string") {
@@ -61,10 +69,15 @@
         }}
         value={trainer.settings.targetForm}
       >
+        <span
+          class="bg-primary stretch-indicator pointer-events-none absolute inset-y-0 rounded-xl opacity-0"
+          aria-hidden="true"
+          data-indicator
+        ></span>
         {#each targetForms as form (form.id)}
           <Radio
             class={[
-              "group/form text-2xs text-muted-foreground hover:bg-fill-hover hover:text-foreground data-checked:bg-primary data-checked:text-primary-foreground grid cursor-pointer justify-items-center gap-1 rounded-xl py-2 font-medium",
+              "group/form text-2xs text-muted-foreground hover:text-foreground not-data-checked:hover:bg-fill data-checked:text-primary-foreground relative z-1 grid cursor-pointer justify-items-center gap-1 rounded-xl py-2 font-medium transition-colors duration-160 ease-out data-checked:delay-100",
               pressable,
             ]}
             value={form.id}

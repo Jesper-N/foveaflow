@@ -1,14 +1,29 @@
 <script lang="ts">
   import { articles } from "$lib/content/articles";
+  import type { Article } from "$lib/content/articles";
   import { guideFaq, referenceLinks } from "$lib/content/guide";
   import { t } from "$lib/i18n/translate";
   import { ArrowUpRightIcon } from "@lucide/svelte";
+  import type { Attachment } from "svelte/attachments";
 
+  import DrillIcon from "../icons/drill-icon.svelte";
   import AccordionList from "../ui/accordion-list.svelte";
+  import BrandMark from "../ui/brand-mark.svelte";
   import { pressable } from "../ui/styles";
   import ControlsPlayground from "./controls-playground.svelte";
   import { subHeading } from "./layout";
   import PageSection from "./page-section.svelte";
+
+  const guides: readonly Article[] = articles;
+
+  const routineOf = (article: Article) =>
+    article.sections.flatMap((section) => section.routine ?? []);
+
+  const share =
+    (minutes: number): Attachment<HTMLElement> =>
+    (node) => {
+      node.style.flexGrow = String(minutes);
+    };
 
   let faq = $derived(
     guideFaq.map(({ question, answer }) => ({
@@ -29,16 +44,49 @@
 </PageSection>
 
 <PageSection id="more-guides" heading={t("More guides")}>
-  <div class="grid gap-2">
-    {#each articles as article (article.slug)}
+  <div class="grid gap-2 md:grid-cols-3">
+    {#each guides as article (article.slug)}
       <a
         class={[
-          "group/article bg-card hover:bg-fill-hover flex items-center justify-between gap-6 rounded-3xl p-5 motion-safe:active:scale-99",
+          "group/article bg-card hover:bg-fill-hover grid content-start gap-4 rounded-3xl p-2 pb-5 motion-safe:active:scale-99",
           pressable,
         ]}
         href={article.path}
       >
-        <span class="grid gap-1">
+        <span
+          class="canvas-grid relative grid h-28 place-items-center overflow-hidden rounded-2xl"
+          aria-hidden="true"
+        >
+          {#if article.comparison}
+            <span class="flex items-center">
+              <BrandMark
+                class="ring-canvas ease-spring relative z-1 size-12 rounded-2xl ring-4 transition-[translate] duration-260 group-hover/article:-translate-x-1"
+              />
+              <span
+                class="bg-popover text-muted-foreground ring-canvas ease-spring -ms-3 grid size-12 place-items-center rounded-2xl text-lg font-semibold ring-4 transition-[translate] duration-260 group-hover/article:translate-x-1"
+              >
+                {article.comparison.alternative.charAt(0)}
+              </span>
+            </span>
+          {:else}
+            <span class="flex w-3/5 gap-1">
+              {#each routineOf(article) as step (step.drillId)}
+                <span
+                  class="bg-popover shadow-thumb grid h-10 min-w-0 basis-0 place-items-center rounded-xl"
+                  {@attach share(step.minutes)}
+                >
+                  <DrillIcon class="size-4" drillId={step.drillId} />
+                </span>
+              {/each}
+            </span>
+          {/if}
+          <span
+            class="bg-popover shadow-thumb ease-spring absolute inset-e-2 top-2 grid size-8 place-items-center rounded-full transition-[translate] duration-260 group-hover/article:translate-x-0.5 group-hover/article:-translate-y-0.5"
+          >
+            <ArrowUpRightIcon class="size-3.5 rtl:-scale-x-100" />
+          </span>
+        </span>
+        <span class="grid gap-1 px-3">
           <span class="text-muted-foreground text-xs font-medium">
             {t(article.kicker)}
           </span>
@@ -46,12 +94,6 @@
           <span class="text-muted-foreground text-sm text-pretty">
             {t(article.description)}
           </span>
-        </span>
-        <span
-          class="bg-popover shadow-thumb ease-spring grid size-10 shrink-0 place-items-center rounded-full transition-[translate] duration-260 group-hover/article:-translate-y-0.5"
-          aria-hidden="true"
-        >
-          <ArrowUpRightIcon class="size-4 rtl:-scale-x-100" />
         </span>
       </a>
     {/each}

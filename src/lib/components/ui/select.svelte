@@ -16,6 +16,7 @@
   import type { Attachment } from "svelte/attachments";
   import type { ClassValue } from "svelte/elements";
 
+  import { followIndicator } from "./follow-indicator";
   import RowLabel from "./row-label.svelte";
   import type { SelectGroup, SelectOption } from "./select-types";
   import { listGroupLabel, listItem, popupSurface, pressable } from "./styles";
@@ -66,57 +67,11 @@
     )
   );
 
-  const followHighlight: Attachment<HTMLElement> = (content) => {
-    const marker = content.querySelector<HTMLElement>("[data-menu-highlight]");
-    let previousTop: number | null = null;
-
-    const place = () => {
-      const item = content.querySelector<HTMLElement>(
-        "[data-slot='select-item'][data-highlighted]"
-      );
-
-      if (!marker) {
-        return;
-      }
-
-      if (!item) {
-        marker.style.setProperty("opacity", "0");
-        previousTop = null;
-
-        return;
-      }
-
-      const top = item.offsetTop;
-
-      if (previousTop === null) {
-        marker.dataset["snap"] = "";
-      } else {
-        delete marker.dataset["snap"];
-      }
-
-      content.dataset["direction"] =
-        top >= (previousTop ?? top) ? "down" : "up";
-      marker.style.setProperty("top", `${top}px`);
-      marker.style.setProperty(
-        "bottom",
-        `${content.clientHeight - top - item.offsetHeight}px`
-      );
-      marker.style.setProperty("opacity", "1");
-      previousTop = top;
-    };
-
-    const observer = new MutationObserver(place);
-
-    observer.observe(content, {
-      attributeFilter: ["data-highlighted"],
-      attributes: true,
-      subtree: true,
-    });
-
-    return () => {
-      observer.disconnect();
-    };
-  };
+  const followHighlight = followIndicator({
+    axis: "y",
+    item: "[data-slot='select-item'][data-highlighted]",
+    watch: "data-highlighted",
+  });
 
   const dealIndex =
     (index: number): Attachment<HTMLElement> =>
@@ -192,7 +147,7 @@
     <span
       class="bg-fill stretch-indicator-y pointer-events-none absolute inset-x-2 rounded-xl opacity-0"
       aria-hidden="true"
-      data-menu-highlight
+      data-indicator
     ></span>
     {#each groups as group, index (group.label ?? index)}
       {#if group.label}

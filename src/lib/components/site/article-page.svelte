@@ -12,6 +12,7 @@
   import PageCta from "./page-cta.svelte";
   import PageHero from "./page-hero.svelte";
   import PageSection from "./page-section.svelte";
+  import RoutineBar from "./routine-bar.svelte";
   import SectionNav from "./section-nav.svelte";
   import SiteShell from "./site-shell.svelte";
   import StepList from "./step-list.svelte";
@@ -83,6 +84,9 @@
         {#each section.body ?? [] as paragraph (paragraph)}
           <p class={bodyText}>{t(paragraph)}</p>
         {/each}
+        {#if section.routine}
+          <RoutineBar steps={section.routine} />
+        {/if}
         {#if section.orderedList}
           <StepList steps={section.orderedList} />
         {/if}
