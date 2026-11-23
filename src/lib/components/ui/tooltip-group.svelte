@@ -180,11 +180,14 @@
     };
   };
 
+  const still = () =>
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
   const labelIn = (node: Element) =>
-    fly(node, { duration: 220, opacity: 0, x: shift * 14 });
+    fly(node, { duration: 220, opacity: 0, x: still() ? 0 : shift * 14 });
 
   const labelOut = (node: Element) =>
-    fly(node, { duration: 160, opacity: 0, x: shift * -14 });
+    fly(node, { duration: 160, opacity: 0, x: still() ? 0 : shift * -14 });
 </script>
 
 <div class={["relative", className]} {@attach follow}>
