@@ -31,7 +31,7 @@
     {#each page.sections as section (section.id)}
       <PageSection id={section.id} heading={t(section.heading)}>
         {#each section.body as paragraph (paragraph)}
-          <p class={bodyText}>{t(paragraph)}</p>
+          <p class={[bodyText, "max-w-prose"]}>{t(paragraph)}</p>
         {/each}
         {#if section.links}
           <ul class="grid gap-2">

@@ -157,9 +157,10 @@ The spring curves are generated from Apple's damping/response model, not eyeball
 | Switch | Thumb springs across; it stretches while pressed | The iOS feel of something you're physically pushing |
 | Segmented control, tabs, section nav | The highlight's two edges ride two springs: the edge facing the new option is stiff, the trailing edge soft, so it stretches across and lands with a small squash. Direction is written to the track before ui-sdk measures, so the right edge always leads | designbookmark's plan switch: reads as one object travelling, not a box swapped |
 | Target form tiles | One black highlight travels to the chosen form with the two-edge springs; the glyph's colour follows 100 ms later | bencho's aspect picker: the choice moves rather than blinking |
-| Menu highlight | One highlight shared by the whole list moves between rows with a stiff leading edge and a soft trailing edge; it snaps on the first row and when you use the keyboard | designbookmark's spring dropdown: your pointer drags a single object through the list |
+| Menu highlight | One highlight shared by the whole list moves between rows with a stiff leading edge and a soft trailing edge whose length grows with the distance (420 ms for a neighbour, up to 790 ms across the list); it snaps on the first row and when you use the keyboard | designbookmark's spring dropdown: your pointer drags a single object through the list |
 | Select menu, color popover | Unfolds out of the trigger's corner: from 0.86 × 0.72 and 10 px up on `ease-spring-pop`, opacity in 160 ms; rows deal in 35 ms apart (first six only). Out in 120–160 ms with no bounce. Opened from the keyboard it only fades | bencho's picker: the list comes from the thing you pressed and is handed to you row by row; the overshoot is the character. Keyboard use gets no delay |
 | Tooltip (single) | After 420 ms it scales in from its trigger (160 ms); a neighbour's tooltip (`data-instant`) appears with no animation | Teaches shortcuts without delaying repeat use |
+| Island title and byline | A newly picked drill or path rolls in from 10 px below while the old one leaves upward (260 / 160 ms) | designbookmark's spring dropdown: confirms the choice landed where you'll look for it |
 | Tooltip group (island rows, site header) | One tooltip per toolbar, after designbookmark's morph tooltip: the first hover waits 420 ms and pops it in from below the trigger; moving to a neighbour makes it travel, leading edge stiff and trailing edge soft, while the old label slides out the way it came and the new one slides in from the far side. Rendered in the top layer, below the island | Reads as one tooltip following your pointer along the toolbar instead of several flashing on and off |
 | Accordion | Height and fade in 260 ms, plus turns into × | State change you can follow |
 | Drill tile | Its preview plays and the open button scales in while hovered or focused | You explore a drill before you open it; still otherwise, so a page of tiles stays calm |
@@ -254,7 +255,7 @@ Every surface names the reference it was measured against and what was taken fro
   - Open, up to 432 px wide, laid out like a now-playing card: a still thumbnail of the drill, the drill (M) as the title and the path (P) as the byline (both plain-text selects), reverse, and a 48 px white play/pause (Space). Below: Size and Speed side by side (or Lilac's Ball color and Scale). Footer behind a hairline: brand, Language, Guide (G), Controls (S).
   - On phones it opens full width with the same layout.
 - **Controls** (S): right-side panel 416 px wide, inset 8 px, with tabs Drill / Targets / General. Each tab is grouped settings rows in `fill` cards, iOS-style: a 28 px icon tile, the label, the control on the right (sliders run under the label, aligned with it), hairlines between rows, small section titles above a card. Targets opens with the live target preview. Footer: "Settings save automatically." and Done. On touch screens it is an 85 dvh bottom sheet.
-- **Guide** (G): 928 px dialog (sheet on touch). Left: the drill's live preview with its name pill; on `/` one stage that crossfades to whichever drill in the list you point at or focus. Right: title, lede, steps, what it trains, quick answers, overview. Footer: updated date, Source, Privacy, Terms, and the primary Read full guide.
+- **Guide** (G): 704 px dialog (sheet on touch). On top, a 256 px stage band (208 on phones) with the drill's live preview and its name pill; on `/` the stage crossfades to whichever drill in the list you point at or focus. The text scrolls underneath with soft fades at both edges. Right: title, lede, steps, what it trains, quick answers, overview. Footer: updated date, Source, Privacy, Terms, and the primary Read full guide.
 - **Reset**: an alert dialog over the controls.
 
 ### Content pages
@@ -262,7 +263,7 @@ Every surface names the reference it was measured against and what was taken fro
 - Sticky 64 px header on solid `background`: brand, Guide (not on `/guide/`), Open FoveaFlow, Language, Theme. On phones the brand and language code collapse to icons.
 - Page width 1280 px with 16 / 24 / 32 px gutters.
 - Hero, centered: breadcrumb chips, title (36 → 52), lede (16 → 20), actions, updated date. Below it, full width: the drill wall (four tiles, 1 → 2 → 4 columns) or the comparison table.
-- Section nav: a sticky chip bar under the header ("On this page") with a sliding pill for the current section.
+- Section nav: a sticky chip bar under the header ("On this page") with a sliding pill for the current section; between sections and after a jump it keeps the last section you passed.
 - Sections 96–128 px apart, in an editorial split from `lg`: heading and intro sticky on the left (352 px), content on the right.
 - Guide extras: the drill showcase (sticky live stage beside the four drill write-ups), the motion path gallery (one grid of 20 route tiles, 2 → 4 → 5 columns, the two unpredictable paths first with a badge), audience cards with icons, the controls playground, article cards, FAQ accordion, reference list.
 - Closing call to action: a dark band with the title, line, button and a live pursuit preview.
@@ -270,7 +271,9 @@ Every surface names the reference it was measured against and what was taken fro
 - Footer: a `card` with brand and the free-use line, a Drills column (icon + name) and a FoveaFlow column (Guide, Privacy, Terms).
 - References list: numbered rows with each source's domain under the title.
 - More guides: three cards with a visual header: the warmup shows its routine as a strip of drill icons sized by minutes, comparisons show both app marks stacked (they part on hover).
-- Article routines (FPS warmup): a timeline bar split by minutes, each segment the drill's preview with a localized duration (`Intl` minutes, no dictionary strings); the hovered segment plays and the others dim. On phones it is a slim icon bar.
+- Article routines (FPS warmup): the hero is the routine itself, a timeline bar split by minutes. Each segment is a link to its drill showing the drill's preview and a localized duration (`Intl` minutes, no dictionary strings); the hovered or focused segment plays and the others dim. On phones it is a slim icon bar. Articles without a routine keep the drill wall; comparisons lead with the table.
+- Scroll areas (Controls panel, guide dialogs, section nav) fade content out at their edges (`scroll-fade-y`, `scroll-fade-x`) instead of cutting it.
+- Prose in articles and legal pages is capped at 65 characters per line (`max-w-prose`).
 
 ### Not found
 

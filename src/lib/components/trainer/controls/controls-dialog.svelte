@@ -63,7 +63,7 @@
     ]}
     finalFocus={trainer.panelReturnFocus}
   >
-    <header class="flex items-start justify-between gap-4 px-5 pt-5 pb-4">
+    <header class="flex items-start justify-between gap-4 px-4 pt-5 pb-4">
       <div class="grid gap-0.5">
         <DialogTitle class="text-lg font-semibold">{t("Controls")}</DialogTitle>
         <DialogDescription class="text-muted-foreground text-sm">
@@ -86,7 +86,7 @@
       value={tab}
     >
       <TabsList
-        class={[segmentTrack, "mx-5"]}
+        class={[segmentTrack, "mx-4"]}
         {@attach tabListElement}
         aria-label={t("Controls")}
       >
@@ -107,7 +107,7 @@
       </TabsList>
 
       <div
-        class="min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 pt-4 pb-2"
+        class="scroll-fade-y min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pt-4 pb-4"
       >
         <TabsPanel class="grid gap-5 outline-none" value="drill">
           <DrillSettings />
@@ -121,7 +121,7 @@
       </div>
     </Tabs>
 
-    <footer class="flex items-center justify-between gap-4 px-5 pt-3 pb-5">
+    <footer class="flex items-center justify-between gap-4 px-4 pt-3 pb-5">
       <p class="text-muted-foreground text-sm">
         {t("Settings save automatically.")}
       </p>

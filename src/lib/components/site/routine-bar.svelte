@@ -1,5 +1,7 @@
 <script lang="ts">
-  import { formatMinutes } from "$lib/i18n/translate";
+  import { mainRouteForDrill } from "$lib/content/drill-routes";
+  import { formatMinutes, t } from "$lib/i18n/translate";
+  import { getDrill } from "$lib/trainer/settings/drills";
   import type { DrillId } from "$lib/trainer/settings/drills";
   import type { Attachment } from "svelte/attachments";
 
@@ -22,8 +24,8 @@
     };
 </script>
 
-<div class="bg-card grid gap-2 rounded-4xl p-2" aria-hidden="true">
-  <ol class="flex h-12 gap-1.5 sm:h-44">
+<div class="bg-card grid gap-2 rounded-4xl p-2">
+  <ol class="flex h-14 gap-1.5 sm:h-60">
     {#each steps as step, index (step.drillId)}
       <li
         class={[
@@ -31,25 +33,37 @@
           exploring !== null && exploring !== index && "opacity-50",
         ]}
         {@attach share(step.minutes)}
-        onpointerenter={() => (exploring = index)}
-        onpointerleave={() => (exploring = null)}
       >
-        <DrillPreview
-          class="size-full max-sm:hidden"
-          drillId={step.drillId}
-          playing={exploring === index}
-        />
-        <span
-          class="sm:bg-popover/90 sm:shadow-thumb flex h-7 items-center gap-1.5 rounded-full text-xs font-medium whitespace-nowrap tabular-nums sm:absolute sm:inset-s-2 sm:top-2 sm:ps-1.5 sm:pe-2.5 sm:backdrop-blur-md"
+        <a
+          class="absolute inset-0 flex items-center justify-center rounded-[inherit] outline-offset-2"
+          aria-label="{t(getDrill(step.drillId).name)}, {formatMinutes(
+            step.minutes
+          )}"
+          href={mainRouteForDrill(step.drillId)?.path ?? "/"}
+          onblur={() => (exploring = null)}
+          onfocus={() => (exploring = index)}
+          onpointerenter={() => (exploring = index)}
+          onpointerleave={() => (exploring = null)}
         >
-          <DrillIcon class="size-4" drillId={step.drillId} />
-          <span class="max-sm:sr-only">{formatMinutes(step.minutes)}</span>
-        </span>
+          <DrillPreview
+            class="size-full max-sm:hidden"
+            drillId={step.drillId}
+            playing={exploring === index}
+          />
+          <span
+            class="sm:bg-popover/90 sm:shadow-thumb flex h-7 items-center gap-1.5 rounded-full text-xs font-medium whitespace-nowrap tabular-nums sm:absolute sm:inset-s-2 sm:top-2 sm:ps-1.5 sm:pe-2.5 sm:backdrop-blur-md"
+            aria-hidden="true"
+          >
+            <DrillIcon class="size-4" drillId={step.drillId} />
+            <span class="max-sm:hidden">{formatMinutes(step.minutes)}</span>
+          </span>
+        </a>
       </li>
     {/each}
   </ol>
   <div
     class="text-muted-foreground flex justify-between px-3 pb-1 text-xs tabular-nums"
+    aria-hidden="true"
   >
     <span>{formatMinutes(0)}</span>
     <span>{formatMinutes(total)}</span>

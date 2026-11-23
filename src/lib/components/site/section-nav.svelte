@@ -101,7 +101,7 @@
       {t("On this page")}
     </h2>
     <ul
-      class="relative flex min-w-0 flex-1 snap-x scrollbar-none gap-1 overflow-x-auto py-2.5"
+      class="scroll-fade-x relative flex min-w-0 flex-1 snap-x scroll-px-4 scrollbar-none gap-1 overflow-x-auto px-2 py-2.5"
       {@attach followSections}
     >
       <li

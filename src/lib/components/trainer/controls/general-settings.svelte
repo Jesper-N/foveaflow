@@ -69,10 +69,10 @@
   </div>
 </SettingsSection>
 
-<SettingsSection id="trainer-defaults" title={t("Defaults")}>
+<SettingsSection id="trainer-defaults">
   <div class="grid gap-3" data-setting-row>
     <span class="text-md font-medium">
-      <RowLabel icon={RotateCcwIcon} label={t("Reset to defaults")} />
+      <RowLabel icon={RotateCcwIcon} label={t("Defaults")} />
     </span>
     <p class="text-muted-foreground ms-10 text-sm">{resetDescription}</p>
     <AlertDialog>

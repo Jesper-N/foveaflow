@@ -8,16 +8,21 @@
 
   interface Props {
     side?: "top" | "bottom";
+    offset?: number;
     class?: ClassValue;
     children: Snippet;
   }
 
-  let { side = "top", class: className, children }: Props = $props();
+  let {
+    side = "top",
+    offset = 8,
+    class: className,
+    children,
+  }: Props = $props();
 
   const OPEN_DELAY_MS = 420;
   const HIDE_GRACE_MS = 140;
   const REOPEN_WINDOW_MS = 400;
-  const GAP = 8;
   const EDGE = 8;
 
   let tip = $state.raw<HTMLDivElement>();
@@ -57,11 +62,11 @@
     tip.style.setProperty("right", `${window.innerWidth - left - width}px`);
 
     if (side === "bottom") {
-      tip.style.setProperty("top", `${box.bottom + GAP}px`);
+      tip.style.setProperty("top", `${box.bottom + offset}px`);
     } else {
       tip.style.setProperty(
         "bottom",
-        `${window.innerHeight - box.top + GAP}px`
+        `${window.innerHeight - box.top + offset}px`
       );
     }
   };

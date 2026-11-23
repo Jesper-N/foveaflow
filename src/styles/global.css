@@ -369,14 +369,14 @@ html[data-i18n-pending="true"] body > * {
   [data-direction="right"] & {
     transition:
       right 330ms var(--ease-edge-lead),
-      left 790ms var(--ease-edge-trail),
+      left var(--trail, 790ms) var(--ease-edge-trail),
       opacity 160ms var(--ease-out);
   }
 
   [data-direction="left"] & {
     transition:
       left 330ms var(--ease-edge-lead),
-      right 790ms var(--ease-edge-trail),
+      right var(--trail, 790ms) var(--ease-edge-trail),
       opacity 160ms var(--ease-out);
   }
 
@@ -394,14 +394,14 @@ html[data-i18n-pending="true"] body > * {
   [data-direction="down"] > & {
     transition:
       bottom 330ms var(--ease-edge-lead),
-      top 790ms var(--ease-edge-trail),
+      top var(--trail, 790ms) var(--ease-edge-trail),
       opacity 120ms var(--ease-out);
   }
 
   [data-direction="up"] > & {
     transition:
       top 330ms var(--ease-edge-lead),
-      bottom 790ms var(--ease-edge-trail),
+      bottom var(--trail, 790ms) var(--ease-edge-trail),
       opacity 120ms var(--ease-out);
   }
 
@@ -409,4 +409,24 @@ html[data-i18n-pending="true"] body > * {
   &[data-snap] {
     transition: opacity 120ms var(--ease-out);
   }
+}
+
+@utility scroll-fade-y {
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    #000 0.75rem,
+    #000 calc(100% - 1rem),
+    transparent
+  );
+}
+
+@utility scroll-fade-x {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 1rem,
+    #000 calc(100% - 1.5rem),
+    transparent
+  );
 }

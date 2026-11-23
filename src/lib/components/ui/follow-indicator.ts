@@ -46,6 +46,10 @@ export const followIndicator =
         delete marker.dataset["snap"];
       }
 
+      container.style.setProperty(
+        "--trail",
+        `${Math.round(Math.min(790, Math.max(420, 300 + Math.abs(start - (previous ?? start)) * 1.6)))}ms`
+      );
       container.dataset["direction"] = directionFor(
         axis,
         start >= (previous ?? start)

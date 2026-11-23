@@ -25,9 +25,7 @@
 
 <div class={guideLayout}>
   <div class={guideAside}>
-    <div
-      class="relative grid h-full overflow-hidden rounded-3xl max-md:aspect-video"
-    >
+    <div class="relative grid h-52 overflow-hidden rounded-3xl sm:h-64">
       {#each drillGuides as guide (guide.drillId)}
         <DrillPreview
           class={[

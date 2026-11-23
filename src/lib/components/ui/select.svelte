@@ -15,6 +15,7 @@
   import type { ComponentProps, Snippet } from "svelte";
   import type { Attachment } from "svelte/attachments";
   import type { ClassValue } from "svelte/elements";
+  import { fly } from "svelte/transition";
 
   import { followIndicator } from "./follow-indicator";
   import RowLabel from "./row-label.svelte";
@@ -58,6 +59,15 @@
     triggerClass,
     "data-hud-select": hudSelect,
   }: Props = $props();
+
+  let selectedLabel = $derived(
+    groups
+      .flatMap((group) => group.options)
+      .find((option) => option.value === value)?.label ?? ""
+  );
+
+  const rollDistance = () =>
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 10;
 
   let offsets = $derived(
     groups.map((_, index) =>
@@ -124,7 +134,21 @@
             {@render icon(value)}
           </span>
         {/if}
-        <SelectValue class="min-w-0 flex-1 truncate text-start" />
+        {#if appearance === "text"}
+          <span class="grid min-w-0 flex-1 overflow-hidden text-start">
+            {#key value}
+              <span
+                class="col-start-1 row-start-1 truncate"
+                in:fly={{ duration: 260, opacity: 0, y: rollDistance() }}
+                out:fly={{ duration: 160, opacity: 0, y: -rollDistance() }}
+              >
+                {selectedLabel}
+              </span>
+            {/key}
+          </span>
+        {:else}
+          <SelectValue class="min-w-0 flex-1 truncate text-start" />
+        {/if}
       {/if}
       <ChevronDownIcon
         class={[

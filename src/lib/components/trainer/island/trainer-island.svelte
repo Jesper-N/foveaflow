@@ -186,7 +186,7 @@
     <div class="island-panel grid gap-3 p-3.5">
       <div class="flex items-center gap-3">
         <DrillPreview
-          class="h-12 w-16 shrink-0 rounded-xl"
+          class="ring-border h-12 w-16 shrink-0 rounded-xl ring-1 [&_path]:[stroke-opacity:0.45]"
           drillId={trainer.settings.drillId}
           patternId={trainer.settings.patternId}
           playing={false}
@@ -233,16 +233,14 @@
 
       <div
         class={[
-          "grid gap-x-5 gap-y-2 px-0.5",
+          "grid gap-x-5 gap-y-2",
           !trainer.isLilacChaser && "grid-cols-2",
         ]}
       >
         <IslandAdjustments />
       </div>
 
-      <footer
-        class="border-border -mx-1 flex items-center gap-1 border-t ps-1 pt-2"
-      >
+      <footer class="border-border flex items-center gap-1 border-t pt-2">
         <a
           class={[
             "text-muted-foreground hover:text-foreground me-auto flex h-9 items-center gap-2 rounded-full pe-2 text-sm font-medium",
@@ -254,7 +252,11 @@
           {siteMetadata.name}
         </a>
         <nav aria-label={t("App actions")}>
-          <TooltipGroup class="flex items-center gap-0.5" side="bottom">
+          <TooltipGroup
+            class="flex items-center gap-0.5"
+            offset={24}
+            side="bottom"
+          >
             <LanguageSelect compact tip />
             <IconButton
               aria-controls="trainer-guide"

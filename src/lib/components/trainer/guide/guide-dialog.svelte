@@ -29,7 +29,7 @@
     class={[
       dialogSurface,
       sheetPresentation,
-      "data-[presentation=dialog]:fixed data-[presentation=dialog]:inset-0 data-[presentation=dialog]:m-auto data-[presentation=dialog]:h-[min(46rem,calc(100dvh-2rem))] data-[presentation=dialog]:w-232 data-[presentation=dialog]:max-w-[calc(100vw-2rem)] data-[presentation=dialog]:rounded-4xl",
+      "data-[presentation=dialog]:fixed data-[presentation=dialog]:inset-0 data-[presentation=dialog]:m-auto data-[presentation=dialog]:h-[min(46rem,calc(100dvh-2rem))] data-[presentation=dialog]:w-176 data-[presentation=dialog]:max-w-[calc(100vw-2rem)] data-[presentation=dialog]:rounded-4xl",
       "data-[presentation=dialog]:transition-[opacity,scale,translate] data-[presentation=dialog]:duration-300 data-[presentation=dialog]:ease-out data-[presentation=dialog]:data-ending-style:translate-y-2 data-[presentation=dialog]:data-ending-style:scale-97 data-[presentation=dialog]:data-ending-style:opacity-0 data-[presentation=dialog]:data-ending-style:duration-180 data-[presentation=dialog]:data-starting-style:translate-y-3 data-[presentation=dialog]:data-starting-style:scale-97 data-[presentation=dialog]:data-starting-style:opacity-0",
     ]}
     finalFocus={trainer.panelReturnFocus}

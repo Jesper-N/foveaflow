@@ -42,7 +42,7 @@
       </span>
     {/if}
     <svg
-      class="text-foreground size-full"
+      class="text-foreground size-full p-2"
       aria-hidden="true"
       fill="none"
       viewBox="0 0 32 24"

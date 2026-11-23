@@ -19,6 +19,10 @@
 
   let { page }: { page: Article } = $props();
 
+  let routine = $derived(
+    page.sections.flatMap((section) => section.routine ?? [])
+  );
+
   let contents = $derived(
     page.sections.map((section, index) => ({
       id: `section-${index}`,
@@ -54,7 +58,11 @@
       {t("Updated")}
       <time datetime={page.lastModified}>{formatDate(page.lastModified)}</time>
     {/snippet}
-    {#if page.comparison === undefined}
+    {#if page.comparison === undefined && routine.length > 0}
+      <nav aria-label={t("Choose a drill")}>
+        <RoutineBar steps={routine} />
+      </nav>
+    {:else if page.comparison === undefined}
       <nav aria-label={t("Choose a drill")}>
         <ul class="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
           {#each drillGuides as guide (guide.drillId)}
@@ -82,11 +90,8 @@
     {#each page.sections as section, index (section.heading)}
       <PageSection id="section-{index}" heading={t(section.heading)}>
         {#each section.body ?? [] as paragraph (paragraph)}
-          <p class={bodyText}>{t(paragraph)}</p>
+          <p class={[bodyText, "max-w-prose"]}>{t(paragraph)}</p>
         {/each}
-        {#if section.routine}
-          <RoutineBar steps={section.routine} />
-        {/if}
         {#if section.orderedList}
           <StepList steps={section.orderedList} />
         {/if}
