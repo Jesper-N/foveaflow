@@ -17,6 +17,8 @@ Browser app for vision training: visual tracking, focus, reaction speed, and per
 
 ## UI
 
+- `docs/design/system.md` is the source of truth for tokens, components, motion, and page layouts. Keep it in sync with `src/styles/global.css` and `src/lib/components/ui/`.
+- Interactive parts use ui-sdk (`@ui-sdk/svelte`). Before changing one, read `node_modules/@ui-sdk/svelte/docs/llms.txt` and the component's page in `docs/components/`.
 - Use Tailwind utilities for all supported styling, including responsive layouts and interaction states. Keep custom CSS for unsupported styling and keyframes.
 - Reuse repeated utility groups through component variants, shared class constants, or Tailwind utilities. Keep one-off layouts local to their component.
 - Check UI changes in a browser at desktop and mobile widths, in light and dark themes.

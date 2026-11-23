@@ -7,6 +7,8 @@ import { inlineScriptHash } from "$lib/csp";
 import { localeBootScript } from "$lib/i18n/boot-script";
 import { createInitialModeExpression } from "mode-watcher";
 
+import interLatin from "../assets/fonts/inter-latin.woff2?url";
+
 type Props = SeoHeadProps;
 
 // Applies the saved theme before first paint, so the page never flashes.
@@ -22,6 +24,13 @@ Astro.csp?.insertScriptHash(inlineScriptHash(localeBootScript));
     <meta charset="utf-8" />
     <script is:inline set:html={themeBootScript} />
     <script is:inline set:html={localeBootScript} />
+    <link
+      rel="preload"
+      href={interLatin}
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <Favicons />
     <SeoHead {...Astro.props} />
   </head>

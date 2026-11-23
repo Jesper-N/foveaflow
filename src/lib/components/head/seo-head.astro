@@ -33,7 +33,10 @@ const ogImageUrl = absoluteUrl(siteMetadata.imagePath, site);
 ---
 
 {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, viewport-fit=cover"
+/>
 <meta name="generator" content={Astro.generator} />
 <meta name="description" content={description} />
 <meta name="robots" content={robots} />

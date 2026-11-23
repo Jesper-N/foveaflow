@@ -1,6 +1,6 @@
 # UI inventory
 
-What the app's pages and core components do and what text they show. Function, content, and grouping only: no visual design, layout, or interaction pattern is prescribed. The current markup is deliberately bare HTML. All visible text is translated into 10 languages (keyed by the English wording in `src/lib/i18n/dictionaries/`).
+What the app's pages and core components do and what text they show. Function, content, and grouping only: no visual design, layout, or interaction pattern is prescribed here. How each piece looks and behaves is in [`design/system.md`](design/system.md). All visible text is translated into 10 languages (keyed by the English wording in `src/lib/i18n/dictionaries/`).
 
 ## Pages
 

@@ -54,7 +54,7 @@ The pre-commit hook runs `bun run lint`. The pre-push hook runs `bun run verify`
 
 ## How it's built
 
-[Astro](https://astro.build/) renders the pages. The controls are [Svelte 5](https://svelte.dev/) styled with [Tailwind CSS 4](https://tailwindcss.com/). The drills run on a canvas engine in plain TypeScript, with no framework code inside it. [Cloudflare Workers](https://workers.cloudflare.com/) serves the site.
+[Astro](https://astro.build/) renders the pages. The controls are [Svelte 5](https://svelte.dev/) components built on [ui-sdk](https://ui-sdk.dev/) and styled with [Tailwind CSS 4](https://tailwindcss.com/). The design system is in [`docs/design/system.md`](docs/design/system.md). The drills run on a canvas engine in plain TypeScript, with no framework code inside it. [Cloudflare Workers](https://workers.cloudflare.com/) serves the site.
 
 <details>
 <summary>Where things live</summary>
@@ -66,12 +66,15 @@ src/lib/trainer/engine/      Motion paths, speed, and seeded randomness
 src/lib/trainer/canvas/      Render loop, targets, trail, and grid
 src/lib/trainer/settings/    Drills, options, and saved settings
 src/lib/components/trainer/  The trainer app: state, controls, and guide
+src/lib/components/ui/       Buttons, selects, sliders, and other parts built on ui-sdk
+src/lib/components/icons/    Drill, path, and target glyphs and illustrations
 src/lib/components/site/     Guide, article, and legal pages
 src/lib/content/             Page copy, routes, and guides
 src/lib/i18n/                Dictionaries for 10 languages
 src/lib/seo/                 Structured data and machine-readable files
 src/styles/                  Global styles
-scripts/                     Build, lint, translation, and profiling scripts
+scripts/                     Build, lint, translation, glyph, and profiling scripts
+docs/design/                 Design system and the references behind it
 tests/unit/                  Unit tests, run by Bun
 tests/*.playwright.ts        Browser tests, run by Playwright
 ```
