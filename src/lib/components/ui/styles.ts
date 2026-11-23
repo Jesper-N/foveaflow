@@ -5,7 +5,7 @@ export const popupSurface =
   "rounded-2xl border-0 bg-popover p-2 text-foreground shadow-popover";
 
 export const listItem =
-  "list-deal flex min-h-10 cursor-default items-center gap-3 rounded-xl ps-3 pe-2.5 text-md outline-none select-none transition-colors duration-160 ease-out data-disabled:opacity-50 data-highlighted:bg-fill pointer-coarse:min-h-12";
+  "list-deal relative z-1 flex min-h-10 cursor-default items-center gap-3 rounded-xl ps-3 pe-2.5 text-md outline-none select-none data-disabled:opacity-50 pointer-coarse:min-h-12";
 
 export const listGroupLabel =
   "px-3 pt-2.5 pb-1 text-xs font-medium text-muted-foreground";

@@ -17,6 +17,7 @@
   import BrandMark from "../../ui/brand-mark.svelte";
   import IconButton from "../../ui/icon-button.svelte";
   import { pressable } from "../../ui/styles";
+  import TooltipGroup from "../../ui/tooltip-group.svelte";
   import { getTrainer } from "../trainer-context";
   import IslandAdjustments from "./island-adjustments.svelte";
   import { createIslandMorph } from "./island-morph";
@@ -190,37 +191,43 @@
           playing={false}
         />
         <IslandSelects />
-        {#if trainer.canReverse}
-          <IconButton
-            class={trainer.settings.motionDirection === -1
-              ? "bg-fill-hover text-foreground"
-              : undefined}
-            aria-describedby="trainer-motion-status"
-            label={trainer.settings.motionDirection === 1
-              ? t("Reverse motion direction")
-              : t("Use forward motion direction")}
-            onclick={trainer.toggleDirection}
-          >
-            <ArrowLeftRightIcon aria-hidden="true" />
-          </IconButton>
-        {/if}
-        <IconButton
-          class="size-12 rounded-full [&_svg]:size-5"
-          aria-describedby="trainer-motion-status"
-          label={trainer.motionPaused ? t("Resume motion") : t("Pause motion")}
-          onclick={trainer.togglePaused}
-          shortcut="space"
-          variant="primary"
-        >
-          {#if trainer.motionPaused}
-            <PlayIcon
-              class="translate-x-px fill-current stroke-0"
-              aria-hidden="true"
-            />
-          {:else}
-            <PauseIcon class="fill-current stroke-0" aria-hidden="true" />
+        <TooltipGroup class="flex items-center gap-1" side="bottom">
+          {#if trainer.canReverse}
+            <IconButton
+              class={trainer.settings.motionDirection === -1
+                ? "bg-fill-hover text-foreground"
+                : undefined}
+              aria-describedby="trainer-motion-status"
+              grouped
+              label={trainer.settings.motionDirection === 1
+                ? t("Reverse motion direction")
+                : t("Use forward motion direction")}
+              onclick={trainer.toggleDirection}
+            >
+              <ArrowLeftRightIcon aria-hidden="true" />
+            </IconButton>
           {/if}
-        </IconButton>
+          <IconButton
+            class="size-12 rounded-full [&_svg]:size-5"
+            aria-describedby="trainer-motion-status"
+            grouped
+            label={trainer.motionPaused
+              ? t("Resume motion")
+              : t("Pause motion")}
+            onclick={trainer.togglePaused}
+            shortcut="space"
+            variant="primary"
+          >
+            {#if trainer.motionPaused}
+              <PlayIcon
+                class="translate-x-px fill-current stroke-0"
+                aria-hidden="true"
+              />
+            {:else}
+              <PauseIcon class="fill-current stroke-0" aria-hidden="true" />
+            {/if}
+          </IconButton>
+        </TooltipGroup>
       </div>
 
       <div
@@ -242,25 +249,27 @@
           <BrandMark class="size-6" />
           {siteMetadata.name}
         </a>
-        <nav class="flex items-center gap-0.5" aria-label={t("App actions")}>
-          <LanguageSelect compact />
-          <IconButton
-            aria-controls="trainer-guide"
-            label={trainer.route ? t("Open guide") : t("About FoveaFlow")}
-            onclick={trainer.openGuide}
-            shortcut="g"
-            side="bottom"
-          >
-            <BookOpenIcon aria-hidden="true" />
-          </IconButton>
-          <IconButton
-            label={t("Open controls")}
-            onclick={trainer.openControls}
-            shortcut="s"
-            side="bottom"
-          >
-            <SlidersHorizontalIcon aria-hidden="true" />
-          </IconButton>
+        <nav aria-label={t("App actions")}>
+          <TooltipGroup class="flex items-center gap-0.5" side="bottom">
+            <LanguageSelect compact tip />
+            <IconButton
+              aria-controls="trainer-guide"
+              grouped
+              label={trainer.route ? t("Open guide") : t("About FoveaFlow")}
+              onclick={trainer.openGuide}
+              shortcut="g"
+            >
+              <BookOpenIcon aria-hidden="true" />
+            </IconButton>
+            <IconButton
+              grouped
+              label={t("Open controls")}
+              onclick={trainer.openControls}
+              shortcut="s"
+            >
+              <SlidersHorizontalIcon aria-hidden="true" />
+            </IconButton>
+          </TooltipGroup>
         </nav>
       </footer>
     </div>

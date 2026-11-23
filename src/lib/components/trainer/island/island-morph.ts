@@ -15,6 +15,7 @@ const CORNER_RADIUS = 28;
 const SUBSTEPS = 4;
 const REST_DISTANCE = 0.25;
 const REST_SPEED = 2;
+const CONTENT_EXIT_MS = 80;
 
 const createSpring = (value: number, stiffness: number, damping: number) => ({
   damping,
@@ -53,6 +54,7 @@ export const createIslandMorph = (island: HTMLElement, notch: HTMLElement) => {
 
   let expanded = false;
   let frame = 0;
+  let exitTimer: number | undefined;
   let previous = 0;
 
   const render = () => {
@@ -139,12 +141,24 @@ export const createIslandMorph = (island: HTMLElement, notch: HTMLElement) => {
 
   return {
     destroy: () => {
+      window.clearTimeout(exitTimer);
       resize.disconnect();
       cancelAnimationFrame(frame);
     },
     setExpanded: (next: boolean) => {
+      window.clearTimeout(exitTimer);
+
+      if (next === expanded) {
+        return;
+      }
+
       expanded = next;
-      retarget();
+
+      if (next || still) {
+        retarget();
+      } else {
+        exitTimer = window.setTimeout(retarget, CONTENT_EXIT_MS);
+      }
     },
   };
 };

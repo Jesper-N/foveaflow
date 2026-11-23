@@ -380,3 +380,29 @@ html[data-i18n-pending="true"] body > * {
       opacity 160ms var(--ease-out);
   }
 }
+
+@utility stretch-indicator-y {
+  transition:
+    top 330ms var(--ease-edge-lead),
+    bottom 330ms var(--ease-edge-lead),
+    opacity 120ms var(--ease-out);
+
+  [data-direction="down"] > & {
+    transition:
+      bottom 330ms var(--ease-edge-lead),
+      top 790ms var(--ease-edge-trail),
+      opacity 120ms var(--ease-out);
+  }
+
+  [data-direction="up"] > & {
+    transition:
+      top 330ms var(--ease-edge-lead),
+      bottom 790ms var(--ease-edge-trail),
+      opacity 120ms var(--ease-out);
+  }
+
+  [data-modality="keyboard"] > &,
+  &[data-snap] {
+    transition: opacity 120ms var(--ease-out);
+  }
+}

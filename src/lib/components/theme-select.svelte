@@ -23,6 +23,7 @@
   hideLabel
   label={t("Theme")}
   onValueChange={selectTheme}
+  tip={t("Theme")}
   value={userPrefersMode.current}
 >
   {#snippet icon(value)}

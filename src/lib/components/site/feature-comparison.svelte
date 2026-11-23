@@ -20,8 +20,30 @@
 
 <section class="grid gap-5" aria-labelledby="feature-comparison">
   <h2 id="feature-comparison" class="sr-only">{t("Feature comparison")}</h2>
-  <div class="bg-card overflow-x-auto rounded-4xl p-2">
-    <table class="text-md w-full min-w-2xl border-separate border-spacing-0">
+  <ul class="grid gap-2 md:hidden">
+    {#each comparison.rows as row (row.feature)}
+      <li class="bg-card grid gap-1 rounded-3xl p-2">
+        <h3 class="px-3 pt-2 pb-1 text-sm font-medium">{t(row.feature)}</h3>
+        <div class="bg-popover grid gap-1 rounded-2xl p-3">
+          <span class="flex items-center gap-2 text-xs font-semibold">
+            <BrandMark class="size-4 rounded-xs" />
+            {siteMetadata.name}
+          </span>
+          <p class="text-md text-pretty">{t(row.foveaflow)}</p>
+        </div>
+        <div class="grid gap-1 p-3">
+          <span class="text-muted-foreground text-xs font-medium">
+            {comparison.alternative}
+          </span>
+          <p class="text-md text-muted-foreground text-pretty">
+            {t(row.alternative)}
+          </p>
+        </div>
+      </li>
+    {/each}
+  </ul>
+  <div class="bg-card overflow-x-auto rounded-4xl p-2 max-md:hidden">
+    <table class="text-md w-full border-separate border-spacing-0">
       <caption class="sr-only">
         {siteMetadata.name} / {comparison.alternative}: {t(
           "Feature comparison"

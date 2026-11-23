@@ -221,6 +221,25 @@ test("keyboard shortcuts pause and open panels", async ({ page }) => {
   await expect(page.getByRole("option", { name: "Circle" })).toBeVisible();
 });
 
+test("the island toolbar shares one tooltip that names each shortcut", async ({
+  page,
+}) => {
+  await openPage(page, "/circle/");
+  await expandIsland(page);
+
+  const controls = page.getByRole("button", { name: "Open controls" });
+  const tooltip = page.locator(".morph-tip[data-open]");
+
+  await expect(controls).toHaveAttribute("aria-keyshortcuts", "S");
+  await page.getByRole("button", { name: "Open guide" }).hover();
+  await expect(tooltip).toContainText("Open guide");
+  await controls.hover();
+  await expect(tooltip).toHaveCount(1);
+  await expect(tooltip).toContainText("Open controls");
+  await page.mouse.move(10, 700);
+  await expect(tooltip).toHaveCount(0);
+});
+
 test("pause freezes the canvas and resume restarts motion", async ({
   page,
 }) => {

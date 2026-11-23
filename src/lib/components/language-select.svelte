@@ -7,7 +7,8 @@
 
   import Select from "./ui/select.svelte";
 
-  let { compact = false }: { compact?: boolean } = $props();
+  let { compact = false, tip = false }: { compact?: boolean; tip?: boolean } =
+    $props();
 
   onMount(() => {
     void languageState.init();
@@ -38,6 +39,7 @@
       languageState.set(value);
     }
   }}
+  tip={tip ? t("Language") : undefined}
   value={languageState.locale}
 >
   {#snippet trigger()}

@@ -14,6 +14,7 @@
   import DrillIcon from "../icons/drill-icon.svelte";
   import BrandMark from "../ui/brand-mark.svelte";
   import { buttonClass } from "../ui/button-variants";
+  import TooltipGroup from "../ui/tooltip-group.svelte";
   import { pageWidth, pillLink } from "./layout";
 
   let { path, children }: { path: string; children: Snippet } = $props();
@@ -67,10 +68,10 @@
           >{t("Open FoveaFlow")}</a
         >
       </nav>
-      <div class="flex items-center gap-1">
-        <LanguageSelect compact />
+      <TooltipGroup class="flex items-center gap-1" side="bottom">
+        <LanguageSelect compact tip />
         <ThemeSelect />
-      </div>
+      </TooltipGroup>
     </div>
   </header>
 
