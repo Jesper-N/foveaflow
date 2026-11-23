@@ -9,14 +9,13 @@
 
 <script lang="ts">
   import type { DrillId } from "$lib/trainer/settings/drills";
-  import { cn } from "$lib/utils";
 
   let { drillId, class: className }: { drillId: DrillId; class?: string } =
     $props();
 </script>
 
 <svg
-  class={cn("text-foreground aspect-12/7 h-auto w-full shrink-0", className)}
+  class={["aspect-12/7 h-auto w-full shrink-0", className]}
   aria-hidden="true"
   data-slot="drill-illustration"
   fill="none"
@@ -26,8 +25,9 @@
   width="240"
 >
   <path
-    class="stroke-border"
     d="M20 70H220M120 14V126"
+    opacity=".2"
+    stroke="currentColor"
     stroke-dasharray="2 5"
   />
   {#if drillId === "pursuit"}
@@ -43,7 +43,7 @@
       stroke-linecap="round"
       stroke-width="2"
     />
-    <circle class="fill-primary" cx="204" cy="67" r="7" />
+    <circle cx="204" cy="67" fill="currentColor" r="7" />
     <circle cx="204" cy="67" opacity=".25" r="13" stroke="currentColor" />
   {:else if drillId === "reactionTime"}
     <circle
@@ -67,7 +67,7 @@
       stroke-linejoin="round"
       stroke-width="2"
     />
-    <circle class="fill-primary" cx="183" cy="30" r="9" />
+    <circle cx="183" cy="30" fill="currentColor" r="9" />
   {:else if drillId === "mot"}
     <g stroke="currentColor" stroke-width="2">
       <circle cx="47" cy="40" r="8.5" />
@@ -83,18 +83,14 @@
       stroke-dasharray="3 5"
       stroke-width="1.5"
     />
-    <circle class="fill-primary" cx="163" cy="65" r="9" />
+    <circle cx="163" cy="65" fill="currentColor" r="9" />
   {:else}
     {#each ring as dot (dot.index)}
       <!-- One dot is missing, like the moving gap in the drill. -->
       {#if dot.index !== 10}
-        <circle class="fill-primary" cx={dot.x} cy={dot.y} r="6" />
+        <circle cx={dot.x} cy={dot.y} fill="currentColor" r="6" />
       {/if}
     {/each}
-    <path
-      class="stroke-foreground"
-      d="M115 70h10M120 65v10"
-      stroke-width="1.5"
-    />
+    <path d="M115 70h10M120 65v10" stroke="currentColor" stroke-width="1.5" />
   {/if}
 </svg>

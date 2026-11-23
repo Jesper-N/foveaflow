@@ -1,6 +1,5 @@
 <script lang="ts">
   import DrillIllustration from "$lib/components/drills/drill-illustration.svelte";
-  import { stageGrid } from "$lib/components/site/styles";
   import type { DrillId } from "$lib/trainer/settings/drills";
 
   let {
@@ -15,11 +14,9 @@
   } = $props();
 </script>
 
-<!-- The stage echoes the trainer canvas: page background with a faint grid. -->
 <header
   class={[
-    "border-border/60 bg-background relative grid items-center gap-6 border-b px-6 pt-7 pb-6 sm:py-7 sm:pr-20 sm:pl-8",
-    stageGrid,
+    "relative grid items-center gap-6 border-b px-6 pt-7 pb-6 sm:py-7 sm:pr-20 sm:pl-8",
     drillId && "sm:grid-cols-[minmax(0,1fr)_13rem]",
   ]}
 >
@@ -30,9 +27,7 @@
     >
       {title}
     </h2>
-    <p
-      class="text-muted-foreground relative max-w-[46ch] text-base leading-7 text-pretty"
-    >
+    <p class="relative max-w-[46ch] text-base leading-7 text-pretty">
       {lede}
     </p>
   </div>

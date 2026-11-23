@@ -1,45 +1,39 @@
 <script lang="ts">
-  import * as Field from "$lib/components/ui/field";
-  import * as Select from "$lib/components/ui/select";
-  import * as ToggleGroup from "$lib/components/ui/toggle-group";
   import { t } from "$lib/i18n/translate";
-  import {
-    getLilacChaserColorName,
-    targetForms,
-  } from "$lib/trainer/settings/options";
+  import { targetForms } from "$lib/trainer/settings/options";
 
-  import LilacColorSelectContent from "../selects/lilac-color-select-content.svelte";
+  import LilacColorOptions from "../selects/lilac-color-options.svelte";
   import { getTrainer } from "../trainer-context";
   import ColorRow from "./color-row.svelte";
   import LetterSettings from "./letter-settings.svelte";
+  import RadioGroup from "./radio-group.svelte";
   import SettingsRow from "./settings-row.svelte";
   import SettingsSection from "./settings-section.svelte";
   import SliderRow from "./slider-row.svelte";
   import TargetGlyph from "./target-glyph.svelte";
 
   const trainer = getTrainer();
+
+  let formOptions = $derived(
+    targetForms.map((form) => ({ label: t(form.name), value: form.id }))
+  );
 </script>
 
 <SettingsSection label={t("Appearance")}>
   {#if trainer.isLilacChaser}
     <SettingsRow>
-      <Field.FieldLabel for="trainer-lilac-color">
-        {t("Ball color")}
-      </Field.FieldLabel>
-      <Select.Root
-        onValueChange={trainer.setLilacChaserColor}
-        type="single"
+      <label for="trainer-lilac-color">{t("Ball color")}</label>
+      <select
+        id="trainer-lilac-color"
+        class="min-h-11"
+        aria-label={t("Lilac Chaser ball color")}
+        onchange={(event) => {
+          trainer.setLilacChaserColor(event.currentTarget.value);
+        }}
         value={trainer.settings.lilacChaserBallColor}
       >
-        <Select.Trigger
-          id="trainer-lilac-color"
-          class="min-h-11 w-full"
-          aria-label={t("Lilac Chaser ball color")}
-        >
-          {t(getLilacChaserColorName(trainer.settings.lilacChaserBallColor))}
-        </Select.Trigger>
-        <LilacColorSelectContent />
-      </Select.Root>
+        <LilacColorOptions />
+      </select>
     </SettingsRow>
     <SliderRow
       label={t("Scale")}
@@ -64,29 +58,19 @@
         </span>
       {/snippet}
     </ColorRow>
-    <SettingsRow>
-      <Field.FieldLabel id="trainer-shape-label">
-        {t("Target form")}
-      </Field.FieldLabel>
-      <ToggleGroup.Root
-        class="grid w-full grid-cols-6"
-        aria-labelledby="trainer-shape-label"
-        type="single"
-        variant="outline"
-        bind:value={() => trainer.settings.targetForm, trainer.setTargetForm}
-      >
-        {#each targetForms as form (form.id)}
-          <ToggleGroup.Item
-            class="min-h-11 px-0"
-            aria-label={t(form.name)}
-            title={t(form.name)}
-            value={form.id}
-          >
-            <span class="size-5"><TargetGlyph form={form.id} /></span>
-          </ToggleGroup.Item>
-        {/each}
-      </ToggleGroup.Root>
-    </SettingsRow>
+    <RadioGroup
+      name="trainer-target-form"
+      legend={t("Target form")}
+      onValueChange={trainer.setTargetForm}
+      options={formOptions}
+      value={trainer.settings.targetForm}
+    >
+      {#snippet item(form)}
+        <span class="size-5" aria-hidden="true">
+          <TargetGlyph {form} />
+        </span>
+      {/snippet}
+    </RadioGroup>
     <SliderRow
       label={t("Size")}
       setting="baseRadiusPx"

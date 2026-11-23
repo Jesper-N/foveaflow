@@ -1,7 +1,4 @@
 <script lang="ts">
-  import * as Field from "$lib/components/ui/field";
-  import { Switch } from "$lib/components/ui/switch";
-
   let {
     id,
     label,
@@ -9,7 +6,7 @@
   }: { id: string; label: string; checked: boolean } = $props();
 </script>
 
-<Field.Field class="min-h-17 justify-between py-3" orientation="horizontal">
-  <Field.FieldLabel for={id}>{label}</Field.FieldLabel>
-  <Switch {id} bind:checked />
-</Field.Field>
+<div class="flex min-h-11 items-center justify-between gap-3 py-3">
+  <label for={id}>{label}</label>
+  <input {id} role="switch" type="checkbox" bind:checked />
+</div>

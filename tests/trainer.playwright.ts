@@ -3,6 +3,8 @@ import type { Page } from "@playwright/test";
 
 import { drillRoutes } from "../src/lib/content/drill-routes";
 import { homeCopy } from "../src/lib/content/home";
+import { getCanvasTheme } from "../src/lib/trainer/canvas/theme";
+import type { ColorMode } from "../src/lib/trainer/canvas/theme";
 import type { PatternId } from "../src/lib/trainer/engine/types";
 import { getDrill } from "../src/lib/trainer/settings/drills";
 import type { DrillId } from "../src/lib/trainer/settings/drills";
@@ -29,8 +31,8 @@ const expectTrainer = async (
   patternId: PatternId
 ) => {
   await expect(pauseButton(page)).toBeVisible();
-  await expect(page.locator('[data-hud-select="drill"]:visible')).toContainText(
-    getDrill(drillId).name
+  await expect(page.locator('select[data-hud-select="drill"]')).toHaveValue(
+    drillId
   );
   await expect
     .poll(async () => await readSettings(page))
@@ -48,21 +50,16 @@ const hoverIsland = async (page: Page) => {
   await page.mouse.move(bounds.x + bounds.width / 2, bounds.y + 20);
 };
 
-/** Picks an option from a menu in the island, by mouse or by touch. */
+/** Picks an option from a select in the island. */
 const choose = async (
   page: Page,
   select: "drill" | "pattern",
-  name: string,
+  label: string,
   hasTouch: boolean
 ) => {
-  const action = hasTouch ? "tap" : "click";
-  await page.locator(`[data-hud-select="${select}"]:visible`)[action]();
-  const option = page.getByRole("option", { exact: true, name });
-  // Scrolling can reveal the menu's scroll buttons and shift its items, so
-  // the click checks stability after that layout change.
-  await option.scrollIntoViewIfNeeded();
-  await option[action]();
-  await expect(page.locator('[data-slot="select-content"]')).toHaveCount(0);
+  await page
+    .locator(`select[data-hud-select="${select}"]`)
+    .selectOption({ label });
 
   if (!hasTouch) {
     await hoverIsland(page);
@@ -81,8 +78,7 @@ const showSection = async (page: Page, section: string) => {
 const adjustSlider = async (page: Page, name: string, key: string) => {
   await page
     .getByRole("dialog")
-    .locator(`[data-slot="slider"][aria-label="${name}"]`)
-    .getByRole("slider")
+    .getByRole("slider", { exact: true, name })
     .press(key);
 };
 
@@ -187,7 +183,7 @@ test("keyboard shortcuts pause and open panels", async ({ page }) => {
 
   await page.keyboard.press("s");
   await expect(page.getByRole("dialog")).toBeVisible();
-  // The next shortcut must work while the closed dialog is still animating out.
+  // The next shortcut must work before the dialog's close event arrives.
   await page.keyboard.press("Escape");
   await page.keyboard.press("g");
   await expect(page.locator("#trainer-guide")).toBeVisible();
@@ -230,23 +226,11 @@ test("the island hides when idle and comes back on pointer or touch", async ({
 
   await (hasTouch ? reveal.tap() : hoverIsland(page));
   await expect(island).not.toHaveAttribute("inert", "");
-  const action = hasTouch ? "tap" : "click";
 
-  const drillMenu = page.getByRole("combobox", {
-    exact: true,
-    name: "Drill: Smooth Pursuit",
-  });
-
-  await drillMenu[action]();
-
-  const reactionJumps = page.getByRole("option", {
-    exact: true,
-    name: "Reaction Jumps",
-  });
-
-  await reactionJumps[action]();
+  await island
+    .getByRole("combobox", { exact: true, name: "Drill" })
+    .selectOption({ label: "Reaction Jumps" });
   await expect(page).toHaveURL(/\/reaction-jumps\/$/u);
-  await expect(page.getByRole("listbox")).toHaveCount(0);
 
   if (!hasTouch) {
     // A pointer resting on the island keeps it open.
@@ -272,9 +256,7 @@ test("the island offers the controls the drill supports", async ({
 
   const pattern = page.locator('[data-hud-select="pattern"]');
 
-  const speed = page.locator(
-    '[data-slot="slider"][aria-label="Header target speed"]'
-  );
+  const speed = page.getByRole("slider", { name: "Header target speed" });
 
   const lilacColor = page.getByRole("combobox", {
     name: "Lilac Chaser ball color",
@@ -409,7 +391,7 @@ test("settings redraw the paused drill, survive a reload, and reset", async ({
     });
 });
 
-test("the target color follows the theme until a custom color is chosen", async ({
+test("the target color follows the color mode until a custom color is chosen", async ({
   page,
 }) => {
   await openPage(page, "/circle/");
@@ -418,24 +400,14 @@ test("the target color follows the theme until a custom color is chosen", async 
   await openControls(page, "targets");
   const color = page.getByLabel("Ball color", { exact: true });
 
-  /** The color picker shows the theme's primary color and the canvas draws it. */
-  const expectThemeTarget = async () => {
-    const primary = await page.evaluate(() => {
-      const context = document.createElement("canvas").getContext("2d");
+  /** The color picker shows the color mode's default target and the canvas draws it. */
+  const expectThemeTarget = async (mode: ColorMode) => {
+    const hex = getCanvasTheme(mode).targetColor;
 
-      if (!context) {
-        throw new Error("No canvas context");
-      }
+    const rgb = [1, 3, 5].map((start) =>
+      Number.parseInt(hex.slice(start, start + 2), 16)
+    );
 
-      context.fillStyle = getComputedStyle(document.documentElement)
-        .getPropertyValue("--primary")
-        .trim();
-      context.fillRect(0, 0, 1, 1);
-
-      return [...context.getImageData(0, 0, 1, 1).data.subarray(0, 3)];
-    });
-
-    const hex = `#${primary.map((channel) => channel.toString(16).padStart(2, "0")).join("")}`;
     await expect(color).toHaveValue(hex);
     await expect
       .poll(
@@ -463,7 +435,7 @@ test("the target color follows the theme until a custom color is chosen", async 
               }
 
               return false;
-            }, primary)
+            }, rgb)
       )
       .toBe(true);
     await expect
@@ -473,11 +445,11 @@ test("the target color follows the theme until a custom color is chosen", async 
       });
   };
 
-  await expectThemeTarget();
+  await expectThemeTarget("light");
   await showSection(page, "general");
   await page.getByRole("radio", { exact: true, name: "Dark" }).click();
   await showSection(page, "targets");
-  await expectThemeTarget();
+  await expectThemeTarget("dark");
 
   // The old default stays available as a chosen color.
   await color.fill("#76d900");
@@ -496,7 +468,7 @@ test("the target color follows the theme until a custom color is chosen", async 
   await showSection(page, "general");
   await resetToDefaults(page);
   await showSection(page, "targets");
-  await expectThemeTarget();
+  await expectThemeTarget("light");
 });
 
 test("a version 2 save is migrated when the trainer loads", async ({
@@ -545,8 +517,7 @@ test("Lilac color and scale redraw the paused drill and persist", async ({
   await page
     .getByRole("dialog")
     .getByRole("combobox", { name: "Lilac Chaser ball color" })
-    .click();
-  await page.getByRole("option", { exact: true, name: "Blue" }).click();
+    .selectOption({ label: "Blue" });
   await expect.poll(async () => await canvasImage(page)).not.toBe(image);
 
   const changed = {

@@ -43,15 +43,6 @@ const repeatableActions = new Set<ShortcutAction>([
   "speedUp",
 ]);
 
-/** A focused select trigger already uses Space and the arrow keys. */
-const selectTriggerActions = new Set<ShortcutAction>([
-  "togglePause",
-  "growTarget",
-  "shrinkTarget",
-  "slowDown",
-  "speedUp",
-]);
-
 /** Focused controls that keep keys for themselves. */
 const keyCapturingSelector = [
   "a[href]",
@@ -61,8 +52,6 @@ const keyCapturingSelector = [
   "textarea",
   "[contenteditable='']",
   "[contenteditable='true']",
-  "[data-slot='dialog-content']",
-  "[data-slot='select-content']",
   "dialog[open]",
   "[role='button']",
   "[role='combobox']",
@@ -73,12 +62,6 @@ const keyCapturingSelector = [
   "[role='switch']",
   "[role='tab']",
   "[role='textbox']",
-].join(",");
-
-/** Focus stays inside a dialog or menu until it finishes animating closed. */
-const closingSurfaceSelector = [
-  "[data-slot='dialog-content'][data-state='closed']",
-  "[data-slot='select-content'][data-state='closed']",
 ].join(",");
 
 export const getShortcutAction = (
@@ -105,16 +88,9 @@ export const getShortcutAction = (
 };
 
 /** Whether the focused element should get the key instead of the shortcut. */
-export const isKeyCapturedBy = (
-  target: EventTarget | null,
-  action: ShortcutAction
-) => {
-  if (!(target instanceof Element) || target.closest(closingSurfaceSelector)) {
+export const isKeyCapturedBy = (target: EventTarget | null) => {
+  if (!(target instanceof Element)) {
     return false;
-  }
-
-  if (target.closest("[data-slot='select-trigger']")) {
-    return selectTriggerActions.has(action);
   }
 
   return target.closest(keyCapturingSelector) !== null;

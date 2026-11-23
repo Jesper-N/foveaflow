@@ -7,7 +7,7 @@ import { homeCopy } from "$lib/content/home";
 import { siteMetadata } from "$lib/content/site";
 import { languageState } from "$lib/i18n/state.svelte";
 import { syncDocumentHead } from "$lib/seo/document-head";
-import { readThemeTargetColor } from "$lib/trainer/canvas/theme";
+import { getCanvasTheme } from "$lib/trainer/canvas/theme";
 import type { ColorMode } from "$lib/trainer/canvas/theme";
 import { TrainerCanvas } from "$lib/trainer/canvas/trainer-canvas";
 import type { CanvasScene } from "$lib/trainer/canvas/trainer-canvas";
@@ -54,12 +54,25 @@ type HudSelect = "drill" | "pattern";
 /** The island stays up a little longer on the first visit. */
 const FIRST_REVEAL_MS = 1800;
 
-/** Focuses a select trigger in the island once it has rendered open. */
-const focusHudSelect = async (select: HudSelect) => {
+/** Focuses a select in the island once it has rendered, and opens its picker. */
+const openHudSelectPicker = async (select: HudSelect) => {
   await tick();
-  document
-    .querySelector<HTMLElement>(`[data-hud-select="${select}"]`)
-    ?.focus({ preventScroll: true });
+
+  const element = document.querySelector<HTMLSelectElement>(
+    `select[data-hud-select="${select}"]`
+  );
+
+  if (!element) {
+    return;
+  }
+
+  element.focus({ preventScroll: true });
+
+  try {
+    element.showPicker();
+  } catch {
+    // Browsers without showPicker on selects leave it focused for the arrow keys.
+  }
 };
 
 /**
@@ -75,28 +88,16 @@ export class Trainer {
   motionPaused = $state(false);
   controlsOpen = $state(false);
   guideOpen = $state(false);
-  drillSelectOpen = $state(false);
-  patternSelectOpen = $state(false);
-  lilacColorSelectOpen = $state(false);
-  languageSelectOpen = $state(false);
 
   readonly hud = new HudVisibility(() => this.overlayOpen);
   readonly cursor = new IdleCursor();
 
-  #themeTargetColor = $state("#000000");
   /** Settings save only after the saved ones have loaded, so defaults never overwrite them. */
   #settingsLoaded = $state(false);
   readonly #saver = new SettingsSaver();
   readonly #canvas = new TrainerCanvas(() => this.#scene);
 
-  overlayOpen = $derived(
-    this.controlsOpen ||
-      this.guideOpen ||
-      this.languageSelectOpen ||
-      this.drillSelectOpen ||
-      this.patternSelectOpen ||
-      this.lilacColorSelectOpen
-  );
+  overlayOpen = $derived(this.controlsOpen || this.guideOpen);
 
   colorMode = $derived.by((): ColorMode => {
     const { current } = mode;
@@ -114,7 +115,9 @@ export class Trainer {
   });
 
   targetColor = $derived(
-    safeStimulusColor(this.settings.ballColor ?? this.#themeTargetColor)
+    safeStimulusColor(
+      this.settings.ballColor ?? getCanvasTheme(this.colorMode).targetColor
+    )
   );
 
   distractorColor = $derived(
@@ -204,16 +207,6 @@ export class Trainer {
     this.#followBrowserRoute(loadSettings() ?? this.settings);
     this.#settingsLoaded = true;
 
-    // The default target color follows the theme's primary color.
-    const root = document.documentElement;
-    this.#themeTargetColor = readThemeTargetColor(root);
-
-    const themeObserver = new MutationObserver(() => {
-      this.#themeTargetColor = readThemeTargetColor(root);
-    });
-
-    themeObserver.observe(root, { attributeFilter: ["class", "style"] });
-
     let mounted = true;
 
     // The island renders once translations load, so its first auto-hide starts then.
@@ -243,7 +236,6 @@ export class Trainer {
     return () => {
       mounted = false;
       reducedMotion.removeEventListener("change", pauseForReducedMotion);
-      themeObserver.disconnect();
       this.#saver.flush();
       this.hud.dispose();
       this.cursor.stop();
@@ -348,7 +340,7 @@ export class Trainer {
   handleKeydown = (event: KeyboardEvent) => {
     const action = getShortcutAction(event);
 
-    if (!action || isKeyCapturedBy(event.target, action)) {
+    if (!action || isKeyCapturedBy(event.target)) {
       return;
     }
 
@@ -379,11 +371,6 @@ export class Trainer {
   };
 
   #runShortcut(action: ShortcutAction) {
-    // Open menus and dialogs keep their own keys.
-    if (this.overlayOpen) {
-      return false;
-    }
-
     switch (action) {
       case "togglePause": {
         this.togglePaused();
@@ -451,14 +438,8 @@ export class Trainer {
 
   /** Opens a select in the island from the keyboard and focuses it. */
   #openHudSelect(select: HudSelect) {
-    if (select === "drill") {
-      this.drillSelectOpen = true;
-    } else {
-      this.patternSelectOpen = true;
-    }
-
     this.hud.reveal();
-    void focusHudSelect(select);
+    void openHudSelectPicker(select);
   }
 
   /** Restarts motion after the drill or path changed, and updates the URL. */

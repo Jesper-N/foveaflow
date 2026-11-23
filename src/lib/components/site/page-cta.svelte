@@ -1,13 +1,12 @@
 <script lang="ts">
   import DrillIllustration from "$lib/components/drills/drill-illustration.svelte";
-  import { Button } from "$lib/components/ui/button";
   import ArrowUpRightIcon from "@lucide/svelte/icons/arrow-up-right";
 
   import {
     contentStage,
     editorialCopy,
     editorialHeading,
-    heroButton,
+    actionLink,
   } from "./styles";
 
   let {
@@ -28,10 +27,10 @@
   <div class="relative flex flex-col items-start gap-3">
     <h2 class={editorialHeading}>{title}</h2>
     <p class={editorialCopy}>{body}</p>
-    <Button class={["mt-3", heroButton]} {href} size="lg">
+    <a class={["mt-3", actionLink]} {href}>
       {label}
-      <ArrowUpRightIcon data-icon="inline-end" />
-    </Button>
+      <ArrowUpRightIcon aria-hidden="true" />
+    </a>
   </div>
   <DrillIllustration class="relative hidden sm:block" drillId="pursuit" />
 </section>

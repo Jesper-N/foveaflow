@@ -6,7 +6,6 @@
   import { homeCopy } from "$lib/content/home";
   import { freeUseNote } from "$lib/content/site";
   import { t } from "$lib/i18n/translate";
-  import { cn } from "$lib/utils";
 
   import GuideHeader from "./guide-header.svelte";
   import { guideCopy, guideSectionHeading } from "./styles";
@@ -26,20 +25,20 @@
       {#each drillGuides as guide (guide.drillId)}
         <li>
           <a
-            class={cn(
+            class={[
               drillCard,
-              "grid h-full grid-cols-[6.5rem_minmax(0,1fr)] items-center gap-4 rounded-2xl p-3"
-            )}
+              "grid h-full grid-cols-[6.5rem_minmax(0,1fr)] items-center gap-4 rounded-2xl p-3",
+            ]}
             href={mainRouteForDrill(guide.drillId)?.path ?? "/"}
           >
             <span class="px-2 py-1.5">
               <DrillIllustration drillId={guide.drillId} />
             </span>
             <span class="grid gap-1">
-              <span class="text-foreground leading-5 font-semibold">
+              <span class="leading-5 font-semibold">
                 {t(guide.title)}
               </span>
-              <span class="text-muted-foreground leading-5 text-pretty">
+              <span class="leading-5 text-pretty">
                 {t(guide.summary)}
               </span>
             </span>

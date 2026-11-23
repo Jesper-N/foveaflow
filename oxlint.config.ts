@@ -6,7 +6,7 @@ import svelte from "ultracite/oxlint/svelte";
 
 export default defineConfig({
   extends: [core, astro, svelte, antiSlop],
-  ignorePatterns: [...core.ignorePatterns, "src/lib/components/ui/**"],
+  ignorePatterns: core.ignorePatterns,
   options: {
     denyWarnings: true,
     reportUnusedDisableDirectives: "error",

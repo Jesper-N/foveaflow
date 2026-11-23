@@ -13,12 +13,10 @@ const HIDE_ZONE_PX = 160;
 
 /**
  * Decides when the floating control island shows. It stays up while the
- * pointer or keyboard focus is in it or a menu from it is open, hides after
+ * pointer or keyboard focus is in it or a select in it has focus, hides after
  * a short delay otherwise, and comes back when the pointer nears the top.
  */
 export class HudVisibility {
-  /** Instant reveal skips the animation when keyboard focus jumps into the island. */
-  instantReveal = $state(false);
   /** False until the first auto-hide, so the island starts visible. */
   #autoHideReady = $state(false);
   #visible = $state(true);
@@ -67,15 +65,13 @@ export class HudVisibility {
     this.#cancelPointerReveal();
   }
 
-  /** Call when a menu opened from the island opens or closes. */
-  handleMenuOpenChange = (open: boolean) => {
-    if (open) {
-      this.#cancelAutoHide();
-      this.reveal();
+  /** Keeps the island up while a select in it has focus. */
+  handleMenuFocus = () => {
+    this.#cancelAutoHide();
+    this.reveal();
+  };
 
-      return;
-    }
-
+  handleMenuBlur = () => {
     if (this.#lastPointerWasTouch) {
       this.showBriefly();
 
@@ -138,7 +134,6 @@ export class HudVisibility {
       event.currentTarget instanceof HTMLElement &&
       event.currentTarget.matches(":focus-visible");
 
-    this.instantReveal = fromKeyboard;
     this.reveal();
 
     if (!fromKeyboard) {
@@ -151,17 +146,12 @@ export class HudVisibility {
       );
 
       if (!focusTarget) {
-        this.instantReveal = false;
-
         return;
       }
 
       focusTarget.focus();
       this.#focusInside = true;
       this.#syncInteraction();
-      requestAnimationFrame(() => {
-        this.instantReveal = false;
-      });
     });
   };
 

@@ -1,5 +1,4 @@
 <script lang="ts">
-  import * as Field from "$lib/components/ui/field";
   import type { RangedSetting } from "$lib/trainer/settings/settings";
 
   import { getTrainer } from "../trainer-context";
@@ -19,14 +18,15 @@
   } = $props();
 
   const trainer = getTrainer();
+  const id = $props.id();
 </script>
 
 <SettingsRow>
-  <Field.FieldTitle>{label}</Field.FieldTitle>
+  <label for={id}>{label}</label>
   <div class="grid min-w-0 grid-cols-[minmax(0,1fr)_3rem] items-center gap-3">
-    <SettingSlider label={sliderLabel} {setting} />
-    <span class="text-muted-foreground text-right text-sm tabular-nums">
+    <SettingSlider {id} label={sliderLabel} {setting} />
+    <output class="text-right tabular-nums" for={id}>
       {formatSetting(setting, trainer.settings[setting])}
-    </span>
+    </output>
   </div>
 </SettingsRow>

@@ -1,6 +1,5 @@
 <script lang="ts">
   import DrillIllustration from "$lib/components/drills/drill-illustration.svelte";
-  import { Button } from "$lib/components/ui/button";
   import type { Article } from "$lib/content/articles";
   import { drillGuides } from "$lib/content/drill-guides";
   import { mainRouteForDrill } from "$lib/content/drill-routes";
@@ -15,7 +14,7 @@
   import ReadingLayout from "./reading-layout.svelte";
   import SiteShell from "./site-shell.svelte";
   import StepList from "./step-list.svelte";
-  import { drillCard, editorialCopy, heroButton } from "./styles";
+  import { actionLink, drillCard, editorialCopy } from "./styles";
 
   let { page }: { page: Article } = $props();
 
@@ -53,20 +52,15 @@
     title={t(page.heading)}
   >
     {#snippet actions()}
-      <Button class={heroButton} href={page.primaryCta.href} size="lg">
+      <a class={actionLink} href={page.primaryCta.href}>
         {t(page.primaryCta.label)}
-        <ArrowUpRightIcon data-icon="inline-end" />
-      </Button>
+        <ArrowUpRightIcon aria-hidden="true" />
+      </a>
       {#if page.secondaryCta}
-        <Button
-          class="h-11 gap-2"
-          href={page.secondaryCta.href}
-          size="lg"
-          variant="ghost"
-        >
+        <a class={actionLink} href={page.secondaryCta.href}>
           {t(page.secondaryCta.label)}
-          <ArrowUpRightIcon data-icon="inline-end" />
-        </Button>
+          <ArrowUpRightIcon aria-hidden="true" />
+        </a>
       {/if}
     {/snippet}
     {#snippet meta()}
@@ -103,7 +97,7 @@
           <ul class="mt-6 grid gap-4">
             {#each section.list as item (item)}
               <li class="flex gap-3">
-                <CheckIcon class="text-foreground mt-1.5 size-4 shrink-0" />
+                <CheckIcon class="mt-1.5 size-4 shrink-0" />
                 <p class={editorialCopy}>{t(item)}</p>
               </li>
             {/each}

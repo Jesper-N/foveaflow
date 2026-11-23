@@ -1,11 +1,10 @@
 <script lang="ts">
-  import { Button } from "$lib/components/ui/button";
   import { t } from "$lib/i18n/translate";
   import ArrowUpRightIcon from "@lucide/svelte/icons/arrow-up-right";
 
   import PageHero from "./page-hero.svelte";
   import SiteShell from "./site-shell.svelte";
-  import { heroButton } from "./styles";
+  import { actionLink } from "./styles";
 </script>
 
 <SiteShell path="/404/">
@@ -17,19 +16,19 @@
       title={t("This path ends here")}
     >
       {#snippet actions()}
-        <Button class={heroButton} href="/" size="lg">
+        <a class={actionLink} href="/">
           {t("Open FoveaFlow")}
-          <ArrowUpRightIcon data-icon="inline-end" />
-        </Button>
-        <Button class="h-11 gap-2" href="/guide/" size="lg" variant="ghost">
+          <ArrowUpRightIcon aria-hidden="true" />
+        </a>
+        <a class={actionLink} href="/guide/">
           {t("Read the guide")}
-          <ArrowUpRightIcon data-icon="inline-end" />
-        </Button>
+          <ArrowUpRightIcon aria-hidden="true" />
+        </a>
       {/snippet}
       {#snippet illustration()}
         <!-- A tracking path that trails off before reaching its target. -->
         <svg
-          class="text-foreground relative h-auto w-full"
+          class="relative h-auto w-full"
           aria-hidden="true"
           fill="none"
           height="140"
@@ -37,8 +36,9 @@
           width="240"
         >
           <path
-            class="stroke-border"
             d="M20 70H220M120 14V126"
+            opacity=".2"
+            stroke="currentColor"
             stroke-dasharray="2 5"
           />
           <path

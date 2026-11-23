@@ -1,6 +1,5 @@
 <script lang="ts">
   import DrillIllustration from "$lib/components/drills/drill-illustration.svelte";
-  import { Button } from "$lib/components/ui/button";
   import { drillGuides } from "$lib/content/drill-guides";
   import { t } from "$lib/i18n/translate";
   import ArrowDownIcon from "@lucide/svelte/icons/arrow-down";
@@ -11,7 +10,7 @@
   import PageHero from "./page-hero.svelte";
   import ReadingLayout from "./reading-layout.svelte";
   import SiteShell from "./site-shell.svelte";
-  import { drillCard, heroButton } from "./styles";
+  import { drillCard, actionLink } from "./styles";
 
   // Each id matches a section in this page or in the two section components.
   const contents = [
@@ -33,14 +32,14 @@
     title={t("FoveaFlow Guide")}
   >
     {#snippet actions()}
-      <Button class={heroButton} href="/smooth-pursuit/" size="lg">
+      <a class={actionLink} href="/smooth-pursuit/">
         {t("Try Smooth Pursuit")}
-        <ArrowUpRightIcon data-icon="inline-end" />
-      </Button>
-      <Button class="h-11 gap-2" href="#practice" size="lg" variant="ghost">
+        <ArrowUpRightIcon aria-hidden="true" />
+      </a>
+      <a class={actionLink} href="#practice">
         {t("How to practice")}
-        <ArrowDownIcon data-icon="inline-end" />
-      </Button>
+        <ArrowDownIcon aria-hidden="true" />
+      </a>
     {/snippet}
     {#snippet footer()}
       <nav
@@ -66,10 +65,10 @@
               >
                 {t(guide.title)}
                 <ArrowDownIcon
-                  class="text-muted-foreground group-hover:text-brand-foreground size-3.5 shrink-0 transition-colors motion-reduce:transition-none"
+                  class="size-3.5 shrink-0 transition-colors motion-reduce:transition-none"
                 />
               </span>
-              <span class="text-muted-foreground text-sm leading-6 text-pretty">
+              <span class="text-sm leading-6 text-pretty">
                 {t(guide.summary)}
               </span>
             </span>

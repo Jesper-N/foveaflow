@@ -1,5 +1,4 @@
 <script lang="ts">
-  import * as Field from "$lib/components/ui/field";
   import type { Snippet } from "svelte";
 
   let {
@@ -15,14 +14,9 @@
   } = $props();
 </script>
 
-<Field.FieldSet
-  class="[&>legend]:text-muted-foreground min-w-0 gap-0 [&+fieldset]:mt-8 [&>legend]:float-left [&>legend]:mb-1 [&>legend]:w-full"
-  aria-label={label}
->
+<fieldset class="min-w-0 [&+fieldset]:mt-8" aria-label={label}>
   {#if legend}
-    <Field.FieldLegend variant="label">{legend}</Field.FieldLegend>
+    <legend>{legend}</legend>
   {/if}
-  <Field.FieldGroup class="divide-border/60 gap-0 divide-y">
-    {@render children()}
-  </Field.FieldGroup>
-</Field.FieldSet>
+  {@render children()}
+</fieldset>

@@ -2,10 +2,9 @@
   import type { Article } from "$lib/content/articles";
   import { siteMetadata } from "$lib/content/site";
   import { formatDate, t } from "$lib/i18n/translate";
-  import { cn } from "$lib/utils";
   import ArrowUpRightIcon from "@lucide/svelte/icons/arrow-up-right";
 
-  import { editorialHeading, editorialLink, panelSurface } from "./styles";
+  import { editorialHeading, editorialLink } from "./styles";
 
   let {
     comparison,
@@ -22,7 +21,7 @@
     {t("Feature comparison")}
   </h2>
   <!-- A table on wide screens. On phones each row stacks into a card. -->
-  <div class="ring-border/70 overflow-hidden rounded-2xl ring-1">
+  <div class="overflow-hidden rounded-2xl ring-1">
     <table class="block w-full border-collapse text-left text-sm sm:table">
       <caption class="sr-only">
         {siteMetadata.name} / {comparison.alternative}: {t(
@@ -30,15 +29,12 @@
         )}
       </caption>
       <thead class="sr-only sm:not-sr-only sm:table-header-group">
-        <tr class="border-border border-b">
+        <tr class="border-b">
           <th class="w-1/4 px-5 py-5 font-medium" scope="col">
             {t("Feature")}
           </th>
           <th
-            class={[
-              panelSurface,
-              "w-[37.5%] px-5 py-5 text-base font-semibold",
-            ]}
+            class={["w-[37.5%] px-5 py-5 text-base font-semibold"]}
             scope="col"
           >
             <span class="flex items-center gap-2">
@@ -57,34 +53,23 @@
           </th>
         </tr>
       </thead>
-      <tbody class="divide-border block divide-y sm:table-row-group">
+      <tbody class="block divide-y sm:table-row-group">
         {#each comparison.rows as row (row.feature)}
           <tr class="grid grid-cols-2 sm:table-row">
             <th
-              class="bg-muted/30 col-span-2 px-4 pt-4 pb-2 font-medium sm:bg-transparent sm:px-5 sm:py-5 sm:align-top"
+              class="col-span-2 px-4 pt-4 pb-2 font-medium sm:bg-transparent sm:px-5 sm:py-5 sm:align-top"
               scope="row"
             >
               {t(row.feature)}
             </th>
-            <td
-              class={[
-                panelSurface,
-                "px-4 py-4 align-top leading-6 sm:px-5 sm:py-5",
-              ]}
-            >
-              <span
-                class="text-brand-foreground mb-2 block text-xs font-semibold sm:hidden"
-              >
+            <td class={["px-4 py-4 align-top leading-6 sm:px-5 sm:py-5"]}>
+              <span class="mb-2 block text-xs font-semibold sm:hidden">
                 {siteMetadata.name}
               </span>
               {t(row.foveaflow)}
             </td>
-            <td
-              class="text-muted-foreground px-4 py-4 align-top leading-6 sm:px-5 sm:py-5"
-            >
-              <span
-                class="text-foreground mb-2 block text-xs font-medium sm:hidden"
-              >
+            <td class="px-4 py-4 align-top leading-6 sm:px-5 sm:py-5">
+              <span class="mb-2 block text-xs font-medium sm:hidden">
                 {comparison.alternative}
               </span>
               {t(row.alternative)}
@@ -95,7 +80,7 @@
     </table>
   </div>
   <div
-    class="text-muted-foreground mt-5 flex flex-wrap items-baseline gap-x-4 gap-y-2 text-xs leading-5"
+    class="mt-5 flex flex-wrap items-baseline gap-x-4 gap-y-2 text-xs leading-5"
   >
     <p>
       {t("Checked against the public browser interface on")}
@@ -104,7 +89,7 @@
       )}
     </p>
     <a
-      class={cn(editorialLink, "text-xs")}
+      class={[editorialLink, "text-xs"]}
       href={comparison.source.href}
       rel="noopener noreferrer"
       target="_blank"

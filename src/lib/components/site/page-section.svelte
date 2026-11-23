@@ -18,9 +18,7 @@
 
 <section
   {...rest}
-  class={first
-    ? "scroll-mt-8"
-    : "border-border scroll-mt-8 border-t pt-12 sm:pt-16"}
+  class={first ? "scroll-mt-8" : "scroll-mt-8 border-t pt-12 sm:pt-16"}
 >
   <h2 class={editorialHeading}>{heading}</h2>
   {#if intro}

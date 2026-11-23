@@ -29,9 +29,7 @@
 <section class="pt-8 pb-4 sm:pt-12">
   {#if breadcrumb}
     <nav class="mb-5 px-1" aria-label={t("Breadcrumb")}>
-      <ol
-        class="text-muted-foreground flex flex-wrap items-center gap-1.5 text-sm"
-      >
+      <ol class="flex flex-wrap items-center gap-1.5 text-sm">
         {#each breadcrumb as crumb, index (crumb.label)}
           {#if index > 0}
             <li aria-hidden="true">
@@ -41,13 +39,13 @@
           <li>
             {#if crumb.href}
               <a
-                class="hover:text-foreground focus-visible:outline-ring rounded-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 motion-reduce:transition-none"
+                class="rounded-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 motion-reduce:transition-none"
                 href={crumb.href}
               >
                 {t(crumb.label)}
               </a>
             {:else}
-              <span class="text-foreground" aria-current="page">
+              <span aria-current="page">
                 {t(crumb.label)}
               </span>
             {/if}
@@ -75,7 +73,7 @@
           </div>
         {/if}
         {#if meta}
-          <p class="text-muted-foreground text-xs">{@render meta()}</p>
+          <p class="text-xs">{@render meta()}</p>
         {/if}
       </div>
       {#if illustration}

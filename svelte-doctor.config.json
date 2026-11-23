@@ -1,5 +1,5 @@
 {
   "ignore": {
-    "files": [".wrangler/**", "src/lib/components/ui/**/*"]
+    "files": [".wrangler/**"]
   }
 }

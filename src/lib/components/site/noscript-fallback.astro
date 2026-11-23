@@ -18,8 +18,8 @@ const { heading, description, showHomeLink = false } = Astro.props;
       display: none !important;
     }
   </style>
-  <main class="bg-background text-foreground fixed inset-0 z-100 overflow-auto p-8">
-    <section class="[&_p]:text-muted-foreground mx-auto flex w-full max-w-2xl flex-col gap-4 py-16 leading-7">
+  <main class="fixed inset-0 z-100 overflow-auto p-8">
+    <section class="mx-auto flex w-full max-w-2xl flex-col gap-4 py-16 leading-7">
       <h2 class={editorialTitle}>{heading}</h2>
       <p class={editorialLede}>{description}</p>
       <p>

@@ -84,9 +84,6 @@ const profilesByBehavior = {
 export const isBehaviorId = (value: string): value is BehaviorId =>
   Object.hasOwn(profilesByBehavior, value);
 
-export const getBehaviorName = (id: BehaviorId) =>
-  behaviors.find((behavior) => behavior.id === id)?.name ?? id;
-
 /** Works out which preset produced a pair of saved profiles. */
 export const behaviorFromProfiles = (
   speedProfile: SpeedProfile,

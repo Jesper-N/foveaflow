@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { cn } from "$lib/utils";
   import type { Snippet } from "svelte";
 
   let { class: className, children }: { class?: string; children: Snippet } =
@@ -8,10 +7,7 @@
 
 <!-- The shared 24×24 line-icon box for drill and pattern icons. -->
 <svg
-  class={cn(
-    "text-foreground in-data-highlighted:text-accent-foreground size-5 shrink-0",
-    className
-  )}
+  class={["size-5 shrink-0", className]}
   aria-hidden="true"
   fill="none"
   stroke="currentColor"

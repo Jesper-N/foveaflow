@@ -1,37 +1,29 @@
 <script lang="ts">
-  import { Slider } from "$lib/components/ui/slider";
-  import { itemAt } from "$lib/trainer/engine/math";
   import { settingRanges } from "$lib/trainer/settings/settings";
   import type { RangedSetting } from "$lib/trainer/settings/settings";
-  import { cn } from "$lib/utils";
 
   import { getTrainer } from "../trainer-context";
 
   let {
+    id,
     setting,
     label,
-    class: className,
-  }: { setting: RangedSetting; label: string; class?: string } = $props();
+  }: { id?: string; setting: RangedSetting; label: string } = $props();
 
   const trainer = getTrainer();
   let range = $derived(settingRanges[setting]);
 </script>
 
-<!-- The track stays compact while an invisible band keeps a 44px hit area. -->
-<Slider
-  class={cn(
-    "h-4 before:absolute before:inset-x-0 before:-inset-y-3.5",
-    className
-  )}
+<input
+  {id}
+  class="w-full min-w-0"
   aria-label={label}
   max={range.max}
   min={range.min}
+  oninput={(event) => {
+    trainer.setRanged(setting, event.currentTarget.valueAsNumber);
+  }}
   step={range.step}
-  type="multiple"
-  bind:value={
-    () => [trainer.settings[setting]],
-    (values) => {
-      trainer.setRanged(setting, itemAt(values, 0));
-    }
-  }
+  type="range"
+  value={trainer.settings[setting]}
 />

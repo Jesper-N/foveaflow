@@ -1,7 +1,5 @@
 // Reports Tailwind classes that have a canonical spelling, like the editor's
-// suggestCanonicalClasses diagnostic, and exits 1 when it finds any. Skips the
-// generated shadcn components. Note: it maps arbitrary `rounded-[…]` values to
-// the wrong named radius in this theme, so use named radii instead.
+// suggestCanonicalClasses diagnostic, and exits 1 when it finds any.
 import { readdirSync, readFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
@@ -28,8 +26,6 @@ const sourceExtensions = new Set([
   ".ts",
   ".tsx",
 ]);
-
-const ignoredSourceDirs = new Set(["src/lib/components/ui"]);
 
 interface Edit {
   file: string;
@@ -159,15 +155,6 @@ const tokens = (value: string) => {
 const listSourceFiles = (dir: string): string[] =>
   readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const entryPath = path.resolve(dir, entry.name);
-
-    const relativePath = path
-      .relative(root, entryPath)
-      .split(path.sep)
-      .join("/");
-
-    if (entry.isDirectory() && ignoredSourceDirs.has(relativePath)) {
-      return [];
-    }
 
     if (entry.isDirectory()) {
       return listSourceFiles(entryPath);

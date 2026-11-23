@@ -1,7 +1,6 @@
 <script lang="ts">
   import DrillIcon from "$lib/components/drills/drill-icon.svelte";
   import PatternIcon from "$lib/components/drills/pattern-icon.svelte";
-  import { Button } from "$lib/components/ui/button";
   import { drillGuides } from "$lib/content/drill-guides";
   import {
     mainRouteForDrill,
@@ -16,7 +15,7 @@
 
   import PageSection from "./page-section.svelte";
   import StepList from "./step-list.svelte";
-  import { iconBadge, panelSurface } from "./styles";
+  import { actionLink, iconBadge } from "./styles";
 
   const audienceIcons = {
     Gamers: Gamepad2Icon,
@@ -33,7 +32,7 @@
     "Keep your head still unless a drill says otherwise. These modes are about eye movement, attention, and focus, not neck movement."
   )}
 >
-  <div class="divide-border mt-10 divide-y">
+  <div class="mt-10 divide-y">
     {#each drillGuides as guide (guide.drillId)}
       <article
         id={guide.drillId}
@@ -41,32 +40,23 @@
       >
         <header class="flex flex-col items-start gap-3">
           <span class={[iconBadge, "size-11"]} aria-hidden="true">
-            <DrillIcon class="text-brand-foreground" drillId={guide.drillId} />
+            <DrillIcon drillId={guide.drillId} />
           </span>
           <h3 class="text-xl font-semibold">
             {t(guide.title)}
           </h3>
-          <p class="text-muted-foreground text-sm leading-6 text-pretty">
+          <p class="text-sm leading-6 text-pretty">
             {t(guide.summary)}
           </p>
-          <Button
-            class="mt-1 gap-2"
-            href={mainRouteForDrill(guide.drillId)?.path}
-            variant="outline"
-          >
+          <a class={actionLink} href={mainRouteForDrill(guide.drillId)?.path}>
             {t("Try this drill")}
-            <ArrowUpRightIcon data-icon="inline-end" />
-          </Button>
+            <ArrowUpRightIcon aria-hidden="true" />
+          </a>
         </header>
         <div class="grid content-start gap-6">
           <StepList steps={guide.steps} />
-          <p
-            class={[
-              panelSurface,
-              "text-muted-foreground rounded-2xl p-5 text-sm leading-6",
-            ]}
-          >
-            <span class="text-foreground font-medium">
+          <p class={["rounded-2xl p-5 text-sm leading-6"]}>
+            <span class="font-medium">
               {t("What it trains:")}
             </span>
             {t(guide.benefits)}
@@ -91,13 +81,12 @@
     {#each patternDrillRoutes as route (route.slug)}
       <a
         class={[
-          panelSurface,
-          "group hover:ring-primary/60 focus-visible:outline-ring flex min-h-14 items-center gap-3 rounded-xl px-4 py-3 text-sm ring-1 ring-transparent transition-shadow focus-visible:outline-2 motion-reduce:transition-none",
+          "group flex min-h-14 items-center gap-3 rounded-xl px-4 py-3 text-sm ring-1 ring-transparent transition-shadow focus-visible:outline-2 motion-reduce:transition-none",
         ]}
         href={route.path}
       >
         <PatternIcon
-          class="group-hover:text-brand-foreground transition-colors motion-reduce:transition-none"
+          class="transition-colors motion-reduce:transition-none"
           patternId={route.patternId}
         />
         <span>{t(route.label)}</span>
@@ -113,12 +102,12 @@
   <div class="mt-6 grid gap-3 sm:grid-cols-3">
     {#each audiences as audience (audience.title)}
       {@const Icon = audienceIcons[audience.title]}
-      <div class={[panelSurface, "grid content-start gap-2 rounded-2xl p-5"]}>
+      <div class={["grid content-start gap-2 rounded-2xl p-5"]}>
         <span class={[iconBadge, "mb-2 size-10"]} aria-hidden="true">
           <Icon class="size-4" />
         </span>
         <h3 class="font-semibold">{t(audience.title)}</h3>
-        <p class="text-muted-foreground text-sm leading-6">
+        <p class="text-sm leading-6">
           {t(audience.body)}
         </p>
       </div>

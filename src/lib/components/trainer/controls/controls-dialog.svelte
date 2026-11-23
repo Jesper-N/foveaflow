@@ -1,13 +1,11 @@
 <script lang="ts">
-  import { Button } from "$lib/components/ui/button";
-  import * as Dialog from "$lib/components/ui/dialog";
   import { t } from "$lib/i18n/translate";
-  import CheckIcon from "@lucide/svelte/icons/check";
   import CrosshairIcon from "@lucide/svelte/icons/crosshair";
   import RouteIcon from "@lucide/svelte/icons/route";
   import SettingsIcon from "@lucide/svelte/icons/settings";
   import XIcon from "@lucide/svelte/icons/x";
 
+  import { closeOnBackdropClick, showModalWhen } from "../modal-dialog";
   import { getTrainer } from "../trainer-context";
   import DrillSettings from "./drill-settings.svelte";
   import GeneralSettings from "./general-settings.svelte";
@@ -51,115 +49,80 @@
   );
 
   // Start on the selected section's tab instead of the close button.
-  const focusSelectedTab = (event: Event) => {
-    event.preventDefault();
-    requestAnimationFrame(() => {
-      document
+  const showControls = showModalWhen(
+    () => trainer.controlsOpen,
+    (dialog) => {
+      dialog
         .querySelector<HTMLElement>(`[data-control-section="${current}"]`)
         ?.focus();
-    });
-  };
+    }
+  );
 </script>
 
-<Dialog.Root bind:open={trainer.controlsOpen}>
-  <Dialog.Content
-    class="flex h-[calc(100dvh-1rem)] max-h-none w-[calc(100dvw-1rem)] max-w-none flex-col gap-0 overflow-hidden rounded-3xl p-0 motion-reduce:transition-none motion-reduce:data-closed:animate-none motion-reduce:data-open:animate-none motion-reduce:**:data-[slot=button]:animate-none motion-reduce:**:data-[slot=button]:transition-none motion-reduce:**:data-[slot=toggle-group-item]:animate-none motion-reduce:**:data-[slot=toggle-group-item]:transition-none sm:max-w-none md:h-[min(40rem,calc(100dvh-2rem))] md:w-[min(55rem,calc(100dvw-2rem))] md:flex-row md:rounded-4xl"
-    onOpenAutoFocus={focusSelectedTab}
-    showCloseButton={false}
-  >
-    <Dialog.Description class="sr-only">
-      {t("Change your saved FoveaFlow settings.")}
-    </Dialog.Description>
-    <Dialog.Close>
-      {#snippet child({ props })}
-        <Button
-          {...props}
-          class="absolute top-3 right-3 z-10 size-11 md:top-4 md:right-4"
-          aria-label={t("Close")}
-          size="icon"
-          variant="secondary"
-        >
-          <XIcon />
-        </Button>
-      {/snippet}
-    </Dialog.Close>
+<dialog
+  class="m-auto h-[calc(100dvh-1rem)] max-h-none w-[calc(100dvw-1rem)] max-w-3xl flex-col open:flex"
+  {@attach showControls}
+  {@attach closeOnBackdropClick}
+  aria-describedby="trainer-controls-description"
+  aria-labelledby="trainer-controls-title"
+  onclose={() => (trainer.controlsOpen = false)}
+>
+  <p id="trainer-controls-description" class="sr-only">
+    {t("Change your saved FoveaFlow settings.")}
+  </p>
 
-    <aside
-      class="md:bg-muted/30 flex flex-none flex-col gap-3 border-b p-3 md:basis-46 md:gap-6 md:border-r md:border-b-0 md:py-4"
+  <header class="flex items-center justify-between gap-2 border-b p-3">
+    <h2 id="trainer-controls-title">{t("Controls")}</h2>
+    <form method="dialog">
+      <button
+        class="inline-flex size-11 items-center justify-center"
+        aria-label={t("Close")}
+        type="submit"
+      >
+        <XIcon aria-hidden="true" />
+      </button>
+    </form>
+  </header>
+
+  <nav class="flex gap-1 border-b p-3" aria-label={t("Control sections")}>
+    {#each sections as { id, label, icon: Icon } (id)}
+      <button
+        class="inline-flex min-h-11 items-center gap-2 px-2 aria-pressed:font-bold"
+        aria-controls="trainer-settings-panel"
+        aria-pressed={current === id}
+        data-control-section={id}
+        onclick={() => (current = id)}
+        type="button"
+      >
+        <Icon class="size-4" aria-hidden="true" />
+        {t(label)}
+      </button>
+    {/each}
+  </nav>
+
+  <!-- Keyed so a new section starts scrolled to the top. -->
+  {#key section.id}
+    <section
+      id="trainer-settings-panel"
+      class="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4"
+      aria-labelledby="trainer-settings-heading"
     >
-      <div class="flex min-h-11 items-center gap-2.5 px-2 pr-14 md:px-3">
-        <img
-          class="size-6 shrink-0 rounded-sm object-cover"
-          alt=""
-          height="24"
-          src="/logo-render/logo.svg"
-          width="24"
-        />
-        <Dialog.Title class="text-base font-semibold">
-          {t("Controls")}
-        </Dialog.Title>
-      </div>
-      <nav
-        class="grid grid-cols-3 gap-1 md:grid-cols-1 md:gap-1.5"
-        aria-label={t("Control sections")}
-      >
-        {#each sections as { id, label, icon: Icon } (id)}
-          <Button
-            class="h-auto min-h-11 min-w-0 flex-col justify-center gap-1.5 rounded-xl px-1 py-2.5 text-xs wrap-anywhere whitespace-normal md:h-9 md:flex-row md:justify-start md:gap-3 md:px-3 md:py-0 md:text-sm"
-            aria-controls="trainer-settings-panel"
-            aria-pressed={current === id}
-            data-control-section={id}
-            onclick={() => (current = id)}
-            variant={current === id ? "secondary" : "ghost"}
-          >
-            <span data-icon="inline-start"><Icon /></span>
-            {t(label)}
-          </Button>
-        {/each}
-      </nav>
-    </aside>
+      <h2 id="trainer-settings-heading">{t(section.label)}</h2>
+      <p>{t(section.description)}</p>
+      {#if section.id === "drill"}
+        <DrillSettings />
+      {:else if section.id === "targets"}
+        <TargetSettings />
+      {:else}
+        <GeneralSettings />
+      {/if}
+    </section>
+  {/key}
 
-    <div class="flex min-h-0 min-w-0 flex-1 flex-col">
-      <!-- The selected tab already names the section on small screens. -->
-      <header class="shrink-0 px-7 pt-6 pr-20 pb-3 max-md:sr-only">
-        <h2 id="trainer-settings-heading" class="text-xl font-semibold">
-          {t(section.label)}
-        </h2>
-        <p class="text-muted-foreground mt-1 text-sm">
-          {t(section.description)}
-        </p>
-      </header>
-      <!-- Keyed so a new section starts scrolled to the top. -->
-      {#key section.id}
-        <section
-          id="trainer-settings-panel"
-          class="min-h-0 flex-1 scrollbar-thin [scrollbar-color:var(--border)_transparent] scrollbar-gutter-stable overflow-y-auto overscroll-contain px-4 py-2 md:px-7 md:pt-0 md:pb-6"
-          aria-labelledby="trainer-settings-heading"
-        >
-          {#if section.id === "drill"}
-            <DrillSettings />
-          {:else if section.id === "targets"}
-            <TargetSettings />
-          {:else}
-            <GeneralSettings />
-          {/if}
-        </section>
-      {/key}
-      <footer
-        class="flex shrink-0 items-center justify-between gap-4 border-t px-4 py-3 md:px-7"
-      >
-        <p class="text-muted-foreground flex items-center gap-2 text-xs">
-          <CheckIcon class="size-3.5 shrink-0" />
-          {t("Settings save automatically.")}
-        </p>
-        <Dialog.Close>
-          {#snippet child({ props })}
-            <Button {...props} class="min-h-11 min-w-20" variant="secondary">
-              {t("Done")}
-            </Button>
-          {/snippet}
-        </Dialog.Close>
-      </footer>
-    </div>
-  </Dialog.Content>
-</Dialog.Root>
+  <footer class="flex items-center justify-between gap-4 border-t p-3">
+    <p>{t("Settings save automatically.")}</p>
+    <form method="dialog">
+      <button class="min-h-11 px-4" type="submit">{t("Done")}</button>
+    </form>
+  </footer>
+</dialog>

@@ -54,7 +54,7 @@ The pre-commit hook runs `bun run lint`. The pre-push hook runs `bun run verify`
 
 ## How it's built
 
-[Astro](https://astro.build/) renders the pages. The controls are [Svelte 5](https://svelte.dev/) with [shadcn-svelte](https://www.shadcn-svelte.com/) and [Bits UI](https://bits-ui.com/), styled with [Tailwind CSS 4](https://tailwindcss.com/). The drills run on a canvas engine in plain TypeScript, with no framework code inside it. [Cloudflare Workers](https://workers.cloudflare.com/) serves the site.
+[Astro](https://astro.build/) renders the pages. The controls are [Svelte 5](https://svelte.dev/) styled with [Tailwind CSS 4](https://tailwindcss.com/). The drills run on a canvas engine in plain TypeScript, with no framework code inside it. [Cloudflare Workers](https://workers.cloudflare.com/) serves the site.
 
 <details>
 <summary>Where things live</summary>
@@ -68,11 +68,10 @@ src/lib/trainer/settings/    Drills, options, and saved settings
 src/lib/components/trainer/  The trainer app: state, controls, and guide
 src/lib/components/drills/   Drill icons and illustrations
 src/lib/components/site/     Guide, article, and legal pages
-src/lib/components/ui/       Generated shadcn-svelte components
 src/lib/content/             Page copy, routes, and guides
 src/lib/i18n/                Dictionaries for 10 languages
 src/lib/seo/                 Structured data and machine-readable files
-src/styles/                  Global styles and theme tokens
+src/styles/                  Global styles and keyframes
 scripts/                     Build, lint, translation, and profiling scripts
 tests/unit/                  Unit tests, run by Bun
 tests/*.playwright.ts        Browser tests, run by Playwright

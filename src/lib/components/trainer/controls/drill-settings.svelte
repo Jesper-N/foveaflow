@@ -1,18 +1,11 @@
 <script lang="ts">
-  import DrillIcon from "$lib/components/drills/drill-icon.svelte";
-  import PatternIcon from "$lib/components/drills/pattern-icon.svelte";
-  import * as Field from "$lib/components/ui/field";
-  import * as Select from "$lib/components/ui/select";
-  import * as ToggleGroup from "$lib/components/ui/toggle-group";
   import { t } from "$lib/i18n/translate";
-  import { behaviors, getBehaviorName } from "$lib/trainer/settings/behaviors";
-  import { getDrill } from "$lib/trainer/settings/drills";
-  import { getPatternName } from "$lib/trainer/settings/patterns";
+  import { behaviors } from "$lib/trainer/settings/behaviors";
 
-  import DrillSelectContent from "../selects/drill-select-content.svelte";
-  import OptionLabel from "../selects/option-label.svelte";
-  import PatternSelectContent from "../selects/pattern-select-content.svelte";
+  import DrillOptions from "../selects/drill-options.svelte";
+  import PatternOptions from "../selects/pattern-options.svelte";
   import { getTrainer } from "../trainer-context";
+  import RadioGroup from "./radio-group.svelte";
   import SettingsRow from "./settings-row.svelte";
   import SettingsSection from "./settings-section.svelte";
   import SliderRow from "./slider-row.svelte";
@@ -23,38 +16,32 @@
 
 <SettingsSection label={t("Drill")}>
   <SettingsRow>
-    <Field.FieldLabel for="trainer-drill">{t("Drill")}</Field.FieldLabel>
-    <Select.Root
-      onValueChange={trainer.selectDrill}
-      type="single"
+    <label for="trainer-drill">{t("Drill")}</label>
+    <select
+      id="trainer-drill"
+      class="min-h-11"
+      onchange={(event) => {
+        trainer.selectDrill(event.currentTarget.value);
+      }}
       value={trainer.settings.drillId}
     >
-      <Select.Trigger id="trainer-drill" class="min-h-11 w-full">
-        <OptionLabel label={t(getDrill(trainer.settings.drillId).name)}>
-          <DrillIcon drillId={trainer.settings.drillId} />
-        </OptionLabel>
-      </Select.Trigger>
-      <DrillSelectContent />
-    </Select.Root>
+      <DrillOptions />
+    </select>
   </SettingsRow>
 
   {#if trainer.isPursuit}
     <SettingsRow>
-      <Field.FieldLabel for="trainer-pattern">
-        {t("Motion path")}
-      </Field.FieldLabel>
-      <Select.Root
-        onValueChange={trainer.selectPattern}
-        type="single"
+      <label for="trainer-pattern">{t("Motion path")}</label>
+      <select
+        id="trainer-pattern"
+        class="min-h-11"
+        onchange={(event) => {
+          trainer.selectPattern(event.currentTarget.value);
+        }}
         value={trainer.settings.patternId}
       >
-        <Select.Trigger id="trainer-pattern" class="min-h-11 w-full">
-          <OptionLabel label={t(getPatternName(trainer.settings.patternId))}>
-            <PatternIcon patternId={trainer.settings.patternId} />
-          </OptionLabel>
-        </Select.Trigger>
-        <PatternSelectContent />
-      </Select.Root>
+        <PatternOptions />
+      </select>
     </SettingsRow>
   {/if}
 </SettingsSection>
@@ -63,53 +50,34 @@
 {#if !trainer.isLilacChaser}
   <SettingsSection legend={t("Motion")}>
     <SettingsRow>
-      <Field.FieldLabel for="trainer-behavior">
-        {t("Motion feel")}
-      </Field.FieldLabel>
-      <Select.Root
-        onValueChange={trainer.selectBehavior}
-        type="single"
+      <label for="trainer-behavior">{t("Motion feel")}</label>
+      <select
+        id="trainer-behavior"
+        class="min-h-11"
+        onchange={(event) => {
+          trainer.selectBehavior(event.currentTarget.value);
+        }}
         value={trainer.behavior}
       >
-        <Select.Trigger id="trainer-behavior" class="min-h-11 w-full">
-          {t(getBehaviorName(trainer.behavior))}
-        </Select.Trigger>
-        <Select.Content>
-          <Select.Group>
-            {#each behaviors as behavior (behavior.id)}
-              <Select.Item value={behavior.id}>{t(behavior.name)}</Select.Item>
-            {/each}
-          </Select.Group>
-        </Select.Content>
-      </Select.Root>
+        {#each behaviors as behavior (behavior.id)}
+          <option value={behavior.id}>{t(behavior.name)}</option>
+        {/each}
+      </select>
     </SettingsRow>
 
     <SliderRow label={t("Speed")} setting="speed" />
 
     {#if trainer.canReverse}
-      <SettingsRow>
-        <Field.FieldLabel id="trainer-direction-label">
-          {t("Direction")}
-        </Field.FieldLabel>
-        <ToggleGroup.Root
-          class="grid w-full grid-cols-2"
-          aria-labelledby="trainer-direction-label"
-          type="single"
-          variant="outline"
-          bind:value={
-            () =>
-              trainer.settings.motionDirection === 1 ? "forward" : "reverse",
-            trainer.setDirection
-          }
-        >
-          <ToggleGroup.Item class="min-h-11" value="forward">
-            {t("Forward")}
-          </ToggleGroup.Item>
-          <ToggleGroup.Item class="min-h-11" value="reverse">
-            {t("Reverse")}
-          </ToggleGroup.Item>
-        </ToggleGroup.Root>
-      </SettingsRow>
+      <RadioGroup
+        name="trainer-direction"
+        legend={t("Direction")}
+        onValueChange={trainer.setDirection}
+        options={[
+          { label: t("Forward"), value: "forward" },
+          { label: t("Reverse"), value: "reverse" },
+        ]}
+        value={trainer.settings.motionDirection === 1 ? "forward" : "reverse"}
+      />
       <SwitchRow
         id="trainer-show-trail"
         label={t("Show trail")}

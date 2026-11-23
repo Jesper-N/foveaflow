@@ -1,11 +1,6 @@
 <script lang="ts">
-  import * as Field from "$lib/components/ui/field";
-  import * as Select from "$lib/components/ui/select";
   import { t } from "$lib/i18n/translate";
-  import {
-    getLetterWeightName,
-    letterWeights,
-  } from "$lib/trainer/settings/options";
+  import { letterWeights } from "$lib/trainer/settings/options";
 
   import { getTrainer } from "../trainer-context";
   import ColorRow from "./color-row.svelte";
@@ -49,30 +44,20 @@
   </ColorRow>
 
   <SettingsRow>
-    <Field.FieldLabel for="trainer-letter-weight">
-      {t("Weight")}
-    </Field.FieldLabel>
-    <Select.Root
-      onValueChange={trainer.setLetterWeight}
-      type="single"
+    <label for="trainer-letter-weight">{t("Weight")}</label>
+    <select
+      id="trainer-letter-weight"
+      class="min-h-11"
+      aria-label={t("Letter weight")}
+      onchange={(event) => {
+        trainer.setLetterWeight(event.currentTarget.value);
+      }}
       value={String(trainer.settings.letterWeight)}
     >
-      <Select.Trigger
-        id="trainer-letter-weight"
-        class="min-h-11 w-full"
-        aria-label={t("Letter weight")}
-      >
-        {t(getLetterWeightName(trainer.settings.letterWeight))}
-      </Select.Trigger>
-      <Select.Content>
-        <Select.Group>
-          {#each letterWeights as weight (weight.id)}
-            <Select.Item value={String(weight.id)}>{t(weight.name)}</Select.Item
-            >
-          {/each}
-        </Select.Group>
-      </Select.Content>
-    </Select.Root>
+      {#each letterWeights as weight (weight.id)}
+        <option value={String(weight.id)}>{t(weight.name)}</option>
+      {/each}
+    </select>
   </SettingsRow>
 
   <SliderRow

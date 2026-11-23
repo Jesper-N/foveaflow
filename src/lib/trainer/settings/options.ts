@@ -37,9 +37,3 @@ export const isLetterWeight = (value: number): value is LetterWeight =>
 
 export const isLilacChaserColor = (value: string): value is LilacChaserColor =>
   lilacChaserColors.some((color) => color.id === value);
-
-export const getLetterWeightName = (id: LetterWeight) =>
-  letterWeights.find((weight) => weight.id === id)?.name ?? String(id);
-
-export const getLilacChaserColorName = (id: LilacChaserColor) =>
-  lilacChaserColors.find((color) => color.id === id)?.name ?? id;

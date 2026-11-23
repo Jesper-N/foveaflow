@@ -18,7 +18,7 @@ export interface TrainerSettings {
   targetCount: number;
   distractorCount: number;
   showTrail: boolean;
-  /** Null follows the current theme's primary color. */
+  /** Null uses the color mode's default target color. */
   ballColor: string | null;
   /** How much distractors are darkened from the target color. */
   distractorBrightness: number;

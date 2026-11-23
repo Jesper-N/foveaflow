@@ -1,67 +1,25 @@
 <script lang="ts">
   import { textLink } from "$lib/components/site/styles";
-  import { Button } from "$lib/components/ui/button";
   import { legalPageLinks } from "$lib/content/legal";
   import { siteMetadata } from "$lib/content/site";
   import { formatDate, t } from "$lib/i18n/translate";
-  import { cn } from "$lib/utils";
   import ArrowUpRightIcon from "@lucide/svelte/icons/arrow-up-right";
   import BookOpenIcon from "@lucide/svelte/icons/book-open";
   import XIcon from "@lucide/svelte/icons/x";
-  import type { Attachment } from "svelte/attachments";
-  import { on } from "svelte/events";
 
+  import { closeOnBackdropClick, showModalWhen } from "../modal-dialog";
   import { getTrainer } from "../trainer-context";
   import DrillGuide from "./drill-guide.svelte";
   import HomeGuide from "./home-guide.svelte";
 
   const trainer = getTrainer();
 
-  const footerLink = cn(
-    textLink,
-    "inline-flex min-h-6 items-center gap-1 text-xs"
-  );
-
-  // A native modal dialog: it traps focus, closes on Escape, and returns focus
-  // to the button that opened it.
-  const showWhenOpened: Attachment<HTMLDialogElement> = (dialog) => {
-    if (trainer.guideOpen && !dialog.open) {
-      dialog.showModal();
-    }
-  };
-
-  // Close on a click that starts and ends on the backdrop, so selecting text
-  // and releasing outside the panel keeps the guide open.
-  const closeOnBackdropClick: Attachment<HTMLDialogElement> = (dialog) => {
-    let pressedBackdrop = false;
-
-    const handlePointerDown = (event: PointerEvent) => {
-      pressedBackdrop = event.target === dialog;
-    };
-
-    const handleClick = (event: MouseEvent) => {
-      if (pressedBackdrop && event.target === dialog) {
-        dialog.close();
-      }
-    };
-
-    const offPointerDown = on(dialog, "pointerdown", handlePointerDown);
-    const offClick = on(dialog, "click", handleClick);
-
-    return () => {
-      offPointerDown();
-      offClick();
-    };
-  };
+  const footerLink = `${textLink} inline-flex min-h-6 items-center gap-1`;
+  const showGuide = showModalWhen(() => trainer.guideOpen);
 </script>
 
 {#snippet pageMeta(className: string)}
-  <div
-    class={[
-      "text-muted-foreground flex-wrap items-center gap-x-4 gap-y-1 text-xs",
-      className,
-    ]}
-  >
+  <div class={["flex-wrap items-center gap-x-4 gap-y-1 text-xs", className]}>
     <span>
       {t("Updated")}
       <time datetime={trainer.guideLastModified}>
@@ -87,28 +45,25 @@
 
 <dialog
   id="trainer-guide"
-  class="bg-popover text-popover-foreground ring-foreground/5 dark:ring-foreground/10 m-auto max-h-[calc(100dvh-2rem)] w-[min(calc(100dvw-2rem),56rem)] max-w-[calc(100dvw-2rem)] flex-col overflow-hidden rounded-4xl text-sm shadow-xl ring-1 outline-hidden backdrop:animate-[guide-backdrop-enter_150ms_ease-out] backdrop:bg-black/30 backdrop:backdrop-blur-sm open:flex open:animate-[guide-dialog-enter_150ms_cubic-bezier(0.23,1,0.32,1)] motion-reduce:backdrop:animate-none motion-reduce:open:animate-none"
-  {@attach showWhenOpened}
+  class="m-auto max-h-[calc(100dvh-2rem)] w-[min(calc(100dvw-2rem),56rem)] max-w-[calc(100dvw-2rem)] flex-col overflow-hidden open:flex"
+  {@attach showGuide}
   {@attach closeOnBackdropClick}
   aria-labelledby="trainer-guide-title"
   onclose={() => (trainer.guideOpen = false)}
 >
+  (trainer.guideOpen = false)} >
   <!-- Floats over the scrolling body; the blur keeps passing text from looking clipped. -->
   <form class="absolute top-4 right-4 z-10 sm:top-5 sm:right-5" method="dialog">
-    <Button
-      class="bg-secondary/80 size-11 backdrop-blur-md"
+    <button
+      class="inline-flex size-11 items-center justify-center"
       aria-label={t("Close")}
-      size="icon"
       type="submit"
-      variant="secondary"
     >
-      <XIcon />
-    </Button>
+      <XIcon aria-hidden="true" />
+    </button>
   </form>
 
-  <div
-    class="min-h-0 flex-1 scrollbar-thin [scrollbar-color:var(--border)_transparent] overflow-y-auto overscroll-contain"
-  >
+  <div class="min-h-0 flex-1 scrollbar-thin overflow-y-auto overscroll-contain">
     {#if trainer.guideRoute}
       <DrillGuide route={trainer.guideRoute} />
     {:else}
@@ -120,16 +75,12 @@
   </div>
 
   <footer
-    class="border-border/60 flex shrink-0 items-center justify-between gap-3 border-t px-6 py-4 sm:px-8"
+    class="flex shrink-0 items-center justify-between gap-3 border-t px-6 py-4 sm:px-8"
   >
     {@render pageMeta("hidden sm:flex")}
-    <Button
-      class="h-auto min-h-12 flex-1 gap-2 px-6 text-base whitespace-normal sm:flex-none"
-      href="/guide/"
-      size="lg"
-    >
-      <BookOpenIcon data-icon="inline-start" />
+    <a class="inline-flex min-h-11 items-center gap-2" href="/guide/">
+      <BookOpenIcon class="size-4" aria-hidden="true" />
       {t("Read full guide")}
-    </Button>
+    </a>
   </footer>
 </dialog>

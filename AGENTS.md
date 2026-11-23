@@ -17,17 +17,14 @@ Browser app for vision training: visual tracking, focus, reaction speed, and per
 
 ## UI
 
-- Use Tailwind utilities for all supported styling, including responsive layouts and interaction states. Keep custom CSS for unsupported styling, keyframes, and theme tokens.
+- Use Tailwind utilities for all supported styling, including responsive layouts and interaction states. Keep custom CSS for unsupported styling and keyframes.
 - Reuse repeated utility groups through component variants, shared class constants, or Tailwind utilities. Keep one-off layouts local to their component.
-- Leave `src/lib/components/ui/**` and the theme tokens in `src/styles/global.css` as generated, and don't override ui component animations from outside. Fix visual issues in app components. If a fix seems to need a theme or ui change, ask first.
-- Aim for agency-grade polish: dense layouts with a clear focal point, consistent radii, spacing, and type scale, and theme colors only. Yellow (primary) marks the target and the next action. Don't pile on effects.
-- Load the shadcn-svelte skill before you create or edit UI components.
+- Aim for agency-grade polish: dense layouts with a clear focal point, consistent radii, spacing, and type scale. Don't pile on effects.
 - Check UI changes in a browser at desktop and mobile widths, in light and dark themes.
 
 ## Gotchas
 
 - The strict CSP lives in `security.csp` in `astro.config.mjs`, and Astro only writes it into built pages. So a new third-party script, font, image host, or API works in dev and breaks in prod. Ask before adding one. Astro hashes the scripts it bundles, but an `is:inline` script must register its own hash with `Astro.csp?.insertScriptHash(inlineScriptHash(script))` from `src/lib/csp.ts`.
-- Use named radii (`rounded-md`, `rounded-lg`). `bun run tailwind:diagnostics` maps arbitrary `rounded-[…]` values to the wrong named radius in this theme.
 - If controls do nothing in dev and the console shows `504 Outdated Optimize Dep`, the Vite dependency cache is stale. Stop the server, delete `node_modules/.vite`, restart, and hard-reload.
 
 ## Quality pass

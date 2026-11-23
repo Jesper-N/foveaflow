@@ -1,83 +1,47 @@
 <script lang="ts">
-  import DrillIcon from "$lib/components/drills/drill-icon.svelte";
-  import PatternIcon from "$lib/components/drills/pattern-icon.svelte";
-  import * as Select from "$lib/components/ui/select";
   import { t } from "$lib/i18n/translate";
-  import { getDrill } from "$lib/trainer/settings/drills";
-  import { getPatternName } from "$lib/trainer/settings/patterns";
-  import { cn } from "$lib/utils";
 
-  import DrillSelectContent from "../selects/drill-select-content.svelte";
-  import PatternSelectContent from "../selects/pattern-select-content.svelte";
+  import DrillOptions from "../selects/drill-options.svelte";
+  import PatternOptions from "../selects/pattern-options.svelte";
   import { getTrainer } from "../trainer-context";
-  import HudSelectLabel from "./hud-select-label.svelte";
-  import { islandLayoutMotion, islandPresenceMotion } from "./island-motion";
 
   const trainer = getTrainer();
-
-  let drillName = $derived(t(getDrill(trainer.settings.drillId).name));
-  let patternName = $derived(t(getPatternName(trainer.settings.patternId)));
-
-  // A two-line field: a small caption over the current value.
-  const triggerClass =
-    "relative h-auto min-h-16 w-full min-w-0 items-start rounded-2xl px-3 py-2.5 data-[size=default]:h-auto sm:px-4 [&>svg:last-child]:absolute [&>svg:last-child]:top-3 [&>svg:last-child]:right-3";
+  const { hud } = trainer;
 </script>
 
-<!-- Both states need explicit track lists for the columns to interpolate. -->
-<div
-  class={cn(
-    "@container grid min-w-0 grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-x-2 transition-[grid-template-columns,column-gap] data-[has-pattern=false]:grid-cols-[minmax(0,1fr)_minmax(0,0fr)] data-[has-pattern=false]:gap-x-0 max-[359px]:min-h-21",
-    islandLayoutMotion
-  )}
-  data-has-pattern={trainer.isPursuit}
->
-  <Select.Root
-    onOpenChange={trainer.hud.handleMenuOpenChange}
-    onValueChange={trainer.selectDrill}
-    type="single"
-    value={trainer.settings.drillId}
-    bind:open={trainer.drillSelectOpen}
-  >
-    <Select.Trigger
-      class={triggerClass}
-      aria-label="{t('Drill')}: {drillName}"
+<div class="grid grid-cols-2 gap-2">
+  <label class="flex min-w-0 flex-col gap-1">
+    {t("Drill")}
+    <select
+      class="min-h-11 min-w-0"
       data-hud-select="drill"
-      title="{t('Drill')}: {drillName}"
+      onblur={hud.handleMenuBlur}
+      onchange={(event) => {
+        trainer.selectDrill(event.currentTarget.value);
+      }}
+      onfocus={hud.handleMenuFocus}
+      value={trainer.settings.drillId}
     >
-      <HudSelectLabel caption={t("Drill")} value={drillName}>
-        <DrillIcon drillId={trainer.settings.drillId} />
-      </HudSelectLabel>
-    </Select.Trigger>
-    <DrillSelectContent class="dark" />
-  </Select.Root>
+      <DrillOptions />
+    </select>
+  </label>
 
-  <!-- Only Smooth Pursuit has paths. The select slides away for other drills. -->
-  <div
-    class={cn(
-      "flex min-w-0 overflow-clip [overflow-clip-margin:3px]",
-      islandPresenceMotion
-    )}
-    data-visible={trainer.isPursuit}
-    inert={!trainer.isPursuit}
-  >
-    <Select.Root
-      onOpenChange={trainer.hud.handleMenuOpenChange}
-      onValueChange={trainer.selectPattern}
-      type="single"
-      value={trainer.settings.patternId}
-      bind:open={trainer.patternSelectOpen}
-    >
-      <Select.Trigger
-        class={cn(triggerClass, "w-[calc(50cqw-0.25rem)] shrink-0")}
-        aria-label="{t('Motion path')}: {patternName}"
+  <!-- Only Smooth Pursuit has paths. -->
+  {#if trainer.isPursuit}
+    <label class="flex min-w-0 flex-col gap-1">
+      {t("Motion path")}
+      <select
+        class="min-h-11 min-w-0"
         data-hud-select="pattern"
-        title="{t('Motion path')}: {patternName}"
+        onblur={hud.handleMenuBlur}
+        onchange={(event) => {
+          trainer.selectPattern(event.currentTarget.value);
+        }}
+        onfocus={hud.handleMenuFocus}
+        value={trainer.settings.patternId}
       >
-        <HudSelectLabel caption={t("Motion path")} value={patternName}>
-          <PatternIcon patternId={trainer.settings.patternId} />
-        </HudSelectLabel>
-      </Select.Trigger>
-      <PatternSelectContent class="dark" />
-    </Select.Root>
-  </div>
+        <PatternOptions />
+      </select>
+    </label>
+  {/if}
 </div>
