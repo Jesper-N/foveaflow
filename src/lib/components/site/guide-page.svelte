@@ -26,6 +26,7 @@
 
 <SiteShell path="/guide/">
   <PageHero
+    layout="split"
     lede={t(
       "Your guide to FoveaFlow’s free online eye trainer. Choose a drill for visual tracking, quick refocus, or peripheral awareness, then make it your own."
     )}
@@ -47,7 +48,7 @@
       </a>
     {/snippet}
     <nav id="drills" class="scroll-mt-36" aria-label={t("Choose a drill")}>
-      <ul class="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+      <ul class="grid gap-2 sm:grid-cols-2">
         {#each drillGuides as guide (guide.drillId)}
           <li class="grid">
             <DrillCard
