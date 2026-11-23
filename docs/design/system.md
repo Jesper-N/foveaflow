@@ -174,7 +174,7 @@ The spring curves are generated from Apple's damping/response model, not eyeball
 
 Never: animation on keyboard shortcuts beyond the state change itself, staggers longer than six rows, looping motion in the trainer chrome, `transition: all`.
 
-**Reduced motion:** a global rule turns animations into a 1 ms jump and limits transitions to color, opacity and shadow. Components also opt out explicitly: the island swaps its morph for a fade, previews and path tiles stay still (Lilac Chaser keeps its gap), the showcase only fades, and the trainer starts paused.
+**Reduced motion:** a global rule turns animations into a 1 ms jump and limits transitions to color, opacity and shadow. Components also opt out explicitly: the island snaps open and closed (its springs check the setting), sliders leave no wake, travelling highlights and the tooltip snap in place and the tooltip label only fades, menus only fade, the controls playground holds still, previews and path tiles stay still (Lilac Chaser keeps its gap), the showcase only fades, and the trainer starts paused.
 
 ## Components
 
