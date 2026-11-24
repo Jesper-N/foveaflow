@@ -1,20 +1,18 @@
 <p align="center">
-  <img src="public/logo-render/logo.svg" width="56" height="56" alt="" />
+  <img src="public/logo-render/logo.svg" width="64" height="64" alt="" />
 </p>
 
 <h1 align="center">FoveaFlow</h1>
 
 <p align="center">
-  Eye training drills in your browser.<br />
-  Free, no account, settings stay on your device.
+  Drills for visual tracking, quick refocus, focus under distraction and peripheral awareness.<br />
+  Free, no account, settings stay in your browser.
 </p>
 
 <p align="center">
   <a href="https://foveaflow.com/"><b>Open FoveaFlow</b></a>
   &nbsp;·&nbsp;
   <a href="https://foveaflow.com/guide/">Guide</a>
-  &nbsp;·&nbsp;
-  <a href="docs/design/system.md">Design system</a>
 </p>
 
 <br />
@@ -23,47 +21,33 @@
   <img src="public/metadata/og-v2.jpg" width="100%" alt="FoveaFlow: train your eyes in the browser" />
 </a>
 
-<br />
-
-## Drills
-
-| Drill | Trains |
-| :-- | :-- |
-| [Smooth Pursuit](https://foveaflow.com/smooth-pursuit/) | Following one target along 20 paths, from a slow circle to hard turns |
-| [Reaction Jumps](https://foveaflow.com/reaction-jumps/) | Finding the target again after it jumps |
-| [Multiple Distractions](https://foveaflow.com/multiple-distractions/) | Staying on the bright target while dimmer ones cross it |
-| [Lilac Chaser](https://foveaflow.com/lilac-chaser/) | Holding your gaze on the center while the ring changes |
-
 ## Development
 
-Needs [Bun](https://bun.com/) 1.4.5 and Node.js 26 (see `.node-version`).
+Requires [Bun](https://bun.com/) 1.4.5 and Node.js 26.
 
 ```bash
-git clone https://github.com/Jesper-N/foveaflow.git
-cd foveaflow
+git clone https://github.com/Jesper-N/foveaflow.git && cd foveaflow
 bun install
-bun run dev    # http://127.0.0.1:4321
+bun run dev        # http://127.0.0.1:4321
 ```
 
-| Command | Does |
-| :-- | :-- |
-| `bun run dev` | Starts the dev server |
-| `bun run build` | Builds the static site into `dist/` |
-| `bun run preview` | Serves the build through Wrangler, like production |
-| `bun run fix` | Applies lint fixes and formatting |
-| `bun run verify` | Runs everything CI runs: lint, types, translations, tests, audit |
+```bash
+bun run build      # static site in dist/
+bun run preview    # the build on Wrangler, as in production
+bun run fix        # lint fixes and formatting
+bun run verify     # everything CI runs
+```
 
-### Before you push
+Built with [Astro](https://astro.build/), [Svelte 5](https://svelte.dev/), [ui-sdk](https://ui-sdk.dev/) and [Tailwind CSS 4](https://tailwindcss.com/). The drills run on a canvas engine in plain TypeScript.
 
-- Browser tests need Chromium once: `bunx playwright install chromium`. They serve the build on port 4323; set `TEST_PORT` to change it.
-- New UI text needs an entry in all 10 dictionaries in `src/lib/i18n/dictionaries/`.
-- `tests/unit/__snapshots__/` locks every motion path. Update it with `bun test tests/unit --update-snapshots` only when a path should move differently.
-- Commits run `lint`, pushes run `verify`, and `main` deploys to Cloudflare Workers once CI passes.
+## Contributing
 
-## Stack
+- Commits run `lint` and pushes run `verify`. `main` deploys to Cloudflare Workers once CI passes.
+- Browser tests need Chromium: `bunx playwright install chromium`. They use port 4323, or `TEST_PORT`.
+- UI text is keyed by its English wording. Add each new string to all 10 dictionaries in `src/lib/i18n/dictionaries/`.
+- A snapshot locks every motion path. When one should change, run `bun test tests/unit --update-snapshots`.
+- Tokens, components and motion follow [`docs/design/system.md`](docs/design/system.md).
 
-[Astro](https://astro.build/), [Svelte 5](https://svelte.dev/), [ui-sdk](https://ui-sdk.dev/), [Tailwind CSS 4](https://tailwindcss.com/) and [Cuelume](https://github.com/danielwh2/cuelume) sounds, served by [Cloudflare Workers](https://workers.cloudflare.com/). The drills run on a canvas engine in plain TypeScript.
+<br />
 
-## License
-
-[MIT](LICENSE)
+<p align="center"><sub>MIT License</sub></p>
