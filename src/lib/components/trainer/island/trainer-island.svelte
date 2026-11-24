@@ -249,7 +249,7 @@
             </div>
           </div>
           <TooltipGroup
-            class="flex flex-col items-center gap-1"
+            class="flex flex-col items-center"
             clearOf=".notch"
             offset={10}
             side="bottom"
@@ -274,21 +274,33 @@
                 <PauseIcon class="fill-current stroke-0" aria-hidden="true" />
               {/if}
             </IconButton>
-            {#if trainer.canReverse}
-              <IconButton
-                class={trainer.settings.motionDirection === -1
-                  ? "bg-fill-hover text-foreground"
-                  : undefined}
-                aria-describedby="trainer-motion-status"
-                grouped
-                label={trainer.settings.motionDirection === 1
-                  ? t("Reverse motion direction")
-                  : t("Use forward motion direction")}
-                onclick={trainer.toggleDirection}
-              >
-                <ArrowLeftRightIcon aria-hidden="true" />
-              </IconButton>
-            {/if}
+            <div
+              class={[
+                "ease-drawer grid transition-[grid-template-rows] duration-300 motion-reduce:transition-none",
+                trainer.canReverse ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+              ]}
+              inert={!trainer.canReverse}
+            >
+              <div class="min-h-0">
+                <IconButton
+                  class={[
+                    "mt-1 transition-[opacity,scale,visibility] duration-200 ease-out",
+                    !trainer.canReverse &&
+                      "invisible opacity-0 motion-safe:scale-75",
+                    trainer.settings.motionDirection === -1 &&
+                      "bg-fill-hover text-foreground",
+                  ]}
+                  aria-describedby="trainer-motion-status"
+                  grouped
+                  label={trainer.settings.motionDirection === 1
+                    ? t("Reverse motion direction")
+                    : t("Use forward motion direction")}
+                  onclick={trainer.toggleDirection}
+                >
+                  <ArrowLeftRightIcon aria-hidden="true" />
+                </IconButton>
+              </div>
+            </div>
           </TooltipGroup>
         </div>
       </div>
