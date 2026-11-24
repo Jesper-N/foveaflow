@@ -5,7 +5,6 @@ import {
   behaviors,
   profilesForBehavior,
 } from "../../src/lib/trainer/settings/behaviors";
-import { safeStimulusColor } from "../../src/lib/trainer/settings/colors";
 import { getDrill } from "../../src/lib/trainer/settings/drills";
 import {
   predictablePatterns,
@@ -92,10 +91,5 @@ describe("catalogs", () => {
     expect(grouped.toSorted()).toEqual(
       pursuitPatterns.map(({ id }) => id).toSorted()
     );
-  });
-
-  test("saturated red is swapped for amber", () => {
-    expect(safeStimulusColor("#f81010")).toBe("#ffb020");
-    expect(safeStimulusColor("#e01010")).toBe("#e01010");
   });
 });

@@ -2,7 +2,7 @@ import * as z from "zod/mini";
 
 import type { SizeProfile, SpeedProfile } from "../engine/profiles";
 import { centimetersPerSecondToSpeed } from "../engine/speed";
-import { isHexColor, safeStimulusColor } from "./colors";
+import { isHexColor } from "./colors";
 import { defaultDrill, getDrill } from "./drills";
 import { isLetterWeight, isLilacChaserColor, isTargetForm } from "./options";
 import { isPursuitPattern } from "./patterns";
@@ -144,9 +144,7 @@ const fromStored = (stored: StoredSettings): TrainerSettings => {
   const sizeProfile = stored.sizeProfile ?? defaults.sizeProfile;
 
   return {
-    ballColor: isHexColor(stored.ballColor)
-      ? safeStimulusColor(stored.ballColor)
-      : null,
+    ballColor: isHexColor(stored.ballColor) ? stored.ballColor : null,
     baseRadiusPx: ranged("baseRadiusPx", stored.baseRadiusPx),
     distractorBrightness: ranged(
       "distractorBrightness",

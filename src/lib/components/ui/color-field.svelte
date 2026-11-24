@@ -48,11 +48,9 @@
     if (details.reason === "item-press" && next !== value) {
       cue("select");
     }
-
-    onValueChange(next);
   }}
   space="hsv"
-  {value}
+  bind:value={() => value, onValueChange}
 >
   <div class="flex min-h-9 items-center justify-between gap-3">
     <Label class="text-md min-w-0 cursor-pointer font-medium" for={triggerId}>

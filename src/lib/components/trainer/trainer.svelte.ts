@@ -17,11 +17,7 @@ import {
   isBehaviorId,
   profilesForBehavior,
 } from "$lib/trainer/settings/behaviors";
-import {
-  fadeHexColor,
-  isHexColor,
-  safeStimulusColor,
-} from "$lib/trainer/settings/colors";
+import { fadeHexColor, isHexColor } from "$lib/trainer/settings/colors";
 import {
   isLetterWeight,
   isLilacChaserColor,
@@ -100,9 +96,7 @@ export class Trainer {
   });
 
   targetColor = $derived(
-    safeStimulusColor(
-      this.settings.ballColor ?? getCanvasTheme(this.colorMode).targetColor
-    )
+    this.settings.ballColor ?? getCanvasTheme(this.colorMode).targetColor
   );
 
   letterColor = $derived(
@@ -254,7 +248,9 @@ export class Trainer {
   };
 
   setBallColor = (color: string) => {
-    this.settings.ballColor = safeStimulusColor(color);
+    if (isHexColor(color)) {
+      this.settings.ballColor = color;
+    }
   };
 
   setLetterColor = (color: string) => {

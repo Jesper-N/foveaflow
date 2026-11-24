@@ -148,12 +148,6 @@ test("only Smooth Pursuit keeps a saved path", () => {
   ).toMatchObject({ drillId: "lilacChaser", patternId: "circle" });
 });
 
-test("a saved saturated red loads as amber", () => {
-  expect(
-    loadFrom(SETTINGS_KEY, JSON.stringify({ ballColor: "#ff0000" }))?.ballColor
-  ).toBe("#ffb020");
-});
-
 test("a size pulse always runs at a steady speed", () => {
   const settings = loadFrom(
     SETTINGS_KEY,
