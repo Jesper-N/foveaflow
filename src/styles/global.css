@@ -47,6 +47,7 @@
   --ring: rgb(23 24 26 / 0.5);
   --target: #17181a;
   --grid: rgb(16 18 22 / 0.075);
+  --dot: rgb(16 18 22 / 0.2);
   --thumb: #ffffff;
   --shadow-color: 23 24 26;
 }
@@ -69,6 +70,7 @@
   --ring: rgb(255 255 255 / 0.55);
   --target: #ffffff;
   --grid: rgb(255 255 255 / 0.045);
+  --dot: rgb(255 255 255 / 0.11);
   --thumb: rgb(255 255 255 / 0.16);
   --shadow-color: 0 0 0;
 }
@@ -324,6 +326,27 @@ html[data-i18n-pending="true"] body > * {
 
 @utility canvas-grid {
   background-color: var(--canvas);
+}
+
+@utility stage-dots {
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: radial-gradient(
+      circle,
+      var(--dot) 0.75px,
+      transparent 1.25px
+    );
+    background-position: center;
+    background-size: 1.5rem 1.5rem;
+    mask-image: radial-gradient(
+      ellipse 75% 70% at 50% 50%,
+      #000 25%,
+      transparent 100%
+    );
+  }
 }
 
 @utility popup-unfold {

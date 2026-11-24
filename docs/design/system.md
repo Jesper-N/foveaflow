@@ -32,6 +32,7 @@ Semantic tokens follow shadcn naming. `fill*` and `border` are alpha overlays of
 | `ring` | ink 50% | white 55% | Focus outline. Neutral like the rest of the theme; at least 3:1 against every surface |
 | `target` | `#17181a` | `#ffffff` | The drill target: the theme ink. Same values as `getCanvasTheme().targetColor`; distractors fade it toward `canvas`; letters default to `canvas` |
 | `grid` | `rgb(16 18 22 / .075)` | `rgb(255 255 255 / .045)` | Hairlines of the fovea rings on marketing previews. The trainer canvas has no grid |
+| `dot` | `rgb(16 18 22 / .2)` | `rgb(255 255 255 / .11)` | Trainer stage texture (`stage-dots`): a 24 px dot lattice that fades out toward the edges, so the stage has a surface without lines to follow |
 | `thumb` | `#ffffff` | white 16% | Segmented and tab indicator |
 | `lilac-stage` | `#d8d8da` | `#d8d8da` | Lilac Chaser previews (the illusion needs its grey) |
 
@@ -101,7 +102,7 @@ Only floating surfaces get a shadow: `shadow-popover` (a 1 px 6% ring plus a sof
 | Menu row | 40 | 48 |
 | Setting icon tile | 28 | 28 (the whole row is the target) |
 | Slider hit area | 40 | 44 |
-| Island notch | 28 × 152 | 32 × 168 |
+| Island notch | 32 × 176 | 36 × 184 |
 | Color swatch | 32 | 44 |
 
 ## Icons
@@ -151,6 +152,7 @@ The spring curves are generated from Apple's damping/response model, not eyeball
 | Island opens (hover 30 ms, tap, or keyboard focus) | The notch's width and height grow on a soft spring (380 / 420 ms, first frame at about 30 ms, full size by about 200 ms); the controls fade in 60 ms later | Responsive like a hardware notch: it reacts the moment you reach it |
 | Island closes (pointer away 220 ms, outside tap, Escape) | Controls fade out in 90 ms, then the notch shrinks back (220 ms, 40 ms later) | Content never gets cut off by the shrinking shape |
 | Anything that changes size (island content, settings cards, select triggers) | `smooth-resize` measures the natural size and animates the old size to the new one on the drawer curve (360 ms) | Content never jumps; the container follows what's inside |
+| Island intro | On load the notch opens (first frame about 200 ms after mount) and tucks back after 3 s unless hovered, focused, or a menu is open | Shows where the controls live, then gets out of the way |
 | Island at rest | A blank MacBook-style notch in the surface color: flat against the top edge, rounded bottom corners, concave fillets into the edge. No text, icon or motion | Nothing to read or watch while you track the target |
 | Island while training | Fades out over 700 ms with the cursor (mouse only), back in 160 ms on movement | The drill gets the whole screen; the way back is instant |
 | Slider wake | Drag fast and every tick the value sweeps past jumps up (to 2.3×, scaled by drag speed) and decays back, so the run tails off behind your hand; a slow drag or a click only fills; an arrow key leaves a small wake. Label, value and icon tile brighten while you adjust | bencho's wake slider: the speed of your hand becomes visible, so the control feels physical without moving when you don't |
@@ -226,8 +228,8 @@ Every surface names the reference it was measured against and what was taken fro
 
 | Surface | Reference | Taken from it |
 | --- | --- | --- |
-| Island at rest | MacBook notch, bencho dynamic island | 152 × 28 notch with 10 px concave ears and 12 px bottom radius, in the popover surface, no content |
-| Island open | MacBook notch apps (NotchNook), bencho dynamic island | Same notch shape grown to 576 px with a 28 px bottom radius; drill tabs and app actions along the top, a still preview, the path, sliders and a large play button below |
+| Island at rest | MacBook notch, bencho dynamic island | 176 × 32 notch with 12 × 16 px concave elliptical ears and squircle bottom corners (`corner-shape: squircle`, 22 px; 14 px round where unsupported), in the popover surface, no content |
+| Island open | MacBook notch apps (NotchNook), bencho dynamic island | Same notch shape grown to 576 px with 48 px squircle corners (32 px round where unsupported); drill tabs and app actions along the top, a still preview, the path, sliders and a large play button below |
 | Menus | bencho picker, designbookmark spring dropdown | Card radius 20, padding 8, rows 40 (picker 48 with avatars) at radius 14, 18 px filled check badge radius 6; unfold from 0.86 × 0.72 and −10 px on stiffness 500 / damping 18; rows dealt 35 ms apart (picker 40 ms); one shared highlight with stiff lead edge (620 / 46) and soft trail (190 / 19) |
 | Sliders | bencho wake slider | Thumbless 3 px bars on a 7 px pitch, 32 % ink for empty bars, energy per bar from drag speed `1 − e^(−v / 900)`, decay `e^(−6.5 dt)`, keyboard wake 0.3 |
 | Switch | bencho liquid toggle | Off: slab track with a grey thumb; on: ink track with slab thumb; track carries the state; colour eases, thumb springs and stretches while held |
@@ -251,7 +253,7 @@ Every surface names the reference it was measured against and what was taken fro
 
 - Full-screen `canvas` stage with the drill.
 - **The island**, top center, flush with the top edge, in the popover surface like every other floating panel. It keeps the notch shape (flat top, concave ears, rounded bottom) at rest and open:
-  - At rest: a 152 × 28 px notch (168 × 32 on touch).
+  - At rest: a 176 × 32 px notch (184 × 36 on touch). It opens for 3 s on load first.
   - Open, up to 576 px wide: drill tabs (icons, the chosen drill also shows its name) with Language, Guide (G) and Controls (S) on the top row; below, a still preview of the drill, then the path select (P) for Smooth Pursuit or the drill's one-line summary, Size and Speed (or Lilac's Ball color and Scale), and a 48 px play/pause (Space) with reverse under it.
   - On phones it opens full width; drill tabs show icons only and the preview is hidden.
 - **Controls** (S): right-side panel 416 px wide, inset 8 px, with tabs Drill / Targets / General. Each tab is grouped settings rows in `fill` cards, iOS-style: a 28 px icon tile, the label, the control on the right (sliders run under the label, aligned with it), hairlines between rows, small section titles above a card. Targets opens with the live target preview. Footer: "Settings save automatically." and Done. On touch screens it is an 85 dvh bottom sheet.
@@ -263,7 +265,7 @@ Every surface names the reference it was measured against and what was taken fro
 - Sticky 64 px header on solid `background`: brand, Guide (not on `/guide/`), Open FoveaFlow, Language, Theme. On phones the brand and language code collapse to icons.
 - Page width 1280 px with 16 / 24 / 32 px gutters.
 - Hero, centered: breadcrumb chips, title (36 → 52), lede (16 → 20), actions, updated date. Below it, full width: the drill wall (four tiles, 1 → 2 → 4 columns) or the comparison table.
-- Section nav: a sticky chip bar under the header ("On this page") with a sliding pill for the current section; between sections and after a jump it keeps the last section you passed.
+- Section nav: a sticky chip bar under the header ("On this page") with a sliding pill for the current section; between sections and after a jump it keeps the last section you passed. Above the first section the first chip is active, and the pill fades in where it lands.
 - Sections 96–128 px apart, in an editorial split from `lg`: heading and intro sticky on the left (352 px), content on the right.
 - Guide extras: the drill showcase (sticky live stage beside the four drill write-ups), the motion path gallery (one grid of 20 route tiles, 2 → 4 → 5 columns, the two unpredictable paths first with a badge), audience cards with icons, the controls playground, article cards, FAQ accordion, reference list.
 - Closing call to action: a dark band with the title, line, button and a live pursuit preview.

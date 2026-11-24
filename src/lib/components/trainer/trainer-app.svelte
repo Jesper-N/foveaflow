@@ -32,7 +32,7 @@
 <svelte:document onvisibilitychange={trainer.handleVisibilityChange} />
 
 <main
-  class="trainer-stage group/stage bg-canvas relative h-dvh overflow-hidden overscroll-none data-[cursor-hidden=true]:cursor-none data-[cursor-hidden=true]:**:cursor-none"
+  class="trainer-stage group/stage bg-canvas stage-dots relative h-dvh overflow-hidden overscroll-none data-[cursor-hidden=true]:cursor-none data-[cursor-hidden=true]:**:cursor-none"
   aria-label={t("FoveaFlow eye trainer app")}
   data-cursor-hidden={trainer.cursor.hidden}
 >

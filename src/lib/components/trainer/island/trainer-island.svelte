@@ -23,6 +23,7 @@
 
   const HOVER_INTENT_MS = 30;
   const COLLAPSE_DELAY_MS = 220;
+  const INTRO_MS = 3000;
 
   const POPUP_SELECTOR =
     "[data-slot='select-content'], [data-slot='popover-content'], [data-slot='tooltip-content']";
@@ -32,6 +33,7 @@
   let island: HTMLElement | undefined;
   let expandTimer: number | undefined;
   let collapseTimer: number | undefined;
+  let introFrame = 0;
   let openedByKeyboard = false;
   let lastPointerType = "mouse";
 
@@ -107,6 +109,12 @@
 
   const islandEvents: Attachment<HTMLElement> = (node) => {
     island = node;
+    introFrame = requestAnimationFrame(() => {
+      introFrame = requestAnimationFrame(() => {
+        expand();
+        collapseTimer = window.setTimeout(scheduleCollapse, INTRO_MS);
+      });
+    });
 
     const stops = [
       on(node, "focusin", handleFocusIn),
@@ -121,6 +129,7 @@
         stop();
       }
 
+      cancelAnimationFrame(introFrame);
       window.clearTimeout(expandTimer);
       window.clearTimeout(collapseTimer);
     };
@@ -307,12 +316,13 @@
   }
 
   .notch {
-    --ear: 0.625rem;
-    --radius: 0.75rem;
-    --open-width: min(36rem, calc(100vw - 1rem - 2 * var(--ear)));
+    --ear-x: 0.75rem;
+    --ear-y: 1rem;
+    --radius: 0.875rem;
+    --open-width: min(36rem, calc(100vw - 1rem - 2 * var(--ear-x)));
 
-    width: 9.5rem;
-    height: calc(1.75rem + env(safe-area-inset-top));
+    width: 11rem;
+    height: calc(2rem + env(safe-area-inset-top));
     border-radius: 0 0 var(--radius) var(--radius);
     transition:
       width 220ms var(--ease-out) 40ms,
@@ -321,7 +331,7 @@
   }
 
   .notch[data-expanded="true"] {
-    --radius: 1.75rem;
+    --radius: 2rem;
 
     width: var(--open-width);
     height: var(--open-height, 12rem);
@@ -333,8 +343,8 @@
 
   @media (pointer: coarse) {
     .notch:not([data-expanded="true"]) {
-      width: 10.5rem;
-      height: calc(2rem + env(safe-area-inset-top));
+      width: 11.5rem;
+      height: calc(2.25rem + env(safe-area-inset-top));
     }
   }
 
@@ -343,27 +353,43 @@
     content: "";
     position: absolute;
     top: 0;
-    width: var(--ear);
-    height: var(--ear);
+    width: var(--ear-x);
+    height: var(--ear-y);
     pointer-events: none;
   }
 
   .notch::before {
     right: 100%;
     background: radial-gradient(
-      circle at 0 100%,
-      transparent calc(var(--ear) - 0.5px),
-      var(--popover) var(--ear)
+      var(--ear-x) var(--ear-y) at 0 100%,
+      transparent calc(100% - 0.5px),
+      var(--popover) 100%
     );
   }
 
   .notch::after {
     left: 100%;
     background: radial-gradient(
-      circle at 100% 100%,
-      transparent calc(var(--ear) - 0.5px),
-      var(--popover) var(--ear)
+      var(--ear-x) var(--ear-y) at 100% 100%,
+      transparent calc(100% - 0.5px),
+      var(--popover) 100%
     );
+  }
+
+  @supports (corner-shape: squircle) {
+    .notch {
+      --radius: 1.375rem;
+
+      corner-shape: squircle;
+    }
+
+    .notch[data-expanded="true"] {
+      --radius: 3rem;
+    }
+
+    .notch-clip {
+      corner-shape: squircle;
+    }
   }
 
   .notch[data-expanded="true"] :global(button.absolute.inset-0) {

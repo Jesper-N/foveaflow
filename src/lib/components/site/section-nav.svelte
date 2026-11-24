@@ -22,6 +22,7 @@
       return;
     }
 
+    indicator.toggleAttribute("data-snap", indicator.style.opacity !== "1");
     list.dataset["direction"] =
       link.offsetLeft >= indicatorLeft ? "right" : "left";
     indicatorLeft = link.offsetLeft;
@@ -49,6 +50,7 @@
       activeId =
         links.find(({ id }) => visible[id] === true)?.id ??
         passed.at(-1)?.id ??
+        links[0]?.id ??
         null;
 
       const link =
