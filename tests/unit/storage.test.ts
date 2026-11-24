@@ -74,7 +74,7 @@ test("saves keep the stored drill field name", () => {
 test.each([
   [{ unit: "deg/s", value: 29.6 }, 30],
   [{ unit: "cm/s", value: 20 }, 19],
-  [{ unit: "screen/s", value: 0.5 }, 20],
+  [{ unit: "screen/s", value: 0.5 }, 25],
 ])("a legacy speed of %o loads as %d", (speed, expected) => {
   expect(loadFrom(SETTINGS_KEY, JSON.stringify({ speed }))?.speed).toBe(
     expected

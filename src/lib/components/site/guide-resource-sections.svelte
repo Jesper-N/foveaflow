@@ -37,7 +37,7 @@
 
 <section
   id="more-guides"
-  class="grid scroll-mt-36 gap-10"
+  class="short:scroll-mt-16 grid scroll-mt-36 gap-10"
   aria-labelledby="more-guides-heading"
 >
   <h2 id="more-guides-heading" class={sectionHeading}>{t("More guides")}</h2>

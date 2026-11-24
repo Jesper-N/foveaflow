@@ -94,7 +94,10 @@
   };
 </script>
 
-<nav class="bg-background sticky top-16 z-9" aria-labelledby="page-toc">
+<nav
+  class="bg-background short:top-0 sticky top-16 z-9"
+  aria-labelledby="page-toc"
+>
   <div class={[pageWidth, "flex items-center gap-4"]}>
     <h2
       id="page-toc"

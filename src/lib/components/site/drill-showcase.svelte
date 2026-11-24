@@ -68,7 +68,7 @@
     };
 </script>
 
-<section id="practice" class="grid scroll-mt-36 gap-12">
+<section id="practice" class="short:scroll-mt-16 grid scroll-mt-36 gap-12">
   <h2 class={sectionHeading}>{t("How each drill works")}</h2>
 
   <div
@@ -117,7 +117,7 @@
         <article
           id={guide.drillId}
           class={[
-            "grid scroll-mt-36 content-center gap-6 transition-opacity duration-500 ease-out lg:min-h-[70vh] lg:py-12",
+            "short:scroll-mt-16 grid scroll-mt-36 content-center gap-6 transition-opacity duration-500 ease-out lg:min-h-[70vh] lg:py-12",
             guide.drillId !== activeDrill &&
               "lg:opacity-40 lg:focus-within:opacity-100 lg:hover:opacity-100",
           ]}

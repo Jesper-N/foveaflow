@@ -46,7 +46,11 @@
         {t("How to practice")}
       </a>
     {/snippet}
-    <nav id="drills" class="scroll-mt-36" aria-label={t("Choose a drill")}>
+    <nav
+      id="drills"
+      class="short:scroll-mt-16 scroll-mt-36"
+      aria-label={t("Choose a drill")}
+    >
       <ul class="grid gap-2 sm:grid-cols-2">
         {#each drillGuides as guide (guide.drillId)}
           <li class="grid">

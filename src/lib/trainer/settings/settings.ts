@@ -66,8 +66,8 @@ export const createDefaultSettings = (
   drill: Drill = defaultDrill
 ): TrainerSettings => ({
   ballColor: null,
-  baseRadiusPx: 40,
-  distractorBrightness: 0.45,
+  baseRadiusPx: 55,
+  distractorBrightness: 0.7,
   distractorCount: drill.distractorCount,
   drillId: drill.id,
   letterColor: null,
@@ -80,7 +80,7 @@ export const createDefaultSettings = (
   patternId: drill.patternId,
   showTrail: false,
   sizeProfile: { kind: "constant" },
-  speed: 20,
+  speed: 25,
   speedProfile: { kind: "constant" },
   targetCount: 1,
   targetForm: "circle",

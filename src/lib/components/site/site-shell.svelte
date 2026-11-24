@@ -52,7 +52,7 @@
 
 <div class="flex min-h-dvh flex-col">
   <header
-    class="bg-background sticky top-0 z-10 shadow-[0_1px_0_var(--background)]"
+    class="bg-background short:static sticky top-0 z-10 shadow-[0_1px_0_var(--background)]"
   >
     <div class={[pageWidth, "flex h-16 items-center gap-1"]}>
       <a

@@ -257,7 +257,7 @@ Every surface names the reference it was measured against and what was taken fro
   - At rest: a 176 × 32 px notch (184 × 36 on touch). It opens for 3 s on load first.
   - Open, up to 576 px wide: drill tabs (icons, the chosen drill also shows its name) with Language, Guide (G) and Controls (S) on the top row; below, a still preview of the drill, then the path select (P) for Smooth Pursuit or the drill's one-line summary, Size and Speed (or Lilac's Ball color and Scale), and a 48 px play/pause (Space) with reverse under it.
   - On phones it opens full width; drill tabs show icons only and the preview is hidden.
-- **Controls** (S): right-side panel 416 px wide, inset 8 px, with tabs Drill / Targets / General. Each tab is grouped settings rows in `fill` cards, iOS-style: a 28 px icon tile, the label, the control on the right (sliders run under the label, aligned with it), hairlines between rows, small section titles above a card. Targets opens with the live target preview. Footer: "Settings save automatically." and Done. On touch screens it is an 85 dvh bottom sheet.
+- **Controls** (S): right-side panel 416 px wide, inset 8 px, with tabs Targets / Drill / General, opening on Targets. Each tab is grouped settings rows in `fill` cards, iOS-style: a 28 px icon tile, the label, the control on the right (sliders run under the label, aligned with it), hairlines between rows, small section titles above a card. Targets opens with the live target preview. Footer: Done. On touch screens it is an 85 dvh bottom sheet.
 - **Guide** (G): 704 px dialog (sheet on touch). On top, a 256 px stage band (208 on phones) with the drill's live preview and its name pill; on `/` the stage crossfades to whichever drill in the list you point at or focus. The text scrolls underneath with soft fades at both edges. Right: title, lede, steps, what it trains, quick answers, overview. Footer: updated date, Source, Privacy, Terms, and the primary Read full guide.
 - **Reset**: an alert dialog over the controls.
 
@@ -276,6 +276,7 @@ Every surface names the reference it was measured against and what was taken fro
 - More guides: three cards with a visual header: the warmup shows its routine as a strip of drill icons sized by minutes, comparisons show both app marks stacked (they part on hover).
 - Article routines (FPS warmup): the hero is the routine itself, a timeline bar split by minutes. Each segment is a link to its drill showing the drill's preview and a localized duration (`Intl` minutes, no dictionary strings); the hovered or focused segment plays and the others dim. On phones it is a slim icon bar. Articles without a routine keep the drill wall; comparisons lead with the table.
 - Scroll areas (Controls panel, guide dialogs, section nav) fade content out at their edges (`scroll-fade-y`, `scroll-fade-x`) instead of cutting it.
+- Short screens (`short` variant, `max-height: 32rem`, phones in landscape): the site header scrolls away and only the section nav stays pinned (section scroll margin 64 px), and the guide dialogs put the stage beside the text (2 : 3 columns) so the text gets the full height to scroll.
 - Prose in articles and legal pages is capped at 65 characters per line (`max-w-prose`).
 
 ### Not found

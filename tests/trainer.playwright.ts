@@ -345,10 +345,11 @@ test("speed moves in whole steps and Done closes the controls", async ({
 }) => {
   await openPage(page, "/circle/");
   await openControls(page);
+  await openTab(page, "Drill");
   await adjustSlider(page, "Speed", "ArrowRight");
   await expect
     .poll(async () => await readSettings(page))
-    .toMatchObject({ speed: 21 });
+    .toMatchObject({ speed: 26 });
   await page.getByRole("button", { exact: true, name: "Done" }).click();
   await expect(page.getByRole("dialog")).not.toBeVisible();
 });

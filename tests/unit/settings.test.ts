@@ -68,7 +68,7 @@ describe("settings", () => {
     };
 
     expect(resetToDefaults(settings)).toMatchObject({
-      baseRadiusPx: 40,
+      baseRadiusPx: 55,
       patternId: "wave",
     });
   });

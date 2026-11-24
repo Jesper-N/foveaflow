@@ -32,7 +32,7 @@
 
 <div class={guideLayout}>
   <div class={guideAside}>
-    <div class="relative h-52 overflow-hidden rounded-3xl sm:h-64">
+    <div class="short:h-full relative h-52 overflow-hidden rounded-3xl sm:h-64">
       <DrillPreview
         class="size-full"
         backdrop="fovea"

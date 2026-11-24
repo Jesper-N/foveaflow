@@ -35,12 +35,12 @@
   const trainer = getTrainer();
 
   const tabs = [
-    { label: "Drill", value: "drill" },
     { label: "Targets", value: "targets" },
+    { label: "Drill", value: "drill" },
     { label: "General", value: "general" },
   ];
 
-  let tab = $state("drill");
+  let tab = $state("targets");
   let tabList = $state.raw<HTMLElement>();
 
   const tabListElement: Attachment<HTMLElement> = (node) => {
@@ -103,11 +103,11 @@
       <div
         class="scroll-fade-y min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pt-4 pb-4"
       >
-        <TabsPanel class="grid gap-5 outline-none" value="drill">
-          <DrillSettings />
-        </TabsPanel>
         <TabsPanel class="grid gap-5 outline-none" value="targets">
           <TargetSettings />
+        </TabsPanel>
+        <TabsPanel class="grid gap-5 outline-none" value="drill">
+          <DrillSettings />
         </TabsPanel>
         <TabsPanel class="grid gap-5 outline-none" value="general">
           <GeneralSettings />

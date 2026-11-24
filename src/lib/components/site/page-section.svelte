@@ -14,7 +14,7 @@
 </script>
 
 <section
-  class="grid scroll-mt-36 gap-6 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] lg:gap-x-20"
+  class="short:scroll-mt-16 grid scroll-mt-36 gap-6 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] lg:gap-x-20"
   {...rest}
 >
   <div class="grid content-start gap-3 lg:sticky lg:top-36">

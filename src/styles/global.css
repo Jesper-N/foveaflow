@@ -4,6 +4,7 @@
 /* Tokens are documented in docs/design/system.md. Keep the two in sync. */
 
 @custom-variant dark (&:where(.dark, .dark *));
+@custom-variant short (@media (max-height: 32rem));
 
 @font-face {
   font-family: "Inter";

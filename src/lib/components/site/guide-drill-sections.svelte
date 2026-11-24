@@ -24,7 +24,7 @@
 
 <DrillShowcase />
 
-<section id="patterns" class="grid scroll-mt-36 gap-10">
+<section id="patterns" class="short:scroll-mt-16 grid scroll-mt-36 gap-10">
   <div class="grid max-w-2xl gap-3">
     <h2 class={sectionHeading}>{t("Motion paths")}</h2>
     <p class={bodyText}>
