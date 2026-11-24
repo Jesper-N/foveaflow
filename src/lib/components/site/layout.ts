@@ -8,8 +8,6 @@ export const subHeading = "text-base font-medium tracking-tight";
 
 export const bodyText = "text-base text-muted-foreground text-pretty";
 
-export const eyebrow = "text-xs font-medium text-muted-foreground";
-
 export const textLink =
   "font-medium text-foreground underline decoration-border decoration-1 underline-offset-4 transition-colors duration-160 ease-out hover:decoration-foreground";
 

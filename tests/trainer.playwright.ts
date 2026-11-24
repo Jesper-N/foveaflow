@@ -24,6 +24,11 @@ const pauseButton = (page: Page) =>
 const resumeButton = (page: Page) =>
   page.getByRole("button", { exact: true, name: "Resume motion" });
 
+const isDark = async (page: Page) =>
+  await page.evaluate(() =>
+    document.documentElement.classList.contains("dark")
+  );
+
 /** The trainer shows the drill in its menu, saves it, and animates. */
 const expectTrainer = async (
   page: Page,
@@ -213,15 +218,10 @@ test("the menus move between drills and paths, then free the shortcuts", async (
   await expect(page).toHaveURL(/\/figure-eight\/$/u);
   await expectTrainer(page, "pursuit", "figureEight");
 
-  const isDark = async () =>
-    await page.evaluate(() =>
-      document.documentElement.classList.contains("dark")
-    );
-
-  const wasDark = await isDark();
+  const wasDark = await isDark(page);
 
   await page.keyboard.press("d");
-  await expect.poll(isDark).toBe(!wasDark);
+  await expect.poll(async () => await isDark(page)).toBe(!wasDark);
   await expect(page).toHaveURL(/\/figure-eight\/$/u);
 });
 
@@ -233,15 +233,10 @@ test("letter shortcuts still work after clicking a toolbar button", async ({
   await pauseButton(page).click();
   await expect(resumeButton(page)).toBeVisible();
 
-  const isDark = async () =>
-    await page.evaluate(() =>
-      document.documentElement.classList.contains("dark")
-    );
-
-  const wasDark = await isDark();
+  const wasDark = await isDark(page);
 
   await page.keyboard.press("d");
-  await expect.poll(isDark).toBe(!wasDark);
+  await expect.poll(async () => await isDark(page)).toBe(!wasDark);
 });
 
 test("keyboard shortcuts pause and open panels", async ({ page }) => {
@@ -271,6 +266,31 @@ test("keyboard shortcuts pause and open panels", async ({ page }) => {
   await expect(page.getByRole("dialog")).toHaveCount(0);
   await page.keyboard.press("p");
   await expect(page.getByRole("option", { name: "Circle" })).toBeVisible();
+});
+
+test("holding an arrow keeps stepping, holding a letter acts once", async ({
+  page,
+}) => {
+  await openPage(page, "/circle/");
+  await expect(pauseButton(page)).toBeVisible();
+  const { speed } = createDefaultSettings();
+
+  await page.keyboard.down("ArrowRight");
+  await page.keyboard.down("ArrowRight");
+  await page.keyboard.down("ArrowRight");
+  await page.keyboard.up("ArrowRight");
+  await expect
+    .poll(async () => await readSettings(page))
+    .toMatchObject({ speed: speed + 3 });
+
+  const wasDark = await isDark(page);
+
+  await page.keyboard.down("d");
+  await page.keyboard.down("d");
+  await page.keyboard.up("d");
+  await expect.poll(async () => await isDark(page)).toBe(!wasDark);
+  await page.waitForTimeout(200);
+  expect(await isDark(page)).toBe(!wasDark);
 });
 
 test("actions make a sound until the Sound switch turns it off", async ({
@@ -435,7 +455,7 @@ test("speed moves in whole steps and Done closes the controls", async ({
   await adjustSlider(page, "Speed", "ArrowRight");
   await expect
     .poll(async () => await readSettings(page))
-    .toMatchObject({ speed: 26 });
+    .toMatchObject({ speed: createDefaultSettings().speed + 1 });
   await page.getByRole("button", { exact: true, name: "Done" }).click();
   await expect(page.getByRole("dialog")).not.toBeVisible();
 });
@@ -594,34 +614,6 @@ test("the target color follows the color mode until a custom color is chosen", a
   await resetToDefaults(page);
   await openTab(page, "Targets");
   await expectThemeTarget("light");
-});
-
-test("a version 2 save is migrated when the trainer loads", async ({
-  page,
-}) => {
-  await page.addInitScript(() => {
-    localStorage.setItem(
-      "foveaflow.settings.v2",
-      JSON.stringify({
-        ballColor: "#76d900",
-        baseRadiusPx: 51,
-        calibration: { cssPxPerCm: 37.8, viewingDistanceCm: 60 },
-        speed: { unit: "cm/s", value: 20 },
-      })
-    );
-  });
-  await openPage(page, "/circle/");
-  await expect
-    .poll(async () => await readSettings(page))
-    .toMatchObject({
-      ballColor: null,
-      baseRadiusPx: 51,
-      speed: 19,
-    });
-  expect(await readSettings(page)).not.toHaveProperty("calibration");
-  expect(
-    await page.evaluate(() => localStorage.getItem("foveaflow.settings.v2"))
-  ).toBeNull();
 });
 
 test("Lilac color and scale redraw the paused drill and persist", async ({

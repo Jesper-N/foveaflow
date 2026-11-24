@@ -129,7 +129,6 @@ Custom SVGs in `src/lib/components/icons/`:
 | `ease-out` | `cubic-bezier(0.22, 1, 0.36, 1)` | Entering, reacting, fades |
 | `ease-spring` | `cubic-bezier(0.24, 1.34, 0.38, 1)` | Small things with a little life: switch thumb, hover fills, arrows, swatches |
 | `ease-spring-soft` | spring `linear()`, damping 0.78, response 0.42 s | Soft settles |
-| `ease-spring-settle` | spring `linear()`, damping 1, response 0.32 s | Settles with no overshoot |
 | `ease-edge-lead` / `ease-edge-trail` | springs `linear()`: stiffness 620 damping 46 (330 ms, no overshoot) / stiffness 190 damping 19 (790 ms) | The two edges of a sliding highlight (`stretch-indicator`) |
 | `ease-drawer` | `cubic-bezier(0.32, 0.72, 0, 1)` | Side panel |
 | `ease-in-out` | `cubic-bezier(0.65, 0, 0.2, 1)` | Movement across the screen (404 runner, equal-speed loops) |

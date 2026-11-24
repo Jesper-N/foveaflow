@@ -1,7 +1,7 @@
 // All user-facing strings in `content/` are English source text. The UI
 // passes them through `t()`, which looks them up in the dictionaries.
 
-export interface FaqItem {
+interface FaqItem {
   question: string;
   answer: string;
 }

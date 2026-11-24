@@ -31,7 +31,7 @@ export type PathPatternId = Extract<
   | "zigZag"
 >;
 
-export const pathDefinitions = {
+const pathDefinitions = {
   clover: {
     kind: "curve",
     pointAt: (phase, { centerX, centerY, radiusX, radiusY }) => {
