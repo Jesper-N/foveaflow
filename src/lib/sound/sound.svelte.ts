@@ -1,11 +1,22 @@
-import { bind, play, setEnabled, unlock } from "cuelume";
+import { bind, play, setEnabled, setTheme, unlock } from "cuelume";
 import type { PlayOptions, SoundName } from "cuelume";
 
 const STORAGE_KEY = "foveaflow-sound";
-const STEP_GAP_MS = 150;
 const MUTE_AFTER_MS = 400;
+const SLIDE_GAP_MS = 150;
 
-type Direction = NonNullable<PlayOptions["direction"]>;
+/** bencho's slider tick sits under Cuelume's cues once it is 1.2× louder. */
+const SLIDE_MIX = 1.2;
+
+/** bencho's slider tick: one soft sine that glides down a little as it fades. */
+const DRAG = {
+  attackMs: 28,
+  fromHz: 174,
+  gain: 0.034,
+  lowpassHz: 640,
+  ms: 250,
+  toHz: 155,
+} as const;
 
 /** Value changes that come from code or the browser, not from a person. */
 const silentReasons = new Set(["imperative", "reset", "restore"]);
@@ -21,8 +32,9 @@ const readSaved = () => {
 class Sound {
   enabled = $state(true);
   #started = false;
-  #lastStep = 0;
+  #lastSlide = Number.NEGATIVE_INFINITY;
   #muteTimer: number | undefined;
+  #context: AudioContext | undefined;
 
   /** Reads the saved choice and binds the `data-cuelume-*` fields. Runs once per page. */
   start() {
@@ -34,6 +46,7 @@ class Sound {
 
     this.enabled = readSaved();
     setEnabled(this.enabled);
+    setTheme("bubble");
     bind();
   }
 
@@ -59,17 +72,56 @@ class Sound {
     }
   };
 
-  /** One step of a slider or a held arrow key. Steps closer than the gap stay silent. */
-  step = (direction: Direction) => {
+  /**
+   * A slider moved, at `position` from 0 (its start) to 1 (its end). The
+   * pitch follows the thumb, from 0.75× at the start to 1.5× at the end, and
+   * moves closer than the gap stay silent, so a slow drag ticks with each step
+   * and a fast one rolls at about seven a second.
+   */
+  slide = (position: number) => {
     const now = performance.now();
 
-    if (now - this.#lastStep < STEP_GAP_MS) {
+    if (now - this.#lastSlide < SLIDE_GAP_MS) {
       return;
     }
 
-    this.#lastStep = now;
-    play("select", { direction, emphasis: "subtle" });
+    this.#lastSlide = now;
+    this.#playTone(0.75 + Math.min(1, Math.max(0, position)) * 0.75);
   };
+
+  #playTone(bend: number) {
+    if (!this.enabled) {
+      return;
+    }
+
+    this.#context ??= new AudioContext();
+
+    const context = this.#context;
+
+    if (context.state !== "running") {
+      void context.resume();
+    }
+
+    const start = context.currentTime;
+    const end = start + DRAG.ms / 1000;
+    const oscillator = context.createOscillator();
+    const lowpass = context.createBiquadFilter();
+    const envelope = context.createGain();
+
+    oscillator.frequency.setValueAtTime(DRAG.fromHz * bend, start);
+    oscillator.frequency.exponentialRampToValueAtTime(DRAG.toHz * bend, end);
+    lowpass.type = "lowpass";
+    lowpass.frequency.value = DRAG.lowpassHz;
+    envelope.gain.setValueAtTime(0.0001, start);
+    envelope.gain.exponentialRampToValueAtTime(
+      DRAG.gain * SLIDE_MIX,
+      start + DRAG.attackMs / 1000
+    );
+    envelope.gain.exponentialRampToValueAtTime(0.0001, end);
+    oscillator.connect(lowpass).connect(envelope).connect(context.destination);
+    oscillator.start(start);
+    oscillator.stop(end + 0.02);
+  }
 }
 
 export const sound = new Sound();

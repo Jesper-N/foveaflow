@@ -189,7 +189,7 @@ Never: animation on keyboard shortcuts beyond the state change itself, staggers 
 
 ## Sound
 
-[Cuelume](https://github.com/danielwh2/cuelume) (`cuelume`) synthesizes every cue with Web Audio: no audio files, no network, no CSP host. `src/lib/sound/sound.svelte.ts` owns it. Theme `default` (glass, wood, air, soft mallets), the calm register meant for all-day use. On by default like bencho; the header speaker toggle and Controls › General › Sound turn it off, saved as `foveaflow-sound` in the browser. Turning it on unlocks audio in that click and plays the switch; turning it off lets the switch's own cue finish (400 ms) before muting.
+[Cuelume](https://github.com/danielwh2/cuelume) (`cuelume`) synthesizes every cue with Web Audio: no audio files, no network, no CSP host. `src/lib/sound/sound.svelte.ts` owns it. Theme `bubble` (knocks, drips, corks, gulps): playful without getting loud, picked by ear over `default`, `mech` and `press`. On by default like bencho; the header speaker toggle and Controls › General › Sound turn it off, saved as `foveaflow-sound` in the browser. Turning it on unlocks audio in that click and plays the switch; turning it off lets the switch's own cue finish (400 ms) before muting.
 
 The rules, from bencho and Cuelume's own guide:
 
@@ -201,11 +201,12 @@ The rules, from bencho and Cuelume's own guide:
 | Interaction | Cue | Why |
 | --- | --- | --- |
 | Option in a menu, segmented control, tab, radio, drill switch | `select`, direction by position | A woody detent: a choice moved, and which way |
-| Slider step, arrow-key size and speed | `select` subtle, direction, at most one per 150 ms | bencho's slider spacing: a drag reads as a texture, not a buzz |
+| Slider step, arrow-key size and speed | bencho's own slider tick, ported note for note: a soft 174 → 155 Hz sine (250 ms, 640 Hz low-pass) whose pitch follows the thumb, 0.75× at the start to 1.5× at the end; at most one per 150 ms, so a slow drag ticks per step and a fast one rolls. Half as loud as a menu pick (measured peak 0.043 against 0.087) | Cuelume has no pitched cue. The pitch tells you where you are on the range, the rhythm how fast you're moving |
 | Switch, play / pause, reverse, `D` theme flip | `toggle`; switching off, pausing, reversing and going dark play it backwards | Two states, and the sound says which one you landed in |
 | Controls, guide, reset dialog open | `open` | A panel arrives |
 | Those dialogs close | `close`; confirming the reset plays it `strong` | Dismissal; the destructive confirm is the weightiest close |
-| Menu, color popover, accordion, island tapped open or tapped away | `open` / `close` subtle | Smaller surfaces get the quieter arrangement |
+| Menu, color popover, accordion | `open` / `close` subtle | Smaller surfaces get the quieter arrangement |
+| Island opens or closes because of you (hover, focus, tap, Escape, pointer away, M) | `open` / `close` subtle | The notch moving is a real state change; its load intro and the tuck-away after 3 s stay silent, and so does the island under an opening dialog |
 | Color preset swatch | `select` | A pick. Dragging the area or hue is continuous, so it stays silent |
 | Hex field typing | `type` (`data-cuelume-type`) | A keystroke per key, throttled by Cuelume |
 | Section nav jump | `navigate` subtle, backwards going up the page | Movement through the page, not a choice |

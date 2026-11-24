@@ -176,7 +176,7 @@
       }
 
       if (isPersonChange(details) && next !== value) {
-        sound.step(next > value ? "forward" : "back");
+        sound.slide((next - min) / (max - min || 1));
       }
 
       const push =

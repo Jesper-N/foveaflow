@@ -60,7 +60,11 @@
     </Label>
     <Popover
       onOpenChange={(open) => {
-        cue(open ? "open" : "close", { emphasis: "subtle" });
+        if (open) {
+          cue("open", { emphasis: "subtle" });
+        } else {
+          cue("close", { emphasis: "subtle" });
+        }
       }}
     >
       <PopoverTrigger

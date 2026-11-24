@@ -45,23 +45,41 @@
     (island.querySelector("[data-open]") !== null ||
       island.matches(":has(:focus-visible)"));
 
-  const expand = () => {
+  /** A dialog that opens plays its own sound, so the island stays quiet under it. */
+  const setExpanded = (next: boolean, quiet = false) => {
+    if (
+      trainer.islandExpanded !== next &&
+      !quiet &&
+      !trainer.controlsOpen &&
+      !trainer.guideOpen
+    ) {
+      if (next) {
+        cue("open", { emphasis: "subtle" });
+      } else {
+        cue("close", { emphasis: "subtle" });
+      }
+    }
+
+    trainer.islandExpanded = next;
+  };
+
+  const expand = (quiet = false) => {
     window.clearTimeout(collapseTimer);
-    trainer.islandExpanded = true;
+    setExpanded(true, quiet);
   };
 
   const collapse = () => {
     window.clearTimeout(expandTimer);
     window.clearTimeout(collapseTimer);
-    trainer.islandExpanded = false;
+    setExpanded(false);
   };
 
-  const scheduleCollapse = () => {
+  const scheduleCollapse = (quiet = false) => {
     window.clearTimeout(expandTimer);
     window.clearTimeout(collapseTimer);
     collapseTimer = window.setTimeout(() => {
       if (!isBusy() && island?.matches(":hover") !== true) {
-        trainer.islandExpanded = false;
+        setExpanded(false, quiet);
       }
     }, COLLAPSE_DELAY_MS);
   };
@@ -72,7 +90,9 @@
     }
 
     window.clearTimeout(collapseTimer);
-    expandTimer = window.setTimeout(expand, HOVER_INTENT_MS);
+    expandTimer = window.setTimeout(() => {
+      expand();
+    }, HOVER_INTENT_MS);
   };
 
   const handlePointerLeave = (event: PointerEvent) => {
@@ -112,8 +132,10 @@
     island = node;
     introFrame = requestAnimationFrame(() => {
       introFrame = requestAnimationFrame(() => {
-        expand();
-        collapseTimer = window.setTimeout(scheduleCollapse, INTRO_MS);
+        expand(true);
+        collapseTimer = window.setTimeout(() => {
+          scheduleCollapse(true);
+        }, INTRO_MS);
       });
     });
 
@@ -161,19 +183,7 @@
     ) {
       openedByKeyboard = false;
       collapse();
-
-      if (event.target.closest("[role='dialog']") === null) {
-        cue("close", { emphasis: "subtle" });
-      }
     }
-  };
-
-  const expandOnPress = () => {
-    if (!expanded) {
-      cue("open", { emphasis: "subtle" });
-    }
-
-    expand();
   };
 </script>
 
@@ -195,7 +205,9 @@
       class="absolute inset-0 z-1 cursor-pointer rounded-[inherit] outline-none"
       aria-expanded={expanded}
       aria-label={t("Trainer controls")}
-      onclick={expandOnPress}
+      onclick={() => {
+        expand();
+      }}
       tabindex={-1}
     ></Button>
 

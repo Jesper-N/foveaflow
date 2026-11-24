@@ -26,7 +26,11 @@
   class={["grid", className]}
   onValueChange={(next, details) => {
     if (isPersonChange(details)) {
-      cue(next.length > openCount ? "open" : "close", { emphasis: "subtle" });
+      if (next.length > openCount) {
+        cue("open", { emphasis: "subtle" });
+      } else {
+        cue("close", { emphasis: "subtle" });
+      }
     }
 
     openCount = next.length;

@@ -86,10 +86,10 @@
       onOpenChange={(open, details) => {
         if (open) {
           cue("open");
+        } else if (details.returnValue === "confirm") {
+          cue("close", { emphasis: "strong" });
         } else {
-          cue("close", {
-            emphasis: details.returnValue === "confirm" ? "strong" : "normal",
-          });
+          cue("close");
         }
       }}
     >

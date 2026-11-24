@@ -32,6 +32,7 @@ import {
   clampSetting,
   createDefaultSettings,
   resetToDefaults,
+  settingRanges,
   withDrill,
   withPattern,
   withRoute,
@@ -436,8 +437,11 @@ export class Trainer {
     const before = this.settings[setting];
     this.setRanged(setting, before + delta);
 
-    if (this.settings[setting] !== before) {
-      sound.step(delta === 1 ? "forward" : "back");
+    const after = this.settings[setting];
+
+    if (after !== before) {
+      const { min, max } = settingRanges[setting];
+      sound.slide((after - min) / (max - min));
     }
   }
 
