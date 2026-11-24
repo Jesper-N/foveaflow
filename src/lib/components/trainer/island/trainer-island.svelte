@@ -187,7 +187,8 @@
           <nav aria-label={t("App actions")}>
             <TooltipGroup
               class="flex items-center gap-0.5"
-              offset={14}
+              clearOf=".notch"
+              offset={10}
               side="bottom"
             >
               <LanguageSelect compact tip />
@@ -238,7 +239,12 @@
               <IslandAdjustments />
             </div>
           </div>
-          <TooltipGroup class="flex flex-col items-center gap-1" side="bottom">
+          <TooltipGroup
+            class="flex flex-col items-center gap-1"
+            clearOf=".notch"
+            offset={10}
+            side="bottom"
+          >
             <IconButton
               class="size-12 rounded-full [&_svg]:size-5"
               aria-describedby="trainer-motion-status"

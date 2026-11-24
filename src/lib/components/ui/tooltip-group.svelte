@@ -9,6 +9,7 @@
   interface Props {
     side?: "top" | "bottom";
     offset?: number;
+    clearOf?: string;
     class?: ClassValue;
     children: Snippet;
   }
@@ -16,6 +17,7 @@
   let {
     side = "top",
     offset = 8,
+    clearOf,
     class: className,
     children,
   }: Props = $props();
@@ -61,8 +63,13 @@
     tip.style.setProperty("left", `${left}px`);
     tip.style.setProperty("right", `${window.innerWidth - left - width}px`);
 
+    const clearBox =
+      clearOf === undefined
+        ? box
+        : (trigger.closest(clearOf)?.getBoundingClientRect() ?? box);
+
     if (side === "bottom") {
-      tip.style.setProperty("top", `${box.bottom + offset}px`);
+      tip.style.setProperty("top", `${clearBox.bottom + offset}px`);
     } else {
       tip.style.setProperty(
         "bottom",

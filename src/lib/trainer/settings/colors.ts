@@ -66,3 +66,17 @@ export const inkOn = (hexColor: string) => {
 
   return luminance > 0.6 ? "#17181a" : "#ffffff";
 };
+
+/** Near-white or near-black, so it can vanish into a light or dark surface. */
+export const isNearlyNeutralEdge = (hexColor: string) => {
+  const color = parseHexColor(hexColor);
+
+  if (!color) {
+    return false;
+  }
+
+  const luminance =
+    (0.2126 * color.red + 0.7152 * color.green + 0.0722 * color.blue) / 255;
+
+  return luminance > 0.92 || luminance < 0.12;
+};

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { inkOn } from "$lib/trainer/settings/colors";
+  import { inkOn, isNearlyNeutralEdge } from "$lib/trainer/settings/colors";
   import { CheckIcon } from "@lucide/svelte";
   import type { Attachment } from "svelte/attachments";
 
@@ -9,8 +9,8 @@
     node.style.setProperty("background-color", color);
     node.style.setProperty("color", inkOn(color));
 
-    if (color.toLowerCase() === "#ffffff") {
-      node.style.setProperty("box-shadow", "inset 0 0 0 1px rgb(0 0 0 / 0.12)");
+    if (isNearlyNeutralEdge(color)) {
+      node.style.setProperty("box-shadow", "inset 0 0 0 1px var(--border)");
     }
   };
 </script>
