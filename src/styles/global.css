@@ -32,10 +32,10 @@
 
 :root {
   color-scheme: light;
-  --background: #ffffff;
+  --background: #f1f1f0;
   --foreground: #17181a;
   --canvas: #f1f1f0;
-  --card: #f1f1f0;
+  --card: #ffffff;
   --popover: #ffffff;
   --primary: #17181a;
   --primary-foreground: #ffffff;
@@ -55,10 +55,10 @@
 
 .dark {
   color-scheme: dark;
-  --background: #0a0a0a;
+  --background: #171717;
   --foreground: #ffffff;
   --canvas: #171717;
-  --card: #171717;
+  --card: #262626;
   --popover: #262626;
   --primary: #ffffff;
   --primary-foreground: #0a0a0a;

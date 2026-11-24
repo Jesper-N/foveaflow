@@ -48,7 +48,7 @@
       {/if}
     </span>
     <span
-      class="bg-popover text-foreground shadow-thumb ease-spring grid size-9 shrink-0 place-items-center rounded-full transition-[opacity,scale] duration-260 pointer-fine:scale-86 pointer-fine:opacity-0 pointer-fine:group-hover/tile:scale-100 pointer-fine:group-hover/tile:opacity-100 pointer-fine:group-focus-visible/tile:scale-100 pointer-fine:group-focus-visible/tile:opacity-100"
+      class="bg-fill-hover text-foreground ease-spring grid size-9 shrink-0 place-items-center rounded-full transition-[opacity,scale] duration-260 pointer-fine:scale-86 pointer-fine:opacity-0 pointer-fine:group-hover/tile:scale-100 pointer-fine:group-hover/tile:opacity-100 pointer-fine:group-focus-visible/tile:scale-100 pointer-fine:group-focus-visible/tile:opacity-100"
       aria-hidden="true"
     >
       <ArrowUpRightIcon class="size-4 rtl:-scale-x-100" />

@@ -24,7 +24,7 @@
     {#each comparison.rows as row (row.feature)}
       <li class="bg-card grid gap-1 rounded-3xl p-2">
         <h3 class="px-3 pt-2 pb-1 text-sm font-medium">{t(row.feature)}</h3>
-        <div class="bg-popover grid gap-1 rounded-2xl p-3">
+        <div class="bg-fill grid gap-1 rounded-2xl p-3">
           <span class="flex items-center gap-2 text-xs font-semibold">
             <BrandMark class="size-4 rounded-xs" />
             {siteMetadata.name}
@@ -62,10 +62,7 @@
           >
             {t("Feature")}
           </th>
-          <th
-            class={[cell, "bg-popover rounded-t-3xl font-semibold"]}
-            scope="col"
-          >
+          <th class={[cell, "bg-fill rounded-t-3xl font-semibold"]} scope="col">
             <span class="flex items-center gap-2.5">
               <BrandMark class="size-6 rounded-md" />
               {siteMetadata.name}
@@ -92,7 +89,7 @@
             <td
               class={[
                 cell,
-                "bg-popover text-pretty",
+                "bg-fill text-pretty",
                 index === lastIndex
                   ? "rounded-b-3xl"
                   : "border-border border-b",

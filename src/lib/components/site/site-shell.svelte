@@ -41,7 +41,7 @@
 
 <ModeWatcher
   disableHeadScriptInjection
-  themeColors={{ dark: "#0a0a0a", light: "#ffffff" }}
+  themeColors={{ dark: "#171717", light: "#f1f1f0" }}
 />
 <a
   class="bg-primary text-md text-primary-foreground fixed inset-s-4 top-3 z-20 -translate-y-20 rounded-full px-4 py-2 font-medium focus-visible:translate-y-0"

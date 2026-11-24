@@ -14,9 +14,9 @@
       "grid justify-items-center gap-8 pt-16 text-center sm:pt-24",
     ]}
   >
-    <PathEndArt
-      class="ring-border aspect-8/5 w-full max-w-md rounded-4xl ring-1"
-    />
+    <div class="bg-card w-full max-w-md rounded-4xl p-2">
+      <PathEndArt class="aspect-8/5 w-full rounded-3xl" />
+    </div>
     <div
       class="motion-safe:animate-rise grid max-w-lg justify-items-center gap-4"
     >

@@ -20,7 +20,7 @@
 
 <ModeWatcher
   defaultMode="system"
-  themeColors={{ dark: "#0a0a0a", light: "#f7f7f6" }}
+  themeColors={{ dark: "#171717", light: "#f1f1f0" }}
   track={false}
 />
 <svelte:window

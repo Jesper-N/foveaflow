@@ -17,10 +17,10 @@ Semantic tokens follow shadcn naming. `fill*` and `border` are alpha overlays of
 
 | Token | Light | Dark | Use |
 | --- | --- | --- | --- |
-| `background` | `#ffffff` | `#0a0a0a` | Page |
+| `background` | `#f1f1f0` | `#171717` | Page: bencho's stage color, the same surface the trainer fills the screen with |
 | `foreground` | `#17181a` | `#ffffff` | Text, icons |
-| `canvas` | `#f1f1f0` | `#171717` | Trainer stage and preview plates: bencho's block stage, so the notch and panels sit on it like bencho's cards |
-| `card` | `#f1f1f0` | `#171717` | Large page cards (bencho's wall-card tier) |
+| `canvas` | `#f1f1f0` | `#171717` | Trainer stage and preview plates (bencho's stage), set into cards as a darker well |
+| `card` | `#ffffff` | `#262626` | Page cards, the same tier as bencho's component cards; highlights inside a card use `fill` |
 | `popover` | `#ffffff` | `#262626` | Floating surfaces: HUD, dialogs, menus (component "slab") |
 | `primary` / `primary-foreground` | `#17181a` / `#fff` | `#fff` / `#0a0a0a` | Primary buttons, selected tiles, tooltips |
 | `muted-foreground` | `#646568` | `#a1a1a1` | Secondary text |
