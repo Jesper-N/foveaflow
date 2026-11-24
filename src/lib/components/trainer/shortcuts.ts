@@ -43,26 +43,37 @@ const repeatableActions = new Set<ShortcutAction>([
   "speedUp",
 ]);
 
-/** Focused controls that keep keys for themselves. */
+/** Focused controls that keep every key for themselves. */
 const keyCapturingSelector = [
-  "a[href]",
-  "button",
   "input:not([type='hidden'])",
   "select",
   "textarea",
   "[contenteditable='']",
   "[contenteditable='true']",
   "dialog[open]",
-  "[role='button']",
   "[role='combobox']",
+  "[role='dialog']",
   "[role='listbox']",
   "[role='option']",
   "[role='slider']",
   "[role='spinbutton']",
-  "[role='switch']",
-  "[role='tab']",
   "[role='textbox']",
 ].join(",");
+
+/** Focused controls that move between options with the arrow keys. */
+const arrowCapturingSelector = "[role='radio'], [role='tab']";
+
+/** Focused controls that Space and Enter press. Letters still reach the shortcuts. */
+const pressableSelector = [
+  "a[href]",
+  "button",
+  "[role='button']",
+  "[role='radio']",
+  "[role='switch']",
+  "[role='tab']",
+].join(",");
+
+const arrowKeys = new Set(["ArrowDown", "ArrowLeft", "ArrowRight", "ArrowUp"]);
 
 export const getShortcutAction = (
   event: ShortcutKeyEvent
@@ -90,10 +101,21 @@ export const getShortcutAction = (
 const closingPanelSelector = "[role='dialog'][data-closed]";
 
 /** Whether the focused element should get the key instead of the shortcut. */
-export const isKeyCapturedBy = (target: EventTarget | null) => {
+export const isKeyCapturedBy = (target: EventTarget | null, key: string) => {
   if (!(target instanceof Element) || target.closest(closingPanelSelector)) {
     return false;
   }
 
-  return target.closest(keyCapturingSelector) !== null;
+  if (target.closest(keyCapturingSelector)) {
+    return true;
+  }
+
+  if (arrowKeys.has(key)) {
+    return target.closest(arrowCapturingSelector) !== null;
+  }
+
+  return (
+    (key === " " || key === "Enter") &&
+    target.closest(pressableSelector) !== null
+  );
 };

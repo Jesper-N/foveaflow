@@ -62,7 +62,9 @@
     ]}
     finalFocus={trainer.panelReturnFocus}
   >
-    <header class="flex items-center justify-between gap-4 px-4 pt-4 pb-3">
+    <header
+      class="short:pt-2 short:pb-2 flex items-center justify-between gap-4 px-4 pt-4 pb-3"
+    >
       <DialogTitle class="text-lg font-semibold">{t("Controls")}</DialogTitle>
       <DialogClose class={buttonClass("ghost", "icon")} aria-label={t("Close")}>
         <XIcon aria-hidden="true" />
@@ -115,7 +117,9 @@
       </div>
     </Tabs>
 
-    <footer class="flex items-center justify-end gap-4 px-4 pt-3 pb-5">
+    <footer
+      class="short:hidden flex items-center justify-end gap-4 px-4 pt-3 pb-5"
+    >
       <DialogClose class={buttonClass("primary", "md")}>{t("Done")}</DialogClose
       >
     </footer>

@@ -221,6 +221,25 @@ test("the menus move between drills and paths, then free the shortcuts", async (
   await expect(page).toHaveURL(/\/figure-eight\/$/u);
 });
 
+test("letter shortcuts still work after clicking a toolbar button", async ({
+  page,
+}) => {
+  await openPage(page, "/circle/");
+  await expandIsland(page);
+  await pauseButton(page).click();
+  await expect(resumeButton(page)).toBeVisible();
+
+  const isDark = async () =>
+    await page.evaluate(() =>
+      document.documentElement.classList.contains("dark")
+    );
+
+  const wasDark = await isDark();
+
+  await page.keyboard.press("d");
+  await expect.poll(isDark).toBe(!wasDark);
+});
+
 test("keyboard shortcuts pause and open panels", async ({ page }) => {
   await openPage(page, "/circle/");
   await expect(pauseButton(page)).toBeVisible();

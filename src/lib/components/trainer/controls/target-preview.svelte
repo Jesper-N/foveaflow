@@ -28,7 +28,7 @@
 </script>
 
 <div
-  class="canvas-grid relative grid h-40 place-items-center overflow-hidden rounded-2xl"
+  class="canvas-grid short:h-28 relative grid h-40 place-items-center overflow-hidden rounded-2xl"
   aria-hidden="true"
 >
   <span

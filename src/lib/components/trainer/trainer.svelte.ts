@@ -331,7 +331,7 @@ export class Trainer {
   handleKeydown = (event: KeyboardEvent) => {
     const action = getShortcutAction(event);
 
-    if (!action || isKeyCapturedBy(event.target)) {
+    if (!action || isKeyCapturedBy(event.target, event.key)) {
       return;
     }
 
