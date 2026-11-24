@@ -376,7 +376,6 @@ export const bn = {
   "Snap to the next target and train fast refocus.":
     "পরের লক্ষ্যে দ্রুত চোখ নিন এবং দ্রুত রিফোকাস অনুশীলন করুন।",
   Sound: "শব্দ",
-  Source: "সোর্স",
   "Source code": "সোর্স কোড",
   "Spatial allocation of attention during smooth pursuit":
     "মসৃণ অনুসরণ চলার সময় মনোযোগের স্থানিক বণ্টন",

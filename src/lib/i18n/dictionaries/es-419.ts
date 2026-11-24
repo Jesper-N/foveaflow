@@ -390,7 +390,6 @@ export const es419 = {
   "Snap to the next target and train fast refocus.":
     "Salta al siguiente objetivo y entrena reenfoque rápido.",
   Sound: "Sonido",
-  Source: "Fuente",
   "Source code": "Código fuente",
   "Spatial allocation of attention during smooth pursuit":
     "Asignación espacial de la atención durante el seguimiento suave",

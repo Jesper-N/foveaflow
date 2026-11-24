@@ -401,7 +401,6 @@ export const fil = {
   "Snap to the next target and train fast refocus.":
     "Ilipat agad ang tingin sa susunod na target at sanayin ang mabilis na paglipat ng focus.",
   Sound: "Tunog",
-  Source: "Pinagmulan",
   "Source code": "Source code",
   "Spatial allocation of attention during smooth pursuit":
     "Spatial allocation ng attention habang nasa smooth pursuit",

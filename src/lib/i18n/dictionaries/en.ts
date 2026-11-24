@@ -379,7 +379,6 @@ export const en = {
   "Snap to the next target and train fast refocus.":
     "Snap to the next target and train fast refocus.",
   Sound: "Sound",
-  Source: "Source",
   "Source code": "Source code",
   "Spatial allocation of attention during smooth pursuit":
     "Spatial allocation of attention during smooth pursuit",

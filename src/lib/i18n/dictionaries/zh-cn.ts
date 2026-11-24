@@ -374,7 +374,6 @@ export const zhCN = {
   "Snap to the next target and train fast refocus.":
     "快速转向下一个目标，练习快速转移视线。",
   Sound: "声音",
-  Source: "源代码",
   "Source code": "源代码",
   "Spatial allocation of attention during smooth pursuit":
     "平滑追踪过程中的注意空间分配",

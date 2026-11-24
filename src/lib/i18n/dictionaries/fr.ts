@@ -393,7 +393,6 @@ export const fr = {
   "Snap to the next target and train fast refocus.":
     "Sautez vers la cible suivante et travaillez la mise au point rapide.",
   Sound: "Son",
-  Source: "Source",
   "Source code": "Code source",
   "Spatial allocation of attention during smooth pursuit":
     "Allocation spatiale de l'attention pendant la poursuite fluide",

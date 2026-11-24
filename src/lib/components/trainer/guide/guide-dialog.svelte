@@ -77,7 +77,7 @@
           rel="noopener noreferrer"
           target="_blank"
         >
-          {t("Source")}
+          GitHub
         </a>
         <a class={footerLink} href={legalPageLinks.privacy.path}>
           {t(legalPageLinks.privacy.label)}

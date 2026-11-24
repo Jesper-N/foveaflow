@@ -376,7 +376,6 @@ export const hi = {
   "Snap to the next target and train fast refocus.":
     "अगले लक्ष्य पर तुरंत जाएं और तेज दोबारा फोकस का अभ्यास करें.",
   Sound: "ध्वनि",
-  Source: "सोर्स",
   "Source code": "सोर्स कोड",
   "Spatial allocation of attention during smooth pursuit":
     "स्मूद ट्रैकिंग के दौरान ध्यान का स्थानिक वितरण",

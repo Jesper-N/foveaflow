@@ -390,7 +390,6 @@ export const ptBR = {
   "Snap to the next target and train fast refocus.":
     "Salte para o próximo alvo e treine refoco rápido.",
   Sound: "Som",
-  Source: "Fonte",
   "Source code": "Código-fonte",
   "Spatial allocation of attention during smooth pursuit":
     "Alocação espacial da atenção durante o rastreamento suave",
