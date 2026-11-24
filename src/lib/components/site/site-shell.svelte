@@ -1,17 +1,23 @@
 <script lang="ts">
   import LanguageSelect from "$lib/components/language-select.svelte";
+  import SoundToggle from "$lib/components/sound-toggle.svelte";
   import ThemeSelect from "$lib/components/theme-select.svelte";
-  import { Button, buttonVariants } from "$lib/components/ui/button";
+  import { mainRouteForDrill } from "$lib/content/drill-routes";
   import { legalPageLinks } from "$lib/content/legal";
   import { siteMetadata } from "$lib/content/site";
   import { t } from "$lib/i18n/translate";
-  import { cn } from "$lib/utils";
-  import ArrowLeftIcon from "@lucide/svelte/icons/arrow-left";
-  import ArrowUpRightIcon from "@lucide/svelte/icons/arrow-up-right";
+  import { sound } from "$lib/sound/sound.svelte";
+  import { drills } from "$lib/trainer/settings/drills";
   import { ModeWatcher } from "mode-watcher";
+  import { onMount } from "svelte";
   import type { Snippet } from "svelte";
 
-  import { textLink } from "./styles";
+  import { startAgentBridge } from "../agent-bridge";
+  import DrillIcon from "../icons/drill-icon.svelte";
+  import BrandMark from "../ui/brand-mark.svelte";
+  import { buttonClass } from "../ui/button-variants";
+  import TooltipGroup from "../ui/tooltip-group.svelte";
+  import { pageWidth, pillLink } from "./layout";
 
   let { path, children }: { path: string; children: Snippet } = $props();
 
@@ -22,102 +28,101 @@
       label,
     })),
   ];
+
+  const drillLinks = drills.map((drill) => ({
+    href: mainRouteForDrill(drill.id)?.path ?? "/",
+    id: drill.id,
+    label: drill.name,
+  }));
+
+  const footerLink =
+    "flex items-center gap-2.5 text-md text-muted-foreground transition-colors duration-160 ease-out hover:text-foreground aria-[current=page]:text-foreground";
+
+  onMount(() => {
+    sound.start();
+    startAgentBridge();
+  });
 </script>
 
-<!-- The head script in base-layout.astro already applied the saved theme. -->
-<ModeWatcher disableHeadScriptInjection />
-<div class="bg-background text-foreground selection:bg-primary/25 min-h-dvh">
-  <a
-    class="bg-primary text-primary-foreground fixed top-3 left-3 z-50 -translate-y-24 rounded-lg px-4 py-3 focus:translate-y-0"
-    href="#content"
-  >
-    {t("Skip to content")}
-  </a>
+<ModeWatcher
+  disableHeadScriptInjection
+  themeColors={{ dark: "#171717", light: "#f1f1f0" }}
+/>
+<a
+  class="bg-primary text-md text-primary-foreground fixed inset-s-4 top-3 z-20 -translate-y-20 rounded-full px-4 py-2 font-medium focus-visible:translate-y-0"
+  href="#content"
+>
+  {t("Skip to content")}
+</a>
 
-  <header class="border-border/70 relative z-30 border-b">
-    <div
-      class="mx-auto flex min-h-20 max-w-7xl items-center justify-between gap-4 px-5 sm:px-8 lg:px-12"
-    >
+<div class="flex min-h-dvh flex-col">
+  <header
+    class="bg-background short:static sticky top-0 z-10 shadow-[0_1px_0_var(--background)] [view-transition-name:site-header]"
+  >
+    <div class={[pageWidth, "flex h-16 items-center gap-1"]}>
       <a
-        class="focus-visible:outline-ring flex shrink-0 items-center gap-2.5 rounded-sm text-xl font-semibold focus-visible:outline-2 focus-visible:outline-offset-4"
-        aria-label={t("Open FoveaFlow")}
+        class="text-md me-auto flex items-center gap-2.5 rounded-full font-medium"
         href="/"
       >
-        <img
-          class="size-7 rounded-sm"
-          alt=""
-          height="28"
-          src="/logo-render/logo.svg"
-          width="28"
-        />
-        {siteMetadata.name}
+        <BrandMark class="size-8" />
+        <span class="max-sm:sr-only">{siteMetadata.name}</span>
       </a>
-      <nav
-        class="flex items-center gap-2 sm:gap-4"
-        aria-label={t("Page navigation")}
-      >
+      <nav class="flex items-center gap-1" aria-label={t("Page navigation")}>
         {#if path !== "/guide/"}
-          <a
-            class={cn(
-              buttonVariants({ size: "sm", variant: "ghost" }),
-              "text-muted-foreground size-10 gap-2 p-0 sm:w-auto sm:px-3"
-            )}
-            aria-label={t("Guide")}
-            href="/guide/"
-            title={t("Guide")}
-          >
-            <ArrowLeftIcon />
-            <span class="hidden sm:inline">{t("Guide")}</span>
-          </a>
+          <a class={pillLink} href="/guide/">{t("Guide")}</a>
         {/if}
-        <LanguageSelect
-          collapseNameOnSmall
-          showSelectedName
-          size="sm"
-          triggerClass="max-w-44 data-[size=sm]:h-10 max-sm:size-10"
-          variant="ghost"
-        />
-        <Button
-          class="hidden gap-2 sm:inline-flex"
-          href="/"
-          size="lg"
-          variant="outline"
+        <a class={buttonClass("secondary", "md")} href="/"
+          >{t("Open FoveaFlow")}</a
         >
-          {t("Open FoveaFlow")}
-          <ArrowUpRightIcon data-icon="inline-end" />
-        </Button>
-        <ThemeSelect />
       </nav>
+      <TooltipGroup class="flex items-center gap-1" side="bottom">
+        <LanguageSelect compact tip />
+        <ThemeSelect />
+        <SoundToggle />
+      </TooltipGroup>
     </div>
   </header>
 
-  <main
-    id="content"
-    class="mx-auto max-w-7xl px-5 outline-none sm:px-8 lg:px-12"
-    tabindex="-1"
-  >
+  <main id="content" class="flex-1 outline-none" tabindex="-1">
     {@render children()}
   </main>
 
-  <footer class="mx-auto mt-16 max-w-7xl px-5 sm:mt-24 sm:px-8 lg:px-12">
+  <footer class={[pageWidth, "mt-24 pb-6 lg:mt-32"]}>
     <div
-      class="border-border/70 flex flex-col gap-6 border-t py-8 md:flex-row md:items-center md:justify-between"
+      class="border-border grid grid-cols-2 gap-x-6 gap-y-10 border-t pt-12 pb-10 md:grid-cols-[minmax(0,1fr)_auto_auto] md:gap-16"
     >
-      <div class="flex flex-col gap-2">
+      <div class="col-span-2 grid content-start gap-4 md:col-span-1">
         <a
-          class="focus-visible:outline-ring self-start rounded-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-4"
+          class="flex items-center gap-3 justify-self-start text-lg font-semibold"
           href="/"
         >
+          <BrandMark class="size-10 rounded-xl" />
           {siteMetadata.name}
         </a>
-        <p class="text-muted-foreground text-sm">
+        <p class="text-md text-muted-foreground max-w-sm text-pretty">
           {t("FoveaFlow is free. No account, no paid plan.")}
         </p>
       </div>
-      <nav class="flex flex-wrap gap-6" aria-label={t("Legal pages")}>
+      <nav class="grid content-start gap-3" aria-labelledby="footer-drills">
+        <h2 id="footer-drills" class="text-xs font-medium">{t("Drills")}</h2>
+        {#each drillLinks as link (link.id)}
+          <a
+            class={footerLink}
+            aria-current={path === link.href ? "page" : undefined}
+            href={link.href}
+          >
+            <DrillIcon class="size-4" drillId={link.id} />
+            {t(link.label)}
+          </a>
+        {/each}
+      </nav>
+      <nav class="grid content-start gap-3" aria-labelledby="footer-pages">
+        <h2 id="footer-pages" class="text-xs font-medium">
+          {siteMetadata.name}
+        </h2>
         {#each footerLinks as link (link.href)}
           <a
-            class={textLink}
+            class={footerLink}
             aria-current={path === link.href ? "page" : undefined}
             href={link.href}
           >

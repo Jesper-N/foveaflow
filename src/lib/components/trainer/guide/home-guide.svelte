@@ -1,67 +1,104 @@
 <script lang="ts">
-  import DrillIllustration from "$lib/components/drills/drill-illustration.svelte";
-  import { drillCard } from "$lib/components/site/styles";
   import { drillGuides } from "$lib/content/drill-guides";
   import { mainRouteForDrill } from "$lib/content/drill-routes";
   import { homeCopy } from "$lib/content/home";
-  import { freeUseNote } from "$lib/content/site";
   import { t } from "$lib/i18n/translate";
-  import { cn } from "$lib/utils";
+  import { getDrill } from "$lib/trainer/settings/drills";
+  import type { DrillId } from "$lib/trainer/settings/drills";
+  import { ArrowUpRightIcon } from "@lucide/svelte";
+  import { DialogDescription, DialogTitle } from "@ui-sdk/svelte/dialog";
 
-  import GuideHeader from "./guide-header.svelte";
-  import { guideCopy, guideSectionHeading } from "./styles";
+  import DrillIcon from "../../icons/drill-icon.svelte";
+  import DrillPreview from "../../icons/drill-preview.svelte";
+  import { pressable } from "../../ui/styles";
+  import {
+    guideAside,
+    guideHeading,
+    guideLayout,
+    guideScroll,
+    guideSection,
+  } from "./guide-styles";
+
+  let shown = $state<DrillId>("pursuit");
 </script>
 
-<GuideHeader lede={t(homeCopy.hero)} title={t(homeCopy.heading)} />
-
-<div class="grid gap-10 px-6 py-7 sm:px-8">
-  <section
-    class="guide-enter grid gap-4 [animation-delay:40ms]"
-    aria-labelledby="trainer-guide-drills"
-  >
-    <h3 id="trainer-guide-drills" class={guideSectionHeading}>
-      {t("Drills")}
-    </h3>
-    <ul class="grid gap-3 sm:grid-cols-2">
+<div class={guideLayout}>
+  <div class={guideAside}>
+    <div
+      class="short:h-full relative grid h-52 overflow-hidden rounded-3xl sm:h-64"
+    >
       {#each drillGuides as guide (guide.drillId)}
-        <li>
-          <a
-            class={cn(
-              drillCard,
-              "grid h-full grid-cols-[6.5rem_minmax(0,1fr)] items-center gap-4 rounded-2xl p-3"
-            )}
-            href={mainRouteForDrill(guide.drillId)?.path ?? "/"}
-          >
-            <span class="px-2 py-1.5">
-              <DrillIllustration drillId={guide.drillId} />
-            </span>
-            <span class="grid gap-1">
-              <span class="text-foreground leading-5 font-semibold">
-                {t(guide.title)}
-              </span>
-              <span class="text-muted-foreground leading-5 text-pretty">
-                {t(guide.summary)}
-              </span>
-            </span>
-          </a>
-        </li>
+        <DrillPreview
+          class={[
+            "col-start-1 row-start-1 size-full transition-opacity duration-300 ease-out",
+            shown === guide.drillId ? "opacity-100" : "opacity-0",
+          ]}
+          backdrop="fovea"
+          drillId={guide.drillId}
+          playing={shown === guide.drillId}
+        />
       {/each}
-    </ul>
-  </section>
-
-  <section
-    class="guide-enter grid gap-3 [animation-delay:80ms]"
-    aria-labelledby="trainer-guide-overview"
-  >
-    <h3 id="trainer-guide-overview" class={guideSectionHeading}>
-      {t("Overview")}
-    </h3>
-    <!-- Balanced columns keep the closing note from sitting alone. -->
-    <div class="*:break-inside-avoid *:not-last:pb-3 sm:columns-2 sm:gap-10">
-      {#each homeCopy.body as paragraph (paragraph)}
-        <p class={guideCopy}>{t(paragraph)}</p>
-      {/each}
-      <p class={guideCopy}>{t(freeUseNote)}</p>
+      <span
+        class="bg-popover/90 shadow-thumb absolute inset-s-3 bottom-3 flex h-8 items-center gap-2 rounded-full ps-2 pe-3 text-sm font-medium backdrop-blur-md"
+      >
+        <DrillIcon class="size-4" drillId={shown} />
+        {t(getDrill(shown).name)}
+      </span>
     </div>
-  </section>
+  </div>
+
+  <div class={guideScroll}>
+    <header class="grid gap-2.5 pe-10">
+      <DialogTitle
+        id="trainer-guide-title"
+        class="text-xl font-semibold text-balance"
+      >
+        {t(homeCopy.heading)}
+      </DialogTitle>
+      <DialogDescription class="text-muted-foreground text-base text-pretty">
+        {t(homeCopy.hero)}
+      </DialogDescription>
+    </header>
+
+    <section class={guideSection} aria-labelledby="trainer-guide-drills">
+      <h3 id="trainer-guide-drills" class={guideHeading}>{t("Drills")}</h3>
+      <ul class="-mx-2 grid">
+        {#each drillGuides as guide (guide.drillId)}
+          <li>
+            <a
+              class={[
+                "group/row hover:bg-fill flex items-center gap-3.5 rounded-2xl p-2",
+                shown === guide.drillId && "bg-fill",
+                pressable,
+              ]}
+              href={mainRouteForDrill(guide.drillId)?.path ?? "/"}
+              onfocus={() => (shown = guide.drillId)}
+              onpointerenter={() => (shown = guide.drillId)}
+            >
+              <span
+                class={[
+                  "grid size-11 shrink-0 place-items-center rounded-xl transition-[background-color,box-shadow] duration-160 ease-out",
+                  shown === guide.drillId
+                    ? "bg-popover shadow-thumb"
+                    : "bg-fill",
+                ]}
+              >
+                <DrillIcon class="size-5" drillId={guide.drillId} />
+              </span>
+              <span class="grid min-w-0 flex-1 gap-0.5">
+                <span class="text-md font-medium">{t(guide.title)}</span>
+                <span class="text-muted-foreground text-sm text-pretty">
+                  {t(guide.summary)}
+                </span>
+              </span>
+              <ArrowUpRightIcon
+                class="text-muted-foreground ease-spring group-hover/row:text-foreground size-4 shrink-0 transition-[translate,color] duration-260 group-hover/row:translate-x-0.5 group-hover/row:-translate-y-0.5 rtl:-scale-x-100"
+                aria-hidden="true"
+              />
+            </a>
+          </li>
+        {/each}
+      </ul>
+    </section>
+  </div>
 </div>

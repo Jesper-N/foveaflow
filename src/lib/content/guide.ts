@@ -11,39 +11,6 @@ export const guideMetadata = {
   title: "FoveaFlow Guide - Eye Trainer Drills & Visual Tracking Settings",
 } as const;
 
-export const guideFaq = [
-  {
-    answer:
-      "Smooth Pursuit is the best starting point when your goal is following one moving target as steadily as possible.",
-    question: "Which drill is best for steady tracking?",
-  },
-  {
-    answer:
-      "Reaction Jumps is best when you want to find a new target position quickly and lock on before the next move.",
-    question: "Which drill is best for quick refocus?",
-  },
-  {
-    answer:
-      "Multiple Distractions is the best choice for practicing selective attention under visual clutter.",
-    question: "Which drill is best when the screen feels busy?",
-  },
-  {
-    answer:
-      "Lilac Chaser is the best choice when you want to hold your gaze on the center and notice change away from it.",
-    question: "Which drill is best for fixation and edge-of-vision awareness?",
-  },
-  {
-    answer:
-      "Change speed and target size first. They usually have the biggest effect on difficulty and control.",
-    question: "Which settings should I change first?",
-  },
-  {
-    answer:
-      "Keep sessions short and deliberate. The goal is focused practice, not pushing through discomfort.",
-    question: "How long should a session be?",
-  },
-] as const;
-
 /** Who the app is for, shown in the guide and in structured data. */
 export const audiences = [
   {

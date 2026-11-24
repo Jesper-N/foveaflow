@@ -1,20 +1,36 @@
 <script lang="ts">
   import LanguageSelect from "$lib/components/language-select.svelte";
-  import * as AlertDialog from "$lib/components/ui/alert-dialog";
-  import { Button } from "$lib/components/ui/button";
-  import * as Field from "$lib/components/ui/field";
-  import * as ToggleGroup from "$lib/components/ui/toggle-group";
   import { t } from "$lib/i18n/translate";
-  import RotateCcwIcon from "@lucide/svelte/icons/rotate-ccw";
+  import { cue, sound } from "$lib/sound/sound.svelte";
+  import {
+    MonitorIcon,
+    MoonIcon,
+    RotateCcwIcon,
+    SunIcon,
+    SunMoonIcon,
+    Volume2Icon,
+  } from "@lucide/svelte";
+  import {
+    AlertDialog,
+    AlertDialogBackdrop,
+    AlertDialogClose,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+  } from "@ui-sdk/svelte/alert-dialog";
   import { userPrefersMode } from "mode-watcher";
 
   import { selectTheme, themeOptions } from "../../theme-options";
+  import { buttonClass } from "../../ui/button-variants";
+  import RowLabel from "../../ui/row-label.svelte";
+  import Segmented from "../../ui/segmented.svelte";
+  import { backdrop, dialogSurface } from "../../ui/styles";
+  import Switch from "../../ui/switch.svelte";
   import { getTrainer } from "../trainer-context";
-  import SettingsRow from "./settings-row.svelte";
   import SettingsSection from "./settings-section.svelte";
 
   const trainer = getTrainer();
-  let resetConfirmOpen = $state(false);
 
   let resetDescription = $derived(
     t(
@@ -22,69 +38,93 @@
     )
   );
 
-  const confirmReset = () => {
-    trainer.resetSettings();
-    resetConfirmOpen = false;
-  };
+  let themeChoices = $derived(
+    themeOptions.map((option) => ({
+      label: t(option.label),
+      value: option.value,
+    }))
+  );
 </script>
 
-<SettingsSection label={t("General")}>
-  <SettingsRow>
-    <Field.FieldTitle>{t("Language")}</Field.FieldTitle>
-    <LanguageSelect showSelectedName triggerClass="min-h-11 w-full" />
-  </SettingsRow>
-
-  <SettingsRow>
-    <Field.FieldTitle id="trainer-theme-label">{t("Theme")}</Field.FieldTitle>
-    <ToggleGroup.Root
-      class="grid w-full grid-cols-3"
-      aria-labelledby="trainer-theme-label"
-      type="single"
-      variant="outline"
-      bind:value={() => userPrefersMode.current, selectTheme}
+<SettingsSection id="trainer-general-settings">
+  <LanguageSelect />
+  <div class="grid gap-3" data-setting-row>
+    <span class="text-md font-medium" aria-hidden="true">
+      <RowLabel icon={SunMoonIcon} label={t("Theme")} />
+    </span>
+    <Segmented
+      class="ms-10"
+      label={t("Theme")}
+      onValueChange={selectTheme}
+      options={themeChoices}
+      value={userPrefersMode.current}
     >
-      {#each themeOptions as option (option.value)}
-        <ToggleGroup.Item class="min-h-11 px-2" value={option.value}>
-          <option.icon data-icon="inline-start" />{t(option.label)}
-        </ToggleGroup.Item>
-      {/each}
-    </ToggleGroup.Root>
-  </SettingsRow>
+      {#snippet icon(value)}
+        {#if value === "light"}
+          <SunIcon aria-hidden="true" />
+        {:else if value === "dark"}
+          <MoonIcon aria-hidden="true" />
+        {:else}
+          <MonitorIcon aria-hidden="true" />
+        {/if}
+      {/snippet}
+    </Segmented>
+  </div>
+  <Switch
+    icon={Volume2Icon}
+    label={t("Sound")}
+    bind:checked={() => sound.enabled, sound.setEnabled}
+  />
+</SettingsSection>
 
-  <SettingsRow>
-    <Field.FieldContent>
-      <Field.FieldTitle>{t("Defaults")}</Field.FieldTitle>
-      <Field.FieldDescription>{resetDescription}</Field.FieldDescription>
-    </Field.FieldContent>
-    <div class="flex @lg/field-group:justify-end">
-      <AlertDialog.Root bind:open={resetConfirmOpen}>
-        <AlertDialog.Trigger>
-          {#snippet child({ props })}
-            <Button
-              {...props}
-              class="h-auto min-h-11 max-w-full whitespace-normal"
-              variant="outline"
-            >
-              <RotateCcwIcon data-icon="inline-start" />
-              {t("Reset to defaults")}
-            </Button>
-          {/snippet}
-        </AlertDialog.Trigger>
-        <AlertDialog.Content>
-          <AlertDialog.Header>
-            <AlertDialog.Title>{t("Reset to defaults?")}</AlertDialog.Title>
-            <AlertDialog.Description>
-              {resetDescription}
-            </AlertDialog.Description>
-          </AlertDialog.Header>
-          <AlertDialog.Footer>
-            <AlertDialog.Cancel>{t("Cancel")}</AlertDialog.Cancel>
-            <AlertDialog.Action onclick={confirmReset} variant="destructive">
-              {t("Reset to defaults")}
-            </AlertDialog.Action>
-          </AlertDialog.Footer>
-        </AlertDialog.Content>
-      </AlertDialog.Root>
-    </div>
-  </SettingsRow>
+<SettingsSection id="trainer-defaults">
+  <div class="flex items-center justify-between gap-3" data-setting-row>
+    <span class="text-md min-w-0 font-medium">
+      <RowLabel icon={RotateCcwIcon} label={t("Defaults")} />
+    </span>
+    <AlertDialog
+      onOpenChange={(open, details) => {
+        if (open) {
+          cue("open");
+        } else if (details.returnValue === "confirm") {
+          cue("close", { emphasis: "strong" });
+        } else {
+          cue("close");
+        }
+      }}
+    >
+      <AlertDialogTrigger class={buttonClass("secondary", "md")}>
+        {t("Reset to defaults")}
+      </AlertDialogTrigger>
+      <AlertDialogBackdrop class={backdrop} />
+      <AlertDialogContent
+        class={[
+          dialogSurface,
+          "fixed inset-0 m-auto h-fit w-88 max-w-[calc(100vw-2rem)] gap-5 rounded-4xl p-6 transition-[opacity,scale] duration-220 ease-out data-ending-style:scale-96 data-ending-style:opacity-0 data-ending-style:duration-160 data-starting-style:scale-96 data-starting-style:opacity-0",
+        ]}
+      >
+        <div class="grid gap-1.5">
+          <AlertDialogTitle class="text-lg font-semibold">
+            {t("Reset to defaults?")}
+          </AlertDialogTitle>
+          <AlertDialogDescription class="text-muted-foreground text-sm">
+            {resetDescription}
+          </AlertDialogDescription>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <AlertDialogClose class={buttonClass("secondary", "lg")}>
+            {t("Cancel")}
+          </AlertDialogClose>
+          <AlertDialogClose
+            class={buttonClass("primary", "lg")}
+            action={trainer.resetSettings}
+            data-agent-confirm={resetDescription}
+            value="confirm"
+          >
+            {t("Reset to defaults")}
+          </AlertDialogClose>
+        </div>
+      </AlertDialogContent>
+    </AlertDialog>
+  </div>
 </SettingsSection>

@@ -1,114 +1,142 @@
 <script lang="ts">
-  import * as Field from "$lib/components/ui/field";
-  import * as Select from "$lib/components/ui/select";
-  import * as ToggleGroup from "$lib/components/ui/toggle-group";
   import { t } from "$lib/i18n/translate";
+  import { cueChoice, isPersonChange } from "$lib/sound/sound.svelte";
+  import { targetForms } from "$lib/trainer/settings/options";
   import {
-    getLilacChaserColorName,
-    targetForms,
-  } from "$lib/trainer/settings/options";
+    BlendIcon,
+    CircleDashedIcon,
+    PaletteIcon,
+    ScalingIcon,
+    SunDimIcon,
+    TargetIcon,
+    TriangleIcon,
+  } from "@lucide/svelte";
+  import { Field, FieldLabel } from "@ui-sdk/svelte/field";
+  import { Radio, RadioGroup } from "@ui-sdk/svelte/radio";
 
-  import LilacColorSelectContent from "../selects/lilac-color-select-content.svelte";
+  import TargetFormGlyph from "../../icons/target-form-glyph.svelte";
+  import ColorField from "../../ui/color-field.svelte";
+  import { followIndicator } from "../../ui/follow-indicator";
+  import RowLabel from "../../ui/row-label.svelte";
+  import { pressable } from "../../ui/styles";
+  import { ballColorPresets } from "../select-options";
   import { getTrainer } from "../trainer-context";
-  import ColorRow from "./color-row.svelte";
   import LetterSettings from "./letter-settings.svelte";
-  import SettingsRow from "./settings-row.svelte";
+  import LilacColorSwatches from "./lilac-color-swatches.svelte";
+  import SettingSlider from "./setting-slider.svelte";
   import SettingsSection from "./settings-section.svelte";
-  import SliderRow from "./slider-row.svelte";
-  import TargetGlyph from "./target-glyph.svelte";
+  import TargetPreview from "./target-preview.svelte";
 
   const trainer = getTrainer();
+
+  const formIndex = (form: string) =>
+    targetForms.findIndex((candidate) => candidate.id === form);
+
+  const followChecked = followIndicator({
+    axis: "x",
+    item: "[role='radio'][data-checked]",
+    watch: "data-checked",
+  });
 </script>
 
-<SettingsSection label={t("Appearance")}>
-  {#if trainer.isLilacChaser}
-    <SettingsRow>
-      <Field.FieldLabel for="trainer-lilac-color">
-        {t("Ball color")}
-      </Field.FieldLabel>
-      <Select.Root
-        onValueChange={trainer.setLilacChaserColor}
-        type="single"
-        value={trainer.settings.lilacChaserBallColor}
-      >
-        <Select.Trigger
-          id="trainer-lilac-color"
-          class="min-h-11 w-full"
-          aria-label={t("Lilac Chaser ball color")}
-        >
-          {t(getLilacChaserColorName(trainer.settings.lilacChaserBallColor))}
-        </Select.Trigger>
-        <LilacColorSelectContent />
-      </Select.Root>
-    </SettingsRow>
-    <SliderRow
+{#if trainer.isLilacChaser}
+  <SettingsSection id="trainer-lilac-settings">
+    <LilacColorSwatches icon />
+    <SettingSlider
+      icon={ScalingIcon}
       label={t("Scale")}
       setting="lilacChaserScale"
-      sliderLabel={t("Lilac Chaser scale")}
+      thumbLabel={t("Lilac Chaser scale")}
     />
-  {:else}
-    <ColorRow
-      id="trainer-color"
+  </SettingsSection>
+{:else}
+  <TargetPreview />
+  <SettingsSection id="trainer-target-settings">
+    <ColorField
+      icon={PaletteIcon}
       label={t("Ball color")}
       onValueChange={trainer.setBallColor}
+      presets={ballColorPresets}
       value={trainer.targetColor}
-    >
-      {#snippet swatch()}
-        <span class="size-6 shrink-0" aria-hidden="true">
-          <TargetGlyph
-            color={trainer.targetColor}
-            filled
-            form={trainer.settings.targetForm}
-            opacity={trainer.settings.targetOpacity}
-          />
-        </span>
-      {/snippet}
-    </ColorRow>
-    <SettingsRow>
-      <Field.FieldLabel id="trainer-shape-label">
-        {t("Target form")}
-      </Field.FieldLabel>
-      <ToggleGroup.Root
-        class="grid w-full grid-cols-6"
-        aria-labelledby="trainer-shape-label"
-        type="single"
-        variant="outline"
-        bind:value={() => trainer.settings.targetForm, trainer.setTargetForm}
+    />
+    <Field class="grid gap-3" data-setting-row>
+      <FieldLabel class="text-md font-medium">
+        <RowLabel icon={TriangleIcon} label={t("Target form")} />
+      </FieldLabel>
+      <RadioGroup
+        class="relative grid grid-cols-6 gap-1"
+        {@attach followChecked}
+        onValueChange={(value, details) => {
+          if (typeof value === "string") {
+            if (isPersonChange(details)) {
+              cueChoice(
+                formIndex(trainer.settings.targetForm),
+                formIndex(value)
+              );
+            }
+
+            trainer.setTargetForm(value);
+          }
+        }}
+        value={trainer.settings.targetForm}
       >
+        <span
+          class="bg-primary stretch-indicator pointer-events-none absolute inset-y-0 rounded-xl opacity-0"
+          aria-hidden="true"
+          data-indicator
+        ></span>
         {#each targetForms as form (form.id)}
-          <ToggleGroup.Item
-            class="min-h-11 px-0"
-            aria-label={t(form.name)}
-            title={t(form.name)}
+          <Radio
+            class={[
+              "group/form text-2xs text-muted-foreground hover:text-foreground not-data-checked:hover:bg-fill data-checked:text-primary-foreground relative z-1 grid cursor-pointer justify-items-center gap-1 rounded-xl py-2 font-medium transition-colors duration-160 ease-out data-checked:delay-100",
+              pressable,
+            ]}
             value={form.id}
           >
-            <span class="size-5"><TargetGlyph form={form.id} /></span>
-          </ToggleGroup.Item>
+            <TargetFormGlyph
+              class="ease-spring size-5 transition-[scale] duration-260 group-data-checked/form:scale-115"
+              form={form.id}
+            />
+            <span class="max-w-full truncate px-0.5">{t(form.name)}</span>
+          </Radio>
         {/each}
-      </ToggleGroup.Root>
-    </SettingsRow>
-    <SliderRow
+      </RadioGroup>
+    </Field>
+    <SettingSlider
+      icon={ScalingIcon}
       label={t("Size")}
       setting="baseRadiusPx"
-      sliderLabel={t("Target size")}
+      thumbLabel={t("Target size")}
     />
-    <SliderRow
+    <SettingSlider
+      icon={BlendIcon}
       label={t("Opacity")}
       setting="targetOpacity"
-      sliderLabel={t("Target opacity")}
+      thumbLabel={t("Target opacity")}
     />
+  </SettingsSection>
+  <SettingsSection id="trainer-letter-settings">
     <LetterSettings />
-  {/if}
-</SettingsSection>
+  </SettingsSection>
+{/if}
 
 {#if trainer.isDistractions}
-  <SettingsSection legend={t("Distractions")}>
-    <SliderRow label={t("Targets")} setting="targetCount" />
-    <SliderRow label={t("Distractors")} setting="distractorCount" />
-    <SliderRow
+  <SettingsSection id="trainer-distraction-settings" title={t("Distractions")}>
+    <SettingSlider
+      icon={TargetIcon}
+      label={t("Targets")}
+      setting="targetCount"
+    />
+    <SettingSlider
+      icon={CircleDashedIcon}
+      label={t("Distractors")}
+      setting="distractorCount"
+    />
+    <SettingSlider
+      icon={SunDimIcon}
       label={t("Distractor color")}
       setting="distractorBrightness"
-      sliderLabel={t("Distractor color brightness")}
+      thumbLabel={t("Distractor color brightness")}
     />
   </SettingsSection>
 {/if}

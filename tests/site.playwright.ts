@@ -15,7 +15,7 @@ const contentPages = [
 const INTERNAL_LINK_PATTERN = /<a\b[^>]*\shref="(?<href>\/[^"#?]*)/gu;
 
 const languageSelect = (page: Page) =>
-  page.getByRole("combobox", { name: /^Change language/u });
+  page.getByRole("combobox", { exact: true, name: "Language" });
 
 for (const path of contentPages) {
   test(`${path} renders one heading and fits the screen`, async ({ page }) => {
@@ -62,15 +62,21 @@ for (const path of ["/", "/guide/"]) {
     page,
   }) => {
     await openPage(page, path);
+    await page.waitForLoadState("networkidle");
 
     const { loaded, preloaded } = await page.evaluate(() => ({
       loaded: performance
         .getEntriesByType("resource")
         .map(({ name }) => new URL(name).pathname)
         .filter((pathname) => pathname.endsWith(".js")),
-      preloaded: Array.from(
-        document.querySelectorAll<HTMLLinkElement>('link[rel="modulepreload"]'),
-        ({ href }) => new URL(href).pathname
+      preloaded: [
+        ...document.querySelectorAll<HTMLLinkElement>(
+          'link[rel="modulepreload"]'
+        ),
+      ].flatMap(({ href, media }) =>
+        media === "" || matchMedia(media).matches
+          ? [new URL(href).pathname]
+          : []
       ),
     }));
 
@@ -119,9 +125,61 @@ test("a language chosen in the menu is kept after a reload", async ({
   await openPage(page, "/guide/");
   await expect(page.locator("h1")).toHaveText("FoveaFlow Guide");
   await languageSelect(page).click();
-  await page.getByRole("option", { name: /^Deutsch/u }).click();
+  await page.getByRole("option", { name: "Deutsch (German)" }).click();
   await expect(page.locator("h1")).toHaveText("FoveaFlow-Guide");
   await page.reload();
   await expect(page.locator("h1")).toHaveText("FoveaFlow-Guide");
   await expect(page.locator("html")).toHaveAttribute("lang", "de");
+});
+
+test("menus, panels and theme changes stay inside the content security policy", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    document.addEventListener("securitypolicyviolation", (event) => {
+      sessionStorage.setItem(
+        "csp-violation",
+        `${event.violatedDirective} ${event.blockedURI}`
+      );
+    });
+  });
+
+  const violation = async () =>
+    await page.evaluate(() => sessionStorage.getItem("csp-violation"));
+
+  await openPage(page, "/circle/");
+  await page.keyboard.press("d");
+  await page.keyboard.press("d");
+  await page.keyboard.press("s");
+  await expect(page.getByRole("dialog")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  await page.keyboard.press("p");
+  await expect(page.getByRole("listbox")).toBeVisible();
+  await page.keyboard.press("Escape");
+  expect(await violation()).toBeNull();
+
+  await openPage(page, "/guide/");
+  await languageSelect(page).click();
+  await expect(page.getByRole("listbox")).toBeVisible();
+  await page.keyboard.press("Escape");
+  expect(await violation()).toBeNull();
+});
+
+test("moving between pages runs a view transition", async ({ page }) => {
+  await page.addInitScript(() => {
+    addEventListener("pagereveal", (event) => {
+      sessionStorage.setItem(
+        "view-transition",
+        String("viewTransition" in event && event.viewTransition !== null)
+      );
+    });
+  });
+
+  await openPage(page, "/guide/");
+  await page.locator("a[href='/fps-eye-training/']").first().click();
+  await expect(page).toHaveURL(/\/fps-eye-training\/$/u);
+  expect(
+    await page.evaluate(() => sessionStorage.getItem("view-transition"))
+  ).toBe("true");
 });

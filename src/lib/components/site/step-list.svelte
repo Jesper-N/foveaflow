@@ -1,29 +1,19 @@
 <script lang="ts">
   import { t } from "$lib/i18n/translate";
 
-  import { editorialCopy } from "./styles";
-
-  let {
-    steps,
-    class: className,
-  }: {
-    /** English source text, translated here. */
-    steps: readonly string[];
-    class?: string;
-  } = $props();
+  let { steps }: { steps: readonly string[] } = $props();
 </script>
 
-<!-- Yellow marks the target and the next action, so step numbers use the brand color. -->
-<ol class={["grid gap-5", className]}>
+<ol class="grid gap-3">
   {#each steps as step, index (step)}
-    <li class="grid grid-cols-[1.5rem_minmax(0,1fr)] items-baseline gap-3">
+    <li class="text-md flex gap-3">
       <span
-        class="text-brand-foreground text-xl leading-none font-semibold tabular-nums"
+        class="bg-fill grid size-6 shrink-0 place-items-center rounded-full text-xs font-medium tabular-nums"
         aria-hidden="true"
       >
         {index + 1}
       </span>
-      <p class={editorialCopy}>{t(step)}</p>
+      <span class="pt-0.5 text-pretty">{t(step)}</span>
     </li>
   {/each}
 </ol>

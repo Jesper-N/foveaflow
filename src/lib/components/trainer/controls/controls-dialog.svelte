@@ -1,165 +1,141 @@
 <script lang="ts">
-  import { Button } from "$lib/components/ui/button";
-  import * as Dialog from "$lib/components/ui/dialog";
   import { t } from "$lib/i18n/translate";
-  import CheckIcon from "@lucide/svelte/icons/check";
-  import CrosshairIcon from "@lucide/svelte/icons/crosshair";
-  import RouteIcon from "@lucide/svelte/icons/route";
-  import SettingsIcon from "@lucide/svelte/icons/settings";
-  import XIcon from "@lucide/svelte/icons/x";
+  import { cue, cueChoice, isPersonChange } from "$lib/sound/sound.svelte";
+  import { XIcon } from "@lucide/svelte";
+  import {
+    Dialog,
+    DialogBackdrop,
+    DialogClose,
+    DialogContent,
+    DialogTitle,
+  } from "@ui-sdk/svelte/dialog";
+  import {
+    Tabs,
+    TabsIndicator,
+    TabsList,
+    TabsPanel,
+    TabsTab,
+  } from "@ui-sdk/svelte/tabs";
+  import type { Attachment } from "svelte/attachments";
 
+  import { buttonClass } from "../../ui/button-variants";
+  import {
+    backdrop,
+    dialogSurface,
+    segmentItem,
+    segmentThumb,
+    segmentTrack,
+    sheetPresentation,
+    setTravelDirection,
+  } from "../../ui/styles";
   import { getTrainer } from "../trainer-context";
   import DrillSettings from "./drill-settings.svelte";
   import GeneralSettings from "./general-settings.svelte";
   import TargetSettings from "./target-settings.svelte";
 
-  type ControlSection = "drill" | "targets" | "general";
-
   const trainer = getTrainer();
 
-  // The dialog stays mounted, so the last section reopens next time.
-  let current = $state<ControlSection>("targets");
+  const tabs = [
+    { label: "Targets", value: "targets" },
+    { label: "Drill", value: "drill" },
+    { label: "General", value: "general" },
+  ];
 
-  const sections = [
-    {
-      description: "Choose your exercise and how it moves.",
-      icon: RouteIcon,
-      id: "drill",
-      label: "Drill",
-    },
-    {
-      description: "Fine-tune what you follow.",
-      icon: CrosshairIcon,
-      id: "targets",
-      label: "Targets",
-    },
-    {
-      description: "Language, theme, and saved preferences.",
-      icon: SettingsIcon,
-      id: "general",
-      label: "General",
-    },
-  ] as const satisfies readonly {
-    description: string;
-    icon: typeof RouteIcon;
-    id: ControlSection;
-    label: string;
-  }[];
+  let tab = $state("targets");
+  let tabList = $state.raw<HTMLElement>();
 
-  let section = $derived(
-    sections.find(({ id }) => id === current) ?? sections[0]
-  );
-
-  // Start on the selected section's tab instead of the close button.
-  const focusSelectedTab = (event: Event) => {
-    event.preventDefault();
-    requestAnimationFrame(() => {
-      document
-        .querySelector<HTMLElement>(`[data-control-section="${current}"]`)
-        ?.focus();
-    });
+  const tabListElement: Attachment<HTMLElement> = (node) => {
+    tabList = node;
   };
+
+  const tabIndex = (value: string) =>
+    tabs.findIndex((item) => item.value === value);
 </script>
 
-<Dialog.Root bind:open={trainer.controlsOpen}>
-  <Dialog.Content
-    class="flex h-[calc(100dvh-1rem)] max-h-none w-[calc(100dvw-1rem)] max-w-none flex-col gap-0 overflow-hidden rounded-3xl p-0 motion-reduce:transition-none motion-reduce:data-closed:animate-none motion-reduce:data-open:animate-none motion-reduce:**:data-[slot=button]:animate-none motion-reduce:**:data-[slot=button]:transition-none motion-reduce:**:data-[slot=toggle-group-item]:animate-none motion-reduce:**:data-[slot=toggle-group-item]:transition-none sm:max-w-none md:h-[min(40rem,calc(100dvh-2rem))] md:w-[min(55rem,calc(100dvw-2rem))] md:flex-row md:rounded-4xl"
-    onOpenAutoFocus={focusSelectedTab}
-    showCloseButton={false}
+<Dialog
+  onOpenChange={(open) => {
+    if (!open) {
+      cue("close");
+    }
+  }}
+  presentation="auto"
+  bind:open={trainer.controlsOpen}
+>
+  <DialogBackdrop class={[backdrop, "bg-black/8 dark:bg-black/32"]} />
+  <DialogContent
+    class={[
+      dialogSurface,
+      sheetPresentation,
+      "data-[presentation=dialog]:fixed data-[presentation=dialog]:inset-y-2 data-[presentation=dialog]:inset-s-auto data-[presentation=dialog]:inset-e-2 data-[presentation=dialog]:h-auto data-[presentation=dialog]:max-h-none data-[presentation=dialog]:w-104 data-[presentation=dialog]:max-w-[calc(100vw-1rem)] data-[presentation=dialog]:rounded-4xl",
+      "data-[presentation=dialog]:ease-drawer data-[presentation=dialog]:transition-[opacity,translate] data-[presentation=dialog]:duration-300 data-[presentation=dialog]:data-ending-style:translate-x-6 data-[presentation=dialog]:data-ending-style:opacity-0 data-[presentation=dialog]:data-ending-style:duration-200 data-[presentation=dialog]:data-starting-style:translate-x-6 data-[presentation=dialog]:data-starting-style:opacity-0 rtl:data-[presentation=dialog]:data-ending-style:-translate-x-6 rtl:data-[presentation=dialog]:data-starting-style:-translate-x-6",
+    ]}
+    finalFocus={trainer.panelReturnFocus}
   >
-    <Dialog.Description class="sr-only">
-      {t("Change your saved FoveaFlow settings.")}
-    </Dialog.Description>
-    <Dialog.Close>
-      {#snippet child({ props })}
-        <Button
-          {...props}
-          class="absolute top-3 right-3 z-10 size-11 md:top-4 md:right-4"
-          aria-label={t("Close")}
-          size="icon"
-          variant="secondary"
-        >
-          <XIcon />
-        </Button>
-      {/snippet}
-    </Dialog.Close>
-
-    <aside
-      class="md:bg-muted/30 flex flex-none flex-col gap-3 border-b p-3 md:basis-46 md:gap-6 md:border-r md:border-b-0 md:py-4"
+    <header
+      class="short:pt-2 short:pb-2 flex items-center justify-between gap-4 px-4 pt-4 pb-3"
     >
-      <div class="flex min-h-11 items-center gap-2.5 px-2 pr-14 md:px-3">
-        <img
-          class="size-6 shrink-0 rounded-sm object-cover"
-          alt=""
-          height="24"
-          src="/logo-render/logo.svg"
-          width="24"
-        />
-        <Dialog.Title class="text-base font-semibold">
-          {t("Controls")}
-        </Dialog.Title>
-      </div>
-      <nav
-        class="grid grid-cols-3 gap-1 md:grid-cols-1 md:gap-1.5"
-        aria-label={t("Control sections")}
-      >
-        {#each sections as { id, label, icon: Icon } (id)}
-          <Button
-            class="h-auto min-h-11 min-w-0 flex-col justify-center gap-1.5 rounded-xl px-1 py-2.5 text-xs wrap-anywhere whitespace-normal md:h-9 md:flex-row md:justify-start md:gap-3 md:px-3 md:py-0 md:text-sm"
-            aria-controls="trainer-settings-panel"
-            aria-pressed={current === id}
-            data-control-section={id}
-            onclick={() => (current = id)}
-            variant={current === id ? "secondary" : "ghost"}
-          >
-            <span data-icon="inline-start"><Icon /></span>
-            {t(label)}
-          </Button>
-        {/each}
-      </nav>
-    </aside>
+      <DialogTitle class="text-lg font-semibold">{t("Controls")}</DialogTitle>
+      <DialogClose class={buttonClass("ghost", "icon")} aria-label={t("Close")}>
+        <XIcon aria-hidden="true" />
+      </DialogClose>
+    </header>
 
-    <div class="flex min-h-0 min-w-0 flex-1 flex-col">
-      <!-- The selected tab already names the section on small screens. -->
-      <header class="shrink-0 px-7 pt-6 pr-20 pb-3 max-md:sr-only">
-        <h2 id="trainer-settings-heading" class="text-xl font-semibold">
-          {t(section.label)}
-        </h2>
-        <p class="text-muted-foreground mt-1 text-sm">
-          {t(section.description)}
-        </p>
-      </header>
-      <!-- Keyed so a new section starts scrolled to the top. -->
-      {#key section.id}
-        <section
-          id="trainer-settings-panel"
-          class="min-h-0 flex-1 scrollbar-thin [scrollbar-color:var(--border)_transparent] scrollbar-gutter-stable overflow-y-auto overscroll-contain px-4 py-2 md:px-7 md:pt-0 md:pb-6"
-          aria-labelledby="trainer-settings-heading"
-        >
-          {#if section.id === "drill"}
-            <DrillSettings />
-          {:else if section.id === "targets"}
-            <TargetSettings />
-          {:else}
-            <GeneralSettings />
-          {/if}
-        </section>
-      {/key}
-      <footer
-        class="flex shrink-0 items-center justify-between gap-4 border-t px-4 py-3 md:px-7"
+    <Tabs
+      class="flex min-h-0 flex-1 flex-col"
+      onValueChange={(next, details) => {
+        if (typeof next === "string") {
+          setTravelDirection(tabList, tabIndex(tab), tabIndex(next));
+
+          if (isPersonChange(details)) {
+            cueChoice(tabIndex(tab), tabIndex(next));
+          }
+
+          tab = next;
+        }
+      }}
+      value={tab}
+    >
+      <TabsList
+        class={[segmentTrack, "mx-4"]}
+        {@attach tabListElement}
+        aria-label={t("Controls")}
       >
-        <p class="text-muted-foreground flex items-center gap-2 text-xs">
-          <CheckIcon class="size-3.5 shrink-0" />
-          {t("Settings save automatically.")}
-        </p>
-        <Dialog.Close>
-          {#snippet child({ props })}
-            <Button {...props} class="min-h-11 min-w-20" variant="secondary">
-              {t("Done")}
-            </Button>
-          {/snippet}
-        </Dialog.Close>
-      </footer>
-    </div>
-  </Dialog.Content>
-</Dialog.Root>
+        <TabsIndicator
+          class={[
+            segmentThumb,
+            "top-(--active-tab-top) right-[calc(100%-var(--active-tab-left)-var(--active-tab-width))] left-(--active-tab-left) h-(--active-tab-height)",
+          ]}
+        />
+        {#each tabs as item (item.value)}
+          <TabsTab
+            class={[segmentItem, "data-selected:text-foreground"]}
+            value={item.value}
+          >
+            {t(item.label)}
+          </TabsTab>
+        {/each}
+      </TabsList>
+
+      <div
+        class="scroll-fade-y min-h-0 flex-1 scrollbar-none overflow-y-auto overscroll-contain px-4 pt-4 pb-4"
+      >
+        <TabsPanel class="grid gap-5 outline-none" value="targets">
+          <TargetSettings />
+        </TabsPanel>
+        <TabsPanel class="grid gap-5 outline-none" value="drill">
+          <DrillSettings />
+        </TabsPanel>
+        <TabsPanel class="grid gap-5 outline-none" value="general">
+          <GeneralSettings />
+        </TabsPanel>
+      </div>
+    </Tabs>
+
+    <footer
+      class="short:hidden flex items-center justify-end gap-4 px-4 pt-3 pb-5"
+    >
+      <DialogClose class={buttonClass("primary", "md")}>{t("Done")}</DialogClose
+      >
+    </footer>
+  </DialogContent>
+</Dialog>

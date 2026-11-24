@@ -28,6 +28,7 @@ export interface CanvasScene {
   colorMode: ColorMode;
   targetColor: string;
   distractorColor: string;
+  letterColor: string;
 }
 
 /** Extra room around a target when erasing it, for antialiased edges. */
@@ -75,6 +76,7 @@ export class TrainerCanvas {
 
   readonly #paint: TargetPaint = {
     distractorColor: "",
+    letterColor: "",
     fontFamily: "",
     targetColor: "",
   };
@@ -331,6 +333,7 @@ export class TrainerCanvas {
     const paint = this.#paint;
     paint.targetColor = scene.targetColor;
     paint.distractorColor = scene.distractorColor;
+    paint.letterColor = scene.letterColor;
     paint.fontFamily = this.#fontFamily;
     drawTargets(ctx, sample, settings, paint);
     this.#recordPaintedRegions(sample, settings);

@@ -23,3 +23,10 @@ export const formatDate = (isoDate: string): string =>
     dateStyle: "medium",
     timeZone: "UTC",
   }).format(new Date(isoDate));
+
+export const formatMinutes = (minutes: number): string =>
+  new Intl.NumberFormat(languageState.locale, {
+    style: "unit",
+    unit: "minute",
+    unitDisplay: "short",
+  }).format(minutes);

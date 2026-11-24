@@ -35,16 +35,7 @@ const toTitleCase = (value: string) =>
     .join(" ");
 
 const smoothPursuitCopy = {
-  body: [
-    "Smooth Pursuit is FoveaFlow's moving-target drill. Keep your head still, follow one target with your eyes, and stay smooth instead of jumping ahead.",
-    "Use Smooth Pursuit for short browser-based practice, a pre-game warmup, or a focused reset after dense screen work.",
-  ],
   faq: [
-    {
-      answer:
-        "Smooth Pursuit is a drill where you follow one moving target as steadily as you can with your eyes.",
-      question: "What is Smooth Pursuit?",
-    },
     {
       answer:
         "Use it when you want steady moving-target practice without the extra clutter of other drills.",
@@ -61,16 +52,7 @@ const smoothPursuitCopy = {
 } satisfies DrillPageCopy;
 
 const reactionJumpsCopy = {
-  body: [
-    "Reaction Jumps is the drill to use when moving smoothly is not the point. The target holds still, then jumps to a new location.",
-    "Reaction Jumps works well as a short pre-game warmup or a fast visual reset between tasks.",
-  ],
   faq: [
-    {
-      answer:
-        "Reaction Jumps trains quick target acquisition and quick refocus from one target position to the next.",
-      question: "What does Reaction Jumps train?",
-    },
     {
       answer:
         "Choose Reaction Jumps when you want discrete target changes rather than continuous motion.",
@@ -87,20 +69,11 @@ const reactionJumpsCopy = {
 } satisfies DrillPageCopy;
 
 const multipleDistractionsCopy = {
-  body: [
-    "Multiple Distractions is FoveaFlow's clutter drill. One target matters most, but other moving objects share the screen and try to pull your attention away.",
-    "Use this drill when Smooth Pursuit feels too clean and you want a more realistic visual-attention challenge.",
-  ],
   faq: [
     {
       answer:
         "It is the task of following the correct target while similar moving objects compete for your attention.",
       question: "What is distractor tracking?",
-    },
-    {
-      answer:
-        "It trains selective attention, target identity, and steady tracking under clutter.",
-      question: "What does Multiple Distractions train?",
     },
     {
       answer:
@@ -113,27 +86,7 @@ const multipleDistractionsCopy = {
 } satisfies DrillPageCopy;
 
 const lilacChaserCopy = {
-  body: [
-    "Lilac Chaser is different from the moving-target drills. Instead of following an object, you keep your eyes on the center cross while the outer ring changes.",
-    "Use Lilac Chaser for a short fixation drill, a perceptual reset, or a quick change of pace between more active modes.",
-  ],
-  faq: [
-    {
-      answer:
-        "Lilac Chaser is a fixation drill where you keep your gaze on a central cross while the outer pattern changes.",
-      question: "What is Lilac Chaser?",
-    },
-    {
-      answer:
-        "The goal is steady fixation and better awareness of change away from the center of your gaze.",
-      question: "What is the goal of this mode?",
-    },
-    {
-      answer:
-        "No. Keep your eyes on the center cross and let the visual effect happen in the periphery.",
-      question: "Should I follow the outer shapes?",
-    },
-  ],
+  faq: [],
   heading: "Lilac Chaser Fixation and Peripheral Awareness",
   hero: "Hold steady at the center and notice change around it.",
 } satisfies DrillPageCopy;
@@ -205,21 +158,7 @@ const patternSlugs = {
 
 const patternCopy = (label: string, patternId: PursuitPatternId) =>
   ({
-    body: [
-      patternSummaries[patternId],
-      "Start with a comfortable speed and a medium target size, then raise difficulty only when you can stay on the target cleanly.",
-    ],
     faq: [
-      {
-        answer:
-          "It is a Smooth Pursuit pattern page that loads the matching path so you can start that style of moving-target practice immediately.",
-        question: `What is the ${label} drill?`,
-      },
-      {
-        answer:
-          "The path shape changes how predictable the movement feels and how often the target changes direction.",
-        question: `What makes the ${label} path different?`,
-      },
       {
         answer:
           "Lower the speed, increase target size, and keep the trail visible until you can stay on target comfortably.",
@@ -227,7 +166,7 @@ const patternCopy = (label: string, patternId: PursuitPatternId) =>
       },
     ],
     heading: `${toTitleCase(label)} Smooth Pursuit Drill`,
-    hero: `Use the ${label} path for short smooth pursuit practice.`,
+    hero: patternSummaries[patternId],
   }) satisfies DrillPageCopy;
 
 /** Routes for Smooth Pursuit paths, in menu order. */
@@ -258,7 +197,7 @@ export const drillRoutes: readonly DrillRoute[] = [
     label: "Smooth Pursuit",
     lastModified: LAST_MODIFIED,
     path: "/smooth-pursuit/",
-    patternId: "randomWalk",
+    patternId: "directionChange",
     slug: "smooth-pursuit",
     title: `${siteMetadata.name} - Free Online Smooth Pursuit Eye Trainer`,
   },

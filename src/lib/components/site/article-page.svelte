@@ -1,23 +1,27 @@
 <script lang="ts">
-  import DrillIllustration from "$lib/components/drills/drill-illustration.svelte";
-  import { Button } from "$lib/components/ui/button";
   import type { Article } from "$lib/content/articles";
   import { drillGuides } from "$lib/content/drill-guides";
   import { mainRouteForDrill } from "$lib/content/drill-routes";
   import { formatDate, t } from "$lib/i18n/translate";
-  import ArrowUpRightIcon from "@lucide/svelte/icons/arrow-up-right";
-  import CheckIcon from "@lucide/svelte/icons/check";
+  import { ArrowRightIcon } from "@lucide/svelte";
 
+  import { buttonClass } from "../ui/button-variants";
+  import DrillCard from "./drill-card.svelte";
   import FeatureComparison from "./feature-comparison.svelte";
+  import { bodyText, pageWidth, sectionGap } from "./layout";
   import PageCta from "./page-cta.svelte";
   import PageHero from "./page-hero.svelte";
   import PageSection from "./page-section.svelte";
-  import ReadingLayout from "./reading-layout.svelte";
+  import RoutineBar from "./routine-bar.svelte";
+  import SectionNav from "./section-nav.svelte";
   import SiteShell from "./site-shell.svelte";
   import StepList from "./step-list.svelte";
-  import { drillCard, editorialCopy, heroButton } from "./styles";
 
   let { page }: { page: Article } = $props();
+
+  let routine = $derived(
+    page.sections.flatMap((section) => section.routine ?? [])
+  );
 
   let contents = $derived(
     page.sections.map((section, index) => ({
@@ -27,84 +31,79 @@
   );
 </script>
 
-{#snippet drillLinks()}
-  <nav
-    class="grid grid-cols-2 gap-3 lg:grid-cols-4"
-    aria-label={t("Choose a drill")}
-  >
-    {#each drillGuides as guide (guide.drillId)}
-      <a
-        class={[drillCard, "flex flex-col items-center gap-3 px-4 py-5"]}
-        href={mainRouteForDrill(guide.drillId)?.path ?? "/"}
-      >
-        <DrillIllustration class="max-w-40" drillId={guide.drillId} />
-        <span class="text-sm font-semibold">{t(guide.title)}</span>
-      </a>
-    {/each}
-  </nav>
-{/snippet}
-
 <SiteShell path={page.path}>
-  <!-- Comparison pages lead with the table instead of the drill links. -->
   <PageHero
     breadcrumb={[{ href: "/guide/", label: "Guide" }, { label: page.kicker }]}
-    footer={"comparison" in page ? undefined : drillLinks}
     lede={t(page.summary)}
     title={t(page.heading)}
   >
     {#snippet actions()}
-      <Button class={heroButton} href={page.primaryCta.href} size="lg">
+      <a
+        class={[buttonClass("primary", "lg"), "group/cta"]}
+        href={page.primaryCta.href}
+      >
         {t(page.primaryCta.label)}
-        <ArrowUpRightIcon data-icon="inline-end" />
-      </Button>
+        <ArrowRightIcon
+          class="ease-spring transition-transform duration-260 group-hover/cta:translate-x-0.5 rtl:-scale-x-100"
+          aria-hidden="true"
+        />
+      </a>
       {#if page.secondaryCta}
-        <Button
-          class="h-11 gap-2"
-          href={page.secondaryCta.href}
-          size="lg"
-          variant="ghost"
-        >
+        <a class={buttonClass("secondary", "lg")} href={page.secondaryCta.href}>
           {t(page.secondaryCta.label)}
-          <ArrowUpRightIcon data-icon="inline-end" />
-        </Button>
+        </a>
       {/if}
     {/snippet}
     {#snippet meta()}
       {t("Updated")}
       <time datetime={page.lastModified}>{formatDate(page.lastModified)}</time>
     {/snippet}
+    {#if page.comparison === undefined && routine.length > 0}
+      <nav aria-label={t("Choose a drill")}>
+        <RoutineBar steps={routine} />
+      </nav>
+    {:else if page.comparison === undefined}
+      <nav aria-label={t("Choose a drill")}>
+        <ul class="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+          {#each drillGuides as guide (guide.drillId)}
+            <li class="grid">
+              <DrillCard
+                drillId={guide.drillId}
+                href={mainRouteForDrill(guide.drillId)?.path ?? "/"}
+                summary={t(guide.summary)}
+                title={t(guide.title)}
+              />
+            </li>
+          {/each}
+        </ul>
+      </nav>
+    {:else}
+      <FeatureComparison
+        checkedOn={page.lastModified}
+        comparison={page.comparison}
+      />
+    {/if}
   </PageHero>
 
-  {#if page.comparison !== undefined}
-    <FeatureComparison
-      checkedOn={page.lastModified}
-      comparison={page.comparison}
-    />
-  {/if}
-
-  <ReadingLayout links={contents}>
+  <SectionNav links={contents} />
+  <div class={[pageWidth, sectionGap, "pt-12 lg:pt-16"]}>
     {#each page.sections as section, index (section.heading)}
-      <PageSection
-        id="section-{index}"
-        first={index === 0}
-        heading={t(section.heading)}
-      >
-        {#if section.body}
-          <div class={[editorialCopy, "mt-4 flex flex-col gap-4"]}>
-            {#each section.body as paragraph (paragraph)}
-              <p>{t(paragraph)}</p>
-            {/each}
-          </div>
-        {/if}
+      <PageSection id="section-{index}" heading={t(section.heading)}>
+        {#each section.body ?? [] as paragraph (paragraph)}
+          <p class={[bodyText, "max-w-prose"]}>{t(paragraph)}</p>
+        {/each}
         {#if section.orderedList}
-          <StepList class="mt-6" steps={section.orderedList} />
+          <StepList steps={section.orderedList} />
         {/if}
         {#if section.list}
-          <ul class="mt-6 grid gap-4">
+          <ul class="grid max-w-prose gap-3">
             {#each section.list as item (item)}
-              <li class="flex gap-3">
-                <CheckIcon class="text-foreground mt-1.5 size-4 shrink-0" />
-                <p class={editorialCopy}>{t(item)}</p>
+              <li class="flex gap-3 text-base text-pretty">
+                <span
+                  class="bg-foreground mt-2.5 size-1.5 shrink-0 rounded-full"
+                  aria-hidden="true"
+                ></span>
+                {t(item)}
               </li>
             {/each}
           </ul>
@@ -112,10 +111,9 @@
       </PageSection>
     {/each}
     <PageCta
-      body={t("Start slow. Adjust as you go.")}
       href={page.primaryCta.href}
       label={t(page.primaryCta.label)}
       title={t("Try it with your own settings")}
     />
-  </ReadingLayout>
+  </div>
 </SiteShell>

@@ -7,11 +7,11 @@ import { articles } from "../src/lib/content/articles";
 import type { Article } from "../src/lib/content/articles";
 import { drillGuides } from "../src/lib/content/drill-guides";
 import { drillRoutes } from "../src/lib/content/drill-routes";
-import { audiences, guideFaq, referenceLinks } from "../src/lib/content/guide";
+import { audiences, referenceLinks } from "../src/lib/content/guide";
 import { homeCopy } from "../src/lib/content/home";
 import { legalPages } from "../src/lib/content/legal";
 import type { LegalPage } from "../src/lib/content/legal";
-import { freeUseNote, safetyNote } from "../src/lib/content/site";
+import { safetyNote } from "../src/lib/content/site";
 import type { PageCopy } from "../src/lib/content/types";
 import { en } from "../src/lib/i18n/dictionaries/en";
 import { behaviors } from "../src/lib/trainer/settings/behaviors";
@@ -25,9 +25,7 @@ import { pursuitPatterns } from "../src/lib/trainer/settings/patterns";
 
 // Every English message the UI can show must have a dictionary entry.
 const messages = new Set<string>([
-  freeUseNote,
   safetyNote,
-  ...guideFaq.flatMap(({ question, answer }) => [question, answer]),
   ...audiences.flatMap(({ title, body }) => [title, body]),
   ...referenceLinks.map(({ label }) => label),
   ...drillGuides.flatMap(({ title, summary, benefits, steps }) => [
@@ -48,7 +46,7 @@ const messages = new Set<string>([
 ]);
 
 const addPageCopy = (copy: PageCopy) => {
-  for (const message of [copy.heading, copy.hero, ...copy.body]) {
+  for (const message of [copy.heading, copy.hero]) {
     messages.add(message);
   }
 };

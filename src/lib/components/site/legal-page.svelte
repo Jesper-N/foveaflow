@@ -1,13 +1,12 @@
 <script lang="ts">
   import type { LegalPage } from "$lib/content/legal";
   import { formatDate, t } from "$lib/i18n/translate";
-  import ArrowUpRightIcon from "@lucide/svelte/icons/arrow-up-right";
 
+  import { bodyText, pageWidth, textLink } from "./layout";
   import PageHero from "./page-hero.svelte";
   import PageSection from "./page-section.svelte";
-  import ReadingLayout from "./reading-layout.svelte";
+  import SectionNav from "./section-nav.svelte";
   import SiteShell from "./site-shell.svelte";
-  import { editorialCopy, editorialLink } from "./styles";
 
   let { page }: { page: LegalPage } = $props();
 
@@ -27,34 +26,30 @@
       <time datetime={page.lastModified}>{formatDate(page.lastModified)}</time>
     {/snippet}
   </PageHero>
-  <ReadingLayout links={contents}>
-    {#each page.sections as section, index (section.id)}
-      <PageSection
-        id={section.id}
-        first={index === 0}
-        heading={t(section.heading)}
-      >
-        <div class={[editorialCopy, "mt-4 flex flex-col gap-4"]}>
-          {#each section.body as paragraph (paragraph)}
-            <p>{t(paragraph)}</p>
-          {/each}
-        </div>
+  <SectionNav links={contents} />
+  <div class={[pageWidth, "grid gap-20 pt-20 lg:gap-28"]}>
+    {#each page.sections as section (section.id)}
+      <PageSection id={section.id} heading={t(section.heading)}>
+        {#each section.body as paragraph (paragraph)}
+          <p class={[bodyText, "max-w-prose"]}>{t(paragraph)}</p>
+        {/each}
         {#if section.links}
-          <div class="mt-5 flex flex-wrap gap-x-6 gap-y-3">
+          <ul class="grid gap-2">
             {#each section.links as link (link.url)}
-              <a
-                class={editorialLink}
-                href={link.url}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                {t(link.label)}
-                <ArrowUpRightIcon class="size-3.5" />
-              </a>
+              <li>
+                <a
+                  class={textLink}
+                  href={link.url}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  {t(link.label)}
+                </a>
+              </li>
             {/each}
-          </div>
+          </ul>
         {/if}
       </PageSection>
     {/each}
-  </ReadingLayout>
+  </div>
 </SiteShell>

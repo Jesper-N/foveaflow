@@ -50,6 +50,6 @@ test("the home page opens the default drill", () => {
   expect(findDrillRoute(slugFromPath("/"))).toBeNull();
   expect(withRoute(settings, null)).toMatchObject({
     drillId: "pursuit",
-    patternId: "randomWalk",
+    patternId: "directionChange",
   });
 });

@@ -1,85 +1,77 @@
 <script lang="ts">
-  import DrillIllustration from "$lib/components/drills/drill-illustration.svelte";
-  import { Button } from "$lib/components/ui/button";
   import { drillGuides } from "$lib/content/drill-guides";
   import { t } from "$lib/i18n/translate";
-  import ArrowDownIcon from "@lucide/svelte/icons/arrow-down";
-  import ArrowUpRightIcon from "@lucide/svelte/icons/arrow-up-right";
+  import { ArrowRightIcon } from "@lucide/svelte";
 
+  import { buttonClass } from "../ui/button-variants";
+  import DrillCard from "./drill-card.svelte";
   import GuideDrillSections from "./guide-drill-sections.svelte";
   import GuideResourceSections from "./guide-resource-sections.svelte";
+  import { pageWidth, sectionGap } from "./layout";
+  import PageCta from "./page-cta.svelte";
   import PageHero from "./page-hero.svelte";
-  import ReadingLayout from "./reading-layout.svelte";
+  import SectionNav from "./section-nav.svelte";
   import SiteShell from "./site-shell.svelte";
-  import { drillCard, heroButton } from "./styles";
 
-  // Each id matches a section in this page or in the two section components.
   const contents = [
     { id: "drills", label: "Choose a drill" },
     { id: "practice", label: "How to practice" },
     { id: "patterns", label: "Motion paths" },
     { id: "controls", label: "Controls" },
     { id: "more-guides", label: "More guides" },
-    { id: "faq", label: "Guide FAQ" },
     { id: "references", label: "References" },
   ];
 </script>
 
 <SiteShell path="/guide/">
   <PageHero
+    layout="split"
     lede={t(
-      "Your guide to FoveaFlow’s free online eye trainer. Choose a drill for visual tracking, quick refocus, or peripheral awareness, then make it your own."
+      "Choose a drill for visual tracking, quick refocus, or peripheral awareness, then make it your own."
     )}
     title={t("FoveaFlow Guide")}
   >
     {#snippet actions()}
-      <Button class={heroButton} href="/smooth-pursuit/" size="lg">
-        {t("Try Smooth Pursuit")}
-        <ArrowUpRightIcon data-icon="inline-end" />
-      </Button>
-      <Button class="h-11 gap-2" href="#practice" size="lg" variant="ghost">
-        {t("How to practice")}
-        <ArrowDownIcon data-icon="inline-end" />
-      </Button>
-    {/snippet}
-    {#snippet footer()}
-      <nav
-        id="drills"
-        class="grid scroll-mt-8 gap-3 sm:grid-cols-2 lg:grid-cols-4"
-        aria-label={t("Choose a drill")}
+      <a
+        class={[buttonClass("primary", "lg"), "group/cta"]}
+        href="/smooth-pursuit/"
       >
-        {#each drillGuides as guide (guide.drillId)}
-          <a
-            class={[
-              drillCard,
-              "group grid grid-cols-[6rem_minmax(0,1fr)] items-center gap-x-5 p-4 sm:flex sm:flex-col sm:items-stretch sm:p-5",
-            ]}
-            href="#{guide.drillId}"
-          >
-            <DrillIllustration
-              class="sm:mx-auto sm:mb-4 sm:max-w-44"
-              drillId={guide.drillId}
-            />
-            <span class="grid gap-1.5">
-              <span
-                class="flex items-center justify-between gap-2 font-semibold wrap-anywhere"
-              >
-                {t(guide.title)}
-                <ArrowDownIcon
-                  class="text-muted-foreground group-hover:text-brand-foreground size-3.5 shrink-0 transition-colors motion-reduce:transition-none"
-                />
-              </span>
-              <span class="text-muted-foreground text-sm leading-6 text-pretty">
-                {t(guide.summary)}
-              </span>
-            </span>
-          </a>
-        {/each}
-      </nav>
+        {t("Try Smooth Pursuit")}
+        <ArrowRightIcon
+          class="ease-spring transition-transform duration-260 group-hover/cta:translate-x-0.5 rtl:-scale-x-100"
+          aria-hidden="true"
+        />
+      </a>
+      <a class={buttonClass("secondary", "lg")} href="#practice">
+        {t("How to practice")}
+      </a>
     {/snippet}
+    <nav
+      id="drills"
+      class="short:scroll-mt-16 scroll-mt-36"
+      aria-label={t("Choose a drill")}
+    >
+      <ul class="grid gap-2 sm:grid-cols-2">
+        {#each drillGuides as guide (guide.drillId)}
+          <li class="grid">
+            <DrillCard
+              drillId={guide.drillId}
+              href="#{guide.drillId}"
+              title={t(guide.title)}
+            />
+          </li>
+        {/each}
+      </ul>
+    </nav>
   </PageHero>
-  <ReadingLayout links={contents}>
+  <SectionNav links={contents} />
+  <div class={[pageWidth, sectionGap, "pt-12 lg:pt-16"]}>
     <GuideDrillSections />
     <GuideResourceSections />
-  </ReadingLayout>
+    <PageCta
+      href="/"
+      label={t("Open FoveaFlow")}
+      title={t("Ready to try a drill?")}
+    />
+  </div>
 </SiteShell>

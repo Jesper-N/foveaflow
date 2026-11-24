@@ -7,7 +7,8 @@ import { homeCopy } from "$lib/content/home";
 import { siteMetadata } from "$lib/content/site";
 import { languageState } from "$lib/i18n/state.svelte";
 import { syncDocumentHead } from "$lib/seo/document-head";
-import { readThemeTargetColor } from "$lib/trainer/canvas/theme";
+import { cue, sound } from "$lib/sound/sound.svelte";
+import { getCanvasTheme } from "$lib/trainer/canvas/theme";
 import type { ColorMode } from "$lib/trainer/canvas/theme";
 import { TrainerCanvas } from "$lib/trainer/canvas/trainer-canvas";
 import type { CanvasScene } from "$lib/trainer/canvas/trainer-canvas";
@@ -17,7 +18,7 @@ import {
   profilesForBehavior,
 } from "$lib/trainer/settings/behaviors";
 import {
-  darkenHexColor,
+  fadeHexColor,
   isHexColor,
   safeStimulusColor,
 } from "$lib/trainer/settings/colors";
@@ -31,6 +32,7 @@ import {
   clampSetting,
   createDefaultSettings,
   resetToDefaults,
+  settingRanges,
   withDrill,
   withPattern,
   withRoute,
@@ -40,27 +42,14 @@ import type {
   TrainerSettings,
 } from "$lib/trainer/settings/settings";
 import { SettingsSaver, loadSettings } from "$lib/trainer/settings/storage";
+import { createSelectController } from "@ui-sdk/svelte/select";
 import { mode, setMode } from "mode-watcher";
 import { tick, untrack } from "svelte";
 import type { Attachment } from "svelte/attachments";
 
-import { HudVisibility } from "./hud/hud-visibility.svelte";
+import { startAgentBridge } from "../agent-bridge";
 import { IdleCursor } from "./idle-cursor.svelte";
-import { getShortcutAction, isKeyCapturedBy } from "./shortcuts";
 import type { ShortcutAction } from "./shortcuts";
-
-type HudSelect = "drill" | "pattern";
-
-/** The island stays up a little longer on the first visit. */
-const FIRST_REVEAL_MS = 1800;
-
-/** Focuses a select trigger in the island once it has rendered open. */
-const focusHudSelect = async (select: HudSelect) => {
-  await tick();
-  document
-    .querySelector<HTMLElement>(`[data-hud-select="${select}"]`)
-    ?.focus({ preventScroll: true });
-};
 
 /**
  * State and actions for the trainer page: the settings, the drill canvas,
@@ -68,6 +57,14 @@ const focusHudSelect = async (select: HudSelect) => {
  * its methods instead of changing settings directly where a change needs
  * validation or side effects.
  */
+
+const focusDrillTabs = async () => {
+  await tick();
+  document
+    .querySelector<HTMLElement>("[data-island-drills] [data-checked]")
+    ?.focus();
+};
+
 export class Trainer {
   settings = $state<TrainerSettings>(createDefaultSettings());
   /** Slug of the page the browser is on, like `circle`. Empty on the homepage. */
@@ -75,28 +72,17 @@ export class Trainer {
   motionPaused = $state(false);
   controlsOpen = $state(false);
   guideOpen = $state(false);
-  drillSelectOpen = $state(false);
-  patternSelectOpen = $state(false);
-  lilacColorSelectOpen = $state(false);
-  languageSelectOpen = $state(false);
+  islandExpanded = $state(false);
+  panelReturnFocus = $state.raw<HTMLElement | "none">("none");
 
-  readonly hud = new HudVisibility(() => this.overlayOpen);
   readonly cursor = new IdleCursor();
+  /** Opens the path menu from the P shortcut. */
+  readonly patternSelect = createSelectController<unknown>();
 
-  #themeTargetColor = $state("#000000");
   /** Settings save only after the saved ones have loaded, so defaults never overwrite them. */
   #settingsLoaded = $state(false);
   readonly #saver = new SettingsSaver();
   readonly #canvas = new TrainerCanvas(() => this.#scene);
-
-  overlayOpen = $derived(
-    this.controlsOpen ||
-      this.guideOpen ||
-      this.languageSelectOpen ||
-      this.drillSelectOpen ||
-      this.patternSelectOpen ||
-      this.lilacColorSelectOpen
-  );
 
   colorMode = $derived.by((): ColorMode => {
     const { current } = mode;
@@ -114,11 +100,21 @@ export class Trainer {
   });
 
   targetColor = $derived(
-    safeStimulusColor(this.settings.ballColor ?? this.#themeTargetColor)
+    safeStimulusColor(
+      this.settings.ballColor ?? getCanvasTheme(this.colorMode).targetColor
+    )
+  );
+
+  letterColor = $derived(
+    this.settings.letterColor ?? getCanvasTheme(this.colorMode).canvasColor
   );
 
   distractorColor = $derived(
-    darkenHexColor(this.targetColor, this.settings.distractorBrightness)
+    fadeHexColor(
+      this.targetColor,
+      getCanvasTheme(this.colorMode).canvasColor,
+      this.settings.distractorBrightness
+    )
   );
 
   route = $derived(findDrillRoute(this.routeSlug));
@@ -140,7 +136,6 @@ export class Trainer {
       : (routeForDrill(settings.drillId, settings.patternId) ?? route);
   });
 
-  guideCopy = $derived(this.guideRoute?.copy ?? this.pageCopy);
   guideLastModified = $derived(
     this.guideRoute?.lastModified ?? siteMetadata.homepageLastModified
   );
@@ -162,6 +157,7 @@ export class Trainer {
   readonly #scene = $derived<CanvasScene>({
     colorMode: this.colorMode,
     distractorColor: this.distractorColor,
+    letterColor: this.letterColor,
     paused: this.#canvasPaused,
     settings: this.#snapshot,
     targetColor: this.targetColor,
@@ -204,28 +200,9 @@ export class Trainer {
     this.#followBrowserRoute(loadSettings() ?? this.settings);
     this.#settingsLoaded = true;
 
-    // The default target color follows the theme's primary color.
-    const root = document.documentElement;
-    this.#themeTargetColor = readThemeTargetColor(root);
-
-    const themeObserver = new MutationObserver(() => {
-      this.#themeTargetColor = readThemeTargetColor(root);
-    });
-
-    themeObserver.observe(root, { attributeFilter: ["class", "style"] });
-
-    let mounted = true;
-
-    // The island renders once translations load, so its first auto-hide starts then.
-    const revealHudOnceTranslated = async () => {
-      await languageState.init();
-
-      if (mounted) {
-        this.hud.showBriefly(FIRST_REVEAL_MS);
-      }
-    };
-
-    void revealHudOnceTranslated();
+    void languageState.init();
+    sound.start();
+    startAgentBridge();
     this.cursor.wake();
 
     // Pause for visitors who ask for less motion. They can still press play.
@@ -241,11 +218,8 @@ export class Trainer {
     reducedMotion.addEventListener("change", pauseForReducedMotion);
 
     return () => {
-      mounted = false;
       reducedMotion.removeEventListener("change", pauseForReducedMotion);
-      themeObserver.disconnect();
       this.#saver.flush();
-      this.hud.dispose();
       this.cursor.stop();
     };
   }
@@ -322,11 +296,15 @@ export class Trainer {
     if (this.canReverse) {
       this.settings.motionDirection =
         this.settings.motionDirection === 1 ? -1 : 1;
+      cue("toggle", {
+        direction: this.settings.motionDirection === 1 ? "forward" : "back",
+      });
     }
   };
 
   togglePaused = () => {
     this.motionPaused = !this.motionPaused;
+    cue("toggle", { direction: this.motionPaused ? "back" : "forward" });
   };
 
   resetSettings = () => {
@@ -336,26 +314,31 @@ export class Trainer {
   };
 
   openControls = () => {
-    this.hud.reveal();
-    this.controlsOpen = true;
+    if (!this.controlsOpen) {
+      this.#rememberFocus();
+      this.controlsOpen = true;
+      cue("open");
+    }
   };
 
   openGuide = () => {
-    this.hud.reveal();
-    this.guideOpen = true;
-  };
-
-  handleKeydown = (event: KeyboardEvent) => {
-    const action = getShortcutAction(event);
-
-    if (!action || isKeyCapturedBy(event.target, action)) {
-      return;
-    }
-
-    if (this.#runShortcut(action)) {
-      event.preventDefault();
+    if (!this.guideOpen) {
+      this.#rememberFocus();
+      this.guideOpen = true;
+      cue("open");
     }
   };
+
+  #rememberFocus() {
+    const { activeElement } = document;
+
+    this.panelReturnFocus =
+      activeElement instanceof HTMLElement &&
+      activeElement !== document.body &&
+      activeElement.closest("[role='dialog']") === null
+        ? activeElement
+        : "none";
+  }
 
   /** Wakes the hidden cursor when the mouse moves. */
   handlePointerMove = (event: PointerEvent) => {
@@ -378,67 +361,68 @@ export class Trainer {
     this.#saver.flush();
   };
 
-  #runShortcut(action: ShortcutAction) {
-    // Open menus and dialogs keep their own keys.
-    if (this.overlayOpen) {
-      return false;
-    }
-
+  runShortcut = (action: ShortcutAction) => {
     switch (action) {
       case "togglePause": {
         this.togglePaused();
 
-        return true;
+        return;
       }
 
       case "growTarget":
       case "shrinkTarget": {
-        const delta = action === "growTarget" ? 1 : -1;
-        this.setRanged("baseRadiusPx", this.settings.baseRadiusPx + delta);
+        this.#stepRanged("baseRadiusPx", action === "growTarget" ? 1 : -1);
 
-        return true;
+        return;
       }
 
       case "speedUp":
       case "slowDown": {
-        const delta = action === "speedUp" ? 1 : -1;
-        this.setRanged("speed", this.settings.speed + delta);
+        this.#stepRanged("speed", action === "speedUp" ? 1 : -1);
 
-        return true;
+        return;
       }
 
       case "toggleTheme": {
-        setMode(this.colorMode === "dark" ? "light" : "dark");
+        const next = this.colorMode === "dark" ? "light" : "dark";
+        setMode(next);
+        cue("toggle", { direction: next === "light" ? "forward" : "back" });
 
-        return true;
+        return;
       }
 
       case "openDrillSelect": {
-        this.#openHudSelect("drill");
+        if (!this.islandExpanded) {
+          cue("open", { emphasis: "subtle" });
+        }
 
-        return true;
+        this.islandExpanded = true;
+        void focusDrillTabs();
+
+        return;
       }
 
       case "openPatternSelect": {
         if (!this.isPursuit) {
-          return false;
+          return;
         }
 
-        this.#openHudSelect("pattern");
+        this.islandExpanded = true;
+        this.patternSelect.setOpen(true);
 
-        return true;
+        return;
       }
 
       case "openControls": {
         this.openControls();
 
-        return true;
+        return;
       }
 
       case "openGuide": {
         this.openGuide();
 
-        return true;
+        return;
       }
 
       default: {
@@ -447,18 +431,18 @@ export class Trainer {
         );
       }
     }
-  }
+  };
 
-  /** Opens a select in the island from the keyboard and focuses it. */
-  #openHudSelect(select: HudSelect) {
-    if (select === "drill") {
-      this.drillSelectOpen = true;
-    } else {
-      this.patternSelectOpen = true;
+  #stepRanged(setting: RangedSetting, delta: 1 | -1) {
+    const before = this.settings[setting];
+    this.setRanged(setting, before + delta);
+
+    const after = this.settings[setting];
+
+    if (after !== before) {
+      const { min, max } = settingRanges[setting];
+      sound.slide((after - min) / (max - min));
     }
-
-    this.hud.reveal();
-    void focusHudSelect(select);
   }
 
   /** Restarts motion after the drill or path changed, and updates the URL. */

@@ -32,9 +32,6 @@ export default defineConfig(
   {
     ignores: ["**/*", "!src/", "!src/**/", "!src/**/*.svelte"],
   },
-  {
-    ignores: ["src/lib/components/ui/**"],
-  },
   ...svelte.configs["flat/base"],
   {
     files: ["src/**/*.svelte"],

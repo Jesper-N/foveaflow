@@ -63,7 +63,7 @@ export const languageOptions = [
   nativeLabel: string;
 }[];
 
-export type LanguageOption = (typeof languageOptions)[number];
+type LanguageOption = (typeof languageOptions)[number];
 
 export type AppLocale = LanguageOption["locale"];
 
@@ -73,10 +73,6 @@ const supportedLocaleSet: ReadonlySet<string> = new Set(
 
 export const isAppLocale = (value: string): value is AppLocale =>
   supportedLocaleSet.has(value);
-
-export const getLanguageOption = (locale: AppLocale): LanguageOption =>
-  languageOptions.find((option) => option.locale === locale) ??
-  languageOptions[0];
 
 export const localeAliases = {
   bn: "bn",

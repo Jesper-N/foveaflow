@@ -1,5 +1,0 @@
-<!-- One solid target among outlined distractors. Renders inside a 24×24 icon. -->
-<circle cx="5" cy="6" r="2.5" />
-<circle cx="19" cy="5" r="2.5" />
-<circle cx="5" cy="19" r="2.5" />
-<circle cx="16" cy="15" fill="currentColor" r="4" stroke="none" />

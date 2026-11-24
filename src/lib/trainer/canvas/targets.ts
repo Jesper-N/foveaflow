@@ -139,6 +139,7 @@ const letterFontSize = (radiusPx: number, settings: TrainerSettings) =>
 export interface TargetPaint {
   targetColor: string;
   distractorColor: string;
+  letterColor: string;
   fontFamily: string;
 }
 
@@ -177,7 +178,7 @@ export const drawTargets = (
         ctx.font = font;
       }
 
-      ctx.fillStyle = settings.letterColor;
+      ctx.fillStyle = paint.letterColor;
       ctx.fillText(
         letterAt(seed, index, letterBucket),
         x,

@@ -1,28 +1,30 @@
 <script lang="ts">
-  import * as Field from "$lib/components/ui/field";
   import type { Snippet } from "svelte";
 
-  let {
-    legend,
-    label,
-    children,
-  }: {
-    /** Visible heading. The first section on a page sits under the page title and has none. */
-    legend?: string;
-    /** Accessible name for a section without a legend. */
-    label?: string;
+  import { smoothResize } from "../../ui/smooth-resize";
+  import { settingsGroup } from "../../ui/styles";
+
+  interface Props {
+    id: string;
+    title?: string;
     children: Snippet;
-  } = $props();
+  }
+
+  let { id, title, children }: Props = $props();
 </script>
 
-<Field.FieldSet
-  class="[&>legend]:text-muted-foreground min-w-0 gap-0 [&+fieldset]:mt-8 [&>legend]:float-left [&>legend]:mb-1 [&>legend]:w-full"
-  aria-label={label}
+<section
+  class="grid gap-2"
+  aria-labelledby={title === undefined ? undefined : id}
 >
-  {#if legend}
-    <Field.FieldLegend variant="label">{legend}</Field.FieldLegend>
+  {#if title !== undefined}
+    <h3 {id} class="text-muted-foreground px-4 text-xs font-medium">
+      {title}
+    </h3>
   {/if}
-  <Field.FieldGroup class="divide-border/60 gap-0 divide-y">
-    {@render children()}
-  </Field.FieldGroup>
-</Field.FieldSet>
+  <div class="overflow-clip rounded-2xl" {@attach smoothResize()}>
+    <div class={settingsGroup}>
+      {@render children()}
+    </div>
+  </div>
+</section>

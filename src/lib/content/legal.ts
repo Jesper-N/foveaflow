@@ -42,7 +42,6 @@ export const legalPages = {
       {
         body: [
           "You do not need to create an account to use FoveaFlow. The app does not ask for your name, email address, payment details, or health records.",
-          "Your practice choices are not uploaded to a FoveaFlow account because there are no accounts.",
         ],
         heading: "Data we do not collect",
         id: "data-we-do-not-collect",

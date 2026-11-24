@@ -1,37 +1,42 @@
 <script lang="ts">
-  import DrillIllustration from "$lib/components/drills/drill-illustration.svelte";
-  import { Button } from "$lib/components/ui/button";
-  import ArrowUpRightIcon from "@lucide/svelte/icons/arrow-up-right";
+  import { ArrowRightIcon } from "@lucide/svelte";
 
-  import {
-    contentStage,
-    editorialCopy,
-    editorialHeading,
-    heroButton,
-  } from "./styles";
+  import DrillPreview from "../icons/drill-preview.svelte";
+  import { buttonClass } from "../ui/button-variants";
 
-  let {
-    title,
-    body,
-    href,
-    label,
-  }: { title: string; body: string; href: string; label: string } = $props();
+  interface Props {
+    title: string;
+    body?: string;
+    href: string;
+    label: string;
+  }
+
+  let { title, body, href, label }: Props = $props();
 </script>
 
-<!-- Closing call to action at the end of a page. -->
 <section
-  class={[
-    contentStage,
-    "grid items-center gap-8 px-6 py-10 sm:grid-cols-[minmax(0,1fr)_14rem] sm:px-10",
-  ]}
+  class="dark text-foreground ring-border in-[html.dark]:bg-card grid items-center gap-2 overflow-hidden rounded-4xl bg-black p-2 ring-1 md:grid-cols-[minmax(0,1fr)_minmax(0,26rem)]"
 >
-  <div class="relative flex flex-col items-start gap-3">
-    <h2 class={editorialHeading}>{title}</h2>
-    <p class={editorialCopy}>{body}</p>
-    <Button class={["mt-3", heroButton]} {href} size="lg">
+  <div class="grid justify-items-start gap-4 p-6 sm:p-10">
+    <h2 class="text-xl font-semibold text-balance sm:text-2xl">{title}</h2>
+    {#if body}
+      <p
+        class="text-muted-foreground text-base sm:text-lg sm:leading-7 sm:tracking-normal"
+      >
+        {body}
+      </p>
+    {/if}
+    <a class={[buttonClass("primary", "lg"), "group/cta mt-3"]} {href}>
       {label}
-      <ArrowUpRightIcon data-icon="inline-end" />
-    </Button>
+      <ArrowRightIcon
+        class="ease-spring transition-transform duration-260 group-hover/cta:translate-x-0.5 rtl:-scale-x-100"
+        aria-hidden="true"
+      />
+    </a>
   </div>
-  <DrillIllustration class="relative hidden sm:block" drillId="pursuit" />
+  <DrillPreview
+    class="aspect-4/3 w-full rounded-3xl"
+    backdrop="fovea"
+    drillId="pursuit"
+  />
 </section>

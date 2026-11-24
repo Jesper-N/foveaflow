@@ -1,14 +1,28 @@
 <script lang="ts">
   import { articles } from "$lib/content/articles";
-  import { referenceLinks, guideFaq } from "$lib/content/guide";
+  import type { Article } from "$lib/content/articles";
+  import { referenceLinks } from "$lib/content/guide";
   import { t } from "$lib/i18n/translate";
-  import ArrowUpRightIcon from "@lucide/svelte/icons/arrow-up-right";
-  import PlusIcon from "@lucide/svelte/icons/plus";
-  import SlidersHorizontalIcon from "@lucide/svelte/icons/sliders-horizontal";
+  import { ArrowUpRightIcon } from "@lucide/svelte";
+  import type { Attachment } from "svelte/attachments";
 
-  import PageCta from "./page-cta.svelte";
+  import DrillIcon from "../icons/drill-icon.svelte";
+  import BrandMark from "../ui/brand-mark.svelte";
+  import { pressable } from "../ui/styles";
+  import ControlsPlayground from "./controls-playground.svelte";
+  import { sectionHeading, subHeading } from "./layout";
   import PageSection from "./page-section.svelte";
-  import { editorialCopy, iconBadge, panelSurface } from "./styles";
+
+  const guides: readonly Article[] = articles;
+
+  const routineOf = (article: Article) =>
+    article.sections.flatMap((section) => section.routine ?? []);
+
+  const share =
+    (minutes: number): Attachment<HTMLElement> =>
+    (node) => {
+      node.style.flexGrow = String(minutes);
+    };
 </script>
 
 <PageSection
@@ -18,96 +32,104 @@
     "Change speed and target size first. They usually have the biggest effect on difficulty and control."
   )}
 >
-  <div class={[panelSurface, "mt-6 flex items-start gap-4 rounded-2xl p-5"]}>
-    <span class={[iconBadge, "size-10"]} aria-hidden="true">
-      <SlidersHorizontalIcon class="size-4" />
-    </span>
-    <div class="grid gap-1">
-      <h3 class="font-semibold">{t("Motion and target")}</h3>
-      <p class="text-muted-foreground text-sm leading-6 text-pretty">
-        {t(
-          "Speed, size, shape, color, opacity, and trail change the feel of the moving drills. Lilac Chaser has its own ball color and scale controls."
-        )}
-      </p>
-    </div>
-  </div>
+  <ControlsPlayground />
 </PageSection>
 
-<PageSection id="more-guides" heading={t("More guides")}>
-  <!-- Dividers live on the wrappers so the rounded focus outline can't bend them. -->
-  <div class="divide-border mt-6 divide-y">
-    {#each articles as article (article.slug)}
-      <div class="py-6 first:pt-0 last:pb-0">
-        <a
-          class="group focus-visible:outline-ring flex items-start gap-5 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4"
-          href={article.path}
+<section
+  id="more-guides"
+  class="short:scroll-mt-16 grid scroll-mt-36 gap-10"
+  aria-labelledby="more-guides-heading"
+>
+  <h2 id="more-guides-heading" class={sectionHeading}>{t("More guides")}</h2>
+  <div class="grid gap-2 md:grid-cols-3">
+    {#each guides as article (article.slug)}
+      <a
+        class={[
+          "group/article bg-card hover:bg-fill-hover grid content-start gap-4 rounded-3xl p-2 pb-5 motion-safe:active:scale-99",
+          pressable,
+        ]}
+        href={article.path}
+      >
+        <span
+          class="canvas-grid relative grid aspect-2/1 place-items-center overflow-hidden rounded-2xl"
+          aria-hidden="true"
         >
-          <div class="flex-1">
-            <h3
-              class="group-hover:text-brand-foreground mb-2 font-semibold transition-colors motion-reduce:transition-none"
-            >
-              {t(article.heading)}
-            </h3>
-            <p class="text-muted-foreground text-sm leading-6">
-              {t(article.description)}
-            </p>
-          </div>
+          {#if article.comparison}
+            <span class="flex items-center">
+              <BrandMark
+                class="ring-canvas ease-spring relative z-1 size-16 rounded-3xl ring-4 transition-[translate] duration-260 group-hover/article:-translate-x-1.5"
+              />
+              <span
+                class="bg-popover text-muted-foreground ring-canvas ease-spring -ms-4 grid size-16 place-items-center rounded-3xl text-xl font-semibold ring-4 transition-[translate] duration-260 group-hover/article:translate-x-1.5"
+              >
+                {article.comparison.alternative.charAt(0)}
+              </span>
+            </span>
+          {:else}
+            <span class="flex w-4/5 gap-1.5">
+              {#each routineOf(article) as step (step.drillId)}
+                <span
+                  class="bg-popover shadow-thumb grid h-16 min-w-0 basis-0 place-items-center rounded-2xl"
+                  {@attach share(step.minutes)}
+                >
+                  <DrillIcon class="size-6" drillId={step.drillId} />
+                </span>
+              {/each}
+            </span>
+          {/if}
           <span
-            class="bg-muted group-hover:bg-primary/10 group-hover:text-brand-foreground flex size-9 shrink-0 items-center justify-center rounded-full transition-colors motion-reduce:transition-none"
+            class="bg-popover shadow-thumb ease-spring absolute inset-e-2 top-2 grid size-8 place-items-center rounded-full transition-[translate] duration-260 group-hover/article:translate-x-0.5 group-hover/article:-translate-y-0.5"
           >
-            <ArrowUpRightIcon class="size-4" />
+            <ArrowUpRightIcon class="size-3.5 rtl:-scale-x-100" />
           </span>
-        </a>
-      </div>
+        </span>
+        <span class="grid gap-2 px-3">
+          <span class="text-muted-foreground text-xs font-medium">
+            {t(article.kicker)}
+          </span>
+          <h3 class={subHeading}>{t(article.heading)}</h3>
+          <span class="text-muted-foreground line-clamp-3 text-sm text-pretty">
+            {t(article.description)}
+          </span>
+        </span>
+      </a>
     {/each}
   </div>
-</PageSection>
-
-<PageSection id="faq" data-nosnippet heading={t("Guide FAQ")}>
-  <div class="divide-border mt-6 divide-y">
-    {#each guideFaq as item (item.question)}
-      <details class="group py-5 first:pt-0 last:pb-0 open:pb-6">
-        <summary
-          class="focus-visible:outline-ring flex min-h-11 cursor-pointer list-none items-center justify-between gap-6 rounded-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-4 [&::-webkit-details-marker]:hidden"
-        >
-          {t(item.question)}
-          <PlusIcon
-            class="text-muted-foreground size-4 shrink-0 transition-transform duration-200 group-open:rotate-45 motion-reduce:transition-none"
-          />
-        </summary>
-        <p class={[editorialCopy, "mt-4 pr-10"]}>{t(item.answer)}</p>
-      </details>
-    {/each}
-  </div>
-</PageSection>
+</section>
 
 <PageSection
   id="references"
   heading={t("Research and background reading")}
   intro={t(
-    "These sources explain the eye movements and visual effects behind the drills. They do not establish that FoveaFlow improves eyesight or game performance."
+    "These sources do not establish that FoveaFlow improves eyesight or game performance."
   )}
 >
-  <ol class="divide-border mt-6 divide-y">
-    {#each referenceLinks as reference (reference.url)}
+  <ol class="divide-border border-border grid divide-y border-y">
+    {#each referenceLinks as reference, index (reference.url)}
       <li>
         <a
-          class="hover:text-brand-foreground focus-visible:outline-ring flex items-baseline gap-4 rounded-sm py-4 text-sm leading-6 transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 motion-reduce:transition-none"
+          class="group/ref text-md flex items-start gap-4 py-4 transition-colors duration-160 ease-out"
           href={reference.url}
           rel="noopener noreferrer"
           target="_blank"
         >
-          <span class="flex-1">{t(reference.label)}</span>
-          <ArrowUpRightIcon class="size-3.5 shrink-0 self-center" />
+          <span
+            class="text-muted-foreground w-6 shrink-0 pt-px text-sm tabular-nums"
+          >
+            {String(index + 1).padStart(2, "0")}
+          </span>
+          <span class="grid flex-1 gap-0.5">
+            <span class="text-pretty">{t(reference.label)}</span>
+            <span class="text-muted-foreground text-xs">
+              {new URL(reference.url).hostname.replace(/^www\./u, "")}
+            </span>
+          </span>
+          <ArrowUpRightIcon
+            class="text-muted-foreground ease-spring group-hover/ref:text-foreground mt-0.5 size-4 shrink-0 transition-[translate,color] duration-260 group-hover/ref:translate-x-0.5 group-hover/ref:-translate-y-0.5 rtl:-scale-x-100"
+            aria-hidden="true"
+          />
         </a>
       </li>
     {/each}
   </ol>
 </PageSection>
-
-<PageCta
-  body={t("Start slow. Adjust as you go.")}
-  href="/"
-  label={t("Open FoveaFlow")}
-  title={t("Ready to try a drill?")}
-/>

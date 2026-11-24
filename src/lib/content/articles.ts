@@ -1,5 +1,13 @@
+import type { DrillId } from "$lib/trainer/settings/drills";
+
+interface RoutineStep {
+  drillId: DrillId;
+  minutes: number;
+}
+
 interface ArticleSection {
   heading: string;
+  routine?: readonly RoutineStep[];
   body?: readonly string[];
   list?: readonly string[];
   orderedList?: readonly string[];
@@ -57,6 +65,12 @@ export const articles = [
           "Treat this as a starting routine, not a target you have to finish. Choose a comfortable speed and shorten or skip any drill that does not feel right.",
         ],
         heading: "A 7-minute FPS eye warmup",
+        routine: [
+          { drillId: "pursuit", minutes: 3 },
+          { drillId: "reactionTime", minutes: 2 },
+          { drillId: "mot", minutes: 1 },
+          { drillId: "lilacChaser", minutes: 1 },
+        ],
         orderedList: [
           "3 minutes of Smooth Pursuit. Follow one moving target with your eyes. Start with Circle or Ellipse and aim for steady tracking.",
           "2 minutes of Reaction Jumps. Find the target after each jump, then settle your gaze before it moves again.",
@@ -73,13 +87,11 @@ export const articles = [
           "Use predictable paths to practice a steady rhythm.",
           "Use Reaction Jumps when you want to practice finding a new target.",
           "Add distractors when you want to practice staying with one target through clutter.",
-          "Save your preferred settings locally and return to the same setup next time.",
         ],
       },
       {
         body: [
           "These drills give you a way to practice specific visual tasks. FoveaFlow does not measure your eye movements or prove that your aim, reaction time, or eyesight has improved.",
-          "Use it alongside your usual in-game practice if you enjoy it. There is no validated FoveaFlow routine or guaranteed performance gain.",
         ],
         heading: "What this warmup can and cannot tell you",
       },
@@ -164,7 +176,7 @@ export const articles = [
       {
         body: [
           "If you prefer a small set of visible controls and simply want to cycle through routines, BlinkCamp is a straightforward option. It is also open source.",
-          "FoveaFlow is the better fit if you want more say over the target and motion. That is a feature comparison, not evidence of better health or gaming results.",
+          "FoveaFlow is the better fit if you want more say over the target and motion.",
         ],
         heading: "When BlinkCamp may be enough",
       },
@@ -233,14 +245,13 @@ export const articles = [
       {
         body: [
           "EyeTrainer.gg offers browser patterns and promotes a forthcoming Steam app. Its announcement mentions new features and an Exercise Creator.",
-          "This page compares the public browser tools checked on September 12, 2026. It does not treat announced Steam features as available browser features, or make claims about the finished desktop app.",
+          "This page compares the public browser tools checked on September 12, 2026.",
         ],
         heading: "What is available today",
       },
       {
         body: [
           "For a quick pattern with minimal setup, EyeTrainer.gg may be enough. Choose FoveaFlow if you want four distinct drill modes and detailed control over the session without leaving the browser.",
-          "Neither the number of settings nor a preference for one interface proves better aim or vision. Pick a comfortable routine you find useful.",
         ],
         heading: "Choose by the controls you need",
       },

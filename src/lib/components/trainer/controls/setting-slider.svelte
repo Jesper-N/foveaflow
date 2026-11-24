@@ -1,37 +1,44 @@
 <script lang="ts">
-  import { Slider } from "$lib/components/ui/slider";
-  import { itemAt } from "$lib/trainer/engine/math";
   import { settingRanges } from "$lib/trainer/settings/settings";
   import type { RangedSetting } from "$lib/trainer/settings/settings";
-  import { cn } from "$lib/utils";
+  import type { LucideIcon } from "@lucide/svelte";
+  import type { ClassValue } from "svelte/elements";
 
+  import Slider from "../../ui/slider.svelte";
   import { getTrainer } from "../trainer-context";
+  import { formatSetting } from "./format-setting";
+
+  interface Props {
+    setting: RangedSetting;
+    label: string;
+    icon?: LucideIcon;
+    thumbLabel?: string;
+    class?: ClassValue;
+  }
 
   let {
     setting,
     label,
+    icon,
+    thumbLabel = label,
     class: className,
-  }: { setting: RangedSetting; label: string; class?: string } = $props();
+  }: Props = $props();
 
   const trainer = getTrainer();
   let range = $derived(settingRanges[setting]);
 </script>
 
-<!-- The track stays compact while an invisible band keeps a 44px hit area. -->
 <Slider
-  class={cn(
-    "h-4 before:absolute before:inset-x-0 before:-inset-y-3.5",
-    className
-  )}
-  aria-label={label}
+  class={className}
+  format={(value) => formatSetting(setting, value)}
+  {icon}
+  {label}
   max={range.max}
   min={range.min}
+  onValueChange={(value) => {
+    trainer.setRanged(setting, value);
+  }}
   step={range.step}
-  type="multiple"
-  bind:value={
-    () => [trainer.settings[setting]],
-    (values) => {
-      trainer.setRanged(setting, itemAt(values, 0));
-    }
-  }
+  {thumbLabel}
+  value={trainer.settings[setting]}
 />

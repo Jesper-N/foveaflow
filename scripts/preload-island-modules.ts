@@ -2,8 +2,9 @@
 // each built page. Astro requests an island's component and renderer only when
 // the page reaches the island, and the browser finds their imports only after
 // they download, so without preloads the scripts arrive in two rounds.
-// Dynamic imports, like translations, still load on demand. Runs after
-// `astro build`.
+// Dynamic imports, like translations, still load on demand. ui-sdk fetches its
+// sheet presentation as soon as a touch screen mounts a popup, so pages that
+// can import it preload it for coarse pointers only. Runs after `astro build`.
 import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
@@ -20,6 +21,11 @@ const ISLAND_SCRIPT_PATTERN =
 const LEADING_IMPORT_PATTERN =
   /import\s*(?:[^"';]*from\s*)?"(?<specifier>\.\/[^"]+)";?/guy;
 
+/** Vite puts its dynamic import map on the first line, before the imports. */
+const VITE_DEPS_PREAMBLE = "const __vite__mapDeps=";
+
+const TOUCH_ONLY_CHUNK_PATTERN = /^sheet-presentation\.[\w-]+\.js$/u;
+
 const listHtmlFiles = (dir: string): string[] =>
   readdirSync(dir, { recursive: true, withFileTypes: true })
     .filter((entry) => entry.isFile() && entry.name.endsWith(".html"))
@@ -32,7 +38,12 @@ const readStaticImports = (url: string) => {
 
   if (!imports) {
     const code = readFileSync(path.join(DIST_DIR, url), "utf-8");
-    imports = [...code.matchAll(LEADING_IMPORT_PATTERN)].map(({ groups }) =>
+
+    const body = code.startsWith(VITE_DEPS_PREAMBLE)
+      ? code.slice(code.indexOf("\n") + 1)
+      : code;
+
+    imports = [...body.matchAll(LEADING_IMPORT_PATTERN)].map(({ groups }) =>
       path.posix.join(path.posix.dirname(url), groups?.["specifier"] ?? "")
     );
     importsByUrl.set(url, imports);
@@ -53,6 +64,16 @@ const collectModules = (urls: string[], modules: Set<string>) => {
   return modules;
 };
 
+const touchOnlyChunk = readdirSync(path.join(DIST_DIR, "_astro")).find((name) =>
+  TOUCH_ONLY_CHUNK_PATTERN.test(name)
+);
+
+const importsTouchOnlyChunk = (url: string) =>
+  touchOnlyChunk !== undefined &&
+  readFileSync(path.join(DIST_DIR, url), "utf-8").includes(
+    `./${touchOnlyChunk}`
+  );
+
 let pageCount = 0;
 
 for (const file of listHtmlFiles(DIST_DIR)) {
@@ -66,11 +87,26 @@ for (const file of listHtmlFiles(DIST_DIR)) {
     continue;
   }
 
-  const links = [...collectModules(islandUrls, new Set())]
+  const modules = collectModules(islandUrls, new Set());
+
+  const links = [...modules]
     .map((url) => `<link rel="modulepreload" href="${url}">`)
     .join("");
 
-  writeFileSync(file, html.replace("</head>", `${links}</head>`));
+  const touchLinks =
+    touchOnlyChunk !== undefined && [...modules].some(importsTouchOnlyChunk)
+      ? [...collectModules([`/_astro/${touchOnlyChunk}`], new Set())]
+          .flatMap((url) =>
+            modules.has(url)
+              ? []
+              : [
+                  `<link rel="modulepreload" href="${url}" media="(pointer: coarse)">`,
+                ]
+          )
+          .join("")
+      : "";
+
+  writeFileSync(file, html.replace("</head>", `${links}${touchLinks}</head>`));
   pageCount += 1;
 }
 

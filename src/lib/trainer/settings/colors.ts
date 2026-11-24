@@ -3,8 +3,8 @@ const HEX_COLOR_PATTERN = /^#(?<hex>[0-9a-f]{6})$/iu;
 /** Replacement for saturated red, the color most likely to trigger photosensitive reactions. */
 const SAFE_RED_REPLACEMENT = "#ffb020";
 
-/** Used when a color to darken cannot be parsed. */
-const FALLBACK_DARK_COLOR = "#4c8a00";
+/** Used when a color to fade cannot be parsed. */
+const FALLBACK_FADED_COLOR = "#8a8a8a";
 
 export const isHexColor = (value: string | null | undefined): value is string =>
   typeof value === "string" && HEX_COLOR_PATTERN.test(value);
@@ -35,16 +35,48 @@ export const safeStimulusColor = (hexColor: string) => {
   return isSaturatedRed ? SAFE_RED_REPLACEMENT : hexColor;
 };
 
-export const darkenHexColor = (hexColor: string, amount: number) => {
+export const fadeHexColor = (
+  hexColor: string,
+  towardColor: string,
+  amount: number
+) => {
+  const color = parseHexColor(hexColor);
+  const toward = parseHexColor(towardColor);
+
+  if (!color || !toward) {
+    return FALLBACK_FADED_COLOR;
+  }
+
+  const mix = (from: number, to: number) =>
+    toHexChannel(Math.round(to + (from - to) * amount));
+
+  return `#${mix(color.red, toward.red)}${mix(color.green, toward.green)}${mix(color.blue, toward.blue)}`;
+};
+
+/** Ink that stays readable on top of a swatch of this color. */
+export const inkOn = (hexColor: string) => {
   const color = parseHexColor(hexColor);
 
   if (!color) {
-    return FALLBACK_DARK_COLOR;
+    return "#17181a";
   }
 
-  const red = toHexChannel(Math.round(color.red * amount));
-  const green = toHexChannel(Math.round(color.green * amount));
-  const blue = toHexChannel(Math.round(color.blue * amount));
+  const luminance =
+    (0.2126 * color.red + 0.7152 * color.green + 0.0722 * color.blue) / 255;
 
-  return `#${red}${green}${blue}`;
+  return luminance > 0.6 ? "#17181a" : "#ffffff";
+};
+
+/** Near-white or near-black, so it can vanish into a light or dark surface. */
+export const isNearlyNeutralEdge = (hexColor: string) => {
+  const color = parseHexColor(hexColor);
+
+  if (!color) {
+    return false;
+  }
+
+  const luminance =
+    (0.2126 * color.red + 0.7152 * color.green + 0.0722 * color.blue) / 255;
+
+  return luminance > 0.92 || luminance < 0.12;
 };
