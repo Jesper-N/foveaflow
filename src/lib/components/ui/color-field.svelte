@@ -13,6 +13,7 @@
     ColorPickerSwatches,
     ColorPickerSwatchItem,
   } from "@ui-sdk/svelte/color-picker";
+  import { Label } from "@ui-sdk/svelte/label";
   import {
     Popover,
     PopoverContent,
@@ -33,6 +34,8 @@
 
   let { label, icon, value, presets, onValueChange }: Props = $props();
 
+  const triggerId = $props.id();
+
   const colorThumb =
     "size-5 -translate-1/2 rounded-full bg-(--color-picker-color) shadow-[0_0_0_2px_white,0_1px_6px_rgb(0_0_0/0.35)] outline-none transition-[scale] duration-160 ease-out has-focus-visible:outline-2 has-focus-visible:outline-offset-3 has-focus-visible:outline-ring data-dragging:scale-115";
 </script>
@@ -52,20 +55,20 @@
   {value}
 >
   <div class="flex min-h-9 items-center justify-between gap-3">
-    <span class="text-md min-w-0 font-medium" aria-hidden="true">
+    <Label class="text-md min-w-0 cursor-pointer font-medium" for={triggerId}>
       <RowLabel {icon} {label} />
-    </span>
+    </Label>
     <Popover
       onOpenChange={(open) => {
         cue(open ? "open" : "close", { emphasis: "subtle" });
       }}
     >
       <PopoverTrigger
+        id={triggerId}
         class={[
           "group/color bg-fill hover:bg-fill-hover data-open:bg-fill-hover flex h-9 items-center gap-2 rounded-full ps-1.5 pe-3 pointer-coarse:h-11",
           pressable,
         ]}
-        aria-label={label}
       >
         <ColorPickerSwatch
           class="ease-spring size-6 rounded-full bg-(--color-picker-color) transition-[scale] duration-220 group-hover/color:scale-108"

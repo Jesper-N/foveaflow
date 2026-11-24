@@ -224,9 +224,9 @@ Never: a cue per animation frame or per drill event, hover sounds, a cue for pag
 | `follow-indicator.ts` | — | Attachment for one shared highlight that travels to the active item (`[data-indicator]` child, `axis` x or y); used by menus and target forms |
 | `tooltip-group.svelte` | Popover API | Wraps a toolbar; every descendant with `data-tip` (and optional `data-tip-key`) shares one travelling tooltip. Triggers carry `aria-label` and `aria-keyshortcuts`, so the tooltip itself is `aria-hidden` |
 | `select.svelte` | ui-sdk Select | Every choice from a list. Groups, leading icon, an 18 px filled check badge on the chosen row, 40 px rows (48 on touch). `appearance`: `field` (filled pill), `ghost` (header and island icon triggers), `text` (the island's title and byline). `labelIcon` adds a row icon tile. Sheet on touch; `compact` stays a popover and hides the chevron on phones |
-| `slider.svelte` | ui-sdk Slider | Every number: thumbless 3 × 16 px tick bars with bencho's speed wake, the formatted value; optional `icon` tile |
+| `slider.svelte` | ui-sdk Field + Slider | Every number: thumbless 3 × 16 px tick bars with bencho's speed wake, the formatted value; optional `icon` tile. The visible label is a `FieldLabel`, so pressing it focuses the slider; `thumbLabel` gives the thumb a longer name where the short label is ambiguous. Label and tile light up from the slider's own `data-dragging` and keyboard focus |
 | `row-label.svelte` | — | A setting's label with its optional 28 px icon tile (inverts while the setting is being adjusted) |
-| `color-field.svelte` | ui-sdk Color Picker + Popover | Colors: swatch + hex trigger; popover with saturation area, hue slider, presets and a hex field |
+| `color-field.svelte` | ui-sdk Color Picker + Popover + Label | Colors: swatch + hex trigger named by its visible `Label`; popover with saturation area, hue slider, presets and a hex field |
 | `switch.svelte` | ui-sdk Switch | On/off settings as a whole-row label. 48 × 28, after bencho's toggle: off is a slab track with a grey thumb, on inverts to an ink track with a slab thumb, so the track carries the state; the thumb stretches while pressed |
 | `segmented.svelte` | ui-sdk Segmented Control | Two or three visible choices (direction, theme) |
 | `sound-toggle.svelte` | ui-sdk Toggle | The header's sound on/off, a speaker icon named "Sound" |
@@ -238,7 +238,7 @@ Also from ui-sdk, used directly: Dialog (controls, guide), Alert Dialog (reset),
 
 Usage rules:
 
-- Name every control. Visible labels come from the label part; icon buttons from their tooltip; sliders and groups from `aria-label` when the visible label is shorter than the setting (`Header target size`).
+- Name every control. Visible labels come from the label part (`FieldLabel`, `Label`, `SelectLabel`), so a press on the label reaches the control; icon buttons from their tooltip; sliders and groups from `aria-label` when the visible label is shorter than the setting (`Header target size`).
 - Keep labels unique per surface so agents and screen-reader users can tell controls apart.
 - Change state through the trainer's methods in `onValueChange`, never in DOM listeners, so agent changes take the same path.
 - Mark anything an agent must not do alone with `data-agent-confirm` (the reset confirmation does).

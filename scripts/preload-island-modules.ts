@@ -21,6 +21,9 @@ const ISLAND_SCRIPT_PATTERN =
 const LEADING_IMPORT_PATTERN =
   /import\s*(?:[^"';]*from\s*)?"(?<specifier>\.\/[^"]+)";?/guy;
 
+/** Vite puts its dynamic import map on the first line, before the imports. */
+const VITE_DEPS_PREAMBLE = "const __vite__mapDeps=";
+
 const TOUCH_ONLY_CHUNK_PATTERN = /^sheet-presentation\.[\w-]+\.js$/u;
 
 const listHtmlFiles = (dir: string): string[] =>
@@ -35,7 +38,12 @@ const readStaticImports = (url: string) => {
 
   if (!imports) {
     const code = readFileSync(path.join(DIST_DIR, url), "utf-8");
-    imports = [...code.matchAll(LEADING_IMPORT_PATTERN)].map(({ groups }) =>
+
+    const body = code.startsWith(VITE_DEPS_PREAMBLE)
+      ? code.slice(code.indexOf("\n") + 1)
+      : code;
+
+    imports = [...body.matchAll(LEADING_IMPORT_PATTERN)].map(({ groups }) =>
       path.posix.join(path.posix.dirname(url), groups?.["specifier"] ?? "")
     );
     importsByUrl.set(url, imports);

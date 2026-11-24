@@ -11,6 +11,7 @@
     TargetIcon,
     TriangleIcon,
   } from "@lucide/svelte";
+  import { Field, FieldLabel } from "@ui-sdk/svelte/field";
   import { Radio, RadioGroup } from "@ui-sdk/svelte/radio";
 
   import TargetFormGlyph from "../../icons/target-form-glyph.svelte";
@@ -58,14 +59,13 @@
       presets={ballColorPresets}
       value={trainer.targetColor}
     />
-    <div class="grid gap-3" data-setting-row>
-      <span id="trainer-target-form" class="text-md font-medium">
+    <Field class="grid gap-3" data-setting-row>
+      <FieldLabel class="text-md font-medium">
         <RowLabel icon={TriangleIcon} label={t("Target form")} />
-      </span>
+      </FieldLabel>
       <RadioGroup
         class="relative grid grid-cols-6 gap-1"
         {@attach followChecked}
-        aria-labelledby="trainer-target-form"
         onValueChange={(value, details) => {
           if (typeof value === "string") {
             if (isPersonChange(details)) {
@@ -101,7 +101,7 @@
           </Radio>
         {/each}
       </RadioGroup>
-    </div>
+    </Field>
     <SettingSlider
       icon={ScalingIcon}
       label={t("Size")}
