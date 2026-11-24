@@ -101,7 +101,7 @@
       </TabsList>
 
       <div
-        class="scroll-fade-y min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pt-4 pb-4"
+        class="scroll-fade-y min-h-0 flex-1 scrollbar-none overflow-y-auto overscroll-contain px-4 pt-4 pb-4"
       >
         <TabsPanel class="grid gap-5 outline-none" value="targets">
           <TargetSettings />

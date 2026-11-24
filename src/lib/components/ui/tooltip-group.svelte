@@ -285,7 +285,7 @@
   }
 
   .morph-tip[data-open] {
-    --scale-timing: 420ms var(--ease-spring-pop);
+    --scale-timing: 200ms var(--ease-out);
 
     opacity: 1;
     scale: 1;
