@@ -194,7 +194,9 @@ test("a drill guide answers questions and closes from its button", async ({
   await expectAnimation(page);
 });
 
-test("the menus move between drills and paths", async ({ page }) => {
+test("the menus move between drills and paths, then free the shortcuts", async ({
+  page,
+}) => {
   await openPage(page, "/smooth-pursuit/");
   await expect(pauseButton(page)).toBeVisible();
 
@@ -206,6 +208,17 @@ test("the menus move between drills and paths", async ({ page }) => {
   await choose(page, "pattern", getPatternName("figureEight"));
   await expect(page).toHaveURL(/\/figure-eight\/$/u);
   await expectTrainer(page, "pursuit", "figureEight");
+
+  const isDark = async () =>
+    await page.evaluate(() =>
+      document.documentElement.classList.contains("dark")
+    );
+
+  const wasDark = await isDark();
+
+  await page.keyboard.press("d");
+  await expect.poll(isDark).toBe(!wasDark);
+  await expect(page).toHaveURL(/\/figure-eight\/$/u);
 });
 
 test("keyboard shortcuts pause and open panels", async ({ page }) => {

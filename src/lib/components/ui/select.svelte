@@ -14,6 +14,7 @@
   import type { ComponentProps, Snippet } from "svelte";
   import type { Attachment } from "svelte/attachments";
   import type { ClassValue } from "svelte/elements";
+  import { on } from "svelte/events";
   import { fly } from "svelte/transition";
 
   import { followIndicator } from "./follow-indicator";
@@ -83,6 +84,32 @@
     watch: "data-highlighted",
   });
 
+  let stopFocusRelease: (() => void) | undefined;
+
+  const releaseReturningFocus = () => {
+    stopFocusRelease?.();
+    stopFocusRelease = on(document, "focusin", ({ target }) => {
+      stopFocusRelease?.();
+      stopFocusRelease = undefined;
+
+      if (
+        target instanceof HTMLElement &&
+        target.matches("[data-slot='select-trigger']")
+      ) {
+        requestAnimationFrame(() => {
+          if (document.activeElement === target) {
+            target.blur();
+          }
+        });
+      }
+    });
+  };
+
+  const endFocusRelease = () => {
+    stopFocusRelease?.();
+    stopFocusRelease = undefined;
+  };
+
   const dealIndex =
     (index: number): Attachment<HTMLElement> =>
     (node) => {
@@ -92,6 +119,16 @@
 
 <Select
   {controller}
+  onOpenChange={(open, details) => {
+    if (
+      !open &&
+      details.reason === "item-press" &&
+      !(details.event instanceof KeyboardEvent)
+    ) {
+      releaseReturningFocus();
+    }
+  }}
+  onOpenChangeComplete={endFocusRelease}
   onValueChange={(next) => {
     if (typeof next === "string") {
       onValueChange(next);
