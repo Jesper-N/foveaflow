@@ -33,6 +33,7 @@
 
   const followSections: Attachment<HTMLElement> = (list) => {
     const visible: Record<string, boolean> = {};
+    let jumpingTo: string | null = null;
 
     const targets = links.flatMap(({ id }) => {
       const target = document.querySelector(`#${CSS.escape(id)}`);
@@ -40,18 +41,8 @@
       return target ? [target] : [];
     });
 
-    const update = () => {
-      const middle = window.innerHeight / 2;
-
-      const passed = targets.filter(
-        (target) => target.getBoundingClientRect().top < middle
-      );
-
-      activeId =
-        links.find(({ id }) => visible[id] === true)?.id ??
-        passed.at(-1)?.id ??
-        links[0]?.id ??
-        null;
+    const show = (id: string | null) => {
+      activeId = id;
 
       const link =
         activeId === null
@@ -70,6 +61,42 @@
       }
     };
 
+    const update = () => {
+      if (jumpingTo !== null) {
+        return;
+      }
+
+      const middle = window.innerHeight / 2;
+
+      const passed = targets.filter(
+        (target) => target.getBoundingClientRect().top < middle
+      );
+
+      show(
+        links.find(({ id }) => visible[id] === true)?.id ??
+          passed.at(-1)?.id ??
+          links[0]?.id ??
+          null
+      );
+    };
+
+    const jump = (event: MouseEvent) => {
+      const link =
+        event.target instanceof Element
+          ? event.target.closest<HTMLAnchorElement>("a[href^='#']")
+          : null;
+
+      if (link) {
+        jumpingTo = link.hash.slice(1);
+        show(jumpingTo);
+      }
+    };
+
+    const settle = () => {
+      jumpingTo = null;
+      update();
+    };
+
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
@@ -85,10 +112,13 @@
       observer.observe(target);
     }
 
-    const stopScrollEnd = on(window, "scrollend", update);
+    const stops = [on(list, "click", jump), on(window, "scrollend", settle)];
 
     return () => {
-      stopScrollEnd();
+      for (const stop of stops) {
+        stop();
+      }
+
       observer.disconnect();
     };
   };

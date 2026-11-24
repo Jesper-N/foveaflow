@@ -243,6 +243,12 @@
     @apply bg-background text-foreground font-sans antialiased;
   }
 
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
   body {
     @apply min-h-dvh;
   }
