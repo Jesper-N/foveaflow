@@ -121,7 +121,7 @@ test("invalid values fall back one by one", () => {
     letterColor: null,
     letterWeight: 600,
     lilacChaserBallColor: "#ff00fe",
-    patternId: "randomWalk",
+    patternId: "directionChange",
     speed: 35,
     targetForm: "circle",
   });

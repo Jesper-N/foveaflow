@@ -20,7 +20,7 @@ export const drills = [
     distractorCount: 0,
     id: "pursuit",
     name: "Smooth Pursuit",
-    patternId: "randomWalk",
+    patternId: "directionChange",
   },
   {
     distractorCount: 0,

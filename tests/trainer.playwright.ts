@@ -136,7 +136,11 @@ const openGuide = async (page: Page) => {
 };
 
 const trainerPages = [
-  { drillId: "pursuit" as const, path: "/", patternId: "randomWalk" as const },
+  {
+    drillId: "pursuit" as const,
+    path: "/",
+    patternId: "directionChange" as const,
+  },
   ...drillRoutes.map((route) => ({
     drillId: route.drillId,
     path: route.path,

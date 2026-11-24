@@ -197,7 +197,7 @@ export const drillRoutes: readonly DrillRoute[] = [
     label: "Smooth Pursuit",
     lastModified: LAST_MODIFIED,
     path: "/smooth-pursuit/",
-    patternId: "randomWalk",
+    patternId: "directionChange",
     slug: "smooth-pursuit",
     title: `${siteMetadata.name} - Free Online Smooth Pursuit Eye Trainer`,
   },
