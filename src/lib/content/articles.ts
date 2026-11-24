@@ -176,7 +176,7 @@ export const articles = [
       {
         body: [
           "If you prefer a small set of visible controls and simply want to cycle through routines, BlinkCamp is a straightforward option. It is also open source.",
-          "FoveaFlow is the better fit if you want more say over the target and motion. That is a feature comparison, not evidence of better health or gaming results.",
+          "FoveaFlow is the better fit if you want more say over the target and motion.",
         ],
         heading: "When BlinkCamp may be enough",
       },
@@ -245,14 +245,13 @@ export const articles = [
       {
         body: [
           "EyeTrainer.gg offers browser patterns and promotes a forthcoming Steam app. Its announcement mentions new features and an Exercise Creator.",
-          "This page compares the public browser tools checked on September 12, 2026. It does not treat announced Steam features as available browser features, or make claims about the finished desktop app.",
+          "This page compares the public browser tools checked on September 12, 2026.",
         ],
         heading: "What is available today",
       },
       {
         body: [
           "For a quick pattern with minimal setup, EyeTrainer.gg may be enough. Choose FoveaFlow if you want four distinct drill modes and detailed control over the session without leaving the browser.",
-          "Neither the number of settings nor a preference for one interface proves better aim or vision. Pick a comfortable routine you find useful.",
         ],
         heading: "Choose by the controls you need",
       },

@@ -204,8 +204,8 @@ export const fil = {
     "Libre ang FoveaFlow. Walang account, walang paid plan.",
   "FoveaFlow is not medical advice, diagnosis, treatment, vision therapy, or a medical device. It does not replace an optometrist, ophthalmologist, doctor, therapist, or other qualified professional.":
     "Ang FoveaFlow ay hindi medical advice, diagnosis, treatment, vision therapy, o medical device. Hindi nito pinapalitan ang optometrist, ophthalmologist, doktor, therapist, o iba pang qualified professional.",
-  "FoveaFlow is the better fit if you want more say over the target and motion. That is a feature comparison, not evidence of better health or gaming results.":
-    "Mas angkop ang FoveaFlow kung gusto mong mas detalyadong baguhin ang target at galaw. Paghahambing ito ng mga tampok, hindi patunay ng mas magandang resulta sa kalusugan o laro.",
+  "FoveaFlow is the better fit if you want more say over the target and motion.":
+    "Mas angkop ang FoveaFlow kung gusto mong mas detalyadong baguhin ang target at galaw.",
   "FoveaFlow lets you change one part of a drill at a time. Keep a familiar path and increase speed. Keep the speed and add distractors. Or make the target easier to see without changing the motion.":
     "Sa FoveaFlow, puwedeng baguhin ang isang bahagi ng ehersisyo sa bawat pagkakataon. Panatilihin ang pamilyar na landas at bilisan ito. Panatilihin ang bilis at magdagdag ng distractor. O gawing mas madaling makita ang target nang hindi binabago ang galaw.",
   "FoveaFlow lets you tune the drill to what you want to practice. Use a predictable path for steady tracking, jumps for quick refocus, or dimmer moving targets for distraction practice.":
@@ -327,8 +327,6 @@ export const fil = {
     "Sinasanay ng Maraming distraksiyon ang piniling atensyon, pagsubaybay ng tingin sa kalat sa screen, at pagkilala sa target. Kailangan mong sundan ang galaw at paulit-ulit na piliin ang tamang bagay kapag may kahawig na mga bagay na umaagaw ng atensyon.",
   "Multiple Distractions: keep track of the brightest target through visual clutter.":
     "Maraming distraksiyon: sundan ang pinakamaliwanag na target sa gitna ng magulong tanawin.",
-  "Neither the number of settings nor a preference for one interface proves better aim or vision. Pick a comfortable routine you find useful.":
-    "Hindi patunay ng mas mahusay na pagpuntirya o paningin ang dami ng setting o pagkagusto sa isang interface. Pumili ng komportableng rutina na kapaki-pakinabang sa iyo.",
   "Not medical care": "Hindi pangangalagang medikal",
   "On this page": "Sa page na ito",
   Opacity: "Opacity",
@@ -468,8 +466,8 @@ export const fil = {
     "Hindi pinatutunayan ng mga sangguniang ito na nagpapalinaw ng paningin o nagpapahusay sa laro ang FoveaFlow.",
   "These terms may be updated when the app or site changes. The date at the top shows the latest version.":
     "Maaaring i-update ang mga tuntuning ito kapag nagbago ang app o site. Ipinapakita ng petsa sa itaas ang pinakabagong bersyon.",
-  "This page compares the public browser tools checked on September 12, 2026. It does not treat announced Steam features as available browser features, or make claims about the finished desktop app.":
-    "Inihahambing ng pahinang ito ang mga pampublikong browser tool na sinuri noong Setyembre 12, 2026. Hindi itinuturing na magagamit na sa browser ang mga inanunsiyong Steam feature, at wala itong pahayag tungkol sa natapos na desktop app.",
+  "This page compares the public browser tools checked on September 12, 2026.":
+    "Inihahambing ng pahinang ito ang mga pampublikong browser tool na sinuri noong Setyembre 12, 2026.",
   "This path ends here": "Dito nagtatapos ang landas na ito",
   "Those settings stay in your browser unless your browser syncs, backs up, or exports its site data. You can remove them by clearing site data for foveaflow.com.":
     "Mananatili ang settings na iyon sa browser mo maliban kung nagsi-sync, nagba-back up, o nag-e-export ng site data ang browser mo. Maaari mo itong alisin sa pamamagitan ng pag-clear ng site data para sa foveaflow.com.",
@@ -547,8 +545,6 @@ export const fil = {
   "You do not need to create an account to use FoveaFlow. The app does not ask for your name, email address, payment details, or health records.":
     "Hindi mo kailangang gumawa ng account para gamitin ang FoveaFlow. Hindi hinihingi ng app ang pangalan, email address, payment details, o health records mo.",
   "Your choices": "Mga pinili mo",
-  "Your practice choices are not uploaded to a FoveaFlow account because there are no accounts.":
-    "Hindi ina-upload ang practice choices mo sa FoveaFlow account dahil walang accounts.",
   Zigzag: "Zigzag",
   "Zigzag Smooth Pursuit Drill":
     "Ehersisyong Zigzag para sa Tuluy-tuloy na pagsunod",

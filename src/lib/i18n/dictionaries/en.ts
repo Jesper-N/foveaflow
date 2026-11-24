@@ -188,8 +188,8 @@ export const en = {
     "FoveaFlow is free. No account, no paid plan.",
   "FoveaFlow is not medical advice, diagnosis, treatment, vision therapy, or a medical device. It does not replace an optometrist, ophthalmologist, doctor, therapist, or other qualified professional.":
     "FoveaFlow is not medical advice, diagnosis, treatment, vision therapy, or a medical device. It does not replace an optometrist, ophthalmologist, doctor, therapist, or other qualified professional.",
-  "FoveaFlow is the better fit if you want more say over the target and motion. That is a feature comparison, not evidence of better health or gaming results.":
-    "FoveaFlow is the better fit if you want more say over the target and motion. That is a feature comparison, not evidence of better health or gaming results.",
+  "FoveaFlow is the better fit if you want more say over the target and motion.":
+    "FoveaFlow is the better fit if you want more say over the target and motion.",
   "FoveaFlow lets you change one part of a drill at a time. Keep a familiar path and increase speed. Keep the speed and add distractors. Or make the target easier to see without changing the motion.":
     "FoveaFlow lets you change one part of a drill at a time. Keep a familiar path and increase speed. Keep the speed and add distractors. Or make the target easier to see without changing the motion.",
   "FoveaFlow lets you tune the drill to what you want to practice. Use a predictable path for steady tracking, jumps for quick refocus, or dimmer moving targets for distraction practice.":
@@ -307,8 +307,6 @@ export const en = {
     "Multiple Distractions trains selective attention, visual tracking under clutter, and target identity. You follow the motion and keep choosing the right ball when similar ones compete for your attention.",
   "Multiple Distractions: keep track of the brightest target through visual clutter.":
     "Multiple Distractions: keep track of the brightest target through visual clutter.",
-  "Neither the number of settings nor a preference for one interface proves better aim or vision. Pick a comfortable routine you find useful.":
-    "Neither the number of settings nor a preference for one interface proves better aim or vision. Pick a comfortable routine you find useful.",
   "Not medical care": "Not medical care",
   "On this page": "On this page",
   Opacity: "Opacity",
@@ -445,8 +443,8 @@ export const en = {
     "These sources do not establish that FoveaFlow improves eyesight or game performance.",
   "These terms may be updated when the app or site changes. The date at the top shows the latest version.":
     "These terms may be updated when the app or site changes. The date at the top shows the latest version.",
-  "This page compares the public browser tools checked on September 12, 2026. It does not treat announced Steam features as available browser features, or make claims about the finished desktop app.":
-    "This page compares the public browser tools checked on September 12, 2026. It does not treat announced Steam features as available browser features, or make claims about the finished desktop app.",
+  "This page compares the public browser tools checked on September 12, 2026.":
+    "This page compares the public browser tools checked on September 12, 2026.",
   "This path ends here": "This path ends here",
   "Those settings stay in your browser unless your browser syncs, backs up, or exports its site data. You can remove them by clearing site data for foveaflow.com.":
     "Those settings stay in your browser unless your browser syncs, backs up, or exports its site data. You can remove them by clearing site data for foveaflow.com.",
@@ -521,8 +519,6 @@ export const en = {
   "You do not need to create an account to use FoveaFlow. The app does not ask for your name, email address, payment details, or health records.":
     "You do not need to create an account to use FoveaFlow. The app does not ask for your name, email address, payment details, or health records.",
   "Your choices": "Your choices",
-  "Your practice choices are not uploaded to a FoveaFlow account because there are no accounts.":
-    "Your practice choices are not uploaded to a FoveaFlow account because there are no accounts.",
   Zigzag: "Zigzag",
   "Zigzag Smooth Pursuit Drill": "Zigzag Smooth Pursuit Drill",
   "Zigzag adds frequent directional switching, so it feels more aggressive than Wave or Diagonal.":

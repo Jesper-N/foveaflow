@@ -187,8 +187,8 @@ export const hi = {
     "FoveaFlow मुफ्त है. खाता नहीं, पेड प्लान नहीं.",
   "FoveaFlow is not medical advice, diagnosis, treatment, vision therapy, or a medical device. It does not replace an optometrist, ophthalmologist, doctor, therapist, or other qualified professional.":
     "FoveaFlow चिकित्सा सलाह, निदान, उपचार, विजन थेरेपी या चिकित्सा उपकरण नहीं है. यह ऑप्टोमेट्रिस्ट, नेत्र रोग विशेषज्ञ, डॉक्टर, थेरेपिस्ट या किसी योग्य पेशेवर की जगह नहीं लेता.",
-  "FoveaFlow is the better fit if you want more say over the target and motion. That is a feature comparison, not evidence of better health or gaming results.":
-    "लक्ष्य और गति को विस्तार से बदलना हो तो FoveaFlow बेहतर विकल्प है। यह सुविधाओं की तुलना है, बेहतर स्वास्थ्य या गेम के नतीजों का प्रमाण नहीं।",
+  "FoveaFlow is the better fit if you want more say over the target and motion.":
+    "लक्ष्य और गति को विस्तार से बदलना हो तो FoveaFlow बेहतर विकल्प है।",
   "FoveaFlow lets you change one part of a drill at a time. Keep a familiar path and increase speed. Keep the speed and add distractors. Or make the target easier to see without changing the motion.":
     "FoveaFlow में एक बार में अभ्यास का एक पहलू बदल सकते हैं। परिचित रास्ता रखते हुए गति बढ़ाएँ। गति वही रखकर व्यवधान जोड़ें। या गति बदले बिना लक्ष्य को देखना आसान बनाएँ।",
   "FoveaFlow lets you tune the drill to what you want to practice. Use a predictable path for steady tracking, jumps for quick refocus, or dimmer moving targets for distraction practice.":
@@ -304,8 +304,6 @@ export const hi = {
     "कई व्यवधान चयनात्मक ध्यान, भीड़ में विजुअल ट्रैकिंग और लक्ष्य पहचान का अभ्यास कराता है. इसमें गति पर नज़र रखते हुए, मिलती-जुलती वस्तुओं के बीच सही लक्ष्य बार-बार चुनना होता है.",
   "Multiple Distractions: keep track of the brightest target through visual clutter.":
     "कई व्यवधान: भरे हुए दृश्य में सबसे चमकीले लक्ष्य पर नज़र रखें।",
-  "Neither the number of settings nor a preference for one interface proves better aim or vision. Pick a comfortable routine you find useful.":
-    "ज़्यादा सेटिंग या किसी इंटरफ़ेस को पसंद करना बेहतर निशाने या नज़र का प्रमाण नहीं है। ऐसी आरामदायक दिनचर्या चुनें जो आपको उपयोगी लगे।",
   "Not medical care": "चिकित्सा देखभाल नहीं",
   "On this page": "इस पेज पर",
   Opacity: "अपारदर्शिता",
@@ -442,8 +440,8 @@ export const hi = {
     "ये स्रोत साबित नहीं करते कि FoveaFlow से नज़र या गेम का प्रदर्शन बेहतर होता है।",
   "These terms may be updated when the app or site changes. The date at the top shows the latest version.":
     "ऐप या साइट बदलने पर ये शर्तें अपडेट हो सकती हैं. ऊपर दी गई तारीख नया संस्करण दिखाती है.",
-  "This page compares the public browser tools checked on September 12, 2026. It does not treat announced Steam features as available browser features, or make claims about the finished desktop app.":
-    "इस पेज पर 12 सितंबर 2026 को जाँचे गए सार्वजनिक ब्राउज़र साधनों की तुलना है। घोषित Steam सुविधाओं को उपलब्ध ब्राउज़र सुविधाएँ नहीं माना गया है, और तैयार डेस्कटॉप ऐप के बारे में दावे नहीं किए गए हैं।",
+  "This page compares the public browser tools checked on September 12, 2026.":
+    "इस पेज पर 12 सितंबर 2026 को जाँचे गए सार्वजनिक ब्राउज़र साधनों की तुलना है।",
   "This path ends here": "यह रास्ता यहीं खत्म होता है",
   "Those settings stay in your browser unless your browser syncs, backs up, or exports its site data. You can remove them by clearing site data for foveaflow.com.":
     "ये सेटिंग आपके ब्राउजर में रहती हैं, जब तक आपका ब्राउजर साइट डेटा सिंक, बैकअप या एक्सपोर्ट न करे. foveaflow.com का साइट डेटा साफ करके आप इन्हें हटा सकते हैं.",
@@ -518,8 +516,6 @@ export const hi = {
   "You do not need to create an account to use FoveaFlow. The app does not ask for your name, email address, payment details, or health records.":
     "FoveaFlow इस्तेमाल करने के लिए खाता बनाने की जरूरत नहीं. ऐप आपका नाम, ईमेल पता, भुगतान जानकारी या स्वास्थ्य रिकॉर्ड नहीं मांगता.",
   "Your choices": "आपकी पसंद",
-  "Your practice choices are not uploaded to a FoveaFlow account because there are no accounts.":
-    "आपकी अभ्यास पसंद किसी FoveaFlow खाते पर अपलोड नहीं होती, क्योंकि खाते हैं ही नहीं.",
   Zigzag: "जिगजैग",
   "Zigzag Smooth Pursuit Drill": "जिगजैग स्मूद ट्रैकिंग अभ्यास",
   "Zigzag adds frequent directional switching, so it feels more aggressive than Wave or Diagonal.":

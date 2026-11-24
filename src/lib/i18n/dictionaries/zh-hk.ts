@@ -186,8 +186,8 @@ export const zhHK = {
     "FoveaFlow 免費。無需帳戶，沒有付費方案。",
   "FoveaFlow is not medical advice, diagnosis, treatment, vision therapy, or a medical device. It does not replace an optometrist, ophthalmologist, doctor, therapist, or other qualified professional.":
     "FoveaFlow 不是醫療建議、診斷、治療、視覺治療或醫療器械。它不能替代驗光師、眼科醫生、醫生、治療師或其他合資格專業人士。",
-  "FoveaFlow is the better fit if you want more say over the target and motion. That is a feature comparison, not evidence of better health or gaming results.":
-    "如果你想更細緻地設定目標和運動方式，FoveaFlow 更適合你。這是功能比較，並不代表健康或遊戲效果更好。",
+  "FoveaFlow is the better fit if you want more say over the target and motion.":
+    "如果你想更細緻地設定目標和運動方式，FoveaFlow 更適合你。",
   "FoveaFlow lets you change one part of a drill at a time. Keep a familiar path and increase speed. Keep the speed and add distractors. Or make the target easier to see without changing the motion.":
     "FoveaFlow 讓你每次調整練習的一個方面。保留熟悉的路徑，增加速度；保留速度，增加干擾物；也可以保持運動方式不變，讓目標更容易看清。",
   "FoveaFlow lets you tune the drill to what you want to practice. Use a predictable path for steady tracking, jumps for quick refocus, or dimmer moving targets for distraction practice.":
@@ -303,8 +303,6 @@ export const zhHK = {
     "多重干擾訓練選擇性注意力、複雜畫面下的視覺追蹤和目標識別。你需要跟隨運動，同時在相似物體爭奪注意力時持續選對目標。",
   "Multiple Distractions: keep track of the brightest target through visual clutter.":
     "多重干擾：在雜亂畫面中持續追蹤最亮的目標。",
-  "Neither the number of settings nor a preference for one interface proves better aim or vision. Pick a comfortable routine you find useful.":
-    "設定更多，或更喜歡某個介面，都不能證明瞄準或視力會變好。選擇你覺得舒適、有用的練習即可。",
   "Not medical care": "不是醫療護理",
   "On this page": "本頁內容",
   Opacity: "不透明度",
@@ -439,8 +437,8 @@ export const zhHK = {
     "這些資料不能證明 FoveaFlow 能改善視力或遊戲表現。",
   "These terms may be updated when the app or site changes. The date at the top shows the latest version.":
     "應用程式或網站變更時，這些條款可能會更新。頂部日期顯示最新版本。",
-  "This page compares the public browser tools checked on September 12, 2026. It does not treat announced Steam features as available browser features, or make claims about the finished desktop app.":
-    "本頁比較的是 2026 年 9 月 12 日核查的公開瀏覽器工具。尚未發佈的 Steam 功能不算作現有瀏覽器功能，本頁亦不評價桌面應用程式的最終版本。",
+  "This page compares the public browser tools checked on September 12, 2026.":
+    "本頁比較的是 2026 年 9 月 12 日核查的公開瀏覽器工具。",
   "This path ends here": "這條路徑到此為止",
   "Those settings stay in your browser unless your browser syncs, backs up, or exports its site data. You can remove them by clearing site data for foveaflow.com.":
     "這些設定會留在你的瀏覽器中，除非瀏覽器同步、備份或導出網站資料。你可以通過清除 foveaflow.com 的網站資料來移除它們。",
@@ -513,8 +511,6 @@ export const zhHK = {
   "You do not need to create an account to use FoveaFlow. The app does not ask for your name, email address, payment details, or health records.":
     "使用 FoveaFlow 不需要建立帳戶。應用程式不會要求你的姓名、電郵地址、付款資料或健康記錄。",
   "Your choices": "你的選擇",
-  "Your practice choices are not uploaded to a FoveaFlow account because there are no accounts.":
-    "你的練習選擇不會上傳到 FoveaFlow 帳戶，因為這裏沒有帳戶。",
   Zigzag: "鋸齒",
   "Zigzag Smooth Pursuit Drill": "鋸齒平滑追蹤練習",
   "Zigzag adds frequent directional switching, so it feels more aggressive than Wave or Diagonal.":

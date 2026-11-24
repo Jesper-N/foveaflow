@@ -196,8 +196,8 @@ export const es419 = {
     "FoveaFlow es gratis. Sin cuenta, sin plan de pago.",
   "FoveaFlow is not medical advice, diagnosis, treatment, vision therapy, or a medical device. It does not replace an optometrist, ophthalmologist, doctor, therapist, or other qualified professional.":
     "FoveaFlow no es consejo médico, diagnóstico, tratamiento, terapia visual ni dispositivo médico. No reemplaza a un optometrista, oftalmólogo, médico, terapeuta u otro profesional calificado.",
-  "FoveaFlow is the better fit if you want more say over the target and motion. That is a feature comparison, not evidence of better health or gaming results.":
-    "FoveaFlow encaja mejor si quieres ajustar con más detalle el objetivo y el movimiento. Esta es una comparación de funciones, no una prueba de mejores resultados de salud o en juegos.",
+  "FoveaFlow is the better fit if you want more say over the target and motion.":
+    "FoveaFlow encaja mejor si quieres ajustar con más detalle el objetivo y el movimiento.",
   "FoveaFlow lets you change one part of a drill at a time. Keep a familiar path and increase speed. Keep the speed and add distractors. Or make the target easier to see without changing the motion.":
     "FoveaFlow te permite cambiar un aspecto del ejercicio a la vez. Conserva una trayectoria conocida y aumenta la velocidad. Mantén la velocidad y agrega distractores. O haz que el objetivo sea más visible sin cambiar su movimiento.",
   "FoveaFlow lets you tune the drill to what you want to practice. Use a predictable path for steady tracking, jumps for quick refocus, or dimmer moving targets for distraction practice.":
@@ -318,8 +318,6 @@ export const es419 = {
     "El modo Múltiples distracciones entrena atención selectiva, seguimiento visual entre ruido visual e identificación del objetivo. Sigues el movimiento y eliges una y otra vez el objeto correcto cuando objetos parecidos compiten por tu atención.",
   "Multiple Distractions: keep track of the brightest target through visual clutter.":
     "Múltiples distracciones: sigue el objetivo más brillante entre el desorden visual.",
-  "Neither the number of settings nor a preference for one interface proves better aim or vision. Pick a comfortable routine you find useful.":
-    "Ni la cantidad de ajustes ni la preferencia por una interfaz demuestran una mejor puntería o visión. Elige una rutina cómoda que te resulte útil.",
   "Not medical care": "No es atención médica",
   "On this page": "En esta página",
   Opacity: "Opacidad",
@@ -458,8 +456,8 @@ export const es419 = {
     "Estas fuentes no demuestran que FoveaFlow mejore la vista ni el rendimiento en los juegos.",
   "These terms may be updated when the app or site changes. The date at the top shows the latest version.":
     "Estos términos pueden actualizarse cuando cambie la app o el sitio. La fecha de arriba muestra la versión más reciente.",
-  "This page compares the public browser tools checked on September 12, 2026. It does not treat announced Steam features as available browser features, or make claims about the finished desktop app.":
-    "Esta página compara las herramientas públicas para navegador revisadas el 12 de septiembre de 2026. No presenta las funciones anunciadas para Steam como funciones web disponibles ni hace afirmaciones sobre la aplicación de escritorio terminada.",
+  "This page compares the public browser tools checked on September 12, 2026.":
+    "Esta página compara las herramientas públicas para navegador revisadas el 12 de septiembre de 2026.",
   "This path ends here": "Este camino termina aquí",
   "Those settings stay in your browser unless your browser syncs, backs up, or exports its site data. You can remove them by clearing site data for foveaflow.com.":
     "Esa configuración queda en tu navegador, a menos que el navegador sincronice, respalde o exporte sus datos de sitio. Puedes eliminarla borrando los datos del sitio foveaflow.com.",
@@ -536,8 +534,6 @@ export const es419 = {
   "You do not need to create an account to use FoveaFlow. The app does not ask for your name, email address, payment details, or health records.":
     "No necesitas crear una cuenta para usar FoveaFlow. La app no pide tu nombre, correo electrónico, datos de pago ni registros de salud.",
   "Your choices": "Tus elecciones",
-  "Your practice choices are not uploaded to a FoveaFlow account because there are no accounts.":
-    "Tus elecciones de práctica no se suben a una cuenta de FoveaFlow porque no hay cuentas.",
   Zigzag: "Zigzag",
   "Zigzag Smooth Pursuit Drill": "Ejercicio de Seguimiento suave en zigzag",
   "Zigzag adds frequent directional switching, so it feels more aggressive than Wave or Diagonal.":
