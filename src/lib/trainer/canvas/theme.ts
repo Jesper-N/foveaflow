@@ -13,7 +13,7 @@ export interface CanvasTheme {
 
 const canvasThemes: Record<ColorMode, CanvasTheme> = {
   dark: {
-    canvasColor: "#181818",
+    canvasColor: "#171717",
     gridColor: "transparent",
     targetColor: "#ffffff",
     trailFadeAlpha: 0.35,
