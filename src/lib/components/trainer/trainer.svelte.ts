@@ -48,7 +48,6 @@ import type { Attachment } from "svelte/attachments";
 
 import { startAgentBridge } from "../agent-bridge";
 import { IdleCursor } from "./idle-cursor.svelte";
-import { getShortcutAction, isKeyCapturedBy } from "./shortcuts";
 import type { ShortcutAction } from "./shortcuts";
 
 /**
@@ -340,18 +339,6 @@ export class Trainer {
         : "none";
   }
 
-  handleKeydown = (event: KeyboardEvent) => {
-    const action = getShortcutAction(event);
-
-    if (!action || isKeyCapturedBy(event.target, event.key)) {
-      return;
-    }
-
-    if (this.#runShortcut(action)) {
-      event.preventDefault();
-    }
-  };
-
   /** Wakes the hidden cursor when the mouse moves. */
   handlePointerMove = (event: PointerEvent) => {
     if (event.pointerType !== "touch") {
@@ -373,26 +360,26 @@ export class Trainer {
     this.#saver.flush();
   };
 
-  #runShortcut(action: ShortcutAction) {
+  runShortcut = (action: ShortcutAction) => {
     switch (action) {
       case "togglePause": {
         this.togglePaused();
 
-        return true;
+        return;
       }
 
       case "growTarget":
       case "shrinkTarget": {
         this.#stepRanged("baseRadiusPx", action === "growTarget" ? 1 : -1);
 
-        return true;
+        return;
       }
 
       case "speedUp":
       case "slowDown": {
         this.#stepRanged("speed", action === "speedUp" ? 1 : -1);
 
-        return true;
+        return;
       }
 
       case "toggleTheme": {
@@ -400,7 +387,7 @@ export class Trainer {
         setMode(next);
         cue("toggle", { direction: next === "light" ? "forward" : "back" });
 
-        return true;
+        return;
       }
 
       case "openDrillSelect": {
@@ -411,30 +398,30 @@ export class Trainer {
         this.islandExpanded = true;
         void focusDrillTabs();
 
-        return true;
+        return;
       }
 
       case "openPatternSelect": {
         if (!this.isPursuit) {
-          return false;
+          return;
         }
 
         this.islandExpanded = true;
         this.patternSelect.setOpen(true);
 
-        return true;
+        return;
       }
 
       case "openControls": {
         this.openControls();
 
-        return true;
+        return;
       }
 
       case "openGuide": {
         this.openGuide();
 
-        return true;
+        return;
       }
 
       default: {
@@ -443,7 +430,7 @@ export class Trainer {
         );
       }
     }
-  }
+  };
 
   #stepRanged(setting: RangedSetting, delta: 1 | -1) {
     const before = this.settings[setting];

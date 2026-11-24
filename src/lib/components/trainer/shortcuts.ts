@@ -10,38 +10,26 @@ export type ShortcutAction =
   | "openControls"
   | "openGuide";
 
-/** The parts of a keyboard event that decide the shortcut. */
-type ShortcutKeyEvent = Pick<
-  KeyboardEvent,
-  | "altKey"
-  | "ctrlKey"
-  | "defaultPrevented"
-  | "isComposing"
-  | "key"
-  | "metaKey"
-  | "repeat"
->;
+interface TrainerShortcut {
+  action: ShortcutAction;
+  /** Keys as ui-sdk's shortcuts name them. */
+  keys: string;
+  /** Holding the keys repeats the action. */
+  repeat?: boolean;
+}
 
-const actionsByKey = new Map<string, ShortcutAction>([
-  [" ", "togglePause"],
-  ["ArrowUp", "growTarget"],
-  ["ArrowDown", "shrinkTarget"],
-  ["ArrowLeft", "slowDown"],
-  ["ArrowRight", "speedUp"],
-  ["d", "toggleTheme"],
-  ["g", "openGuide"],
-  ["m", "openDrillSelect"],
-  ["p", "openPatternSelect"],
-  ["s", "openControls"],
-]);
-
-/** Holding these keys repeats them. Holding the others does nothing. */
-const repeatableActions = new Set<ShortcutAction>([
-  "growTarget",
-  "shrinkTarget",
-  "slowDown",
-  "speedUp",
-]);
+export const trainerShortcuts = [
+  { action: "togglePause", keys: "space" },
+  { action: "growTarget", keys: "arrowup", repeat: true },
+  { action: "shrinkTarget", keys: "arrowdown", repeat: true },
+  { action: "slowDown", keys: "arrowleft", repeat: true },
+  { action: "speedUp", keys: "arrowright", repeat: true },
+  { action: "toggleTheme", keys: "d" },
+  { action: "openGuide", keys: "g" },
+  { action: "openDrillSelect", keys: "m" },
+  { action: "openPatternSelect", keys: "p" },
+  { action: "openControls", keys: "s" },
+] as const satisfies readonly TrainerShortcut[];
 
 /** Focused controls that keep every key for themselves. */
 const keyCapturingSelector = [
@@ -63,7 +51,7 @@ const keyCapturingSelector = [
 /** Focused controls that move between options with the arrow keys. */
 const arrowCapturingSelector = "[role='radio'], [role='tab']";
 
-/** Focused controls that Space and Enter press. Letters still reach the shortcuts. */
+/** Focused controls that Space presses. Letters still reach the shortcuts. */
 const pressableSelector = [
   "a[href]",
   "button",
@@ -73,36 +61,11 @@ const pressableSelector = [
   "[role='tab']",
 ].join(",");
 
-const arrowKeys = new Set(["ArrowDown", "ArrowLeft", "ArrowRight", "ArrowUp"]);
-
-export const getShortcutAction = (
-  event: ShortcutKeyEvent
-): ShortcutAction | null => {
-  if (
-    event.defaultPrevented ||
-    event.isComposing ||
-    event.altKey ||
-    event.ctrlKey ||
-    event.metaKey
-  ) {
-    return null;
-  }
-
-  const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
-  const action = actionsByKey.get(key);
-
-  if (!action || (event.repeat && !repeatableActions.has(action))) {
-    return null;
-  }
-
-  return action;
-};
-
 const closingPanelSelector = "[role='dialog'][data-closed]";
 
-/** Whether the focused element should get the key instead of the shortcut. */
-export const isKeyCapturedBy = (target: EventTarget | null, key: string) => {
-  if (!(target instanceof Element) || target.closest(closingPanelSelector)) {
+/** Whether the focused element should get the keys instead of the shortcut. */
+export const isKeyCapturedBy = (target: Element | null, keys: string) => {
+  if (target === null || target.closest(closingPanelSelector)) {
     return false;
   }
 
@@ -110,12 +73,9 @@ export const isKeyCapturedBy = (target: EventTarget | null, key: string) => {
     return true;
   }
 
-  if (arrowKeys.has(key)) {
+  if (keys.startsWith("arrow")) {
     return target.closest(arrowCapturingSelector) !== null;
   }
 
-  return (
-    (key === " " || key === "Enter") &&
-    target.closest(pressableSelector) !== null
-  );
+  return keys === "space" && target.closest(pressableSelector) !== null;
 };

@@ -1,12 +1,14 @@
 <script lang="ts">
   import { languageState } from "$lib/i18n/state.svelte";
   import { t } from "$lib/i18n/translate";
+  import { useShortcut } from "@ui-sdk/svelte/shortcuts";
   import { ModeWatcher } from "mode-watcher";
   import { onMount, untrack } from "svelte";
 
   import ControlsDialog from "./controls/controls-dialog.svelte";
   import GuideDialog from "./guide/guide-dialog.svelte";
   import TrainerIsland from "./island/trainer-island.svelte";
+  import { isKeyCapturedBy, trainerShortcuts } from "./shortcuts";
   import { setTrainer } from "./trainer-context";
   import { Trainer } from "./trainer.svelte";
 
@@ -16,6 +18,19 @@
   const trainer = setTrainer(new Trainer(untrack(() => routeSlug)));
 
   onMount(() => trainer.mount());
+
+  for (const { action, keys, ...options } of trainerShortcuts) {
+    useShortcut(
+      keys,
+      () => {
+        trainer.runShortcut(action);
+      },
+      {
+        ...options,
+        when: () => !isKeyCapturedBy(document.activeElement, keys),
+      }
+    );
+  }
 </script>
 
 <ModeWatcher
@@ -24,7 +39,6 @@
   track={false}
 />
 <svelte:window
-  onkeydown={trainer.handleKeydown}
   onpagehide={trainer.flushSettings}
   onpointermove={trainer.handlePointerMove}
   onpopstate={trainer.handlePopState}

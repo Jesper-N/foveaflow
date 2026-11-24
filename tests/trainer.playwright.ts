@@ -247,6 +247,10 @@ test("letter shortcuts still work after clicking a toolbar button", async ({
 test("keyboard shortcuts pause and open panels", async ({ page }) => {
   await openPage(page, "/circle/");
   await expect(pauseButton(page)).toBeVisible();
+  await page.keyboard.press("ArrowUp");
+  await expect
+    .poll(async () => await readSettings(page))
+    .toMatchObject({ baseRadiusPx: createDefaultSettings().baseRadiusPx + 1 });
   await page.keyboard.press(" ");
   await expect(resumeButton(page)).toBeVisible();
   await page.keyboard.press(" ");

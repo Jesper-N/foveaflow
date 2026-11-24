@@ -1,34 +1,17 @@
 import { expect, test } from "bun:test";
 
-import { getShortcutAction } from "../../src/lib/components/trainer/shortcuts";
+import { trainerShortcuts } from "../../src/lib/components/trainer/shortcuts";
 
-const press = (key: string, modifiers: Partial<KeyboardEvent> = {}) =>
-  getShortcutAction({
-    altKey: false,
-    ctrlKey: false,
-    defaultPrevented: false,
-    isComposing: false,
-    key,
-    metaKey: false,
-    repeat: false,
-    ...modifiers,
-  });
-
-test("keys map to actions, ignoring letter case", () => {
-  expect(press(" ")).toBe("togglePause");
-  expect(press("S")).toBe("openControls");
-  expect(press("ArrowRight")).toBe("speedUp");
-  expect(press("x")).toBeNull();
+test("every shortcut has its own keys", () => {
+  const keys = trainerShortcuts.map((shortcut) => shortcut.keys);
+  expect(new Set(keys).size).toBe(keys.length);
 });
 
 test("only size and speed repeat while a key is held", () => {
-  expect(press("ArrowUp", { repeat: true })).toBe("growTarget");
-  expect(press("g", { repeat: true })).toBeNull();
-});
-
-test("browser and system shortcuts are left alone", () => {
-  expect(press("s", { metaKey: true })).toBeNull();
-  expect(press("d", { ctrlKey: true })).toBeNull();
-  expect(press("g", { defaultPrevented: true })).toBeNull();
-  expect(press("g", { isComposing: true })).toBeNull();
+  expect(
+    trainerShortcuts
+      .filter((shortcut) => "repeat" in shortcut && shortcut.repeat)
+      .map((shortcut) => shortcut.action)
+      .toSorted()
+  ).toEqual(["growTarget", "shrinkTarget", "slowDown", "speedUp"]);
 });

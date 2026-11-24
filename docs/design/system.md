@@ -236,6 +236,8 @@ Never: a cue per animation frame or per drill event, hover sounds, a cue for pag
 
 Also from ui-sdk, used directly: Dialog (controls, guide), Alert Dialog (reset), Tabs (control sections), Radio Group (target forms, Lilac swatches).
 
+Keyboard shortcuts register with ui-sdk's `useShortcut` from the table in `trainer/shortcuts.ts`, so they pause while a modal is open and ignore text fields. `isKeyCapturedBy` adds what ui-sdk can't know: a focused slider, menu or select keeps every key, a focused radio or tab keeps the arrows, and a focused button keeps Space. Letters always reach the shortcuts.
+
 Usage rules:
 
 - Name every control. Visible labels come from the label part (`FieldLabel`, `Label`, `SelectLabel`), so a press on the label reaches the control; icon buttons from their tooltip; sliders and groups from `aria-label` when the visible label is shorter than the setting (`Header target size`).
