@@ -165,3 +165,21 @@ test("menus, panels and theme changes stay inside the content security policy", 
   await page.keyboard.press("Escape");
   expect(await violation()).toBeNull();
 });
+
+test("moving between pages runs a view transition", async ({ page }) => {
+  await page.addInitScript(() => {
+    addEventListener("pagereveal", (event) => {
+      sessionStorage.setItem(
+        "view-transition",
+        String("viewTransition" in event && event.viewTransition !== null)
+      );
+    });
+  });
+
+  await openPage(page, "/guide/");
+  await page.locator("a[href='/fps-eye-training/']").first().click();
+  await expect(page).toHaveURL(/\/fps-eye-training\/$/u);
+  expect(
+    await page.evaluate(() => sessionStorage.getItem("view-transition"))
+  ).toBe("true");
+});

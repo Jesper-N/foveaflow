@@ -180,12 +180,13 @@ The spring curves are generated from Apple's damping/response model, not eyeball
 | More guides cards | The two app marks part by 4 px on hover | "Versus" made physical, once, on intent |
 | 404 | The target runs its route once and stops at the break | Tells the "path ends here" story; plays once |
 | Hero | Text rises once on load | First impression only |
+| Page to page | Native cross-document view transition: the old page fades and lifts 8 px (140 ms), the new one fades up from 12 px after 60 ms (320 ms), both on `ease-out`, over the page background. The site header has its own `view-transition-name`, so it holds still while the content changes | Links feel like moving within one place instead of a reload; no script, and Firefox simply navigates |
 
 Measured with frame sampling (Chromium, 1280 × 800, `requestAnimationFrame` per frame): island open 390 ms (full size by about 200 ms); island close 500 ms including the 220 ms grace; settings card resize 380 ms; select trigger width 390 ms; island content fade 530 ms; menu unfold 250 ms (no overshoot); menu rows dealt by 440 ms; menu highlight 560 ms; tooltip first show 420 ms delay then a 200 ms scale-in; tooltip travel 860 ms; tabs 600 ms; segmented 530 ms; target form highlight 600 ms; section nav pill 830 ms; switch 360 ms; color popover 250 ms (same unfold); Controls drawer 320 ms; reset dialog 300 ms; guide dialog 330 ms; guide stage crossfade 370 ms; accordion 340 ms; showcase crossfade 480 ms; drill tile button 330 ms; guide card marks 360 ms; routine dim 350 ms; press 170 ms; hero 610 ms; 404 runner 2.7 s once. With reduced motion every transform, clip and position change lands in one frame and only opacity fades.
 
 Never: animation on keyboard shortcuts beyond the state change itself, staggers longer than six rows, looping motion in the trainer chrome, `transition: all`.
 
-**Reduced motion:** a global rule turns animations into a 1 ms jump and limits transitions to color, opacity and shadow. Components also opt out explicitly: the island snaps open and closed (its springs check the setting), sliders leave no wake, travelling highlights and the tooltip snap in place and the tooltip label only fades, menus only fade, the controls playground holds still, previews and path tiles stay still (Lilac Chaser keeps its gap), the showcase only fades, and the trainer starts paused.
+**Reduced motion:** page-to-page transitions are off, and a global rule turns animations into a 1 ms jump and limits transitions to color, opacity and shadow. Components also opt out explicitly: the island snaps open and closed (its springs check the setting), sliders leave no wake, travelling highlights and the tooltip snap in place and the tooltip label only fades, menus only fade, the controls playground holds still, previews and path tiles stay still (Lilac Chaser keeps its gap), the showcase only fades, and the trainer starts paused.
 
 ## Sound
 

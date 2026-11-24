@@ -294,6 +294,40 @@ html[data-i18n-pending="true"] body > * {
   @apply invisible;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+
+::view-transition {
+  background-color: var(--background);
+}
+
+::view-transition-old(root) {
+  mix-blend-mode: normal;
+  animation: page-out 140ms var(--ease-out) both;
+}
+
+::view-transition-new(root) {
+  mix-blend-mode: normal;
+  animation: page-in 320ms var(--ease-out) 60ms both;
+}
+
+@keyframes page-out {
+  to {
+    opacity: 0;
+    translate: 0 -8px;
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    translate: 0 12px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   ::before,
