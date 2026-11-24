@@ -1,5 +1,6 @@
 import { bind, play, setEnabled, setTheme, unlock } from "cuelume";
 import type { PlayOptions, SoundName } from "cuelume";
+import { on } from "svelte/events";
 
 const STORAGE_KEY = "foveaflow-sound";
 const MUTE_AFTER_MS = 400;
@@ -35,6 +36,7 @@ class Sound {
   #lastSlide = Number.NEGATIVE_INFINITY;
   #muteTimer: number | undefined;
   #context: AudioContext | undefined;
+  #stopWarmUp: (() => void) | undefined;
 
   /** Reads the saved choice and binds the `data-cuelume-*` fields. Runs once per page. */
   start() {
@@ -48,7 +50,32 @@ class Sound {
     setEnabled(this.enabled);
     setTheme("bubble");
     bind();
+
+    const stops = ["pointerdown", "keydown"].map((type) =>
+      on(window, type, this.#warmUp, { capture: true })
+    );
+
+    this.#stopWarmUp = () => {
+      for (const stop of stops) {
+        stop();
+      }
+    };
   }
+
+  /**
+   * Browsers start audio only after a press or a key, never on hover. The
+   * first one starts both engines, so every later sound, hover included,
+   * plays at once.
+   */
+  readonly #warmUp = () => {
+    this.#stopWarmUp?.();
+
+    if (this.enabled) {
+      void unlock();
+      this.#context ??= new AudioContext();
+      void this.#context.resume();
+    }
+  };
 
   /** Turning sound off lets the switch's own off cue finish first. */
   setEnabled = (enabled: boolean) => {
