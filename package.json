@@ -31,6 +31,7 @@
     "@ui-sdk/core": "0.1.0-beta.13",
     "@ui-sdk/svelte": "0.1.0-beta.13",
     "astro": "7.4.13",
+    "cuelume": "0.2.8",
     "mode-watcher": "1.1.0",
     "svelte": "5.58.1",
     "tailwindcss": "4.3.5",

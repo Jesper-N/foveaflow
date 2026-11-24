@@ -389,6 +389,7 @@ export const es419 = {
     "Seguimiento suave: sigue un objetivo móvil por la trayectoria elegida.",
   "Snap to the next target and train fast refocus.":
     "Salta al siguiente objetivo y entrena reenfoque rápido.",
+  Sound: "Sonido",
   Source: "Fuente",
   "Source code": "Código fuente",
   "Spatial allocation of attention during smooth pursuit":

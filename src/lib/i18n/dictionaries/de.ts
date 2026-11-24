@@ -382,6 +382,7 @@ export const de = {
     "Gleichmäßige Blickfolge: Folge einem bewegten Ziel auf einer gewählten Bahn.",
   "Snap to the next target and train fast refocus.":
     "Spring zum nächsten Ziel und trainiere schnelles Nachfokussieren.",
+  Sound: "Ton",
   Source: "Quelle",
   "Source code": "Quellcode",
   "Spatial allocation of attention during smooth pursuit":

@@ -2,6 +2,7 @@
   import LanguageSelect from "$lib/components/language-select.svelte";
   import { getDrillGuide } from "$lib/content/drill-guides";
   import { t } from "$lib/i18n/translate";
+  import { cue } from "$lib/sound/sound.svelte";
   import {
     ArrowLeftRightIcon,
     BookOpenIcon,
@@ -160,7 +161,19 @@
     ) {
       openedByKeyboard = false;
       collapse();
+
+      if (event.target.closest("[role='dialog']") === null) {
+        cue("close", { emphasis: "subtle" });
+      }
     }
+  };
+
+  const expandOnPress = () => {
+    if (!expanded) {
+      cue("open", { emphasis: "subtle" });
+    }
+
+    expand();
   };
 </script>
 
@@ -182,7 +195,7 @@
       class="absolute inset-0 z-1 cursor-pointer rounded-[inherit] outline-none"
       aria-expanded={expanded}
       aria-label={t("Trainer controls")}
-      onclick={expand}
+      onclick={expandOnPress}
       tabindex={-1}
     ></Button>
 

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { t } from "$lib/i18n/translate";
+  import { cue, cueChoice, isPersonChange } from "$lib/sound/sound.svelte";
   import { XIcon } from "@lucide/svelte";
   import {
     Dialog,
@@ -51,7 +52,15 @@
     tabs.findIndex((item) => item.value === value);
 </script>
 
-<Dialog presentation="auto" bind:open={trainer.controlsOpen}>
+<Dialog
+  onOpenChange={(open) => {
+    if (!open) {
+      cue("close");
+    }
+  }}
+  presentation="auto"
+  bind:open={trainer.controlsOpen}
+>
   <DialogBackdrop class={[backdrop, "bg-black/8 dark:bg-black/32"]} />
   <DialogContent
     class={[
@@ -73,9 +82,14 @@
 
     <Tabs
       class="flex min-h-0 flex-1 flex-col"
-      onValueChange={(next) => {
+      onValueChange={(next, details) => {
         if (typeof next === "string") {
           setTravelDirection(tabList, tabIndex(tab), tabIndex(next));
+
+          if (isPersonChange(details)) {
+            cueChoice(tabIndex(tab), tabIndex(next));
+          }
+
           tab = next;
         }
       }}

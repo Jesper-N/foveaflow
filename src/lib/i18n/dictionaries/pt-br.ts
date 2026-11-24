@@ -389,6 +389,7 @@ export const ptBR = {
     "Rastreamento suave: siga um alvo móvel pela trajetória escolhida.",
   "Snap to the next target and train fast refocus.":
     "Salte para o próximo alvo e treine refoco rápido.",
+  Sound: "Som",
   Source: "Fonte",
   "Source code": "Código-fonte",
   "Spatial allocation of attention during smooth pursuit":

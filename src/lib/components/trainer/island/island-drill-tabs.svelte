@@ -1,5 +1,6 @@
 <script lang="ts">
   import { t } from "$lib/i18n/translate";
+  import { cueChoice, isPersonChange } from "$lib/sound/sound.svelte";
   import { drills } from "$lib/trainer/settings/drills";
   import {
     SegmentedControl,
@@ -29,13 +30,18 @@
   {@attach trackElement}
   aria-label={t("Drill")}
   data-island-drills
-  onValueChange={(next) => {
+  onValueChange={(next, details) => {
     if (typeof next === "string") {
       setTravelDirection(
         track,
         indexOf(trainer.settings.drillId),
         indexOf(next)
       );
+
+      if (isPersonChange(details)) {
+        cueChoice(indexOf(trainer.settings.drillId), indexOf(next));
+      }
+
       trainer.selectDrill(next);
     }
   }}

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { t } from "$lib/i18n/translate";
+  import { cue } from "$lib/sound/sound.svelte";
   import type { LucideIcon } from "@lucide/svelte";
   import {
     ColorPicker,
@@ -40,7 +41,11 @@
   aria-label={label}
   data-setting-row
   format="hex"
-  onValueChange={(next) => {
+  onValueChange={(next, details) => {
+    if (details.reason === "item-press" && next !== value) {
+      cue("select");
+    }
+
     onValueChange(next);
   }}
   space="hsv"
@@ -50,7 +55,11 @@
     <span class="text-md min-w-0 font-medium" aria-hidden="true">
       <RowLabel {icon} {label} />
     </span>
-    <Popover>
+    <Popover
+      onOpenChange={(open) => {
+        cue(open ? "open" : "close", { emphasis: "subtle" });
+      }}
+    >
       <PopoverTrigger
         class={[
           "group/color bg-fill hover:bg-fill-hover data-open:bg-fill-hover flex h-9 items-center gap-2 rounded-full ps-1.5 pe-3 pointer-coarse:h-11",
@@ -96,6 +105,7 @@
         <ColorPickerInput
           class="bg-fill text-md focus-visible:outline-ring h-9 w-full rounded-xl px-3 font-medium uppercase tabular-nums outline-none focus-visible:outline-2 pointer-coarse:h-11 pointer-coarse:text-base"
           aria-label={t("Hex")}
+          data-cuelume-type
           spellcheck={false}
         />
       </PopoverContent>

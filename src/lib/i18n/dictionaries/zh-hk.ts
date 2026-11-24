@@ -373,6 +373,7 @@ export const zhHK = {
     "平滑追蹤：沿所選路徑跟隨一個移動目標。",
   "Snap to the next target and train fast refocus.":
     "快速轉向下一個目標，練習快速轉移視線。",
+  Sound: "聲音",
   Source: "源碼",
   "Source code": "源程式碼",
   "Spatial allocation of attention during smooth pursuit":

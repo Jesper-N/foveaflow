@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { cue, isPersonChange } from "$lib/sound/sound.svelte";
   import { PlusIcon } from "@lucide/svelte";
   import {
     Accordion,
@@ -18,9 +19,19 @@
   let { items, headingLevel = 3, class: className }: Props = $props();
 
   let headingTag = $derived(headingLevel === 4 ? "h4" : "h3");
+  let openCount = 0;
 </script>
 
-<Accordion class={["grid", className]}>
+<Accordion
+  class={["grid", className]}
+  onValueChange={(next, details) => {
+    if (isPersonChange(details)) {
+      cue(next.length > openCount ? "open" : "close", { emphasis: "subtle" });
+    }
+
+    openCount = next.length;
+  }}
+>
   {#each items as item (item.question)}
     <AccordionItem
       class="group/item border-border border-b last:border-b-0"

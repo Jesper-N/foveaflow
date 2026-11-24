@@ -1,10 +1,12 @@
 <script lang="ts">
   import LanguageSelect from "$lib/components/language-select.svelte";
+  import SoundToggle from "$lib/components/sound-toggle.svelte";
   import ThemeSelect from "$lib/components/theme-select.svelte";
   import { mainRouteForDrill } from "$lib/content/drill-routes";
   import { legalPageLinks } from "$lib/content/legal";
   import { siteMetadata } from "$lib/content/site";
   import { t } from "$lib/i18n/translate";
+  import { sound } from "$lib/sound/sound.svelte";
   import { drills } from "$lib/trainer/settings/drills";
   import { ModeWatcher } from "mode-watcher";
   import { onMount } from "svelte";
@@ -36,7 +38,10 @@
   const footerLink =
     "flex items-center gap-2.5 text-md text-muted-foreground transition-colors duration-160 ease-out hover:text-foreground aria-[current=page]:text-foreground";
 
-  onMount(startAgentBridge);
+  onMount(() => {
+    sound.start();
+    startAgentBridge();
+  });
 </script>
 
 <ModeWatcher
@@ -73,6 +78,7 @@
       <TooltipGroup class="flex items-center gap-1" side="bottom">
         <LanguageSelect compact tip />
         <ThemeSelect />
+        <SoundToggle />
       </TooltipGroup>
     </div>
   </header>

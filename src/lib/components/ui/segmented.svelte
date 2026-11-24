@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { cueChoice, isPersonChange } from "$lib/sound/sound.svelte";
   import {
     SegmentedControl,
     SegmentedControlIndicator,
@@ -52,9 +53,14 @@
   class={[segmentTrack, className]}
   {@attach trackElement}
   aria-label={label}
-  onValueChange={(next) => {
+  onValueChange={(next, details) => {
     if (typeof next === "string") {
       setTravelDirection(track, indexOf(value), indexOf(next));
+
+      if (isPersonChange(details)) {
+        cueChoice(indexOf(value), indexOf(next));
+      }
+
       onValueChange(next);
     }
   }}

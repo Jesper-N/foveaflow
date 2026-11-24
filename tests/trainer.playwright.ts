@@ -269,6 +269,65 @@ test("keyboard shortcuts pause and open panels", async ({ page }) => {
   await expect(page.getByRole("option", { name: "Circle" })).toBeVisible();
 });
 
+test("actions make a sound until the Sound switch turns it off", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    class CountingContext extends AudioContext {
+      static count() {
+        const root = document.documentElement;
+        root.dataset["soundStarts"] = String(
+          Number(root.dataset["soundStarts"] ?? 0) + 1
+        );
+      }
+
+      override createOscillator() {
+        CountingContext.count();
+
+        return super.createOscillator();
+      }
+
+      override createBufferSource() {
+        CountingContext.count();
+
+        return super.createBufferSource();
+      }
+    }
+
+    window.AudioContext = CountingContext;
+  });
+
+  const started = async () =>
+    await page.evaluate(() =>
+      Number(document.documentElement.dataset["soundStarts"] ?? 0)
+    );
+
+  await openPage(page, "/circle/");
+  await page.keyboard.press(" ");
+  await expect(resumeButton(page)).toBeVisible();
+  await expect.poll(started).toBeGreaterThan(0);
+
+  await openControls(page);
+  await openTab(page, "General");
+  await page.getByRole("switch", { name: "Sound" }).click();
+  await expect(page.getByRole("switch", { name: "Sound" })).not.toBeChecked();
+  await closeControls(page);
+  await page.waitForTimeout(500);
+
+  const silentFrom = await started();
+  await expandIsland(page);
+  await resumeButton(page).click();
+  await expect(pauseButton(page)).toBeVisible();
+  await page.waitForTimeout(200);
+  expect(await started()).toBe(silentFrom);
+
+  await page.reload();
+  await page.keyboard.press(" ");
+  await expect(resumeButton(page)).toBeVisible();
+  await page.waitForTimeout(200);
+  expect(await started()).toBe(0);
+});
+
 test("the island toolbar shares one tooltip that names each shortcut", async ({
   page,
 }) => {

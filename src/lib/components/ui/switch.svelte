@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { cue, isPersonChange } from "$lib/sound/sound.svelte";
   import type { LucideIcon } from "@lucide/svelte";
   import { Switch, SwitchThumb } from "@ui-sdk/svelte/switch";
 
@@ -20,6 +21,11 @@
   <span class="text-md min-w-0 font-medium"><RowLabel {icon} {label} /></span>
   <Switch
     class="bg-popover data-checked:bg-primary relative inline-flex h-7 w-12 shrink-0 items-center rounded-full p-1 shadow-[inset_0_0_0_1px_var(--border)] transition-[background-color,box-shadow] duration-300 ease-out data-checked:shadow-none"
+    onCheckedChange={(next, details) => {
+      if (isPersonChange(details)) {
+        cue("toggle", { direction: next ? "forward" : "back" });
+      }
+    }}
     bind:checked
   >
     <SwitchThumb

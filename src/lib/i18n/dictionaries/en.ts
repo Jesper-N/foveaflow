@@ -378,6 +378,7 @@ export const en = {
     "Smooth Pursuit: follow one moving target along a chosen path.",
   "Snap to the next target and train fast refocus.":
     "Snap to the next target and train fast refocus.",
+  Sound: "Sound",
   Source: "Source",
   "Source code": "Source code",
   "Spatial allocation of attention during smooth pursuit":

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { cue, cueChoice, isPersonChange } from "$lib/sound/sound.svelte";
   import { CheckIcon, ChevronDownIcon } from "@lucide/svelte";
   import type { LucideIcon } from "@lucide/svelte";
   import {
@@ -61,11 +62,14 @@
     "data-hud-select": hudSelect,
   }: Props = $props();
 
+  let allOptions = $derived(groups.flatMap((group) => group.options));
+
   let selectedLabel = $derived(
-    groups
-      .flatMap((group) => group.options)
-      .find((option) => option.value === value)?.label ?? ""
+    allOptions.find((option) => option.value === value)?.label ?? ""
   );
+
+  const indexOf = (option: string) =>
+    allOptions.findIndex((candidate) => candidate.value === option);
 
   const rollDistance = () =>
     window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 10;
@@ -120,17 +124,21 @@
 <Select
   {controller}
   onOpenChange={(open, details) => {
-    if (
-      !open &&
-      details.reason === "item-press" &&
-      !(details.event instanceof KeyboardEvent)
-    ) {
+    if (open) {
+      cue("open", { emphasis: "subtle" });
+    } else if (details.reason !== "item-press") {
+      cue("close", { emphasis: "subtle" });
+    } else if (!(details.event instanceof KeyboardEvent)) {
       releaseReturningFocus();
     }
   }}
   onOpenChangeComplete={endFocusRelease}
-  onValueChange={(next) => {
+  onValueChange={(next, details) => {
     if (typeof next === "string") {
+      if (isPersonChange(details)) {
+        cueChoice(indexOf(value), indexOf(next));
+      }
+
       onValueChange(next);
     }
   }}

@@ -7,6 +7,7 @@ import { homeCopy } from "$lib/content/home";
 import { siteMetadata } from "$lib/content/site";
 import { languageState } from "$lib/i18n/state.svelte";
 import { syncDocumentHead } from "$lib/seo/document-head";
+import { cue, sound } from "$lib/sound/sound.svelte";
 import { getCanvasTheme } from "$lib/trainer/canvas/theme";
 import type { ColorMode } from "$lib/trainer/canvas/theme";
 import { TrainerCanvas } from "$lib/trainer/canvas/trainer-canvas";
@@ -200,6 +201,7 @@ export class Trainer {
     this.#settingsLoaded = true;
 
     void languageState.init();
+    sound.start();
     startAgentBridge();
     this.cursor.wake();
 
@@ -294,11 +296,15 @@ export class Trainer {
     if (this.canReverse) {
       this.settings.motionDirection =
         this.settings.motionDirection === 1 ? -1 : 1;
+      cue("toggle", {
+        direction: this.settings.motionDirection === 1 ? "forward" : "back",
+      });
     }
   };
 
   togglePaused = () => {
     this.motionPaused = !this.motionPaused;
+    cue("toggle", { direction: this.motionPaused ? "back" : "forward" });
   };
 
   resetSettings = () => {
@@ -308,13 +314,19 @@ export class Trainer {
   };
 
   openControls = () => {
-    this.#rememberFocus();
-    this.controlsOpen = true;
+    if (!this.controlsOpen) {
+      this.#rememberFocus();
+      this.controlsOpen = true;
+      cue("open");
+    }
   };
 
   openGuide = () => {
-    this.#rememberFocus();
-    this.guideOpen = true;
+    if (!this.guideOpen) {
+      this.#rememberFocus();
+      this.guideOpen = true;
+      cue("open");
+    }
   };
 
   #rememberFocus() {
@@ -371,27 +383,31 @@ export class Trainer {
 
       case "growTarget":
       case "shrinkTarget": {
-        const delta = action === "growTarget" ? 1 : -1;
-        this.setRanged("baseRadiusPx", this.settings.baseRadiusPx + delta);
+        this.#stepRanged("baseRadiusPx", action === "growTarget" ? 1 : -1);
 
         return true;
       }
 
       case "speedUp":
       case "slowDown": {
-        const delta = action === "speedUp" ? 1 : -1;
-        this.setRanged("speed", this.settings.speed + delta);
+        this.#stepRanged("speed", action === "speedUp" ? 1 : -1);
 
         return true;
       }
 
       case "toggleTheme": {
-        setMode(this.colorMode === "dark" ? "light" : "dark");
+        const next = this.colorMode === "dark" ? "light" : "dark";
+        setMode(next);
+        cue("toggle", { direction: next === "light" ? "forward" : "back" });
 
         return true;
       }
 
       case "openDrillSelect": {
+        if (!this.islandExpanded) {
+          cue("open", { emphasis: "subtle" });
+        }
+
         this.islandExpanded = true;
         void focusDrillTabs();
 
@@ -426,6 +442,15 @@ export class Trainer {
           `Unsupported shortcut: ${String(action satisfies never)}`
         );
       }
+    }
+  }
+
+  #stepRanged(setting: RangedSetting, delta: 1 | -1) {
+    const before = this.settings[setting];
+    this.setRanged(setting, before + delta);
+
+    if (this.settings[setting] !== before) {
+      sound.step(delta === 1 ? "forward" : "back");
     }
   }
 

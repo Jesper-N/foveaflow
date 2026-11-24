@@ -1,5 +1,6 @@
 <script lang="ts">
   import { t } from "$lib/i18n/translate";
+  import { cueChoice, isPersonChange } from "$lib/sound/sound.svelte";
   import { targetForms } from "$lib/trainer/settings/options";
   import {
     BlendIcon,
@@ -26,6 +27,9 @@
   import TargetPreview from "./target-preview.svelte";
 
   const trainer = getTrainer();
+
+  const formIndex = (form: string) =>
+    targetForms.findIndex((candidate) => candidate.id === form);
 
   const followChecked = followIndicator({
     axis: "x",
@@ -62,8 +66,15 @@
         class="relative grid grid-cols-6 gap-1"
         {@attach followChecked}
         aria-labelledby="trainer-target-form"
-        onValueChange={(value) => {
+        onValueChange={(value, details) => {
           if (typeof value === "string") {
+            if (isPersonChange(details)) {
+              cueChoice(
+                formIndex(trainer.settings.targetForm),
+                formIndex(value)
+              );
+            }
+
             trainer.setTargetForm(value);
           }
         }}

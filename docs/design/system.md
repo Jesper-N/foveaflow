@@ -187,6 +187,31 @@ Never: animation on keyboard shortcuts beyond the state change itself, staggers 
 
 **Reduced motion:** a global rule turns animations into a 1 ms jump and limits transitions to color, opacity and shadow. Components also opt out explicitly: the island snaps open and closed (its springs check the setting), sliders leave no wake, travelling highlights and the tooltip snap in place and the tooltip label only fades, menus only fade, the controls playground holds still, previews and path tiles stay still (Lilac Chaser keeps its gap), the showcase only fades, and the trainer starts paused.
 
+## Sound
+
+[Cuelume](https://github.com/danielwh2/cuelume) (`cuelume`) synthesizes every cue with Web Audio: no audio files, no network, no CSP host. `src/lib/sound/sound.svelte.ts` owns it. Theme `default` (glass, wood, air, soft mallets), the calm register meant for all-day use. On by default like bencho; the header speaker toggle and Controls › General › Sound turn it off, saved as `foveaflow-sound` in the browser. Turning it on unlocks audio in that click and plays the switch; turning it off lets the switch's own cue finish (400 ms) before muting.
+
+The rules, from bencho and Cuelume's own guide:
+
+- A cue confirms a change a person made. Picking the value that is already chosen, hovering, autoplay, a form reset, a value restored from storage and a controller call (`imperative`) stay silent (`isPersonChange`).
+- One cue per action. A menu pick plays its choice, not the menu closing as well.
+- The cue names the kind of event, the direction names which way: later options rise, earlier ones fall.
+- Nothing in the drill itself makes sound. The trainer chrome does; the target never does.
+
+| Interaction | Cue | Why |
+| --- | --- | --- |
+| Option in a menu, segmented control, tab, radio, drill switch | `select`, direction by position | A woody detent: a choice moved, and which way |
+| Slider step, arrow-key size and speed | `select` subtle, direction, at most one per 150 ms | bencho's slider spacing: a drag reads as a texture, not a buzz |
+| Switch, play / pause, reverse, `D` theme flip | `toggle`; switching off, pausing, reversing and going dark play it backwards | Two states, and the sound says which one you landed in |
+| Controls, guide, reset dialog open | `open` | A panel arrives |
+| Those dialogs close | `close`; confirming the reset plays it `strong` | Dismissal; the destructive confirm is the weightiest close |
+| Menu, color popover, accordion, island tapped open or tapped away | `open` / `close` subtle | Smaller surfaces get the quieter arrangement |
+| Color preset swatch | `select` | A pick. Dragging the area or hue is continuous, so it stays silent |
+| Hex field typing | `type` (`data-cuelume-type`) | A keystroke per key, throttled by Cuelume |
+| Section nav jump | `navigate` subtle, backwards going up the page | Movement through the page, not a choice |
+
+Never: a cue per animation frame or per drill event, hover sounds, a cue for pages loading.
+
 ## Components
 
 `src/lib/components/ui/` holds the kit. Interactive parts are [ui-sdk](https://ui-sdk.dev) (`@ui-sdk/svelte`) components with our classes; read `node_modules/@ui-sdk/svelte/docs/llms.txt` and the component's page before changing one. Don't hand-roll a role that ui-sdk ships.
@@ -204,6 +229,7 @@ Never: animation on keyboard shortcuts beyond the state change itself, staggers 
 | `color-field.svelte` | ui-sdk Color Picker + Popover | Colors: swatch + hex trigger; popover with saturation area, hue slider, presets and a hex field |
 | `switch.svelte` | ui-sdk Switch | On/off settings as a whole-row label. 48 × 28, after bencho's toggle: off is a slab track with a grey thumb, on inverts to an ink track with a slab thumb, so the track carries the state; the thumb stretches while pressed |
 | `segmented.svelte` | ui-sdk Segmented Control | Two or three visible choices (direction, theme) |
+| `sound-toggle.svelte` | ui-sdk Toggle | The header's sound on/off, a speaker icon named "Sound" |
 | `accordion-list.svelte` | ui-sdk Accordion | Questions and answers (guide FAQ, quick answers) |
 | `brand-mark.svelte` | — | Logo |
 | `styles.ts` | — | Shared class groups: `pressable`, popup surface, list rows, dialog surface, sheet presentation, settings group (rows marked `data-setting-row` get 12 px padding and hairlines between them), segment track/thumb/item, backdrop. Popup motion lives in the `popup-unfold` and `list-deal` utilities in `global.css` |

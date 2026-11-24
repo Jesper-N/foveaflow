@@ -1,5 +1,6 @@
 <script lang="ts">
   import { t } from "$lib/i18n/translate";
+  import { cue } from "$lib/sound/sound.svelte";
   import type { Attachment } from "svelte/attachments";
   import { on } from "svelte/events";
 
@@ -88,6 +89,17 @@
 
       if (link) {
         jumpingTo = link.hash.slice(1);
+
+        const from = links.findIndex(({ id }) => id === activeId);
+        const to = links.findIndex(({ id }) => id === jumpingTo);
+
+        if (from !== to) {
+          cue("navigate", {
+            direction: to < from ? "back" : "forward",
+            emphasis: "subtle",
+          });
+        }
+
         show(jumpingTo);
       }
     };

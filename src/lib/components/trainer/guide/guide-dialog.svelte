@@ -2,6 +2,7 @@
   import { legalPageLinks } from "$lib/content/legal";
   import { siteMetadata } from "$lib/content/site";
   import { formatDate, t } from "$lib/i18n/translate";
+  import { cue } from "$lib/sound/sound.svelte";
   import { ArrowRightIcon, XIcon } from "@lucide/svelte";
   import {
     Dialog,
@@ -22,7 +23,15 @@
     "rounded-full px-2.5 py-1.5 text-sm text-muted-foreground transition-colors duration-160 ease-out hover:bg-fill hover:text-foreground";
 </script>
 
-<Dialog presentation="auto" bind:open={trainer.guideOpen}>
+<Dialog
+  onOpenChange={(open) => {
+    if (!open) {
+      cue("close");
+    }
+  }}
+  presentation="auto"
+  bind:open={trainer.guideOpen}
+>
   <DialogBackdrop class={backdrop} />
   <DialogContent
     id="trainer-guide"

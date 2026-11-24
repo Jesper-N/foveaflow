@@ -1,12 +1,14 @@
 <script lang="ts">
   import LanguageSelect from "$lib/components/language-select.svelte";
   import { t } from "$lib/i18n/translate";
+  import { cue, sound } from "$lib/sound/sound.svelte";
   import {
     MonitorIcon,
     MoonIcon,
     RotateCcwIcon,
     SunIcon,
     SunMoonIcon,
+    Volume2Icon,
   } from "@lucide/svelte";
   import {
     AlertDialog,
@@ -24,6 +26,7 @@
   import RowLabel from "../../ui/row-label.svelte";
   import Segmented from "../../ui/segmented.svelte";
   import { backdrop, dialogSurface } from "../../ui/styles";
+  import Switch from "../../ui/switch.svelte";
   import { getTrainer } from "../trainer-context";
   import SettingsSection from "./settings-section.svelte";
 
@@ -67,6 +70,11 @@
       {/snippet}
     </Segmented>
   </div>
+  <Switch
+    icon={Volume2Icon}
+    label={t("Sound")}
+    bind:checked={() => sound.enabled, sound.setEnabled}
+  />
 </SettingsSection>
 
 <SettingsSection id="trainer-defaults">
@@ -74,7 +82,17 @@
     <span class="text-md min-w-0 font-medium">
       <RowLabel icon={RotateCcwIcon} label={t("Defaults")} />
     </span>
-    <AlertDialog>
+    <AlertDialog
+      onOpenChange={(open, details) => {
+        if (open) {
+          cue("open");
+        } else {
+          cue("close", {
+            emphasis: details.returnValue === "confirm" ? "strong" : "normal",
+          });
+        }
+      }}
+    >
       <AlertDialogTrigger class={buttonClass("secondary", "md")}>
         {t("Reset to defaults")}
       </AlertDialogTrigger>

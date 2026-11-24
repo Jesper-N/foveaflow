@@ -392,6 +392,7 @@ export const fr = {
     "Poursuite fluide : suivez une cible mobile sur la trajectoire choisie.",
   "Snap to the next target and train fast refocus.":
     "Sautez vers la cible suivante et travaillez la mise au point rapide.",
+  Sound: "Son",
   Source: "Source",
   "Source code": "Code source",
   "Spatial allocation of attention during smooth pursuit":

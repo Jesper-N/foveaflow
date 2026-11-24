@@ -375,6 +375,7 @@ export const hi = {
     "स्मूद ट्रैकिंग: चुने हुए रास्ते पर चल रहे लक्ष्य का पीछा करें।",
   "Snap to the next target and train fast refocus.":
     "अगले लक्ष्य पर तुरंत जाएं और तेज दोबारा फोकस का अभ्यास करें.",
+  Sound: "ध्वनि",
   Source: "सोर्स",
   "Source code": "सोर्स कोड",
   "Spatial allocation of attention during smooth pursuit":

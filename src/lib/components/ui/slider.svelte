@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { isPersonChange, sound } from "$lib/sound/sound.svelte";
   import type { LucideIcon } from "@lucide/svelte";
   import {
     Slider,
@@ -171,9 +172,13 @@
   {format}
   {max}
   {min}
-  onValueChange={(next) => {
+  onValueChange={(next, details) => {
     if (typeof next !== "number") {
       return;
+    }
+
+    if (isPersonChange(details) && next !== value) {
+      sound.step(next > value ? "forward" : "back");
     }
 
     const push = pressed ? 1 - Math.exp(-speed / 900) : KEY_PUSH;
