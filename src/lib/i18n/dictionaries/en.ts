@@ -182,8 +182,6 @@ export const en = {
     "FoveaFlow is a free browser tool. Use it safely, stop if it feels bad, and do not treat it as medical care.",
   "FoveaFlow is built to work without an account. The app keeps your settings in your browser and uses Cloudflare to serve the site.":
     "FoveaFlow is built to work without an account. The app keeps your settings in your browser and uses Cloudflare to serve the site.",
-  "FoveaFlow is free to use, requires no account or install, and stores settings locally in your browser.":
-    "FoveaFlow is free to use, requires no account or install, and stores settings locally in your browser.",
   "FoveaFlow is free to use. There is no account, paid plan, subscription, or in-app purchase.":
     "FoveaFlow is free to use. There is no account, paid plan, subscription, or in-app purchase.",
   "FoveaFlow is free. No account, no paid plan.":
@@ -220,7 +218,6 @@ export const en = {
     "Give tired screen eyes a quick active break after reading, meetings, or too many tabs.",
   Gold: "Gold",
   Guide: "Guide",
-  "Guide FAQ": "Guide FAQ",
   "Hard Turns Smooth Pursuit Drill": "Hard Turns Smooth Pursuit Drill",
   "Hard Turns is one of the most demanding Smooth Pursuit patterns because the target changes direction abruptly.":
     "Hard Turns is one of the most demanding Smooth Pursuit patterns because the target changes direction abruptly.",
@@ -248,7 +245,6 @@ export const en = {
   "How do I make it easier?": "How do I make it easier?",
   "How do I make this pattern easier?": "How do I make this pattern easier?",
   "How each drill works": "How each drill works",
-  "How long should a session be?": "How long should a session be?",
   "How should beginners start?": "How should beginners start?",
   "How to practice": "How to practice",
   "IT professionals": "IT professionals",
@@ -260,14 +256,8 @@ export const en = {
     "If you have a vision condition, recent eye injury, surgery, neurological symptoms, or any concern about using moving visual targets, ask a qualified professional before using the app.",
   "If you prefer a small set of visible controls and simply want to cycle through routines, BlinkCamp is a straightforward option. It is also open source.":
     "If you prefer a small set of visible controls and simply want to cycle through routines, BlinkCamp is a straightforward option. It is also open source.",
-  "It is a Smooth Pursuit pattern page that loads the matching path so you can start that style of moving-target practice immediately.":
-    "It is a Smooth Pursuit pattern page that loads the matching path so you can start that style of moving-target practice immediately.",
   "It is the task of following the correct target while similar moving objects compete for your attention.":
     "It is the task of following the correct target while similar moving objects compete for your attention.",
-  "It trains selective attention, target identity, and steady tracking under clutter.":
-    "It trains selective attention, target identity, and steady tracking under clutter.",
-  "Keep sessions short and deliberate. The goal is focused practice, not pushing through discomfort.":
-    "Keep sessions short and deliberate. The goal is focused practice, not pushing through discomfort.",
   "Keep your head still and let your eyes do the work.":
     "Keep your head still and let your eyes do the work.",
   "Keep your head still and lock onto the main, brightest ball.":
@@ -288,12 +278,6 @@ export const en = {
   "Lilac Chaser Fixation and Peripheral Awareness":
     "Lilac Chaser Fixation and Peripheral Awareness",
   "Lilac Chaser ball color": "Lilac Chaser ball color",
-  "Lilac Chaser is a fixation drill where you keep your gaze on a central cross while the outer pattern changes.":
-    "Lilac Chaser is a fixation drill where you keep your gaze on a central cross while the outer pattern changes.",
-  "Lilac Chaser is different from the moving-target drills. Instead of following an object, you keep your eyes on the center cross while the outer ring changes.":
-    "Lilac Chaser is different from the moving-target drills. Instead of following an object, you keep your eyes on the center cross while the outer ring changes.",
-  "Lilac Chaser is the best choice when you want to hold your gaze on the center and notice change away from it.":
-    "Lilac Chaser is the best choice when you want to hold your gaze on the center and notice change away from it.",
   "Lilac Chaser scale": "Lilac Chaser scale",
   "Lilac Chaser trains fixation, peripheral awareness, visual attention, and noticing change away from the point you are looking at. For gaming, it can be a short warmup for catching movement near the edge of your vision without constantly shifting your gaze.":
     "Lilac Chaser trains fixation, peripheral awareness, visual attention, and noticing change away from the point you are looking at. For gaming, it can be a short warmup for catching movement near the edge of your vision without constantly shifting your gaze.",
@@ -319,25 +303,18 @@ export const en = {
   "Motion path": "Motion path",
   "Motion paths": "Motion paths",
   "Multiple Distractions": "Multiple Distractions",
-  "Multiple Distractions is FoveaFlow's clutter drill. One target matters most, but other moving objects share the screen and try to pull your attention away.":
-    "Multiple Distractions is FoveaFlow's clutter drill. One target matters most, but other moving objects share the screen and try to pull your attention away.",
-  "Multiple Distractions is the best choice for practicing selective attention under visual clutter.":
-    "Multiple Distractions is the best choice for practicing selective attention under visual clutter.",
   "Multiple Distractions trains selective attention, visual tracking under clutter, and target identity. You follow the motion and keep choosing the right ball when similar ones compete for your attention.":
     "Multiple Distractions trains selective attention, visual tracking under clutter, and target identity. You follow the motion and keep choosing the right ball when similar ones compete for your attention.",
   "Multiple Distractions: keep track of the brightest target through visual clutter.":
     "Multiple Distractions: keep track of the brightest target through visual clutter.",
   "Neither the number of settings nor a preference for one interface proves better aim or vision. Pick a comfortable routine you find useful.":
     "Neither the number of settings nor a preference for one interface proves better aim or vision. Pick a comfortable routine you find useful.",
-  "No. Keep your eyes on the center cross and let the visual effect happen in the periphery.":
-    "No. Keep your eyes on the center cross and let the visual effect happen in the periphery.",
   "Not medical care": "Not medical care",
   "On this page": "On this page",
   Opacity: "Opacity",
   "Open FoveaFlow": "Open FoveaFlow",
   "Open controls": "Open controls",
   "Open guide": "Open guide",
-  Overview: "Overview",
   "Page navigation": "Page navigation",
   "Pattern routes": "Pattern routes",
   "Pause motion": "Pause motion",
@@ -354,16 +331,8 @@ export const en = {
     "Random removes the comfort of a repeating loop. Because the target changes direction and position less predictably, the drill adds more target-search work than a simple circle or ellipse.",
   "Reaction Jumps": "Reaction Jumps",
   "Reaction Jumps Eye Training": "Reaction Jumps Eye Training",
-  "Reaction Jumps is best when you want to find a new target position quickly and lock on before the next move.":
-    "Reaction Jumps is best when you want to find a new target position quickly and lock on before the next move.",
-  "Reaction Jumps is the drill to use when moving smoothly is not the point. The target holds still, then jumps to a new location.":
-    "Reaction Jumps is the drill to use when moving smoothly is not the point. The target holds still, then jumps to a new location.",
-  "Reaction Jumps trains quick target acquisition and quick refocus from one target position to the next.":
-    "Reaction Jumps trains quick target acquisition and quick refocus from one target position to the next.",
   "Reaction Jumps trains quick target acquisition, saccadic eye movement, peripheral detection, and fast refocusing. It is useful when you want to react to a new visual target without moving your head first.":
     "Reaction Jumps trains quick target acquisition, saccadic eye movement, peripheral detection, and fast refocusing. It is useful when you want to react to a new visual target without moving your head first.",
-  "Reaction Jumps works well as a short pre-game warmup or a fast visual reset between tasks.":
-    "Reaction Jumps works well as a short pre-game warmup or a fast visual reset between tasks.",
   "Reaction Jumps: find the target after it moves to a new position.":
     "Reaction Jumps: find the target after it moves to a new position.",
   "Read full guide": "Read full guide",
@@ -384,8 +353,6 @@ export const en = {
   "Role of peripheral vision in saccade planning":
     "Role of peripheral vision in saccade planning",
   "Saccadic reaction time factors": "Saccadic reaction time factors",
-  "Save your preferred settings locally and return to the same setup next time.":
-    "Save your preferred settings locally and return to the same setup next time.",
   Scale: "Scale",
   Semibold: "Semibold",
   "Settings saved in your browser": "Settings saved in your browser",
@@ -396,7 +363,6 @@ export const en = {
   "Sharpen your visual warmup before FPS games with tracking, refocus, peripheral awareness, and character movement reading drills.":
     "Sharpen your visual warmup before FPS games with tracking, refocus, peripheral awareness, and character movement reading drills.",
   "Short bursts": "Short bursts",
-  "Should I follow the outer shapes?": "Should I follow the outer shapes?",
   "Show target letters": "Show target letters",
   "Show trail": "Show trail",
   Size: "Size",
@@ -406,12 +372,6 @@ export const en = {
   "Smooth Pursuit Eye Training": "Smooth Pursuit Eye Training",
   "Smooth Pursuit helps train steady tracking, moving-target focus, and controlled eye movement across more of your usable range.":
     "Smooth Pursuit helps train steady tracking, moving-target focus, and controlled eye movement across more of your usable range.",
-  "Smooth Pursuit is FoveaFlow's moving-target drill. Keep your head still, follow one target with your eyes, and stay smooth instead of jumping ahead.":
-    "Smooth Pursuit is FoveaFlow's moving-target drill. Keep your head still, follow one target with your eyes, and stay smooth instead of jumping ahead.",
-  "Smooth Pursuit is a drill where you follow one moving target as steadily as you can with your eyes.":
-    "Smooth Pursuit is a drill where you follow one moving target as steadily as you can with your eyes.",
-  "Smooth Pursuit is the best starting point when your goal is following one moving target as steadily as possible.":
-    "Smooth Pursuit is the best starting point when your goal is following one moving target as steadily as possible.",
   "Smooth Pursuit, Reaction Jumps, Multiple Distractions, and Lilac Chaser.":
     "Smooth Pursuit, Reaction Jumps, Multiple Distractions, and Lilac Chaser.",
   "Smooth Pursuit: follow one moving target along a chosen path.":
@@ -438,8 +398,6 @@ export const en = {
   "Start a visual warmup in either browser tool. FoveaFlow gives you separate tracking, refocus, distraction, and fixation drills, with detailed controls available right now in the browser.":
     "Start a visual warmup in either browser tool. FoveaFlow gives you separate tracking, refocus, distraction, and fixation drills, with detailed controls available right now in the browser.",
   "Start the warmup": "Start the warmup",
-  "Start with a comfortable speed and a medium target size, then raise difficulty only when you can stay on the target cleanly.":
-    "Start with a comfortable speed and a medium target size, then raise difficulty only when you can stay on the target cleanly.",
   "Start with a predictable path for steady tracking. Try random movement or hard turns when you want to spend more time finding the target.":
     "Start with a predictable path for steady tracking. Try random movement or hard turns when you want to spend more time finding the target.",
   "Start with fewer distractors, a slower speed, and a larger main target.":
@@ -460,12 +418,8 @@ export const en = {
   "The floating controls tuck away while you practice. Your settings stay in your browser, so you can return to your preferred setup without an account.":
     "The floating controls tuck away while you practice. Your settings stay in your browser, so you can return to your preferred setup without an account.",
   "The full tool runs in the browser.": "The full tool runs in the browser.",
-  "The goal is steady fixation and better awareness of change away from the center of your gaze.":
-    "The goal is steady fixation and better awareness of change away from the center of your gaze.",
   "The page you’re looking for does not exist.":
     "The page you’re looking for does not exist.",
-  "The path shape changes how predictable the movement feels and how often the target changes direction.":
-    "The path shape changes how predictable the movement feels and how often the target changes direction.",
   "The patterns are simple screen paths and timing drills. They are not a clinical program, and results will vary from person to person.":
     "The patterns are simple screen paths and timing drills. They are not a clinical program, and results will vary from person to person.",
   "The public browser interface shows pattern navigation, Show Grid, and Darkmode controls.":
@@ -516,17 +470,9 @@ export const en = {
   "Try this drill": "Try this drill",
   Unpredictable: "Unpredictable",
   Updated: "Updated",
-  "Use FoveaFlow as a short FPS warmup, an active screen break, or a focused visual practice session.":
-    "Use FoveaFlow as a short FPS warmup, an active screen break, or a focused visual practice session.",
-  "Use Lilac Chaser for a short fixation drill, a perceptual reset, or a quick change of pace between more active modes.":
-    "Use Lilac Chaser for a short fixation drill, a perceptual reset, or a quick change of pace between more active modes.",
   "Use Reaction Jumps when you want to practice finding a new target.":
     "Use Reaction Jumps when you want to practice finding a new target.",
-  "Use Smooth Pursuit for short browser-based practice, a pre-game warmup, or a focused reset after dense screen work.":
-    "Use Smooth Pursuit for short browser-based practice, a pre-game warmup, or a focused reset after dense screen work.",
   "Use forward motion direction": "Use forward motion direction",
-  "Use it alongside your usual in-game practice if you enjoy it. There is no validated FoveaFlow routine or guaranteed performance gain.":
-    "Use it alongside your usual in-game practice if you enjoy it. There is no validated FoveaFlow routine or guaranteed performance gain.",
   "Use it when you want steady moving-target practice without the extra clutter of other drills.":
     "Use it when you want steady moving-target practice without the extra clutter of other drills.",
   "Use predictable paths for steady tracking. Use random paths or hard turns when you want more target-search work.":
@@ -536,50 +482,8 @@ export const en = {
   "Use safely": "Use safely",
   "Use slower speeds for clean refocusing. Raise the speed when you want a sharper reaction drill.":
     "Use slower speeds for clean refocusing. Raise the speed when you want a sharper reaction drill.",
-  "Use the Bounce path for short smooth pursuit practice.":
-    "Use the Bounce path for short smooth pursuit practice.",
-  "Use the Circle path for short smooth pursuit practice.":
-    "Use the Circle path for short smooth pursuit practice.",
-  "Use the Clover path for short smooth pursuit practice.":
-    "Use the Clover path for short smooth pursuit practice.",
-  "Use the Corner tour path for short smooth pursuit practice.":
-    "Use the Corner tour path for short smooth pursuit practice.",
-  "Use the Diagonal path for short smooth pursuit practice.":
-    "Use the Diagonal path for short smooth pursuit practice.",
-  "Use the Diamond loop path for short smooth pursuit practice.":
-    "Use the Diamond loop path for short smooth pursuit practice.",
-  "Use the Down-left sweep path for short smooth pursuit practice.":
-    "Use the Down-left sweep path for short smooth pursuit practice.",
-  "Use the Down-right sweep path for short smooth pursuit practice.":
-    "Use the Down-right sweep path for short smooth pursuit practice.",
-  "Use the Edge loop path for short smooth pursuit practice.":
-    "Use the Edge loop path for short smooth pursuit practice.",
-  "Use the Ellipse path for short smooth pursuit practice.":
-    "Use the Ellipse path for short smooth pursuit practice.",
-  "Use the Figure eight path for short smooth pursuit practice.":
-    "Use the Figure eight path for short smooth pursuit practice.",
-  "Use the Hard turns path for short smooth pursuit practice.":
-    "Use the Hard turns path for short smooth pursuit practice.",
-  "Use the Horizontal sweep path for short smooth pursuit practice.":
-    "Use the Horizontal sweep path for short smooth pursuit practice.",
-  "Use the Hourglass path for short smooth pursuit practice.":
-    "Use the Hourglass path for short smooth pursuit practice.",
-  "Use the Lissajous path for short smooth pursuit practice.":
-    "Use the Lissajous path for short smooth pursuit practice.",
-  "Use the Random path for short smooth pursuit practice.":
-    "Use the Random path for short smooth pursuit practice.",
-  "Use the Stair steps path for short smooth pursuit practice.":
-    "Use the Stair steps path for short smooth pursuit practice.",
-  "Use the Vertical sweep path for short smooth pursuit practice.":
-    "Use the Vertical sweep path for short smooth pursuit practice.",
-  "Use the Wave path for short smooth pursuit practice.":
-    "Use the Wave path for short smooth pursuit practice.",
-  "Use the Zigzag path for short smooth pursuit practice.":
-    "Use the Zigzag path for short smooth pursuit practice.",
   "Use the app in a safe place where you can stop easily. Do not use it while driving, walking around, operating equipment, or doing anything that needs your full attention.":
     "Use the app in a safe place where you can stop easily. Do not use it while driving, walking around, operating equipment, or doing anything that needs your full attention.",
-  "Use this drill when Smooth Pursuit feels too clean and you want a more realistic visual-attention challenge.":
-    "Use this drill when Smooth Pursuit feels too clean and you want a more realistic visual-attention challenge.",
   "Vertical Sweep Smooth Pursuit Drill": "Vertical Sweep Smooth Pursuit Drill",
   "Vertical Sweep mirrors the simplicity of Horizontal Sweep but changes the direction of travel for straightforward up-down tracking.":
     "Vertical Sweep mirrors the simplicity of Horizontal Sweep but changes the direction of travel for straightforward up-down tracking.",
@@ -595,74 +499,9 @@ export const en = {
   "Wave introduces a repeating up-and-down rhythm on top of horizontal movement. It stays readable and smooth without the abrupt feel of hard corners.":
     "Wave introduces a repeating up-and-down rhythm on top of horizontal movement. It stays readable and smooth without the abrupt feel of hard corners.",
   Weight: "Weight",
-  "What does Multiple Distractions train?":
-    "What does Multiple Distractions train?",
-  "What does Reaction Jumps train?": "What does Reaction Jumps train?",
-  "What is Lilac Chaser?": "What is Lilac Chaser?",
-  "What is Smooth Pursuit?": "What is Smooth Pursuit?",
   "What is available today": "What is available today",
   "What is distractor tracking?": "What is distractor tracking?",
-  "What is the Bounce drill?": "What is the Bounce drill?",
-  "What is the Circle drill?": "What is the Circle drill?",
-  "What is the Clover drill?": "What is the Clover drill?",
-  "What is the Corner tour drill?": "What is the Corner tour drill?",
-  "What is the Diagonal drill?": "What is the Diagonal drill?",
-  "What is the Diamond loop drill?": "What is the Diamond loop drill?",
-  "What is the Down-left sweep drill?": "What is the Down-left sweep drill?",
-  "What is the Down-right sweep drill?": "What is the Down-right sweep drill?",
-  "What is the Edge loop drill?": "What is the Edge loop drill?",
-  "What is the Ellipse drill?": "What is the Ellipse drill?",
-  "What is the Figure eight drill?": "What is the Figure eight drill?",
-  "What is the Hard turns drill?": "What is the Hard turns drill?",
-  "What is the Horizontal sweep drill?": "What is the Horizontal sweep drill?",
-  "What is the Hourglass drill?": "What is the Hourglass drill?",
-  "What is the Lissajous drill?": "What is the Lissajous drill?",
-  "What is the Random drill?": "What is the Random drill?",
-  "What is the Stair steps drill?": "What is the Stair steps drill?",
-  "What is the Vertical sweep drill?": "What is the Vertical sweep drill?",
-  "What is the Wave drill?": "What is the Wave drill?",
-  "What is the Zigzag drill?": "What is the Zigzag drill?",
-  "What is the goal of this mode?": "What is the goal of this mode?",
   "What it trains:": "What it trains:",
-  "What makes the Bounce path different?":
-    "What makes the Bounce path different?",
-  "What makes the Circle path different?":
-    "What makes the Circle path different?",
-  "What makes the Clover path different?":
-    "What makes the Clover path different?",
-  "What makes the Corner tour path different?":
-    "What makes the Corner tour path different?",
-  "What makes the Diagonal path different?":
-    "What makes the Diagonal path different?",
-  "What makes the Diamond loop path different?":
-    "What makes the Diamond loop path different?",
-  "What makes the Down-left sweep path different?":
-    "What makes the Down-left sweep path different?",
-  "What makes the Down-right sweep path different?":
-    "What makes the Down-right sweep path different?",
-  "What makes the Edge loop path different?":
-    "What makes the Edge loop path different?",
-  "What makes the Ellipse path different?":
-    "What makes the Ellipse path different?",
-  "What makes the Figure eight path different?":
-    "What makes the Figure eight path different?",
-  "What makes the Hard turns path different?":
-    "What makes the Hard turns path different?",
-  "What makes the Horizontal sweep path different?":
-    "What makes the Horizontal sweep path different?",
-  "What makes the Hourglass path different?":
-    "What makes the Hourglass path different?",
-  "What makes the Lissajous path different?":
-    "What makes the Lissajous path different?",
-  "What makes the Random path different?":
-    "What makes the Random path different?",
-  "What makes the Stair steps path different?":
-    "What makes the Stair steps path different?",
-  "What makes the Vertical sweep path different?":
-    "What makes the Vertical sweep path different?",
-  "What makes the Wave path different?": "What makes the Wave path different?",
-  "What makes the Zigzag path different?":
-    "What makes the Zigzag path different?",
   "What the app is": "What the app is",
   "What this warmup can and cannot tell you":
     "What this warmup can and cannot tell you",
@@ -672,17 +511,7 @@ export const en = {
   "When should I choose this over Smooth Pursuit?":
     "When should I choose this over Smooth Pursuit?",
   "When should I use Smooth Pursuit?": "When should I use Smooth Pursuit?",
-  "Which drill is best for fixation and edge-of-vision awareness?":
-    "Which drill is best for fixation and edge-of-vision awareness?",
-  "Which drill is best for quick refocus?":
-    "Which drill is best for quick refocus?",
-  "Which drill is best for steady tracking?":
-    "Which drill is best for steady tracking?",
-  "Which drill is best when the screen feels busy?":
-    "Which drill is best when the screen feels busy?",
   "Which settings matter most?": "Which settings matter most?",
-  "Which settings should I change first?":
-    "Which settings should I change first?",
   "You can change the target’s appearance, adjust motion behavior, and keep your preferred settings on this device. Each main drill and Smooth Pursuit path also has a direct link.":
     "You can change the target’s appearance, adjust motion behavior, and keep your preferred settings on this device. Each main drill and Smooth Pursuit path also has a direct link.",
   "You can clear saved FoveaFlow settings from your browser's site data controls. You can also use browser or extension settings to block optional analytics scripts.":

@@ -20,6 +20,7 @@
 
   import RowLabel from "./row-label.svelte";
   import { popupSurface, pressable } from "./styles";
+  import SwatchDot from "./swatch-dot.svelte";
 
   interface Props {
     label: string;
@@ -58,7 +59,7 @@
         aria-label={label}
       >
         <ColorPickerSwatch
-          class="ease-spring size-6 rounded-full bg-(--color-picker-color) shadow-[inset_0_0_0_1px_rgb(0_0_0/0.12)] transition-[scale] duration-220 group-hover/color:scale-108"
+          class="ease-spring size-6 rounded-full bg-(--color-picker-color) transition-[scale] duration-220 group-hover/color:scale-108"
         />
         <span
           class="text-muted-foreground text-sm font-medium uppercase tabular-nums"
@@ -88,9 +89,7 @@
               class="group/swatch focus-visible:outline-ring grid aspect-square cursor-pointer place-items-center rounded-full outline-none focus-visible:outline-2 focus-visible:outline-offset-1"
               value={preset}
             >
-              <span
-                class="ease-spring group-data-selected/swatch:outline-foreground size-5 rounded-full bg-(--color-picker-color) shadow-[inset_0_0_0_1px_rgb(0_0_0/0.12)] outline-2 outline-offset-2 outline-transparent transition-[scale,outline-color] duration-220 hover:scale-110"
-              ></span>
+              <SwatchDot color={preset} />
             </ColorPickerSwatchItem>
           {/each}
         </ColorPickerSwatches>

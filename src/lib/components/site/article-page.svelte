@@ -39,7 +39,7 @@
   >
     {#snippet actions()}
       <a
-        class={[buttonClass("accent", "lg"), "group/cta"]}
+        class={[buttonClass("primary", "lg"), "group/cta"]}
         href={page.primaryCta.href}
       >
         {t(page.primaryCta.label)}
@@ -100,7 +100,7 @@
             {#each section.list as item (item)}
               <li class="flex gap-3 text-base text-pretty">
                 <span
-                  class="bg-accent mt-2.5 size-1.5 shrink-0 rounded-full"
+                  class="bg-foreground mt-2.5 size-1.5 shrink-0 rounded-full"
                   aria-hidden="true"
                 ></span>
                 {t(item)}

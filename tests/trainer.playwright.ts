@@ -31,9 +31,11 @@ const expectTrainer = async (
   patternId: PatternId
 ) => {
   await expect(pauseButton(page)).toBeVisible();
-  await expect(page.locator('[data-hud-select="drill"]')).toHaveText(
-    getDrill(drillId).name
-  );
+  await expect(
+    page
+      .locator("[data-island-drills]")
+      .getByRole("radio", { exact: true, name: getDrill(drillId).name })
+  ).toBeChecked();
   await expect
     .poll(async () => await readSettings(page))
     .toMatchObject({ patternId, presetId: drillId });
@@ -63,14 +65,24 @@ const expandIsland = async (page: Page) => {
   await expect(island).toHaveAttribute("data-expanded", "true");
 };
 
-/** Picks an option from a drill or path select in the trainer controls. */
+/** Picks a drill tab or a path from the path select in the trainer controls. */
 const choose = async (
   page: Page,
   select: "drill" | "pattern",
   label: string
 ) => {
   await expandIsland(page);
-  await page.locator(`[data-hud-select="${select}"]`).click();
+
+  if (select === "drill") {
+    await page
+      .locator("[data-island-drills]")
+      .getByRole("radio", { exact: true, name: label })
+      .click();
+
+    return;
+  }
+
+  await page.locator('[data-hud-select="pattern"]').click();
   const listbox = page.getByRole("listbox");
   await settle(listbox);
   await listbox.getByRole("option", { exact: true, name: label }).click();

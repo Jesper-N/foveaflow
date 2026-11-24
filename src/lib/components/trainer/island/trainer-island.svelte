@@ -1,5 +1,6 @@
 <script lang="ts">
   import LanguageSelect from "$lib/components/language-select.svelte";
+  import { getDrillGuide } from "$lib/content/drill-guides";
   import { t } from "$lib/i18n/translate";
   import {
     ArrowLeftRightIcon,
@@ -12,15 +13,16 @@
   import type { Attachment } from "svelte/attachments";
   import { on } from "svelte/events";
 
+  import DrillPreview from "../../icons/drill-preview.svelte";
   import IconButton from "../../ui/icon-button.svelte";
-  import { smoothResize } from "../../ui/smooth-resize";
   import TooltipGroup from "../../ui/tooltip-group.svelte";
   import { getTrainer } from "../trainer-context";
   import IslandAdjustments from "./island-adjustments.svelte";
+  import IslandDrillTabs from "./island-drill-tabs.svelte";
   import IslandSelects from "./island-selects.svelte";
 
-  const HOVER_INTENT_MS = 80;
-  const COLLAPSE_DELAY_MS = 320;
+  const HOVER_INTENT_MS = 30;
+  const COLLAPSE_DELAY_MS = 220;
 
   const POPUP_SELECTOR =
     "[data-slot='select-content'], [data-slot='popover-content'], [data-slot='tooltip-content']";
@@ -124,6 +126,20 @@
     };
   };
 
+  const measurePanel: Attachment<HTMLElement> = (panel) => {
+    const notch = panel.closest<HTMLElement>(".notch");
+
+    const observer = new ResizeObserver(() => {
+      notch?.style.setProperty("--open-height", `${panel.offsetHeight}px`);
+    });
+
+    observer.observe(panel);
+
+    return () => {
+      observer.disconnect();
+    };
+  };
+
   const handleDocumentPointerDown = (event: PointerEvent) => {
     lastPointerType = event.pointerType;
 
@@ -143,89 +159,38 @@
 
 <div
   id="trainer-controls"
-  class="island-shadow pointer-events-none absolute inset-x-0 top-0 z-10 flex justify-center px-2 pt-[max(0.5rem,env(safe-area-inset-top))] sm:pt-3"
+  class="notch-shadow pointer-events-none absolute inset-x-0 top-0 z-10 flex justify-center"
   data-idle={trainer.cursor.hidden && !trainer.motionPaused && !expanded}
   data-nosnippet
 >
   <section
-    class="island bg-popover text-foreground pointer-events-auto relative w-full max-w-120"
+    class="notch island bg-popover text-foreground pointer-events-auto relative"
     {@attach islandEvents}
     aria-label={t("Trainer controls")}
     data-expanded={expanded}
   >
     <Button
-      class="island-compact absolute top-0 left-1/2 z-1 h-(--compact-height) w-(--compact-width) -translate-x-1/2 cursor-pointer rounded-full outline-none"
+      class="absolute inset-0 z-1 cursor-pointer rounded-[inherit] outline-none"
       aria-expanded={expanded}
       aria-label={t("Trainer controls")}
       onclick={expand}
       tabindex={-1}
     ></Button>
 
-    <div class="island-panel" {@attach smoothResize()}>
-      <div class="grid gap-3 p-3">
-        <div
-          class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]"
-        >
-          <IslandSelects />
-          <TooltipGroup
-            class="flex items-center gap-1 justify-self-end max-sm:col-start-2 max-sm:row-span-2 max-sm:row-start-1"
-            side="bottom"
-          >
-            {#if trainer.canReverse}
-              <IconButton
-                class={trainer.settings.motionDirection === -1
-                  ? "bg-fill-hover text-foreground"
-                  : undefined}
-                aria-describedby="trainer-motion-status"
-                grouped
-                label={trainer.settings.motionDirection === 1
-                  ? t("Reverse motion direction")
-                  : t("Use forward motion direction")}
-                onclick={trainer.toggleDirection}
-              >
-                <ArrowLeftRightIcon aria-hidden="true" />
-              </IconButton>
-            {/if}
-            <IconButton
-              class="size-11 rounded-full"
-              aria-describedby="trainer-motion-status"
-              grouped
-              label={trainer.motionPaused
-                ? t("Resume motion")
-                : t("Pause motion")}
-              onclick={trainer.togglePaused}
-              shortcut="space"
-              variant="accent"
+    <div class="notch-clip absolute inset-0 overflow-hidden rounded-[inherit]">
+      <div
+        class="notch-panel absolute top-0 left-1/2 -ml-[calc(var(--open-width)/2)] grid w-(--open-width) gap-4 px-4 pt-[calc(env(safe-area-inset-top)+0.75rem)] pb-4 sm:px-5 sm:pb-5"
+        {@attach measurePanel}
+      >
+        <div class="flex items-center justify-between gap-3">
+          <IslandDrillTabs />
+          <nav aria-label={t("App actions")}>
+            <TooltipGroup
+              class="flex items-center gap-0.5"
+              offset={14}
+              side="bottom"
             >
-              {#if trainer.motionPaused}
-                <PlayIcon
-                  class="translate-x-px fill-current stroke-0"
-                  aria-hidden="true"
-                />
-              {:else}
-                <PauseIcon class="fill-current stroke-0" aria-hidden="true" />
-              {/if}
-            </IconButton>
-          </TooltipGroup>
-        </div>
-
-        <div
-          class={[
-            "bg-fill grid gap-x-6 gap-y-1 rounded-2xl px-4 py-2",
-            !trainer.isLilacChaser && "grid-cols-2",
-          ]}
-        >
-          <IslandAdjustments />
-        </div>
-
-        <nav aria-label={t("App actions")}>
-          <TooltipGroup
-            class="flex items-center justify-between gap-1"
-            offset={20}
-            side="bottom"
-          >
-            <LanguageSelect compact tip />
-            <span class="flex items-center gap-0.5">
+              <LanguageSelect compact tip />
               <IconButton
                 aria-controls="trainer-guide"
                 grouped
@@ -243,94 +208,189 @@
               >
                 <SlidersHorizontalIcon aria-hidden="true" />
               </IconButton>
-            </span>
+            </TooltipGroup>
+          </nav>
+        </div>
+
+        <div
+          class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 sm:grid-cols-[auto_minmax(0,1fr)_auto]"
+        >
+          <DrillPreview
+            class="h-24 w-32 shrink-0 rounded-2xl max-sm:hidden"
+            drillId={trainer.settings.drillId}
+            patternId={trainer.settings.patternId}
+            playing={false}
+          />
+          <div class="grid min-w-0 gap-3">
+            {#if trainer.isPursuit}
+              <IslandSelects />
+            {:else}
+              <p class="text-muted-foreground text-sm text-pretty">
+                {t(getDrillGuide(trainer.settings.drillId).summary)}
+              </p>
+            {/if}
+            <div
+              class={[
+                "grid gap-x-5 gap-y-1",
+                !trainer.isLilacChaser && "grid-cols-2",
+              ]}
+            >
+              <IslandAdjustments />
+            </div>
+          </div>
+          <TooltipGroup class="flex flex-col items-center gap-1" side="bottom">
+            <IconButton
+              class="size-12 rounded-full [&_svg]:size-5"
+              aria-describedby="trainer-motion-status"
+              grouped
+              label={trainer.motionPaused
+                ? t("Resume motion")
+                : t("Pause motion")}
+              onclick={trainer.togglePaused}
+              shortcut="space"
+              variant="primary"
+            >
+              {#if trainer.motionPaused}
+                <PlayIcon
+                  class="translate-x-px fill-current stroke-0"
+                  aria-hidden="true"
+                />
+              {:else}
+                <PauseIcon class="fill-current stroke-0" aria-hidden="true" />
+              {/if}
+            </IconButton>
+            {#if trainer.canReverse}
+              <IconButton
+                class={trainer.settings.motionDirection === -1
+                  ? "bg-fill-hover text-foreground"
+                  : undefined}
+                aria-describedby="trainer-motion-status"
+                grouped
+                label={trainer.settings.motionDirection === 1
+                  ? t("Reverse motion direction")
+                  : t("Use forward motion direction")}
+                onclick={trainer.toggleDirection}
+              >
+                <ArrowLeftRightIcon aria-hidden="true" />
+              </IconButton>
+            {/if}
           </TooltipGroup>
-        </nav>
+        </div>
       </div>
     </div>
   </section>
 </div>
 
 <style>
-  .island-shadow {
-    filter: drop-shadow(0 0 0.5px rgb(0 0 0 / 0.2))
+  .notch-shadow {
+    filter: drop-shadow(0 0 0.5px rgb(0 0 0 / 0.22))
       drop-shadow(0 1px 2px rgb(0 0 0 / 0.06));
     transition: opacity 160ms var(--ease-out);
   }
 
-  .island-shadow:has(:global(.island[data-expanded="true"])) {
+  .notch-shadow:has(:global(.notch[data-expanded="true"])) {
     filter: drop-shadow(0 0 0.5px rgb(0 0 0 / 0.16))
-      drop-shadow(0 8px 20px rgb(0 0 0 / 0.08));
+      drop-shadow(0 12px 28px rgb(0 0 0 / 0.12));
   }
 
   @media (hover: hover) and (pointer: fine) {
-    .island-shadow[data-idle="true"] {
+    .notch-shadow[data-idle="true"] {
       opacity: 0;
       transition-duration: 700ms;
     }
   }
 
-  .island {
-    --compact-width: 7.5rem;
-    --compact-height: 2.25rem;
-    --compact-inset: calc(50% - var(--compact-width) / 2);
+  .notch {
+    --ear: 0.625rem;
+    --radius: 0.75rem;
+    --open-width: min(36rem, calc(100vw - 1rem - 2 * var(--ear)));
 
-    clip-path: inset(
-      0 var(--compact-inset) calc(100% - var(--compact-height))
-        var(--compact-inset) round calc(var(--compact-height) / 2)
-    );
-    transition: clip-path 340ms var(--ease-drawer) 60ms;
+    width: 9.5rem;
+    height: calc(1.75rem + env(safe-area-inset-top));
+    border-radius: 0 0 var(--radius) var(--radius);
+    transition:
+      width 220ms var(--ease-out) 40ms,
+      height 220ms var(--ease-out) 40ms,
+      border-radius 220ms var(--ease-out) 40ms;
   }
 
-  .island[data-expanded="true"] {
-    clip-path: inset(0 0 0 0 round 1.5rem);
-    transition-duration: 480ms;
-    transition-delay: 0ms;
+  .notch[data-expanded="true"] {
+    --radius: 1.75rem;
+
+    width: var(--open-width);
+    height: var(--open-height, 12rem);
+    transition:
+      width 380ms var(--ease-spring-soft),
+      height 420ms var(--ease-spring-soft),
+      border-radius 380ms var(--ease-spring-soft);
   }
 
   @media (pointer: coarse) {
-    .island {
-      --compact-width: 8.5rem;
-      --compact-height: 2.75rem;
+    .notch:not([data-expanded="true"]) {
+      width: 10.5rem;
+      height: calc(2rem + env(safe-area-inset-top));
     }
   }
 
-  .island[data-expanded="true"] :global(.island-compact) {
+  .notch::before,
+  .notch::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: var(--ear);
+    height: var(--ear);
     pointer-events: none;
   }
 
-  .island-panel {
-    overflow: clip;
+  .notch::before {
+    right: 100%;
+    background: radial-gradient(
+      circle at 0 100%,
+      transparent calc(var(--ear) - 0.5px),
+      var(--popover) var(--ear)
+    );
+  }
+
+  .notch::after {
+    left: 100%;
+    background: radial-gradient(
+      circle at 100% 100%,
+      transparent calc(var(--ear) - 0.5px),
+      var(--popover) var(--ear)
+    );
+  }
+
+  .notch[data-expanded="true"] :global(button.absolute.inset-0) {
+    pointer-events: none;
+  }
+
+  .notch-panel {
     opacity: 0;
-    filter: blur(4px);
-    translate: 0 -4px;
+    translate: 0 -6px;
     pointer-events: none;
     transition:
-      opacity 120ms var(--ease-out),
-      filter 120ms var(--ease-out),
-      translate 120ms var(--ease-out);
+      opacity 90ms var(--ease-out),
+      translate 90ms var(--ease-out);
   }
 
-  .island[data-expanded="true"] .island-panel {
+  .notch[data-expanded="true"] .notch-panel {
     opacity: 1;
-    filter: blur(0);
     translate: 0 0;
     pointer-events: auto;
-    transition-duration: 280ms;
-    transition-delay: 90ms;
+    transition-duration: 200ms;
+    transition-delay: 60ms;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .island,
-    .island[data-expanded="true"] {
+    .notch,
+    .notch[data-expanded="true"] {
       transition: none;
     }
 
-    .island-panel,
-    .island[data-expanded="true"] .island-panel {
-      filter: none;
+    .notch-panel,
+    .notch[data-expanded="true"] .notch-panel {
       translate: 0 0;
-      transition: opacity 160ms var(--ease-out);
+      transition: opacity 120ms var(--ease-out);
     }
   }
 </style>

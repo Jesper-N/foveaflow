@@ -10,10 +10,8 @@ export interface FaqItem {
 export interface PageCopy {
   heading: string;
   hero: string;
-  body: readonly string[];
 }
 
-/** A drill page also answers three common questions. */
 export interface DrillPageCopy extends PageCopy {
-  faq: readonly [FaqItem, FaqItem, FaqItem];
+  faq: readonly FaqItem[];
 }

@@ -42,7 +42,7 @@ import type {
 import { SettingsSaver, loadSettings } from "$lib/trainer/settings/storage";
 import { createSelectController } from "@ui-sdk/svelte/select";
 import { mode, setMode } from "mode-watcher";
-import { untrack } from "svelte";
+import { tick, untrack } from "svelte";
 import type { Attachment } from "svelte/attachments";
 
 import { startAgentBridge } from "../agent-bridge";
@@ -56,7 +56,13 @@ import type { ShortcutAction } from "./shortcuts";
  * its methods instead of changing settings directly where a change needs
  * validation or side effects.
  */
-const DEFAULT_LETTER_COLOR = "#17181a";
+
+const focusDrillTabs = async () => {
+  await tick();
+  document
+    .querySelector<HTMLElement>("[data-island-drills] [data-checked]")
+    ?.focus();
+};
 
 export class Trainer {
   settings = $state<TrainerSettings>(createDefaultSettings());
@@ -69,8 +75,7 @@ export class Trainer {
   panelReturnFocus = $state.raw<HTMLElement | "none">("none");
 
   readonly cursor = new IdleCursor();
-  /** Open the drill and path menus from the M and P shortcuts. */
-  readonly drillSelect = createSelectController<unknown>();
+  /** Opens the path menu from the P shortcut. */
   readonly patternSelect = createSelectController<unknown>();
 
   /** Settings save only after the saved ones have loaded, so defaults never overwrite them. */
@@ -99,7 +104,9 @@ export class Trainer {
     )
   );
 
-  letterColor = $derived(this.settings.letterColor ?? DEFAULT_LETTER_COLOR);
+  letterColor = $derived(
+    this.settings.letterColor ?? getCanvasTheme(this.colorMode).canvasColor
+  );
 
   distractorColor = $derived(
     fadeHexColor(
@@ -386,7 +393,7 @@ export class Trainer {
 
       case "openDrillSelect": {
         this.islandExpanded = true;
-        this.drillSelect.setOpen(true);
+        void focusDrillTabs();
 
         return true;
       }

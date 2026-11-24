@@ -207,7 +207,7 @@
       {/if}
       <span class="min-w-0 flex-1 truncate">{option.label}</span>
       <SelectItemIndicator
-        class="bg-accent text-accent-foreground grid size-4.5 shrink-0 place-items-center rounded-md"
+        class="bg-foreground text-background grid size-4.5 shrink-0 place-items-center rounded-md"
       >
         <CheckIcon class="size-3.5" aria-hidden="true" stroke-width={2.5} />
       </SelectItemIndicator>

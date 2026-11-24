@@ -180,8 +180,6 @@ export const zhHK = {
     "FoveaFlow 是免費的瀏覽器工具。請安全使用；感覺不適就停止，不要把它當作醫療護理。",
   "FoveaFlow is built to work without an account. The app keeps your settings in your browser and uses Cloudflare to serve the site.":
     "FoveaFlow 設計為無需帳戶即可使用。應用程式會把你的設定儲存在瀏覽器裏，並通過 Cloudflare 提供網站服務。",
-  "FoveaFlow is free to use, requires no account or install, and stores settings locally in your browser.":
-    "FoveaFlow 免費使用，無需帳戶或安裝，設定會本機儲存在你的瀏覽器中。",
   "FoveaFlow is free to use. There is no account, paid plan, subscription, or in-app purchase.":
     "FoveaFlow 免費使用。沒有帳戶、付費方案、訂閱或應用程式內購買。",
   "FoveaFlow is free. No account, no paid plan.":
@@ -218,7 +216,6 @@ export const zhHK = {
     "閱讀、開會或打開太多標籤頁後，讓疲勞的眼睛做一次短暫的主動休息。",
   Gold: "金色",
   Guide: "指南",
-  "Guide FAQ": "指南常見問題",
   "Hard Turns Smooth Pursuit Drill": "急轉彎平滑追蹤練習",
   "Hard Turns is one of the most demanding Smooth Pursuit patterns because the target changes direction abruptly.":
     "急轉彎是難度較高的平滑追蹤圖案之一，因為目標會突然改變方向。",
@@ -245,7 +242,6 @@ export const zhHK = {
   "How do I make it easier?": "怎樣降低難度？",
   "How do I make this pattern easier?": "怎樣讓這個圖案更簡單？",
   "How each drill works": "各項練習怎樣做",
-  "How long should a session be?": "一次訓練應該多長？",
   "How should beginners start?": "初學者應該怎麼開始？",
   "How to practice": "練習方法",
   "IT professionals": "IT 專業人士",
@@ -257,14 +253,8 @@ export const zhHK = {
     "如果你有視力問題、近期眼部受傷、手術、神經系統症狀，或對使用移動視覺目標有任何顧慮，請先諮詢合資格專業人士再使用本應用程式。",
   "If you prefer a small set of visible controls and simply want to cycle through routines, BlinkCamp is a straightforward option. It is also open source.":
     "如果你喜歡少量清晰可見的控制項，只想依次切換練習，BlinkCamp 是一個簡單直接的選擇，而且是開源的。",
-  "It is a Smooth Pursuit pattern page that loads the matching path so you can start that style of moving-target practice immediately.":
-    "這是一個平滑追蹤圖案頁面，會載入對應路徑，讓你可以立刻開始這種移動目標練習。",
   "It is the task of following the correct target while similar moving objects compete for your attention.":
     "它的任務是在類似移動物體爭奪注意力時，繼續跟隨正確目標。",
-  "It trains selective attention, target identity, and steady tracking under clutter.":
-    "它訓練選擇性注意力、目標識別，以及複雜畫面下的穩定追蹤。",
-  "Keep sessions short and deliberate. The goal is focused practice, not pushing through discomfort.":
-    "每次練習保持簡短、專注。感到不適就停止，不必勉強堅持。",
   "Keep your head still and let your eyes do the work.":
     "保持頭部不動，讓眼睛完成追蹤。",
   "Keep your head still and lock onto the main, brightest ball.":
@@ -285,12 +275,6 @@ export const zhHK = {
   "Lilac Chaser Fixation and Peripheral Awareness":
     "丁香追逐者注視和周邊視覺覺察",
   "Lilac Chaser ball color": "丁香追逐者球顏色",
-  "Lilac Chaser is a fixation drill where you keep your gaze on a central cross while the outer pattern changes.":
-    "丁香追逐者是注視練習：外圈圖案變化時，你要把視線停在中心十字上。",
-  "Lilac Chaser is different from the moving-target drills. Instead of following an object, you keep your eyes on the center cross while the outer ring changes.":
-    "丁香追逐者和移動目標練習不同。你不是跟隨物體，而是在外圈變化時把視線固定在中心十字上。",
-  "Lilac Chaser is the best choice when you want to hold your gaze on the center and notice change away from it.":
-    "當你想把視線固定在中心，同時察覺中心外的變化時，丁香追逐者最合適。",
   "Lilac Chaser scale": "丁香追逐者大小",
   "Lilac Chaser trains fixation, peripheral awareness, visual attention, and noticing change away from the point you are looking at. For gaming, it can be a short warmup for catching movement near the edge of your vision without constantly shifting your gaze.":
     "丁香追逐者訓練注視、周邊視覺覺察、視覺注意，以及察覺視線落點外的變化。用於遊戲時，它可以作為短暫熱身，幫你在不頻繁轉移視線的情況下捕捉視野邊緣的移動。",
@@ -315,25 +299,18 @@ export const zhHK = {
   "Motion path": "運動路徑",
   "Motion paths": "運動路徑",
   "Multiple Distractions": "多重干擾",
-  "Multiple Distractions is FoveaFlow's clutter drill. One target matters most, but other moving objects share the screen and try to pull your attention away.":
-    "多重干擾是 FoveaFlow 的複雜畫面練習。一個目標最重要，但其他移動物體也在屏幕上，會試圖帶走你的注意力。",
-  "Multiple Distractions is the best choice for practicing selective attention under visual clutter.":
-    "多重干擾最適合練習複雜畫面下的選擇性注意力。",
   "Multiple Distractions trains selective attention, visual tracking under clutter, and target identity. You follow the motion and keep choosing the right ball when similar ones compete for your attention.":
     "多重干擾訓練選擇性注意力、複雜畫面下的視覺追蹤和目標識別。你需要跟隨運動，同時在相似物體爭奪注意力時持續選對目標。",
   "Multiple Distractions: keep track of the brightest target through visual clutter.":
     "多重干擾：在雜亂畫面中持續追蹤最亮的目標。",
   "Neither the number of settings nor a preference for one interface proves better aim or vision. Pick a comfortable routine you find useful.":
     "設定更多，或更喜歡某個介面，都不能證明瞄準或視力會變好。選擇你覺得舒適、有用的練習即可。",
-  "No. Keep your eyes on the center cross and let the visual effect happen in the periphery.":
-    "不需要。把視線停在中心十字上，讓視覺效果在周邊發生。",
   "Not medical care": "不是醫療護理",
   "On this page": "本頁內容",
   Opacity: "不透明度",
   "Open FoveaFlow": "開啟 FoveaFlow",
   "Open controls": "打開控制項",
   "Open guide": "打開指南",
-  Overview: "概覽",
   "Page navigation": "頁面導航",
   "Pattern routes": "路徑練習",
   "Pause motion": "暫停運動",
@@ -350,16 +327,8 @@ export const zhHK = {
     "隨機路徑沒有重複循環帶來的舒適感。目標的方向和位置更難預測，因此比簡單圓形或橢圓增加了更多目標搜尋負荷。",
   "Reaction Jumps": "反應跳點",
   "Reaction Jumps Eye Training": "反應跳點眼部訓練",
-  "Reaction Jumps is best when you want to find a new target position quickly and lock on before the next move.":
-    "當你想快速找到新目標位置，並在下一次移動前鎖定它時，反應跳點最合適。",
-  "Reaction Jumps is the drill to use when moving smoothly is not the point. The target holds still, then jumps to a new location.":
-    "如果重點不是平穩移動，就用反應跳點。目標會先停住，然後跳到新位置。",
-  "Reaction Jumps trains quick target acquisition and quick refocus from one target position to the next.":
-    "反應跳點訓練快速捕捉目標，以及從一個目標位置到下一個位置的快速轉移視線。",
   "Reaction Jumps trains quick target acquisition, saccadic eye movement, peripheral detection, and fast refocusing. It is useful when you want to react to a new visual target without moving your head first.":
     "反應跳點訓練快速目標捕捉、掃視眼動、周邊檢測和快速轉移視線。當你想在不先轉頭的情況下對新視覺目標作出反應時，它很有用。",
-  "Reaction Jumps works well as a short pre-game warmup or a fast visual reset between tasks.":
-    "反應跳點適合做短暫賽前熱身，也適合在任務之間快速重置視覺狀態。",
   "Reaction Jumps: find the target after it moves to a new position.":
     "反應跳點：目標移到新位置後，迅速找到它。",
   "Read full guide": "閱讀完整指南",
@@ -379,8 +348,6 @@ export const zhHK = {
   Ring: "圓環",
   "Role of peripheral vision in saccade planning": "周邊視覺在掃視規劃中的作用",
   "Saccadic reaction time factors": "掃視反應時間因素",
-  "Save your preferred settings locally and return to the same setup next time.":
-    "將喜歡的設定儲存在本機，下次繼續使用。",
   Scale: "比例",
   Semibold: "半粗體",
   "Settings saved in your browser": "設定已儲存在瀏覽器中",
@@ -391,7 +358,6 @@ export const zhHK = {
   "Sharpen your visual warmup before FPS games with tracking, refocus, peripheral awareness, and character movement reading drills.":
     "在 FPS 遊戲前，通過追蹤、轉移視線、周邊視覺覺察和角色移動判斷練習來熱身視覺狀態。",
   "Short bursts": "短時爆發",
-  "Should I follow the outer shapes?": "我應該跟隨外圈形狀嗎？",
   "Show target letters": "顯示目標字母",
   "Show trail": "顯示拖尾",
   Size: "大小",
@@ -401,12 +367,6 @@ export const zhHK = {
   "Smooth Pursuit Eye Training": "平滑追蹤眼部訓練",
   "Smooth Pursuit helps train steady tracking, moving-target focus, and controlled eye movement across more of your usable range.":
     "平滑追蹤幫助訓練穩定追蹤、移動目標專注，以及在更大可用範圍內控制眼動。",
-  "Smooth Pursuit is FoveaFlow's moving-target drill. Keep your head still, follow one target with your eyes, and stay smooth instead of jumping ahead.":
-    "平滑追蹤是 FoveaFlow 的移動目標練習。保持頭部不動，用眼睛跟隨一個目標，盡量平穩，不要搶先跳到前面。",
-  "Smooth Pursuit is a drill where you follow one moving target as steadily as you can with your eyes.":
-    "平滑追蹤是用眼睛盡量穩定跟隨一個移動目標的練習。",
-  "Smooth Pursuit is the best starting point when your goal is following one moving target as steadily as possible.":
-    "如果你的目標是盡量穩定地跟隨一個移動目標，平滑追蹤是最好的起點。",
   "Smooth Pursuit, Reaction Jumps, Multiple Distractions, and Lilac Chaser.":
     "平滑追蹤、反應跳點、多重干擾和丁香追逐者。",
   "Smooth Pursuit: follow one moving target along a chosen path.":
@@ -433,8 +393,6 @@ export const zhHK = {
   "Start a visual warmup in either browser tool. FoveaFlow gives you separate tracking, refocus, distraction, and fixation drills, with detailed controls available right now in the browser.":
     "兩款工具都能在瀏覽器中進行視覺熱身。FoveaFlow 分別提供追蹤、視線轉移、干擾和注視練習，現有瀏覽器版即可使用詳細設定。",
   "Start the warmup": "開始熱身",
-  "Start with a comfortable speed and a medium target size, then raise difficulty only when you can stay on the target cleanly.":
-    "從舒適的速度和中等目標大小開始。只有能穩定跟住目標後，再提高難度。",
   "Start with a predictable path for steady tracking. Try random movement or hard turns when you want to spend more time finding the target.":
     "先用可預測的路徑練習穩定追蹤。想增加尋找目標的練習，可以試試隨機運動或急轉彎。",
   "Start with fewer distractors, a slower speed, and a larger main target.":
@@ -455,11 +413,7 @@ export const zhHK = {
   "The floating controls tuck away while you practice. Your settings stay in your browser, so you can return to your preferred setup without an account.":
     "練習時，懸浮控制項會收起。設定儲存在瀏覽器中，下次無需帳戶就能繼續使用熟悉的配置。",
   "The full tool runs in the browser.": "完整工具都在瀏覽器中運作。",
-  "The goal is steady fixation and better awareness of change away from the center of your gaze.":
-    "目標是穩定注視，並更好地察覺視線中心之外的變化。",
   "The page you’re looking for does not exist.": "你要找的頁面不存在。",
-  "The path shape changes how predictable the movement feels and how often the target changes direction.":
-    "路徑形狀會改變運動的可預測感，以及目標改變方向的頻率。",
   "The patterns are simple screen paths and timing drills. They are not a clinical program, and results will vary from person to person.":
     "這些圖案是簡單的屏幕路徑和時機練習，不是臨床項目，效果因人而異。",
   "The public browser interface shows pattern navigation, Show Grid, and Darkmode controls.":
@@ -510,17 +464,9 @@ export const zhHK = {
   "Try this drill": "試試這項練習",
   Unpredictable: "不可預測",
   Updated: "更新日期",
-  "Use FoveaFlow as a short FPS warmup, an active screen break, or a focused visual practice session.":
-    "把 FoveaFlow 用作短時間 FPS 熱身、主動屏幕休息，或專注的視覺練習。",
-  "Use Lilac Chaser for a short fixation drill, a perceptual reset, or a quick change of pace between more active modes.":
-    "用丁香追逐者做短時間注視練習、感知重置，或在更主動的模式之間換個節奏。",
   "Use Reaction Jumps when you want to practice finding a new target.":
     "想練習快速找到新目標時，選擇反應跳點。",
-  "Use Smooth Pursuit for short browser-based practice, a pre-game warmup, or a focused reset after dense screen work.":
-    "用平滑追蹤做簡短的瀏覽器練習、遊戲前熱身，或在繁忙的屏幕工作後換換注意力。",
   "Use forward motion direction": "使用正向運動方向",
-  "Use it alongside your usual in-game practice if you enjoy it. There is no validated FoveaFlow routine or guaranteed performance gain.":
-    "如果你喜歡，可以配合日常遊戲練習使用。目前沒有經過驗證的 FoveaFlow 訓練方案，也不保證提升表現。",
   "Use it when you want steady moving-target practice without the extra clutter of other drills.":
     "當你想做穩定移動目標練習，又不想加入其他練習的額外干擾時使用它。",
   "Use predictable paths for steady tracking. Use random paths or hard turns when you want more target-search work.":
@@ -530,50 +476,8 @@ export const zhHK = {
   "Use safely": "安全使用",
   "Use slower speeds for clean refocusing. Raise the speed when you want a sharper reaction drill.":
     "先用較慢的速度練習準確地轉移視線，再提高速度，增加反應練習的難度。",
-  "Use the Bounce path for short smooth pursuit practice.":
-    "使用彈跳路徑做短時間平滑追蹤練習。",
-  "Use the Circle path for short smooth pursuit practice.":
-    "使用圓形路徑做短時間平滑追蹤練習。",
-  "Use the Clover path for short smooth pursuit practice.":
-    "使用三葉形路徑做短時間平滑追蹤練習。",
-  "Use the Corner tour path for short smooth pursuit practice.":
-    "使用四角巡遊路徑做短時間平滑追蹤練習。",
-  "Use the Diagonal path for short smooth pursuit practice.":
-    "使用對角線路徑做短時間平滑追蹤練習。",
-  "Use the Diamond loop path for short smooth pursuit practice.":
-    "使用菱形循環路徑做短時間平滑追蹤練習。",
-  "Use the Down-left sweep path for short smooth pursuit practice.":
-    "使用左下掃動路徑做短時間平滑追蹤練習。",
-  "Use the Down-right sweep path for short smooth pursuit practice.":
-    "使用右下掃動路徑做短時間平滑追蹤練習。",
-  "Use the Edge loop path for short smooth pursuit practice.":
-    "使用邊緣循環路徑做短時間平滑追蹤練習。",
-  "Use the Ellipse path for short smooth pursuit practice.":
-    "使用橢圓路徑做短時間平滑追蹤練習。",
-  "Use the Figure eight path for short smooth pursuit practice.":
-    "使用 8 字形路徑做短時間平滑追蹤練習。",
-  "Use the Hard turns path for short smooth pursuit practice.":
-    "使用急轉彎路徑做短時間平滑追蹤練習。",
-  "Use the Horizontal sweep path for short smooth pursuit practice.":
-    "使用水平掃動路徑做短時間平滑追蹤練習。",
-  "Use the Hourglass path for short smooth pursuit practice.":
-    "使用沙漏路徑做短時間平滑追蹤練習。",
-  "Use the Lissajous path for short smooth pursuit practice.":
-    "使用李薩如路徑做短時間平滑追蹤練習。",
-  "Use the Random path for short smooth pursuit practice.":
-    "使用隨機路徑做短時間平滑追蹤練習。",
-  "Use the Stair steps path for short smooth pursuit practice.":
-    "使用階梯路徑做短時間平滑追蹤練習。",
-  "Use the Vertical sweep path for short smooth pursuit practice.":
-    "使用垂直掃動路徑做短時間平滑追蹤練習。",
-  "Use the Wave path for short smooth pursuit practice.":
-    "使用波浪路徑做短時間平滑追蹤練習。",
-  "Use the Zigzag path for short smooth pursuit practice.":
-    "使用鋸齒路徑做短時間平滑追蹤練習。",
   "Use the app in a safe place where you can stop easily. Do not use it while driving, walking around, operating equipment, or doing anything that needs your full attention.":
     "請在安全、方便隨時停止的地方使用本應用程式。不要在開車、走路、操作設備，或進行任何需要全部注意力的事情時使用。",
-  "Use this drill when Smooth Pursuit feels too clean and you want a more realistic visual-attention challenge.":
-    "如果覺得平滑追蹤的畫面太簡單，想在更多干擾下練習視覺注意力，可以試試這個模式。",
   "Vertical Sweep Smooth Pursuit Drill": "垂直掃動平滑追蹤練習",
   "Vertical Sweep mirrors the simplicity of Horizontal Sweep but changes the direction of travel for straightforward up-down tracking.":
     "垂直掃動保留了水平掃動的簡單性，只是把移動方向改為上下，適合直接的上下追蹤。",
@@ -587,54 +491,9 @@ export const zhHK = {
   "Wave introduces a repeating up-and-down rhythm on top of horizontal movement. It stays readable and smooth without the abrupt feel of hard corners.":
     "波浪在水平移動上加入重複的上下節奏。它保持清晰和平滑，不會像硬轉角那樣突兀。",
   Weight: "粗細",
-  "What does Multiple Distractions train?": "多重干擾訓練什麼？",
-  "What does Reaction Jumps train?": "反應跳點訓練什麼？",
-  "What is Lilac Chaser?": "丁香追逐者是什麼？",
-  "What is Smooth Pursuit?": "平滑追蹤是什麼？",
   "What is available today": "目前可用的功能",
   "What is distractor tracking?": "什麼是干擾物追蹤？",
-  "What is the Bounce drill?": "彈跳練習是什麼？",
-  "What is the Circle drill?": "圓形練習是什麼？",
-  "What is the Clover drill?": "三葉形練習是什麼？",
-  "What is the Corner tour drill?": "四角巡遊練習是什麼？",
-  "What is the Diagonal drill?": "對角線練習是什麼？",
-  "What is the Diamond loop drill?": "菱形循環練習是什麼？",
-  "What is the Down-left sweep drill?": "左下掃動練習是什麼？",
-  "What is the Down-right sweep drill?": "右下掃動練習是什麼？",
-  "What is the Edge loop drill?": "邊緣循環練習是什麼？",
-  "What is the Ellipse drill?": "橢圓練習是什麼？",
-  "What is the Figure eight drill?": "8 字形練習是什麼？",
-  "What is the Hard turns drill?": "急轉彎練習是什麼？",
-  "What is the Horizontal sweep drill?": "水平掃動練習是什麼？",
-  "What is the Hourglass drill?": "沙漏練習是什麼？",
-  "What is the Lissajous drill?": "李薩如練習是什麼？",
-  "What is the Random drill?": "隨機練習是什麼？",
-  "What is the Stair steps drill?": "階梯練習是什麼？",
-  "What is the Vertical sweep drill?": "垂直掃動練習是什麼？",
-  "What is the Wave drill?": "波浪練習是什麼？",
-  "What is the Zigzag drill?": "鋸齒練習是什麼？",
-  "What is the goal of this mode?": "這個模式的目標是什麼？",
   "What it trains:": "訓練內容：",
-  "What makes the Bounce path different?": "彈跳路徑有什麼不同？",
-  "What makes the Circle path different?": "圓形路徑有什麼不同？",
-  "What makes the Clover path different?": "三葉形路徑有什麼不同？",
-  "What makes the Corner tour path different?": "四角巡遊路徑有什麼不同？",
-  "What makes the Diagonal path different?": "對角線路徑有什麼不同？",
-  "What makes the Diamond loop path different?": "菱形循環路徑有什麼不同？",
-  "What makes the Down-left sweep path different?": "左下掃動路徑有什麼不同？",
-  "What makes the Down-right sweep path different?": "右下掃動路徑有什麼不同？",
-  "What makes the Edge loop path different?": "邊緣循環路徑有什麼不同？",
-  "What makes the Ellipse path different?": "橢圓路徑有什麼不同？",
-  "What makes the Figure eight path different?": "8 字形路徑有什麼不同？",
-  "What makes the Hard turns path different?": "急轉彎路徑有什麼不同？",
-  "What makes the Horizontal sweep path different?": "水平掃動路徑有什麼不同？",
-  "What makes the Hourglass path different?": "沙漏路徑有什麼不同？",
-  "What makes the Lissajous path different?": "李薩如路徑有什麼不同？",
-  "What makes the Random path different?": "隨機路徑有什麼不同？",
-  "What makes the Stair steps path different?": "階梯路徑有什麼不同？",
-  "What makes the Vertical sweep path different?": "垂直掃動路徑有什麼不同？",
-  "What makes the Wave path different?": "波浪路徑有什麼不同？",
-  "What makes the Zigzag path different?": "鋸齒路徑有什麼不同？",
   "What the app is": "應用程式是什麼",
   "What this warmup can and cannot tell you":
     "這套熱身能說明甚麼，不能說明甚麼",
@@ -644,14 +503,7 @@ export const zhHK = {
   "When should I choose this over Smooth Pursuit?":
     "什麼時候該選它而不是平滑追蹤？",
   "When should I use Smooth Pursuit?": "什麼時候該用平滑追蹤？",
-  "Which drill is best for fixation and edge-of-vision awareness?":
-    "哪個練習最適合注視和視野邊緣感知？",
-  "Which drill is best for quick refocus?": "哪個練習最適合快速轉移視線？",
-  "Which drill is best for steady tracking?": "哪個練習最適合穩定追蹤？",
-  "Which drill is best when the screen feels busy?":
-    "屏幕感覺很亂時，哪個練習最合適？",
   "Which settings matter most?": "哪些設定最重要？",
-  "Which settings should I change first?": "應該先改哪些設定？",
   "You can change the target’s appearance, adjust motion behavior, and keep your preferred settings on this device. Each main drill and Smooth Pursuit path also has a direct link.":
     "你可以修改目標外觀、調整運動方式，並將喜歡的設定儲存在這部裝置上。每個主要練習和平滑追蹤路徑亦有直接連結。",
   "You can clear saved FoveaFlow settings from your browser's site data controls. You can also use browser or extension settings to block optional analytics scripts.":

@@ -2,7 +2,6 @@
   import { drillGuides } from "$lib/content/drill-guides";
   import { mainRouteForDrill } from "$lib/content/drill-routes";
   import { homeCopy } from "$lib/content/home";
-  import { freeUseNote } from "$lib/content/site";
   import { t } from "$lib/i18n/translate";
   import { getDrill } from "$lib/trainer/settings/drills";
   import type { DrillId } from "$lib/trainer/settings/drills";
@@ -98,16 +97,6 @@
           </li>
         {/each}
       </ul>
-    </section>
-
-    <section class={guideSection} aria-labelledby="trainer-guide-overview">
-      <h3 id="trainer-guide-overview" class={guideHeading}>{t("Overview")}</h3>
-      <div class="text-md text-muted-foreground grid gap-3 text-pretty">
-        {#each homeCopy.body as paragraph (paragraph)}
-          <p>{t(paragraph)}</p>
-        {/each}
-        <p>{t(freeUseNote)}</p>
-      </div>
     </section>
   </div>
 </div>

@@ -1,13 +1,12 @@
 <script lang="ts">
   import { articles } from "$lib/content/articles";
   import type { Article } from "$lib/content/articles";
-  import { guideFaq, referenceLinks } from "$lib/content/guide";
+  import { referenceLinks } from "$lib/content/guide";
   import { t } from "$lib/i18n/translate";
   import { ArrowUpRightIcon } from "@lucide/svelte";
   import type { Attachment } from "svelte/attachments";
 
   import DrillIcon from "../icons/drill-icon.svelte";
-  import AccordionList from "../ui/accordion-list.svelte";
   import BrandMark from "../ui/brand-mark.svelte";
   import { pressable } from "../ui/styles";
   import ControlsPlayground from "./controls-playground.svelte";
@@ -24,13 +23,6 @@
     (node) => {
       node.style.flexGrow = String(minutes);
     };
-
-  let faq = $derived(
-    guideFaq.map(({ question, answer }) => ({
-      answer: t(answer),
-      question: t(question),
-    }))
-  );
 </script>
 
 <PageSection
@@ -104,10 +96,6 @@
     {/each}
   </div>
 </section>
-
-<PageSection id="faq" data-nosnippet heading={t("Guide FAQ")}>
-  <AccordionList class="-mt-4" items={faq} />
-</PageSection>
 
 <PageSection
   id="references"

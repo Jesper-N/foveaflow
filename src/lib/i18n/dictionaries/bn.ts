@@ -181,8 +181,6 @@ export const bn = {
     "FoveaFlow বিনা খরচের ব্রাউজার টুল। নিরাপদে ব্যবহার করুন, অস্বস্তি লাগলে থামুন, এবং এটিকে চিকিৎসা ভাববেন না।",
   "FoveaFlow is built to work without an account. The app keeps your settings in your browser and uses Cloudflare to serve the site.":
     "FoveaFlow অ্যাকাউন্ট ছাড়া কাজ করার জন্য বানানো। অ্যাপটি আপনার সেটিং ব্রাউজারে রাখে এবং সাইট চালাতে Cloudflare ব্যবহার করে।",
-  "FoveaFlow is free to use, requires no account or install, and stores settings locally in your browser.":
-    "FoveaFlow ব্যবহার করতে খরচ নেই, অ্যাকাউন্ট বা ইনস্টল লাগে না, এবং সেটিং আপনার ব্রাউজারেই রাখা হয়।",
   "FoveaFlow is free to use. There is no account, paid plan, subscription, or in-app purchase.":
     "FoveaFlow বিনা খরচে ব্যবহার করা যায়। অ্যাকাউন্ট, পেইড প্ল্যান, সাবস্ক্রিপশন বা ইন-অ্যাপ কেনাকাটা নেই।",
   "FoveaFlow is free. No account, no paid plan.":
@@ -219,7 +217,6 @@ export const bn = {
     "পড়া, মিটিং বা বেশি ট্যাবের পর ক্লান্ত চোখকে ছোট সক্রিয় বিরতি দিন।",
   Gold: "সোনালি",
   Guide: "নির্দেশিকা",
-  "Guide FAQ": "গাইড প্রশ্নোত্তর",
   "Hard Turns Smooth Pursuit Drill": "হার্ড টার্নস মসৃণ অনুসরণ ড্রিল",
   "Hard Turns is one of the most demanding Smooth Pursuit patterns because the target changes direction abruptly.":
     "হার্ড টার্নস সবচেয়ে কঠিন মসৃণ অনুসরণ প্যাটার্নগুলোর একটি, কারণ লক্ষ্য হঠাৎ দিক বদলায়।",
@@ -246,7 +243,6 @@ export const bn = {
   "How do I make it easier?": "এটি কীভাবে সহজ করব?",
   "How do I make this pattern easier?": "এই প্যাটার্ন কীভাবে সহজ করব?",
   "How each drill works": "প্রতিটি ড্রিল কীভাবে কাজ করে",
-  "How long should a session be?": "একটি সেশন কতক্ষণ হওয়া উচিত?",
   "How should beginners start?": "নতুনরা কীভাবে শুরু করবে?",
   "How to practice": "যেভাবে অনুশীলন করবেন",
   "IT professionals": "IT পেশাজীবী",
@@ -258,14 +254,8 @@ export const bn = {
     "আপনার দৃষ্টি-সংক্রান্ত সমস্যা, সাম্প্রতিক চোখের আঘাত, সার্জারি, স্নায়বিক উপসর্গ, বা চলমান ভিজ্যুয়াল লক্ষ্য ব্যবহার নিয়ে কোনো উদ্বেগ থাকলে অ্যাপ ব্যবহারের আগে যোগ্য পেশাদারের পরামর্শ নিন।",
   "If you prefer a small set of visible controls and simply want to cycle through routines, BlinkCamp is a straightforward option. It is also open source.":
     "কম নিয়ন্ত্রণ রেখে শুধু রুটিন পাল্টে যেতে চাইলে BlinkCamp সহজ একটি বিকল্প। এর সোর্স কোডও উন্মুক্ত।",
-  "It is a Smooth Pursuit pattern page that loads the matching path so you can start that style of moving-target practice immediately.":
-    "এটি একটি মসৃণ অনুসরণ প্যাটার্ন পেজ, যা মিল থাকা পথ লোড করে যাতে আপনি সঙ্গে সঙ্গে সেই ধরনের চলমান লক্ষ্য অনুশীলন শুরু করতে পারেন।",
   "It is the task of following the correct target while similar moving objects compete for your attention.":
     "এটি এমন একটি কাজ, যেখানে একই রকম চলমান বস্তু মনোযোগ টানতে চাইলে আপনাকে ঠিক লক্ষ্য অনুসরণ করতে হয়।",
-  "It trains selective attention, target identity, and steady tracking under clutter.":
-    "এটি ভিড়ের মধ্যে নির্বাচিত মনোযোগ, লক্ষ্যের পরিচয় ধরে রাখা এবং স্থির ট্র্যাকিং অনুশীলন করায়।",
-  "Keep sessions short and deliberate. The goal is focused practice, not pushing through discomfort.":
-    "সেশন ছোট ও সচেতনভাবে করুন। লক্ষ্য হলো ফোকাসড অনুশীলন, অস্বস্তি সহ্য করে চালিয়ে যাওয়া নয়।",
   "Keep your head still and let your eyes do the work.":
     "মাথা স্থির রাখুন, কাজটা চোখকে করতে দিন।",
   "Keep your head still and lock onto the main, brightest ball.":
@@ -286,12 +276,6 @@ export const bn = {
   "Lilac Chaser Fixation and Peripheral Awareness":
     "লাইলাক চেজার ফিক্সেশন ও পারিপার্শ্বিক সচেতনতা",
   "Lilac Chaser ball color": "লাইলাক চেজার বলের রং",
-  "Lilac Chaser is a fixation drill where you keep your gaze on a central cross while the outer pattern changes.":
-    "লাইলাক চেজার একটি ফিক্সেশন ড্রিল, যেখানে বাইরের প্যাটার্ন বদলালেও আপনি মাঝের ক্রসে তাকিয়ে থাকেন।",
-  "Lilac Chaser is different from the moving-target drills. Instead of following an object, you keep your eyes on the center cross while the outer ring changes.":
-    "লাইলাক চেজার চলমান লক্ষ্য ড্রিলগুলোর থেকে আলাদা। কোনো বস্তু অনুসরণ না করে বাইরের রিং বদলানোর সময় আপনি মাঝের ক্রসে চোখ রাখেন।",
-  "Lilac Chaser is the best choice when you want to hold your gaze on the center and notice change away from it.":
-    "মাঝখানে তাকিয়ে থেকে তার বাইরে বদল খেয়াল করতে চাইলে লাইলাক চেজার সবচেয়ে ভালো পছন্দ।",
   "Lilac Chaser scale": "লাইলাক চেজার স্কেল",
   "Lilac Chaser trains fixation, peripheral awareness, visual attention, and noticing change away from the point you are looking at. For gaming, it can be a short warmup for catching movement near the edge of your vision without constantly shifting your gaze.":
     "লাইলাক চেজার ফিক্সেশন, পারিপার্শ্বিক সচেতনতা, ভিজ্যুয়াল মনোযোগ এবং আপনি যেখানে তাকিয়ে আছেন তার বাইরে বদল খেয়াল করা অনুশীলন করায়। গেমিংয়ের ক্ষেত্রে বারবার দৃষ্টি না সরিয়ে দৃষ্টির প্রান্তের নড়াচড়া ধরার ছোট ওয়ার্মআপ হিসেবে এটি কাজে লাগতে পারে।",
@@ -316,25 +300,18 @@ export const bn = {
   "Motion path": "চলনের পথ",
   "Motion paths": "চলাচলের পথ",
   "Multiple Distractions": "একাধিক বিভ্রান্তি",
-  "Multiple Distractions is FoveaFlow's clutter drill. One target matters most, but other moving objects share the screen and try to pull your attention away.":
-    "একাধিক বিভ্রান্তি হলো FoveaFlow-এর ভিজ্যুয়াল ভিড় ড্রিল। একটি লক্ষ্যই সবচেয়ে গুরুত্বপূর্ণ, কিন্তু অন্য চলমান বস্তুগুলো একই স্ক্রিনে থাকে এবং আপনার মনোযোগ সরাতে চায়।",
-  "Multiple Distractions is the best choice for practicing selective attention under visual clutter.":
-    "ভিজ্যুয়াল ভিড়ের মধ্যে নির্বাচিত মনোযোগ অনুশীলনের জন্য একাধিক বিভ্রান্তি সবচেয়ে ভালো পছন্দ।",
   "Multiple Distractions trains selective attention, visual tracking under clutter, and target identity. You follow the motion and keep choosing the right ball when similar ones compete for your attention.":
     "একাধিক বিভ্রান্তি নির্বাচিত মনোযোগ, ভিড়ের মধ্যে ভিজ্যুয়াল ট্র্যাকিং এবং লক্ষ্য চেনা অনুশীলন করায়। এখানে চলন অনুসরণ করতে হয়, পাশাপাশি একই রকম বস্তু মনোযোগ চাইলে বারবার ঠিক বস্তুটি বেছে রাখতে হয়।",
   "Multiple Distractions: keep track of the brightest target through visual clutter.":
     "একাধিক বিভ্রান্তি: ব্যস্ত দৃশ্যে সবচেয়ে উজ্জ্বল লক্ষ্যটি অনুসরণ করুন।",
   "Neither the number of settings nor a preference for one interface proves better aim or vision. Pick a comfortable routine you find useful.":
     "বেশি সেটিং থাকা বা কোনো ইন্টারফেস পছন্দ হওয়া উন্নত নিশানা বা দৃষ্টিশক্তির প্রমাণ নয়। আপনার কাছে আরামদায়ক ও উপকারী মনে হয় এমন রুটিন বেছে নিন।",
-  "No. Keep your eyes on the center cross and let the visual effect happen in the periphery.":
-    "না। মাঝের ক্রসে চোখ রাখুন এবং প্রান্তে ভিজ্যুয়াল প্রভাব হতে দিন।",
   "Not medical care": "চিকিৎসা নয়",
   "On this page": "এই পেজে",
   Opacity: "অস্বচ্ছতা",
   "Open FoveaFlow": "FoveaFlow খুলুন",
   "Open controls": "কন্ট্রোল খুলুন",
   "Open guide": "গাইড খুলুন",
-  Overview: "সারাংশ",
   "Page navigation": "পেজ নেভিগেশন",
   "Pattern routes": "অনুশীলনের পথ",
   "Pause motion": "চলন থামান",
@@ -351,16 +328,8 @@ export const bn = {
     "র‍্যান্ডমে পুনরাবৃত্ত লুপ নেই। লক্ষ্য কখন দিক বা অবস্থান বদলাবে তা বোঝা কঠিন, তাই বৃত্ত বা উপবৃত্তের চেয়ে লক্ষ্য খোঁজার কাজ বেশি।",
   "Reaction Jumps": "দ্রুত ফোকাস বদল",
   "Reaction Jumps Eye Training": "দ্রুত ফোকাস বদল চোখের অনুশীলন",
-  "Reaction Jumps is best when you want to find a new target position quickly and lock on before the next move.":
-    "নতুন লক্ষ্য অবস্থান দ্রুত খুঁজে পরের মুভের আগে চোখ স্থির করতে চাইলে দ্রুত ফোকাস বদল সবচেয়ে ভালো।",
-  "Reaction Jumps is the drill to use when moving smoothly is not the point. The target holds still, then jumps to a new location.":
-    "মসৃণ চলন অনুসরণই লক্ষ্য না হলে দ্রুত ফোকাস বদল ব্যবহার করুন। লক্ষ্যটি স্থির থাকে, তারপর নতুন জায়গায় লাফ দেয়।",
-  "Reaction Jumps trains quick target acquisition and quick refocus from one target position to the next.":
-    "দ্রুত ফোকাস বদল দ্রুত লক্ষ্য ধরা এবং এক অবস্থান থেকে আরেক অবস্থানে দ্রুত রিফোকাস অনুশীলন করায়।",
   "Reaction Jumps trains quick target acquisition, saccadic eye movement, peripheral detection, and fast refocusing. It is useful when you want to react to a new visual target without moving your head first.":
     "দ্রুত ফোকাস বদল দ্রুত লক্ষ্য ধরা, saccadic eye movement, পারিপার্শ্বিক শনাক্তকরণ এবং দ্রুত রিফোকাস অনুশীলন করায়। মাথা আগে না সরিয়ে নতুন ভিজ্যুয়াল লক্ষ্যে প্রতিক্রিয়া দিতে চাইলে এটি কাজে লাগে।",
-  "Reaction Jumps works well as a short pre-game warmup or a fast visual reset between tasks.":
-    "গেমের আগে ছোট ওয়ার্মআপ বা কাজের মাঝে দ্রুত ভিজ্যুয়াল রিসেট হিসেবে দ্রুত ফোকাস বদল ভালো কাজ করে।",
   "Reaction Jumps: find the target after it moves to a new position.":
     "দ্রুত ফোকাস বদল: লক্ষ্য নতুন জায়গায় যাওয়ার পর সেটি খুঁজে নিন।",
   "Read full guide": "পুরো গাইড পড়ুন",
@@ -381,8 +350,6 @@ export const bn = {
   "Role of peripheral vision in saccade planning":
     "স্যাকাড পরিকল্পনায় পারিপার্শ্বিক দৃষ্টির ভূমিকা",
   "Saccadic reaction time factors": "স্যাকাডিক প্রতিক্রিয়া সময়ের কারণ",
-  "Save your preferred settings locally and return to the same setup next time.":
-    "পছন্দের সেটিং ডিভাইসে সেভ করুন, পরেরবার একইভাবে শুরু করতে পারবেন।",
   Scale: "স্কেল",
   Semibold: "সেমিবোল্ড",
   "Settings saved in your browser": "সেটিং আপনার ব্রাউজারে সংরক্ষিত",
@@ -393,7 +360,6 @@ export const bn = {
   "Sharpen your visual warmup before FPS games with tracking, refocus, peripheral awareness, and character movement reading drills.":
     "FPS গেমের আগে ট্র্যাকিং, রিফোকাস, পারিপার্শ্বিক সচেতনতা এবং চরিত্রের চলন পড়ার ড্রিল দিয়ে ভিজ্যুয়াল ওয়ার্মআপ ঝালিয়ে নিন।",
   "Short bursts": "ছোট বার্স্ট",
-  "Should I follow the outer shapes?": "বাইরের আকৃতিগুলো কি অনুসরণ করব?",
   "Show target letters": "লক্ষ্যের অক্ষর দেখান",
   "Show trail": "ট্রেইল দেখান",
   Size: "সাইজ",
@@ -403,12 +369,6 @@ export const bn = {
   "Smooth Pursuit Eye Training": "মসৃণ অনুসরণ চোখের অনুশীলন",
   "Smooth Pursuit helps train steady tracking, moving-target focus, and controlled eye movement across more of your usable range.":
     "মসৃণ অনুসরণ স্থির ট্র্যাকিং, চলমান লক্ষ্য ফোকাস এবং ব্যবহারযোগ্য পরিসরের বেশি অংশ জুড়ে নিয়ন্ত্রিত চোখের চলন অনুশীলনে সাহায্য করে।",
-  "Smooth Pursuit is FoveaFlow's moving-target drill. Keep your head still, follow one target with your eyes, and stay smooth instead of jumping ahead.":
-    "মসৃণ অনুসরণ হলো FoveaFlow-এর চলমান লক্ষ্য ড্রিল। মাথা স্থির রাখুন, চোখ দিয়ে একটি লক্ষ্য অনুসরণ করুন, এবং আগে লাফিয়ে না গিয়ে মসৃণ থাকুন।",
-  "Smooth Pursuit is a drill where you follow one moving target as steadily as you can with your eyes.":
-    "মসৃণ অনুসরণ এমন ড্রিল যেখানে চোখ দিয়ে একটি চলমান লক্ষ্য যতটা পারেন স্থিরভাবে অনুসরণ করেন।",
-  "Smooth Pursuit is the best starting point when your goal is following one moving target as steadily as possible.":
-    "একটি চলমান লক্ষ্য যতটা সম্ভব স্থিরভাবে অনুসরণ করাই লক্ষ্য হলে মসৃণ অনুসরণ সবচেয়ে ভালো শুরু।",
   "Smooth Pursuit, Reaction Jumps, Multiple Distractions, and Lilac Chaser.":
     "মসৃণ অনুসরণ, দ্রুত ফোকাস বদল, একাধিক বিভ্রান্তি ও লাইলাক চেজার।",
   "Smooth Pursuit: follow one moving target along a chosen path.":
@@ -435,8 +395,6 @@ export const bn = {
   "Start a visual warmup in either browser tool. FoveaFlow gives you separate tracking, refocus, distraction, and fixation drills, with detailed controls available right now in the browser.":
     "দুটি ব্রাউজার টুলেই দৃষ্টির ওয়ার্মআপ করা যায়। FoveaFlow-এ অনুসরণ, দৃষ্টি বদল, বিক্ষেপ ও দৃষ্টি স্থির রাখার আলাদা অনুশীলন আছে, যার বিস্তারিত নিয়ন্ত্রণ এখনই ব্রাউজারে ব্যবহার করা যায়।",
   "Start the warmup": "ওয়ার্মআপ শুরু করুন",
-  "Start with a comfortable speed and a medium target size, then raise difficulty only when you can stay on the target cleanly.":
-    "আরামদায়ক গতি ও মাঝারি লক্ষ্যের সাইজ দিয়ে শুরু করুন, তারপর লক্ষ্য পরিষ্কারভাবে ধরে রাখতে পারলে তবেই কঠিনতা বাড়ান।",
   "Start with a predictable path for steady tracking. Try random movement or hard turns when you want to spend more time finding the target.":
     "স্থিরভাবে অনুসরণ করতে প্রথমে অনুমান করা যায় এমন পথ বেছে নিন। লক্ষ্য খোঁজার অনুশীলন বাড়াতে র‍্যান্ডম গতি বা তীক্ষ্ণ বাঁক চেষ্টা করুন।",
   "Start with fewer distractors, a slower speed, and a larger main target.":
@@ -457,12 +415,8 @@ export const bn = {
   "The floating controls tuck away while you practice. Your settings stay in your browser, so you can return to your preferred setup without an account.":
     "অনুশীলনের সময় ভাসমান নিয়ন্ত্রণগুলো গুটিয়ে যায়। সেটিং ব্রাউজারেই থাকে, তাই অ্যাকাউন্ট ছাড়াই পছন্দের সেটআপে ফিরে আসতে পারবেন।",
   "The full tool runs in the browser.": "পুরো টুলটি ব্রাউজারেই চলে।",
-  "The goal is steady fixation and better awareness of change away from the center of your gaze.":
-    "লক্ষ্য হলো স্থির ফিক্সেশন এবং দৃষ্টির কেন্দ্রের বাইরে বদল আরও ভালোভাবে খেয়াল করা।",
   "The page you’re looking for does not exist.":
     "আপনি যে পৃষ্ঠাটি খুঁজছেন সেটি নেই।",
-  "The path shape changes how predictable the movement feels and how often the target changes direction.":
-    "পথের আকৃতি বদলালে চলন কতটা অনুমানযোগ্য লাগে এবং লক্ষ্য কতবার দিক বদলায় তা বদলায়।",
   "The patterns are simple screen paths and timing drills. They are not a clinical program, and results will vary from person to person.":
     "প্যাটার্নগুলো সহজ স্ক্রিন পথ ও টাইমিং ড্রিল। এগুলো ক্লিনিক্যাল প্রোগ্রাম নয়, এবং ফল ব্যক্তি ভেদে বদলাবে।",
   "The public browser interface shows pattern navigation, Show Grid, and Darkmode controls.":
@@ -513,17 +467,9 @@ export const bn = {
   "Try this drill": "এই অনুশীলনটি চেষ্টা করুন",
   Unpredictable: "অনুমান করা কঠিন",
   Updated: "হালনাগাদের তারিখ",
-  "Use FoveaFlow as a short FPS warmup, an active screen break, or a focused visual practice session.":
-    "FoveaFlow ছোট FPS ওয়ার্মআপ, সক্রিয় স্ক্রিন বিরতি বা ফোকাসড ভিজ্যুয়াল অনুশীলন সেশন হিসেবে ব্যবহার করুন।",
-  "Use Lilac Chaser for a short fixation drill, a perceptual reset, or a quick change of pace between more active modes.":
-    "ছোট ফিক্সেশন ড্রিল, উপলব্ধির রিসেট, বা বেশি সক্রিয় মোডের মাঝে দ্রুত গতি বদলের জন্য লাইলাক চেজার ব্যবহার করুন।",
   "Use Reaction Jumps when you want to practice finding a new target.":
     "নতুন লক্ষ্য খুঁজে পাওয়ার অনুশীলনে দ্রুত ফোকাস বদল ব্যবহার করুন।",
-  "Use Smooth Pursuit for short browser-based practice, a pre-game warmup, or a focused reset after dense screen work.":
-    "ব্রাউজারে ছোট অনুশীলন, গেমের আগে ওয়ার্মআপ বা দীর্ঘক্ষণ স্ক্রিনে কাজের পর মনোযোগ ফিরিয়ে আনতে মসৃণ অনুসরণ ব্যবহার করুন।",
   "Use forward motion direction": "সামনের দিকের চলন ব্যবহার করুন",
-  "Use it alongside your usual in-game practice if you enjoy it. There is no validated FoveaFlow routine or guaranteed performance gain.":
-    "ভালো লাগলে গেমের স্বাভাবিক অনুশীলনের পাশাপাশি ব্যবহার করুন। FoveaFlow-এর কোনো যাচাইকৃত রুটিন বা পারফরম্যান্স বাড়ার নিশ্চয়তা নেই।",
   "Use it when you want steady moving-target practice without the extra clutter of other drills.":
     "অন্য ড্রিলের বাড়তি ভিড় ছাড়া স্থিরভাবে চলমান লক্ষ্য অনুশীলন চাইলে এটি ব্যবহার করুন।",
   "Use predictable paths for steady tracking. Use random paths or hard turns when you want more target-search work.":
@@ -533,50 +479,8 @@ export const bn = {
   "Use safely": "নিরাপদে ব্যবহার করুন",
   "Use slower speeds for clean refocusing. Raise the speed when you want a sharper reaction drill.":
     "পরিষ্কার রিফোকাসের জন্য কম গতি ব্যবহার করুন। বেশি তীক্ষ্ণ প্রতিক্রিয়া ড্রিল চাইলে গতি বাড়ান।",
-  "Use the Bounce path for short smooth pursuit practice.":
-    "ছোট মসৃণ অনুসরণ অনুশীলনের জন্য বাউন্স পথ ব্যবহার করুন।",
-  "Use the Circle path for short smooth pursuit practice.":
-    "ছোট মসৃণ অনুসরণ অনুশীলনের জন্য বৃত্ত পথ ব্যবহার করুন।",
-  "Use the Clover path for short smooth pursuit practice.":
-    "ছোট মসৃণ অনুসরণ অনুশীলনের জন্য ক্লোভার পথ ব্যবহার করুন।",
-  "Use the Corner tour path for short smooth pursuit practice.":
-    "ছোট মসৃণ অনুসরণ অনুশীলনের জন্য কর্নার ট্যুর পথ ব্যবহার করুন।",
-  "Use the Diagonal path for short smooth pursuit practice.":
-    "ছোট মসৃণ অনুসরণ অনুশীলনের জন্য তির্যক পথ ব্যবহার করুন।",
-  "Use the Diamond loop path for short smooth pursuit practice.":
-    "ছোট মসৃণ অনুসরণ অনুশীলনের জন্য ডায়মন্ড লুপ পথ ব্যবহার করুন।",
-  "Use the Down-left sweep path for short smooth pursuit practice.":
-    "ছোট মসৃণ অনুসরণ অনুশীলনের জন্য নিচে-বামে সুইপ পথ ব্যবহার করুন।",
-  "Use the Down-right sweep path for short smooth pursuit practice.":
-    "ছোট মসৃণ অনুসরণ অনুশীলনের জন্য নিচে-ডানে সুইপ পথ ব্যবহার করুন।",
-  "Use the Edge loop path for short smooth pursuit practice.":
-    "ছোট মসৃণ অনুসরণ অনুশীলনের জন্য এজ লুপ পথ ব্যবহার করুন।",
-  "Use the Ellipse path for short smooth pursuit practice.":
-    "ছোট মসৃণ অনুসরণ অনুশীলনের জন্য উপবৃত্ত পথ ব্যবহার করুন।",
-  "Use the Figure eight path for short smooth pursuit practice.":
-    "ছোট মসৃণ অনুসরণ অনুশীলনের জন্য ফিগার এইট পথ ব্যবহার করুন।",
-  "Use the Hard turns path for short smooth pursuit practice.":
-    "ছোট মসৃণ অনুসরণ অনুশীলনের জন্য হার্ড টার্নস পথ ব্যবহার করুন।",
-  "Use the Horizontal sweep path for short smooth pursuit practice.":
-    "ছোট মসৃণ অনুসরণ অনুশীলনের জন্য আড়াআড়ি সুইপ পথ ব্যবহার করুন।",
-  "Use the Hourglass path for short smooth pursuit practice.":
-    "ছোট মসৃণ অনুসরণ অনুশীলনের জন্য আওয়ারগ্লাস পথ ব্যবহার করুন।",
-  "Use the Lissajous path for short smooth pursuit practice.":
-    "ছোট মসৃণ অনুসরণ অনুশীলনের জন্য Lissajous পথ ব্যবহার করুন।",
-  "Use the Random path for short smooth pursuit practice.":
-    "ছোট মসৃণ অনুসরণ অনুশীলনের জন্য র‍্যান্ডম পথ ব্যবহার করুন।",
-  "Use the Stair steps path for short smooth pursuit practice.":
-    "ছোট মসৃণ অনুসরণ অনুশীলনের জন্য স্টেয়ার স্টেপস পথ ব্যবহার করুন।",
-  "Use the Vertical sweep path for short smooth pursuit practice.":
-    "ছোট মসৃণ অনুসরণ অনুশীলনের জন্য উল্লম্ব সুইপ পথ ব্যবহার করুন।",
-  "Use the Wave path for short smooth pursuit practice.":
-    "ছোট মসৃণ অনুসরণ অনুশীলনের জন্য ওয়েভ পথ ব্যবহার করুন।",
-  "Use the Zigzag path for short smooth pursuit practice.":
-    "ছোট মসৃণ অনুসরণ অনুশীলনের জন্য জিগজ্যাগ পথ ব্যবহার করুন।",
   "Use the app in a safe place where you can stop easily. Do not use it while driving, walking around, operating equipment, or doing anything that needs your full attention.":
     "অ্যাপটি এমন নিরাপদ জায়গায় ব্যবহার করুন, যেখানে সহজে থামতে পারবেন। গাড়ি চালানোর সময়, হাঁটাহাঁটির সময়, যন্ত্র চালানোর সময়, বা পুরো মনোযোগ লাগে এমন কোনো কাজের সময় এটি ব্যবহার করবেন না।",
-  "Use this drill when Smooth Pursuit feels too clean and you want a more realistic visual-attention challenge.":
-    "মসৃণ অনুসরণ খুব পরিষ্কার বা সহজ লাগলে এবং আরও বাস্তবসম্মত ভিজ্যুয়াল মনোযোগের চ্যালেঞ্জ চাইলে এই ড্রিল ব্যবহার করুন।",
   "Vertical Sweep Smooth Pursuit Drill": "উল্লম্ব সুইপ মসৃণ অনুসরণ ড্রিল",
   "Vertical Sweep mirrors the simplicity of Horizontal Sweep but changes the direction of travel for straightforward up-down tracking.":
     "উল্লম্ব সুইপ, আড়াআড়ি সুইপ-এর সরলতা ধরে রাখে, তবে সরাসরি ওপর-নিচ ট্র্যাকিংয়ের জন্য চলনের দিক বদলায়।",
@@ -592,54 +496,9 @@ export const bn = {
   "Wave introduces a repeating up-and-down rhythm on top of horizontal movement. It stays readable and smooth without the abrupt feel of hard corners.":
     "ওয়েভ আড়াআড়ি চলনের ওপর পুনরাবৃত্ত ওপর-নিচ ছন্দ যোগ করে। কঠিন কোণের হঠাৎ অনুভূতি ছাড়াই এটি বোঝা যায় এবং মসৃণ থাকে।",
   Weight: "পুরুত্ব",
-  "What does Multiple Distractions train?": "একাধিক বিভ্রান্তি কী অনুশীলন করায়?",
-  "What does Reaction Jumps train?": "দ্রুত ফোকাস বদল কী অনুশীলন করায়?",
-  "What is Lilac Chaser?": "লাইলাক চেজার কী?",
-  "What is Smooth Pursuit?": "মসৃণ অনুসরণ কী?",
   "What is available today": "এখন যা ব্যবহার করা যায়",
   "What is distractor tracking?": "বিভ্রান্তিকারী ট্র্যাকিং কী?",
-  "What is the Bounce drill?": "বাউন্স ড্রিল কী?",
-  "What is the Circle drill?": "বৃত্ত ড্রিল কী?",
-  "What is the Clover drill?": "ক্লোভার ড্রিল কী?",
-  "What is the Corner tour drill?": "কর্নার ট্যুর ড্রিল কী?",
-  "What is the Diagonal drill?": "তির্যক ড্রিল কী?",
-  "What is the Diamond loop drill?": "ডায়মন্ড লুপ ড্রিল কী?",
-  "What is the Down-left sweep drill?": "নিচে-বামে সুইপ ড্রিল কী?",
-  "What is the Down-right sweep drill?": "নিচে-ডানে সুইপ ড্রিল কী?",
-  "What is the Edge loop drill?": "এজ লুপ ড্রিল কী?",
-  "What is the Ellipse drill?": "উপবৃত্ত ড্রিল কী?",
-  "What is the Figure eight drill?": "ফিগার এইট ড্রিল কী?",
-  "What is the Hard turns drill?": "হার্ড টার্নস ড্রিল কী?",
-  "What is the Horizontal sweep drill?": "আড়াআড়ি সুইপ ড্রিল কী?",
-  "What is the Hourglass drill?": "আওয়ারগ্লাস ড্রিল কী?",
-  "What is the Lissajous drill?": "Lissajous ড্রিল কী?",
-  "What is the Random drill?": "র‍্যান্ডম ড্রিল কী?",
-  "What is the Stair steps drill?": "স্টেয়ার স্টেপস ড্রিল কী?",
-  "What is the Vertical sweep drill?": "উল্লম্ব সুইপ ড্রিল কী?",
-  "What is the Wave drill?": "ওয়েভ ড্রিল কী?",
-  "What is the Zigzag drill?": "জিগজ্যাগ ড্রিল কী?",
-  "What is the goal of this mode?": "এই মোডের লক্ষ্য কী?",
   "What it trains:": "এটি যা অনুশীলন করায়:",
-  "What makes the Bounce path different?": "বাউন্স পথ আলাদা কেন?",
-  "What makes the Circle path different?": "বৃত্ত পথ আলাদা কেন?",
-  "What makes the Clover path different?": "ক্লোভার পথ আলাদা কেন?",
-  "What makes the Corner tour path different?": "কর্নার ট্যুর পথ আলাদা কেন?",
-  "What makes the Diagonal path different?": "তির্যক পথ আলাদা কেন?",
-  "What makes the Diamond loop path different?": "ডায়মন্ড লুপ পথ আলাদা কেন?",
-  "What makes the Down-left sweep path different?": "নিচে-বামে সুইপ পথ আলাদা কেন?",
-  "What makes the Down-right sweep path different?": "নিচে-ডানে সুইপ পথ আলাদা কেন?",
-  "What makes the Edge loop path different?": "এজ লুপ পথ আলাদা কেন?",
-  "What makes the Ellipse path different?": "উপবৃত্ত পথ আলাদা কেন?",
-  "What makes the Figure eight path different?": "ফিগার এইট পথ আলাদা কেন?",
-  "What makes the Hard turns path different?": "হার্ড টার্নস পথ আলাদা কেন?",
-  "What makes the Horizontal sweep path different?": "আড়াআড়ি সুইপ পথ আলাদা কেন?",
-  "What makes the Hourglass path different?": "আওয়ারগ্লাস পথ আলাদা কেন?",
-  "What makes the Lissajous path different?": "Lissajous পথ আলাদা কেন?",
-  "What makes the Random path different?": "র‍্যান্ডম পথ আলাদা কেন?",
-  "What makes the Stair steps path different?": "স্টেয়ার স্টেপস পথ আলাদা কেন?",
-  "What makes the Vertical sweep path different?": "উল্লম্ব সুইপ পথ আলাদা কেন?",
-  "What makes the Wave path different?": "ওয়েভ পথ আলাদা কেন?",
-  "What makes the Zigzag path different?": "জিগজ্যাগ পথ আলাদা কেন?",
   "What the app is": "অ্যাপটি কী",
   "What this warmup can and cannot tell you":
     "এই ওয়ার্মআপ থেকে কী বোঝা যায়, আর কী যায় না",
@@ -649,15 +508,7 @@ export const bn = {
   "When should I choose this over Smooth Pursuit?":
     "মসৃণ অনুসরণের বদলে কখন এটি বেছে নেব?",
   "When should I use Smooth Pursuit?": "মসৃণ অনুসরণ কখন ব্যবহার করব?",
-  "Which drill is best for fixation and edge-of-vision awareness?":
-    "ফিক্সেশন ও দৃষ্টির প্রান্তের সচেতনতার জন্য কোন ড্রিল ভালো?",
-  "Which drill is best for quick refocus?": "দ্রুত রিফোকাসের জন্য কোন ড্রিল ভালো?",
-  "Which drill is best for steady tracking?":
-    "স্থির ট্র্যাকিংয়ের জন্য কোন ড্রিল ভালো?",
-  "Which drill is best when the screen feels busy?":
-    "স্ক্রিন ব্যস্ত লাগলে কোন ড্রিল ভালো?",
   "Which settings matter most?": "কোন সেটিং সবচেয়ে গুরুত্বপূর্ণ?",
-  "Which settings should I change first?": "প্রথমে কোন সেটিং বদলাব?",
   "You can change the target’s appearance, adjust motion behavior, and keep your preferred settings on this device. Each main drill and Smooth Pursuit path also has a direct link.":
     "লক্ষ্যের চেহারা ও চলাচল বদলাতে এবং পছন্দের সেটিং এই ডিভাইসে রাখতে পারেন। প্রতিটি মূল অনুশীলন ও মসৃণ অনুসরণের প্রতিটি পথের সরাসরি লিংকও আছে।",
   "You can clear saved FoveaFlow settings from your browser's site data controls. You can also use browser or extension settings to block optional analytics scripts.":

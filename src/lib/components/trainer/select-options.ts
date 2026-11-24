@@ -36,8 +36,8 @@ export const letterWeightGroups = (): SelectGroup[] => [
 ];
 
 export const ballColorPresets = [
-  "#fdc700",
-  "#f0b100",
+  "#17181a",
+  "#ffffff",
   "#ff8a00",
   "#ff3b6b",
   "#c86bff",

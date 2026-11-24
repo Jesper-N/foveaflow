@@ -26,7 +26,7 @@
         {body}
       </p>
     {/if}
-    <a class={[buttonClass("accent", "lg"), "group/cta mt-3"]} {href}>
+    <a class={[buttonClass("primary", "lg"), "group/cta mt-3"]} {href}>
       {label}
       <ArrowRightIcon
         class="ease-spring transition-transform duration-260 group-hover/cta:translate-x-0.5 rtl:-scale-x-100"

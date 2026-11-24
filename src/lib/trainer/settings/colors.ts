@@ -52,3 +52,17 @@ export const fadeHexColor = (
 
   return `#${mix(color.red, toward.red)}${mix(color.green, toward.green)}${mix(color.blue, toward.blue)}`;
 };
+
+/** Ink that stays readable on top of a swatch of this color. */
+export const inkOn = (hexColor: string) => {
+  const color = parseHexColor(hexColor);
+
+  if (!color) {
+    return "#17181a";
+  }
+
+  const luminance =
+    (0.2126 * color.red + 0.7152 * color.green + 0.0722 * color.blue) / 255;
+
+  return luminance > 0.6 ? "#17181a" : "#ffffff";
+};

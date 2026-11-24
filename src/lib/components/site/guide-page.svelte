@@ -19,7 +19,6 @@
     { id: "patterns", label: "Motion paths" },
     { id: "controls", label: "Controls" },
     { id: "more-guides", label: "More guides" },
-    { id: "faq", label: "Guide FAQ" },
     { id: "references", label: "References" },
   ];
 </script>
@@ -34,7 +33,7 @@
   >
     {#snippet actions()}
       <a
-        class={[buttonClass("accent", "lg"), "group/cta"]}
+        class={[buttonClass("primary", "lg"), "group/cta"]}
         href="/smooth-pursuit/"
       >
         {t("Try Smooth Pursuit")}

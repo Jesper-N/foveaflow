@@ -1,7 +1,6 @@
 <script lang="ts">
   import { getDrillGuide } from "$lib/content/drill-guides";
   import type { DrillRoute } from "$lib/content/drill-routes";
-  import { freeUseNote } from "$lib/content/site";
   import { t } from "$lib/i18n/translate";
   import { getDrill } from "$lib/trainer/settings/drills";
   import { DialogDescription, DialogTitle } from "@ui-sdk/svelte/dialog";
@@ -73,19 +72,13 @@
       </p>
     </section>
 
-    <section class={guideSection} aria-labelledby="trainer-guide-faq">
-      <h3 id="trainer-guide-faq" class={guideHeading}>{t("Quick answers")}</h3>
-      <AccordionList headingLevel={4} items={faq} />
-    </section>
-
-    <section class={guideSection} aria-labelledby="trainer-guide-overview">
-      <h3 id="trainer-guide-overview" class={guideHeading}>{t("Overview")}</h3>
-      <div class="text-md text-muted-foreground grid gap-3 text-pretty">
-        {#each copy.body as paragraph (paragraph)}
-          <p>{t(paragraph)}</p>
-        {/each}
-        <p>{t(freeUseNote)}</p>
-      </div>
-    </section>
+    {#if faq.length > 0}
+      <section class={guideSection} aria-labelledby="trainer-guide-faq">
+        <h3 id="trainer-guide-faq" class={guideHeading}>
+          {t("Quick answers")}
+        </h3>
+        <AccordionList headingLevel={4} items={faq} />
+      </section>
+    {/if}
   </div>
 </div>

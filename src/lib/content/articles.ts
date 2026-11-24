@@ -87,13 +87,11 @@ export const articles = [
           "Use predictable paths to practice a steady rhythm.",
           "Use Reaction Jumps when you want to practice finding a new target.",
           "Add distractors when you want to practice staying with one target through clutter.",
-          "Save your preferred settings locally and return to the same setup next time.",
         ],
       },
       {
         body: [
           "These drills give you a way to practice specific visual tasks. FoveaFlow does not measure your eye movements or prove that your aim, reaction time, or eyesight has improved.",
-          "Use it alongside your usual in-game practice if you enjoy it. There is no validated FoveaFlow routine or guaranteed performance gain.",
         ],
         heading: "What this warmup can and cannot tell you",
       },

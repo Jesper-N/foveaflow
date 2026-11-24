@@ -147,7 +147,7 @@
           </p>
           <a
             class={[
-              buttonClass("accent", "lg"),
+              buttonClass("primary", "lg"),
               "group/cta justify-self-start",
             ]}
             href={mainRouteForDrill(guide.drillId)?.path}

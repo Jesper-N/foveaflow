@@ -33,21 +33,19 @@
   color-scheme: light;
   --background: #ffffff;
   --foreground: #17181a;
-  --canvas: #f7f7f6;
+  --canvas: #f1f1f0;
   --card: #f1f1f0;
   --popover: #ffffff;
   --primary: #17181a;
   --primary-foreground: #ffffff;
-  --accent: #fdc700;
-  --accent-foreground: #17181a;
   --muted-foreground: #646568;
   --faint: #b5b5b6;
   --fill: rgb(23 24 26 / 0.06);
   --fill-hover: rgb(23 24 26 / 0.1);
   --fill-active: rgb(23 24 26 / 0.12);
   --border: rgb(23 24 26 / 0.12);
-  --ring: #2231dd;
-  --target: #fdc700;
+  --ring: rgb(23 24 26 / 0.5);
+  --target: #17181a;
   --grid: rgb(16 18 22 / 0.075);
   --thumb: #ffffff;
   --shadow-color: 23 24 26;
@@ -57,21 +55,19 @@
   color-scheme: dark;
   --background: #0a0a0a;
   --foreground: #ffffff;
-  --canvas: #0a0a0a;
+  --canvas: #181818;
   --card: #181818;
   --popover: #262626;
   --primary: #ffffff;
   --primary-foreground: #0a0a0a;
-  --accent: #f0b100;
-  --accent-foreground: #0a0a0a;
   --muted-foreground: #a1a1a1;
   --faint: #6b6b6b;
   --fill: rgb(255 255 255 / 0.06);
   --fill-hover: rgb(255 255 255 / 0.1);
   --fill-active: rgb(255 255 255 / 0.12);
   --border: rgb(255 255 255 / 0.12);
-  --ring: #3aa9ff;
-  --target: #f0b100;
+  --ring: rgb(255 255 255 / 0.55);
+  --target: #ffffff;
   --grid: rgb(255 255 255 / 0.045);
   --thumb: rgb(255 255 255 / 0.16);
   --shadow-color: 0 0 0;
@@ -85,8 +81,6 @@
   --color-popover: var(--popover);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
   --color-muted-foreground: var(--muted-foreground);
   --color-faint: var(--faint);
   --color-fill: var(--fill);
@@ -306,7 +300,7 @@
   }
 
   ::selection {
-    @apply bg-accent/45;
+    @apply bg-foreground/15;
   }
 }
 
@@ -330,11 +324,6 @@ html[data-i18n-pending="true"] body > * {
 
 @utility canvas-grid {
   background-color: var(--canvas);
-  background-image:
-    linear-gradient(to right, var(--grid) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
-  background-position: center;
-  background-size: 2rem 2rem;
 }
 
 @utility popup-unfold {
@@ -469,8 +458,6 @@ html[data-i18n-pending="true"] body > * {
 }
 
 @utility fovea-grid {
-  --fovea-line: color-mix(in srgb, var(--grid) 60%, transparent);
-
   background-color: var(--canvas);
   background-image:
     linear-gradient(var(--grid), var(--grid)),
@@ -484,15 +471,11 @@ html[data-i18n-pending="true"] body > * {
       transparent 62% calc(92% - 1px),
       var(--grid) calc(92% - 1px) 92%,
       transparent 92%
-    ),
-    linear-gradient(to right, var(--fovea-line) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--fovea-line) 1px, transparent 1px);
-  background-position: center, center, center, center, center;
-  background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat;
+    );
+  background-position: center;
+  background-repeat: no-repeat;
   background-size:
     0.75rem 1px,
     1px 0.75rem,
-    100% 100%,
-    2rem 2rem,
-    2rem 2rem;
+    100% 100%;
 }
