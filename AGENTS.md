@@ -25,7 +25,7 @@ Browser app for vision training: visual tracking, focus, reaction speed, and per
 
 ## Gotchas
 
-- The strict CSP lives in `security.csp` in `astro.config.mjs`, and Astro only writes it into built pages. So a new third-party script, font, image host, or API works in dev and breaks in prod. Ask before adding one. Astro hashes the scripts it bundles, but an `is:inline` script must register its own hash with `Astro.csp?.insertScriptHash(inlineScriptHash(script))` from `src/lib/csp.ts`.
+- The strict CSP lives in `security.csp` in `astro.config.mjs`, and Astro only writes it into built pages. So a new third-party script, font, image host, or API works in dev and breaks in prod. Ask before adding one. Astro hashes the scripts it bundles, but an `is:inline` script must register its own hash with `Astro.csp?.insertScriptHash(inlineScriptHash(script))` from `src/lib/csp.ts`. Styles are strict too: `style-src-elem` allows only files and hashed inline styles (`Astro.csp?.insertStyleHash(inlineStyleHash(style))`), `style` attributes stay allowed, and ui-sdk adds its CSS as constructed sheets through the `csp-nonce` meta tag.
 - If controls do nothing in dev and the console shows `504 Outdated Optimize Dep`, the Vite dependency cache is stale. Stop the server, delete `node_modules/.vite`, restart, and hard-reload.
 
 ## Quality pass

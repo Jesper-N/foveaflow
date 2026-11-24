@@ -131,3 +131,37 @@ test("a language chosen in the menu is kept after a reload", async ({
   await expect(page.locator("h1")).toHaveText("FoveaFlow-Guide");
   await expect(page.locator("html")).toHaveAttribute("lang", "de");
 });
+
+test("menus, panels and theme changes stay inside the content security policy", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    document.addEventListener("securitypolicyviolation", (event) => {
+      sessionStorage.setItem(
+        "csp-violation",
+        `${event.violatedDirective} ${event.blockedURI}`
+      );
+    });
+  });
+
+  const violation = async () =>
+    await page.evaluate(() => sessionStorage.getItem("csp-violation"));
+
+  await openPage(page, "/circle/");
+  await page.keyboard.press("d");
+  await page.keyboard.press("d");
+  await page.keyboard.press("s");
+  await expect(page.getByRole("dialog")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  await page.keyboard.press("p");
+  await expect(page.getByRole("listbox")).toBeVisible();
+  await page.keyboard.press("Escape");
+  expect(await violation()).toBeNull();
+
+  await openPage(page, "/guide/");
+  await languageSelect(page).click();
+  await expect(page.getByRole("listbox")).toBeVisible();
+  await page.keyboard.press("Escape");
+  expect(await violation()).toBeNull();
+});

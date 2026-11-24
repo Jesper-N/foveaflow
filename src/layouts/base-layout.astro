@@ -22,6 +22,7 @@ Astro.csp?.insertScriptHash(inlineScriptHash(localeBootScript));
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta property="csp-nonce" />
     <script is:inline set:html={themeBootScript} />
     <script is:inline set:html={localeBootScript} />
     <link
