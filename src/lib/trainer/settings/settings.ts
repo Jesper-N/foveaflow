@@ -26,7 +26,7 @@ export interface TrainerSettings {
   targetForm: TargetForm;
   motionDirection: MotionDirection;
   letterEnabled: boolean;
-  letterColor: string;
+  letterColor: string | null;
   letterWeight: LetterWeight;
   letterScale: number;
   lilacChaserScale: number;
@@ -70,7 +70,7 @@ export const createDefaultSettings = (
   distractorBrightness: 0.45,
   distractorCount: drill.distractorCount,
   drillId: drill.id,
-  letterColor: "#000000",
+  letterColor: null,
   letterEnabled: false,
   letterScale: 0.5,
   letterWeight: 600,

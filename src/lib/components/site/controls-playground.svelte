@@ -10,9 +10,8 @@
 
   import { formatSetting } from "../trainer/controls/format-setting";
   import Slider from "../ui/slider.svelte";
-  import { subHeading } from "./layout";
 
-  const ROUTE = patternGlyphs.figureEight;
+  const ROUTE = patternGlyphs.lissajous;
   const LAPS_PER_SECOND_PER_SPEED = 1 / 160;
   const RADIUS_PER_PX = 1.5 / 40;
 
@@ -80,15 +79,7 @@
       <circle class="fill-target" {@attach run} r={radius} />
     </svg>
   </div>
-  <div class="grid content-between gap-8 p-4 sm:p-5">
-    <div class="grid gap-1.5">
-      <h3 class={subHeading}>{t("Motion and target")}</h3>
-      <p class="text-md text-muted-foreground text-pretty">
-        {t(
-          "Speed, size, shape, color, opacity, and trail change the feel of the moving drills. Lilac Chaser has its own ball color and scale controls."
-        )}
-      </p>
-    </div>
+  <div class="grid content-center p-4 sm:p-5">
     <div class="grid gap-2">
       <Slider
         format={(value) => formatSetting("speed", value)}
@@ -98,7 +89,6 @@
         min={settingRanges.speed.min}
         onValueChange={(value) => (speed = value)}
         step={settingRanges.speed.step}
-        ticks={24}
         value={speed}
       />
       <Slider
@@ -110,7 +100,6 @@
         onValueChange={(value) => (size = value)}
         step={settingRanges.baseRadiusPx.step}
         thumbLabel={t("Target size")}
-        ticks={24}
         value={size}
       />
     </div>

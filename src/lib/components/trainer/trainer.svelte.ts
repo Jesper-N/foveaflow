@@ -17,7 +17,7 @@ import {
   profilesForBehavior,
 } from "$lib/trainer/settings/behaviors";
 import {
-  darkenHexColor,
+  fadeHexColor,
   isHexColor,
   safeStimulusColor,
 } from "$lib/trainer/settings/colors";
@@ -56,6 +56,8 @@ import type { ShortcutAction } from "./shortcuts";
  * its methods instead of changing settings directly where a change needs
  * validation or side effects.
  */
+const DEFAULT_LETTER_COLOR = "#17181a";
+
 export class Trainer {
   settings = $state<TrainerSettings>(createDefaultSettings());
   /** Slug of the page the browser is on, like `circle`. Empty on the homepage. */
@@ -97,8 +99,14 @@ export class Trainer {
     )
   );
 
+  letterColor = $derived(this.settings.letterColor ?? DEFAULT_LETTER_COLOR);
+
   distractorColor = $derived(
-    darkenHexColor(this.targetColor, this.settings.distractorBrightness)
+    fadeHexColor(
+      this.targetColor,
+      getCanvasTheme(this.colorMode).canvasColor,
+      this.settings.distractorBrightness
+    )
   );
 
   route = $derived(findDrillRoute(this.routeSlug));
@@ -141,6 +149,7 @@ export class Trainer {
   readonly #scene = $derived<CanvasScene>({
     colorMode: this.colorMode,
     distractorColor: this.distractorColor,
+    letterColor: this.letterColor,
     paused: this.#canvasPaused,
     settings: this.#snapshot,
     targetColor: this.targetColor,

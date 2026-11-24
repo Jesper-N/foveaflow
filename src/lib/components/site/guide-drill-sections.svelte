@@ -6,18 +6,11 @@
     predictablePatterns,
     unpredictablePatterns,
   } from "$lib/trainer/settings/patterns";
-  import { Gamepad2Icon, MonitorIcon, TerminalIcon } from "@lucide/svelte";
 
   import DrillShowcase from "./drill-showcase.svelte";
   import { bodyText, sectionHeading, subHeading } from "./layout";
   import MotionPathTile from "./motion-path-tile.svelte";
-
-  const audienceIcons = [Gamepad2Icon, TerminalIcon, MonitorIcon];
-
-  const audienceCards = audiences.map((audience, index) => ({
-    ...audience,
-    Icon: audienceIcons[index] ?? MonitorIcon,
-  }));
+  import PageSection from "./page-section.svelte";
 
   const pathRoutes = [
     ...unpredictablePatterns.map(({ id }) => ({ id, unpredictable: true })),
@@ -36,7 +29,7 @@
     <h2 class={sectionHeading}>{t("Motion paths")}</h2>
     <p class={bodyText}>
       {t(
-        "Start with a predictable path for steady tracking. Try random movement or hard turns when you want to spend more time finding the target. Each link opens Smooth Pursuit with that path selected."
+        "Start with a predictable path for steady tracking. Try random movement or hard turns when you want to spend more time finding the target."
       )}
     </p>
   </div>
@@ -56,30 +49,13 @@
   </nav>
 </section>
 
-<section class="grid gap-10" aria-labelledby="audiences">
-  <div class="grid max-w-2xl gap-3">
-    <h2 id="audiences" class={sectionHeading}>
-      {t("A short break from the usual screen")}
-    </h2>
-    <p class={bodyText}>
-      {t("Use it as a quick visual warmup or active screen break.")}
-    </p>
-  </div>
-  <div class="grid gap-2 md:grid-cols-3">
-    {#each audienceCards as audience (audience.title)}
-      <div class="bg-card grid content-start gap-3 rounded-3xl p-6">
-        <div class="flex items-center gap-3">
-          <span
-            class="bg-popover shadow-thumb grid size-10 shrink-0 place-items-center rounded-xl"
-          >
-            <audience.Icon class="size-4.5" aria-hidden="true" />
-          </span>
-          <h3 class={subHeading}>{t(audience.title)}</h3>
-        </div>
-        <p class="text-md text-muted-foreground text-pretty">
-          {t(audience.body)}
-        </p>
-      </div>
+<PageSection id="audiences" heading={t("A short break from the usual screen")}>
+  <ul class="divide-border border-border grid divide-y border-y">
+    {#each audiences as audience (audience.title)}
+      <li class="grid gap-1.5 py-5">
+        <h3 class={subHeading}>{t(audience.title)}</h3>
+        <p class={[bodyText, "max-w-prose"]}>{t(audience.body)}</p>
+      </li>
     {/each}
-  </div>
-</section>
+  </ul>
+</PageSection>

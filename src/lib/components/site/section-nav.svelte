@@ -101,7 +101,7 @@
       {t("On this page")}
     </h2>
     <ul
-      class="scroll-fade-x relative flex min-w-0 flex-1 snap-x scroll-px-4 scrollbar-none gap-1 overflow-x-auto px-2 py-2.5"
+      class="scroll-fade-x relative flex min-w-0 flex-1 snap-x scroll-px-6 scrollbar-none gap-1 overflow-x-auto px-6 py-2.5"
       {@attach followSections}
     >
       <li
@@ -115,7 +115,7 @@
             class={[
               "relative flex h-9 items-center rounded-full px-3.5 text-sm font-medium whitespace-nowrap transition-colors duration-160 ease-out pointer-coarse:h-11",
               activeId === link.id
-                ? "text-primary-foreground"
+                ? "text-primary-foreground delay-100"
                 : "text-muted-foreground hover:bg-fill hover:text-foreground",
             ]}
             aria-current={activeId === link.id ? "location" : undefined}

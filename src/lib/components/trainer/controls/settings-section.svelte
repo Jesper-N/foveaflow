@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
 
+  import { smoothResize } from "../../ui/smooth-resize";
   import { settingsGroup } from "../../ui/styles";
 
   interface Props {
@@ -21,7 +22,9 @@
       {title}
     </h3>
   {/if}
-  <div class={settingsGroup}>
-    {@render children()}
+  <div class="overflow-clip rounded-2xl" {@attach smoothResize()}>
+    <div class={settingsGroup}>
+      {@render children()}
+    </div>
   </div>
 </section>

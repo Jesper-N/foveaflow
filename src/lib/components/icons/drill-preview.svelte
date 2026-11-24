@@ -8,19 +8,29 @@
   interface Props {
     drillId: DrillId;
     patternId?: string;
+    backdrop?: "grid" | "fovea";
     playing?: boolean;
     class?: ClassValue;
   }
 
-  let { drillId, patternId, playing, class: className }: Props = $props();
+  let {
+    drillId,
+    patternId,
+    playing,
+    backdrop = "grid",
+    class: className,
+  }: Props = $props();
+
+  const FIGURE_EIGHT =
+    "M16 12C19 8 26 7.5 26 12S19 16 16 12 6 7.5 6 12 13 16 16 12Z";
 
   let pursuitRoute = $derived(
-    patternId !== undefined && isPursuitPattern(patternId)
+    patternId !== undefined &&
+      patternId !== "figureEight" &&
+      isPursuitPattern(patternId)
       ? patternGlyphs[patternId]
-      : patternGlyphs.figureEight
+      : FIGURE_EIGHT
   );
-
-  const pursuitTrail = [1, 2, 3, 4, 5];
 
   const jumps = [
     { x: 8, y: 7 },
@@ -80,7 +90,9 @@
 <svg
   class={[
     "preview text-foreground",
-    drillId === "lilacChaser" ? "bg-lilac-stage" : "canvas-grid",
+    drillId === "lilacChaser" && "bg-lilac-stage",
+    drillId !== "lilacChaser" &&
+      (backdrop === "fovea" ? "fovea-grid" : "canvas-grid"),
     className,
   ]}
   {@attach playWhenVisible}
@@ -93,20 +105,9 @@
       d={pursuitRoute}
       stroke="currentColor"
       stroke-linecap="round"
-      stroke-opacity="0.12"
-      stroke-width="0.35"
-    />
-    {#each pursuitTrail as step (step)}
-      <circle
-        class="trail fill-target"
-        {@attach route(pursuitRoute)}
-        r={1.5 - step * 0.18}
-      />
-    {/each}
-    <circle
-      class="mover halo fill-target"
-      {@attach route(pursuitRoute)}
-      r="2.8"
+      stroke-linejoin="round"
+      stroke-opacity="0.16"
+      stroke-width="0.3"
     />
     <circle class="mover fill-target" {@attach route(pursuitRoute)} r="1.5" />
   {:else if drillId === "reactionTime"}
@@ -127,24 +128,17 @@
       <circle class="drifter distractor" {@attach route(path)} r="1.35" />
     {/each}
     <g class="drifter lead">
-      <circle
-        class="fill-target"
-        {@attach route(patternGlyphs.figureEight)}
-        r="1.5"
-      />
+      <circle class="fill-target" {@attach route(FIGURE_EIGHT)} r="1.5" />
       <circle
         class="stroke-target"
-        {@attach route(patternGlyphs.figureEight)}
+        {@attach route(FIGURE_EIGHT)}
         r="2.7"
         stroke-opacity="0.55"
         stroke-width="0.25"
       />
     </g>
   {:else}
-    <filter id="lilac-soften" height="2" width="2" x="-0.5" y="-0.5">
-      <feGaussianBlur stdDeviation="0.45" />
-    </filter>
-    <g filter="url(#lilac-soften)">
+    <g>
       {#each lilacDots as dot (dot.index)}
         <circle class="lilac" cx={dot.cx} cy={dot.cy} fill="#ff00fe" r="1.25" />
       {/each}
@@ -168,19 +162,10 @@
   }
 
   .mover,
-  .trail,
   .drifter circle,
   .distractor {
     offset-rotate: 0deg;
     offset-distance: 62%;
-  }
-
-  .halo {
-    opacity: 0.2;
-  }
-
-  .trail {
-    opacity: 0;
   }
 
   .distractor {
@@ -202,38 +187,8 @@
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    .mover,
-    .trail {
-      animation: travel 5s linear infinite;
-    }
-
-    .trail {
-      opacity: 0.3;
-    }
-
-    .trail:nth-child(2) {
-      animation-delay: -0.08s;
-      opacity: 0.3;
-    }
-
-    .trail:nth-child(3) {
-      animation-delay: -0.16s;
-      opacity: 0.22;
-    }
-
-    .trail:nth-child(4) {
-      animation-delay: -0.24s;
-      opacity: 0.15;
-    }
-
-    .trail:nth-child(5) {
-      animation-delay: -0.32s;
-      opacity: 0.1;
-    }
-
-    .trail:nth-child(6) {
-      animation-delay: -0.4s;
-      opacity: 0.06;
+    .mover {
+      animation: travel 6s linear infinite;
     }
 
     .mover {

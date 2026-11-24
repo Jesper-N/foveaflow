@@ -52,7 +52,6 @@ export const hi = {
   Cancel: "रद्द करें",
   "Change speed and target size first. They usually have the biggest effect on difficulty and control.":
     "पहले गति और लक्ष्य का आकार बदलें. कठिनाई और कंट्रोल पर आम तौर पर इन्हीं का सबसे ज्यादा असर होता है.",
-  "Change your saved FoveaFlow settings.": "अपनी सेव की गई FoveaFlow सेटिंग बदलें.",
   "Changes to these terms": "इन शर्तों में बदलाव",
   "Checked against the public browser interface on":
     "सार्वजनिक ब्राउज़र इंटरफ़ेस जाँचने की तारीख:",
@@ -60,6 +59,8 @@ export const hi = {
   "Choose Reaction Jumps when you want discrete target changes rather than continuous motion.":
     "लगातार गति के बजाय अलग-अलग लक्ष्य बदलाव चाहिए तो तेज़ फोकस शिफ्ट चुनें.",
   "Choose a drill": "अभ्यास चुनें",
+  "Choose a drill for visual tracking, quick refocus, or peripheral awareness, then make it your own.":
+    "चलती वस्तु पर नज़र रखने, तेज़ी से नज़र बदलने या परिधीय दृष्टि का अभ्यास चुनें और उसे अपनी ज़रूरत के अनुसार ढालें।",
   "Choose a path and adjust supported direction and motion behaviors.":
     "रास्ता चुनें और उसमें समर्थित दिशा तथा गति के व्यवहार को बदलें।",
   "Choose by the controls you need": "ज़रूरी नियंत्रणों के अनुसार चुनें",
@@ -151,8 +152,6 @@ export const hi = {
   "FPS warmup": "FPS वॉर्मअप",
   Feature: "सुविधा",
   "Feature comparison": "फीचर तुलना",
-  "Features may change. This comparison does not cover unreleased apps.":
-    "सुविधाएँ बदल सकती हैं। इस तुलना में ऐसे ऐप शामिल नहीं हैं जो अभी जारी नहीं हुए हैं।",
   "Figure Eight Smooth Pursuit Drill": "फिगर आठ स्मूद ट्रैकिंग अभ्यास",
   "Figure Eight adds a crossover point, which means the target passes through the center and changes direction more often than a simple loop.":
     "फिगर आठ में एक क्रॉसओवर बिंदु होता है. लक्ष्य बीच से गुजरता है और सरल लूप से ज्यादा बार दिशा बदलता है.",
@@ -175,8 +174,6 @@ export const hi = {
     "FoveaFlow विज्ञापन कुकी सेट नहीं करता. साइट उपलब्ध और सुरक्षित रखने के लिए जरूरत पड़ने पर Cloudflare सुरक्षा कुकी सेट कर सकता है.",
   "FoveaFlow eye trainer animation for visual tracking practice":
     "विजुअल ट्रैकिंग अभ्यास के लिए FoveaFlow आई ट्रेनर एनिमेशन",
-  "FoveaFlow eye trainer animation for visual tracking practice. Use Pause motion to stop target movement before changing controls.":
-    "विजुअल ट्रैकिंग अभ्यास के लिए FoveaFlow आई ट्रेनर एनिमेशन. कंट्रोल बदलने से पहले लक्ष्य की गति रोकने के लिए गति रोकें इस्तेमाल करें.",
   "FoveaFlow eye trainer app": "FoveaFlow आई ट्रेनर ऐप",
   "FoveaFlow is a free browser tool for visual tracking practice. It shows moving targets, reaction jumps, Lilac Chaser fixation practice, and distractor tracking patterns on a screen.":
     "FoveaFlow विजुअल ट्रैकिंग अभ्यास के लिए मुफ्त ब्राउजर टूल है. यह स्क्रीन पर चलते लक्ष्य, तेज़ फोकस शिफ्ट, लाइलैक चेज़र नजर टिकाने का अभ्यास और विचलन ट्रैकिंग पैटर्न दिखाता है.",
@@ -277,8 +274,6 @@ export const hi = {
     "सिर स्थिर रखें और आराम से बैठें। लक्ष्य बार-बार छूटे तो गति कम करें या उसका आकार बढ़ाएँ। सहजता से उसका पीछा कर पाने पर ही कठिनाई बढ़ाएँ।",
   "Keep your head still and start with your eyes on the ball.":
     "सिर स्थिर रखें और नजर गेंद पर रखकर शुरू करें.",
-  "Keep your head still unless a drill says otherwise. These modes are about eye movement, attention, and focus, not neck movement.":
-    "जब तक अभ्यास में अलग निर्देश न हों, सिर स्थिर रखें। ये अभ्यास आँखों की गति, ध्यान और नज़र टिकाने के लिए हैं, गर्दन घुमाने के लिए नहीं।",
   Language: "भाषा",
   "Legal pages": "कानूनी पेज",
   "Let the disappearing gap move around the fixed circle. With steady focus, the colored balls may fade and the missing spot can look like a moving green afterimage.":
@@ -317,7 +312,6 @@ export const hi = {
   "More control, when you want it": "ज़रूरत पड़ने पर ज़्यादा नियंत्रण",
   "More guides": "और गाइड",
   Motion: "गति",
-  "Motion and target": "गति और लक्ष्य",
   "Motion feel": "गति का एहसास",
   "Motion path": "गति रास्ता",
   "Motion paths": "गति के रास्ते",
@@ -391,7 +385,6 @@ export const hi = {
     "पसंदीदा सेटिंग डिवाइस पर सहेजें और अगली बार वहीं से शुरू करें।",
   Scale: "स्केल",
   Semibold: "सेमीबोल्ड",
-  "Settings save automatically.": "सेटिंग अपने आप सहेजी जाती हैं।",
   "Settings saved in your browser": "सेटिंग आपके ब्राउजर में सेव हैं",
   "Sharpen focus between code, logs, dashboards, terminals, tickets, and multi-monitor work.":
     "कोड, लॉग, डैशबोर्ड, टर्मिनल, टिकट और मल्टी-मॉनिटर काम के बीच फोकस तेज करें.",
@@ -430,8 +423,6 @@ export const hi = {
   "Speed and size": "गति और आकार",
   "Speed and size sliders.": "गति और आकार के स्लाइडर।",
   "Speed wave": "स्पीड वेव",
-  "Speed, size, shape, color, opacity, and trail change the feel of the moving drills. Lilac Chaser has its own ball color and scale controls.":
-    "गति, आकार, आकृति, रंग, अपारदर्शिता और ट्रेल चलते अभ्यासों का एहसास बदलते हैं. लाइलैक चेज़र के अपने गेंद रंग और स्केल कंट्रोल हैं.",
   "Speed, size, shape, color, opacity, trails, and mode-specific motion settings.":
     "गति, आकार, आकृति, रंग, अपारदर्शिता, गति के निशान और हर मोड की खास गति सेटिंग।",
   "Speed, target size, and path matter most because they change difficulty quickly.":
@@ -443,12 +434,11 @@ export const hi = {
   "Stair steps": "सीढ़ी स्टेप्स",
   "Start a visual warmup in either browser tool. FoveaFlow gives you separate tracking, refocus, distraction, and fixation drills, with detailed controls available right now in the browser.":
     "दोनों ब्राउज़र साधनों में विज़ुअल वार्मअप कर सकते हैं। FoveaFlow में ट्रैकिंग, नज़र बदलने, व्यवधान और नज़र टिकाने के अलग अभ्यास हैं। इनके विस्तृत नियंत्रण अभी ब्राउज़र में उपलब्ध हैं।",
-  "Start slow. Adjust as you go.": "धीरे शुरू करें। ज़रूरत के अनुसार बदलते जाएँ।",
   "Start the warmup": "वॉर्मअप शुरू करें",
   "Start with a comfortable speed and a medium target size, then raise difficulty only when you can stay on the target cleanly.":
     "आरामदायक गति और मध्यम लक्ष्य आकार से शुरू करें. लक्ष्य पर साफ टिक सकें तभी कठिनाई बढ़ाएं.",
-  "Start with a predictable path for steady tracking. Try random movement or hard turns when you want to spend more time finding the target. Each link opens Smooth Pursuit with that path selected.":
-    "स्थिर ट्रैकिंग के लिए पहले अनुमान लगाने योग्य रास्ता चुनें। लक्ष्य ढूँढने का अधिक अभ्यास चाहिए तो रैंडम गति या तीखे मोड़ आज़माएँ। हर लिंक स्मूद ट्रैकिंग को उसी रास्ते के साथ खोलता है।",
+  "Start with a predictable path for steady tracking. Try random movement or hard turns when you want to spend more time finding the target.":
+    "स्थिर ट्रैकिंग के लिए पहले अनुमान लगाने योग्य रास्ता चुनें। लक्ष्य ढूँढने का अधिक अभ्यास चाहिए तो रैंडम गति या तीखे मोड़ आज़माएँ।",
   "Start with fewer distractors, a slower speed, and a larger main target.":
     "कम विचलन, धीमी गति और बड़े मुख्य लक्ष्य से शुरू करें.",
   "Start with fewer distractors, then add more when you can keep the target cleanly.":
@@ -469,8 +459,8 @@ export const hi = {
   "The full tool runs in the browser.": "पूरा साधन ब्राउज़र में चलता है।",
   "The goal is steady fixation and better awareness of change away from the center of your gaze.":
     "लक्ष्य है स्थिर नजर और नजर के केंद्र से दूर बदलाव की बेहतर समझ.",
-  "The page you’re looking for does not exist. Open the trainer or use the guide to find your next drill.":
-    "आप जिस पेज को ढूँढ रहे हैं, वह मौजूद नहीं है। अभ्यास खोलें या गाइड से अपना अगला अभ्यास चुनें।",
+  "The page you’re looking for does not exist.":
+    "आप जिस पेज को ढूँढ रहे हैं, वह मौजूद नहीं है।",
   "The path shape changes how predictable the movement feels and how often the target changes direction.":
     "रास्ते का आकार बदलता है कि गति कितनी अनुमानित लगेगी और लक्ष्य कितनी बार दिशा बदलेगा.",
   "The patterns are simple screen paths and timing drills. They are not a clinical program, and results will vary from person to person.":
@@ -494,8 +484,8 @@ export const hi = {
   Theme: "थीम",
   "These drills give you a way to practice specific visual tasks. FoveaFlow does not measure your eye movements or prove that your aim, reaction time, or eyesight has improved.":
     "ये अभ्यास खास दृश्य कार्यों का अभ्यास करने का तरीका हैं। FoveaFlow आँखों की गति नहीं मापता और न ही साबित करता है कि आपका निशाना, प्रतिक्रिया समय या नज़र बेहतर हुई है।",
-  "These sources explain the eye movements and visual effects behind the drills. They do not establish that FoveaFlow improves eyesight or game performance.":
-    "ये स्रोत अभ्यासों में होने वाली आँखों की गति और दृश्य प्रभावों को समझाते हैं। ये साबित नहीं करते कि FoveaFlow से नज़र या गेम का प्रदर्शन बेहतर होता है।",
+  "These sources do not establish that FoveaFlow improves eyesight or game performance.":
+    "ये स्रोत साबित नहीं करते कि FoveaFlow से नज़र या गेम का प्रदर्शन बेहतर होता है।",
   "These terms may be updated when the app or site changes. The date at the top shows the latest version.":
     "ऐप या साइट बदलने पर ये शर्तें अपडेट हो सकती हैं. ऊपर दी गई तारीख नया संस्करण दिखाती है.",
   "This page compares the public browser tools checked on September 12, 2026. It does not treat announced Steam features as available browser features, or make claims about the finished desktop app.":
@@ -534,8 +524,6 @@ export const hi = {
   "Use forward motion direction": "आगे वाली गति दिशा इस्तेमाल करें",
   "Use it alongside your usual in-game practice if you enjoy it. There is no validated FoveaFlow routine or guaranteed performance gain.":
     "पसंद आए तो इसे गेम के अपने सामान्य अभ्यास के साथ इस्तेमाल करें। FoveaFlow की कोई प्रमाणित दिनचर्या या प्रदर्शन में सुधार की गारंटी नहीं है।",
-  "Use it as a quick visual warmup or active screen break.":
-    "इसे तेज विजुअल वॉर्मअप या सक्रिय स्क्रीन ब्रेक की तरह इस्तेमाल करें.",
   "Use it when you want steady moving-target practice without the extra clutter of other drills.":
     "दूसरे अभ्यासों की अतिरिक्त भीड़ के बिना स्थिर चलते लक्ष्य अभ्यास चाहिए तो इसे इस्तेमाल करें.",
   "Use predictable paths for steady tracking. Use random paths or hard turns when you want more target-search work.":
@@ -683,8 +671,6 @@ export const hi = {
   "You do not need to create an account to use FoveaFlow. The app does not ask for your name, email address, payment details, or health records.":
     "FoveaFlow इस्तेमाल करने के लिए खाता बनाने की जरूरत नहीं. ऐप आपका नाम, ईमेल पता, भुगतान जानकारी या स्वास्थ्य रिकॉर्ड नहीं मांगता.",
   "Your choices": "आपकी पसंद",
-  "Your guide to FoveaFlow’s free online eye trainer. Choose a drill for visual tracking, quick refocus, or peripheral awareness, then make it your own.":
-    "FoveaFlow के मुफ़्त ऑनलाइन नेत्र-अभ्यास की गाइड। चलती वस्तु पर नज़र रखने, तेज़ी से नज़र बदलने या परिधीय दृष्टि का अभ्यास चुनें और उसे अपनी ज़रूरत के अनुसार ढालें।",
   "Your practice choices are not uploaded to a FoveaFlow account because there are no accounts.":
     "आपकी अभ्यास पसंद किसी FoveaFlow खाते पर अपलोड नहीं होती, क्योंकि खाते हैं ही नहीं.",
   Zigzag: "जिगजैग",

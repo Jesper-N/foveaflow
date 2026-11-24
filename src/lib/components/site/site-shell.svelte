@@ -66,7 +66,7 @@
         {#if path !== "/guide/"}
           <a class={pillLink} href="/guide/">{t("Guide")}</a>
         {/if}
-        <a class={buttonClass("primary", "md")} href="/"
+        <a class={buttonClass("secondary", "md")} href="/"
           >{t("Open FoveaFlow")}</a
         >
       </nav>
@@ -83,7 +83,7 @@
 
   <footer class={[pageWidth, "mt-24 pb-6 lg:mt-32"]}>
     <div
-      class="bg-card grid grid-cols-2 gap-x-6 gap-y-10 rounded-4xl p-6 sm:p-10 md:grid-cols-[minmax(0,1fr)_auto_auto] md:gap-16"
+      class="border-border grid grid-cols-2 gap-x-6 gap-y-10 border-t pt-12 pb-10 md:grid-cols-[minmax(0,1fr)_auto_auto] md:gap-16"
     >
       <div class="col-span-2 grid content-start gap-4 md:col-span-1">
         <a

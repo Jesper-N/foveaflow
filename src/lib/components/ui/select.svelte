@@ -10,7 +10,6 @@
     SelectItemIndicator,
     SelectLabel,
     SelectTrigger,
-    SelectValue,
   } from "@ui-sdk/svelte/select";
   import type { ComponentProps, Snippet } from "svelte";
   import type { Attachment } from "svelte/attachments";
@@ -20,6 +19,7 @@
   import { followIndicator } from "./follow-indicator";
   import RowLabel from "./row-label.svelte";
   import type { SelectGroup, SelectOption } from "./select-types";
+  import { smoothResize } from "./smooth-resize";
   import { listGroupLabel, listItem, popupSurface, pressable } from "./styles";
 
   interface Props {
@@ -27,7 +27,7 @@
     labelIcon?: LucideIcon;
     hideLabel?: boolean;
     compact?: boolean;
-    appearance?: "field" | "ghost" | "text";
+    appearance?: "field" | "ghost";
     triggerLabel?: string;
     tip?: string;
     groups: readonly SelectGroup[];
@@ -116,8 +116,6 @@
           "bg-fill text-md hover:bg-fill-hover data-open:bg-fill-hover h-9 gap-2 rounded-full ps-3 pe-2.5 pointer-coarse:h-11",
         appearance === "ghost" &&
           "text-md text-muted-foreground hover:bg-fill hover:text-foreground data-open:bg-fill data-open:text-foreground h-9 gap-1.5 rounded-full px-2.5 pointer-coarse:h-11",
-        appearance === "text" &&
-          "hover:bg-fill data-open:bg-fill -mx-2 h-8 max-w-[calc(100%+1rem)] gap-1 rounded-lg px-2 pointer-coarse:h-10",
         pressable,
         compact && "max-sm:pe-3",
         triggerClass,
@@ -134,11 +132,19 @@
             {@render icon(value)}
           </span>
         {/if}
-        {#if appearance === "text"}
-          <span class="grid min-w-0 flex-1 overflow-hidden text-start">
+        <span
+          class="me-auto min-w-0 overflow-clip text-start"
+          {@attach smoothResize("width")}
+        >
+          <span class="relative block w-max">
+            <span
+              class="invisible block whitespace-nowrap before:content-[attr(data-label)]"
+              aria-hidden="true"
+              data-label={selectedLabel}
+            ></span>
             {#key value}
               <span
-                class="col-start-1 row-start-1 truncate"
+                class="absolute inset-0 whitespace-nowrap"
                 in:fly={{ duration: 260, opacity: 0, y: rollDistance() }}
                 out:fly={{ duration: 160, opacity: 0, y: -rollDistance() }}
               >
@@ -146,9 +152,7 @@
               </span>
             {/key}
           </span>
-        {:else}
-          <SelectValue class="min-w-0 flex-1 truncate text-start" />
-        {/if}
+        </span>
       {/if}
       <ChevronDownIcon
         class={[
@@ -203,7 +207,7 @@
       {/if}
       <span class="min-w-0 flex-1 truncate">{option.label}</span>
       <SelectItemIndicator
-        class="bg-foreground text-background grid size-4.5 shrink-0 place-items-center rounded-md"
+        class="bg-accent text-accent-foreground grid size-4.5 shrink-0 place-items-center rounded-md"
       >
         <CheckIcon class="size-3.5" aria-hidden="true" stroke-width={2.5} />
       </SelectItemIndicator>

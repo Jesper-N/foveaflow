@@ -36,6 +36,7 @@
     <div class="relative h-52 overflow-hidden rounded-3xl sm:h-64">
       <DrillPreview
         class="size-full"
+        backdrop="fovea"
         drillId={route.drillId}
         patternId={route.patternId}
       />

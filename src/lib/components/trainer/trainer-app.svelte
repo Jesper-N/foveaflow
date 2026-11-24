@@ -37,11 +37,6 @@
   data-cursor-hidden={trainer.cursor.hidden}
 >
   <h1 class="sr-only">{t(trainer.pageCopy.heading)}</h1>
-  <p id="trainer-canvas-description" class="sr-only">
-    {t(
-      "FoveaFlow eye trainer animation for visual tracking practice. Use Pause motion to stop target movement before changing controls."
-    )}
-  </p>
   <p id="trainer-motion-status" class="sr-only" aria-live="polite">
     {t("Motion")}
     {trainer.motionPaused ? t("paused") : t("playing")}.
@@ -52,7 +47,7 @@
   <canvas
     class="absolute inset-0 size-full touch-none"
     {@attach trainer.attachCanvas}
-    aria-describedby="trainer-canvas-description trainer-motion-status"
+    aria-describedby="trainer-motion-status"
     aria-label={t(
       "FoveaFlow eye trainer animation for visual tracking practice"
     )}

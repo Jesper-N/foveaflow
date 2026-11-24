@@ -6,7 +6,6 @@
     DialogBackdrop,
     DialogClose,
     DialogContent,
-    DialogDescription,
     DialogTitle,
   } from "@ui-sdk/svelte/dialog";
   import {
@@ -63,13 +62,8 @@
     ]}
     finalFocus={trainer.panelReturnFocus}
   >
-    <header class="flex items-start justify-between gap-4 px-4 pt-5 pb-4">
-      <div class="grid gap-0.5">
-        <DialogTitle class="text-lg font-semibold">{t("Controls")}</DialogTitle>
-        <DialogDescription class="text-muted-foreground text-sm">
-          {t("Change your saved FoveaFlow settings.")}
-        </DialogDescription>
-      </div>
+    <header class="flex items-center justify-between gap-4 px-4 pt-4 pb-3">
+      <DialogTitle class="text-lg font-semibold">{t("Controls")}</DialogTitle>
       <DialogClose class={buttonClass("ghost", "icon")} aria-label={t("Close")}>
         <XIcon aria-hidden="true" />
       </DialogClose>
@@ -121,10 +115,7 @@
       </div>
     </Tabs>
 
-    <footer class="flex items-center justify-between gap-4 px-4 pt-3 pb-5">
-      <p class="text-muted-foreground text-sm">
-        {t("Settings save automatically.")}
-      </p>
+    <footer class="flex items-center justify-end gap-4 px-4 pt-3 pb-5">
       <DialogClose class={buttonClass("primary", "md")}>{t("Done")}</DialogClose
       >
     </footer>

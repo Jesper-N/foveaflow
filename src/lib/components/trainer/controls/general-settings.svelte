@@ -70,15 +70,12 @@
 </SettingsSection>
 
 <SettingsSection id="trainer-defaults">
-  <div class="grid gap-3" data-setting-row>
-    <span class="text-md font-medium">
+  <div class="flex items-center justify-between gap-3" data-setting-row>
+    <span class="text-md min-w-0 font-medium">
       <RowLabel icon={RotateCcwIcon} label={t("Defaults")} />
     </span>
-    <p class="text-muted-foreground ms-10 text-sm">{resetDescription}</p>
     <AlertDialog>
-      <AlertDialogTrigger
-        class={[buttonClass("secondary", "md"), "ms-10 justify-self-start"]}
-      >
+      <AlertDialogTrigger class={buttonClass("secondary", "md")}>
         {t("Reset to defaults")}
       </AlertDialogTrigger>
       <AlertDialogBackdrop class={backdrop} />

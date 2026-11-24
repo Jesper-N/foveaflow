@@ -47,6 +47,7 @@
         >
           <DrillPreview
             class="size-full max-sm:hidden"
+            backdrop="fovea"
             drillId={step.drillId}
             playing={exploring === index}
           />

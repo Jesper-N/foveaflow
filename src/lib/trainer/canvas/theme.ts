@@ -4,6 +4,7 @@ export type ColorMode = "light" | "dark";
 
 export interface CanvasTheme {
   gridColor: string;
+  canvasColor: string;
   /** Target color until the user picks one, as a `#rrggbb` hex. */
   targetColor: string;
   /** How much of the trail each frame erases. */
@@ -12,11 +13,13 @@ export interface CanvasTheme {
 
 const canvasThemes: Record<ColorMode, CanvasTheme> = {
   dark: {
+    canvasColor: "#0a0a0a",
     gridColor: "rgba(255, 255, 255, 0.045)",
     targetColor: "#f0b100",
     trailFadeAlpha: 0.35,
   },
   light: {
+    canvasColor: "#f7f7f6",
     gridColor: "rgba(16, 18, 22, 0.075)",
     targetColor: "#fdc700",
     trailFadeAlpha: 0.38,

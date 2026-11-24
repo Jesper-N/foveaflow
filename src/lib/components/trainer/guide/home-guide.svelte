@@ -32,6 +32,7 @@
             "col-start-1 row-start-1 size-full transition-opacity duration-300 ease-out",
             shown === guide.drillId ? "opacity-100" : "opacity-0",
           ]}
+          backdrop="fovea"
           drillId={guide.drillId}
           playing={shown === guide.drillId}
         />

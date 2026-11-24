@@ -20,7 +20,6 @@
     min: number;
     max: number;
     step: number;
-    ticks?: number;
     format: (value: number) => string;
     onValueChange: (value: number) => void;
     class?: ClassValue;
@@ -34,7 +33,6 @@
     min,
     max,
     step,
-    ticks = 32,
     format,
     onValueChange,
     class: className,
@@ -43,20 +41,38 @@
   const WAKE_HEIGHT = 1.3;
   const WAKE_DECAY = 6.5;
   const KEY_PUSH = 0.3;
+  const TICK_PITCH = 7;
+  const TICK_WIDTH = 3;
+
+  let ticks = $state(28);
+
+  const fitTicks: Attachment<HTMLElement> = (row) => {
+    const observer = new ResizeObserver(() => {
+      ticks = Math.max(
+        8,
+        Math.floor((row.clientWidth + TICK_PITCH - TICK_WIDTH) / TICK_PITCH)
+      );
+    });
+
+    observer.observe(row);
+
+    return () => {
+      observer.disconnect();
+    };
+  };
 
   const bars: (HTMLSpanElement | undefined)[] = [];
   let energy = new Float32Array(0);
   let frame = 0;
   let pressed = $state(false);
   let focused = $state(false);
-  let hovered = $state(false);
   let lastX = 0;
   let lastTime = 0;
   let speed = 0;
 
   let ratio = $derived(max === min ? 0 : (value - min) / (max - min));
   let valueIndex = $derived(Math.round(ratio * (ticks - 1)));
-  let active = $derived(pressed || focused || hovered);
+  let active = $derived(pressed || focused);
   let indexes = $derived(Array.from({ length: ticks }, (_, index) => index));
 
   const registerBar =
@@ -199,16 +215,13 @@
       lastX = event.clientX;
       lastTime = performance.now();
     }}
-    onpointerenter={(event: PointerEvent) => {
-      hovered = event.pointerType !== "touch";
-    }}
-    onpointerleave={() => (hovered = false)}
     onpointermove={trackSpeed}
   >
     <SliderTrack class="relative h-4 w-full">
       <div
-        class="flex h-full w-full items-center justify-between"
+        class="flex h-full w-full items-center gap-1"
         {@attach stopWake}
+        {@attach fitTicks}
         aria-hidden="true"
       >
         {#each indexes as index (index)}

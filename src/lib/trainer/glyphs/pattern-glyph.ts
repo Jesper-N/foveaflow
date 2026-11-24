@@ -34,6 +34,11 @@ const openTravelPx: Partial<Record<PatternId, number>> = {
 
 const MAX_TRAVEL_PX = 6000;
 
+const drawnGlyphs: Partial<Record<PatternId, string>> = {
+  directionChange: "M5 17L10.5 7L15.5 16L21 6.5L27 14",
+  randomWalk: "M5 16C7 9 11 6.5 13.5 9.5S15 17 19 17 23.5 9 27 8",
+};
+
 const distanceToSegment = ([x, y]: Point, [ax, ay]: Point, [bx, by]: Point) => {
   const dx = bx - ax;
   const dy = by - ay;
@@ -97,6 +102,12 @@ const isSameHeading = (a: Point, b: Point, c: Point, d: Point) => {
 const format = (value: number) => String(Math.round(value * 10) / 10);
 
 export const buildPatternGlyph = (id: PatternId) => {
+  const drawn = drawnGlyphs[id];
+
+  if (drawn !== undefined) {
+    return drawn;
+  }
+
   const sampler = new PatternSampler();
   const rng = createRng(SEED);
   const frames: TargetFrame[] = [];

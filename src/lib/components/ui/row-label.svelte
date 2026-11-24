@@ -16,7 +16,7 @@
       class={[
         "grid size-7 shrink-0 place-items-center rounded-sm transition-colors duration-160 ease-out",
         active
-          ? "bg-foreground text-background"
+          ? "bg-accent text-accent-foreground"
           : "bg-fill-active text-foreground",
       ]}
       aria-hidden="true"

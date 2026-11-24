@@ -51,7 +51,7 @@ export const letterColorPresets = [
   "#17181a",
   "#5c5b56",
   "#ffffff",
-  "#fdc700",
+  "#ff8a00",
   "#ff3b6b",
   "#2f7bff",
   "#34d17a",

@@ -39,7 +39,7 @@
   >
     {#snippet actions()}
       <a
-        class={[buttonClass("primary", "lg"), "group/cta"]}
+        class={[buttonClass("accent", "lg"), "group/cta"]}
         href={page.primaryCta.href}
       >
         {t(page.primaryCta.label)}
@@ -86,7 +86,7 @@
   </PageHero>
 
   <SectionNav links={contents} />
-  <div class={[pageWidth, sectionGap, "pt-20"]}>
+  <div class={[pageWidth, sectionGap, "pt-12 lg:pt-16"]}>
     {#each page.sections as section, index (section.heading)}
       <PageSection id="section-{index}" heading={t(section.heading)}>
         {#each section.body ?? [] as paragraph (paragraph)}
@@ -96,11 +96,11 @@
           <StepList steps={section.orderedList} />
         {/if}
         {#if section.list}
-          <ul class="bg-card grid gap-1 rounded-4xl p-2">
+          <ul class="grid max-w-prose gap-3">
             {#each section.list as item (item)}
-              <li class="text-md flex gap-3 rounded-2xl p-3 text-pretty">
+              <li class="flex gap-3 text-base text-pretty">
                 <span
-                  class="bg-target mt-1.75 size-1.5 shrink-0 rounded-full"
+                  class="bg-accent mt-2.5 size-1.5 shrink-0 rounded-full"
                   aria-hidden="true"
                 ></span>
                 {t(item)}
@@ -111,7 +111,6 @@
       </PageSection>
     {/each}
     <PageCta
-      body={t("Start slow. Adjust as you go.")}
       href={page.primaryCta.href}
       label={t(page.primaryCta.label)}
       title={t("Try it with your own settings")}

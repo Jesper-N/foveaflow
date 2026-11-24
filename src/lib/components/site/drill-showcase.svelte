@@ -5,6 +5,7 @@
   import type { DrillId } from "$lib/trainer/settings/drills";
   import { ArrowRightIcon } from "@lucide/svelte";
   import type { Attachment } from "svelte/attachments";
+  import { on } from "svelte/events";
 
   import DrillIcon from "../icons/drill-icon.svelte";
   import DrillPreview from "../icons/drill-preview.svelte";
@@ -17,6 +18,35 @@
   let activeIndex = $derived(
     drillGuides.findIndex(({ drillId }) => drillId === activeDrill)
   );
+
+  const followScroll: Attachment<HTMLElement> = (root) => {
+    const settle = () => {
+      const middle = window.innerHeight / 2;
+      let closest: { id: DrillId; distance: number } | null = null;
+
+      for (const guide of drillGuides) {
+        const article = root.querySelector(`#${CSS.escape(guide.drillId)}`);
+        const box = article?.getBoundingClientRect();
+
+        const distance =
+          box === undefined
+            ? Number.POSITIVE_INFINITY
+            : Math.abs(box.top + box.height / 2 - middle);
+
+        if (closest === null || distance < closest.distance) {
+          closest = { distance, id: guide.drillId };
+        }
+      }
+
+      if (closest !== null) {
+        activeDrill = closest.id;
+      }
+    };
+
+    settle();
+
+    return on(window, "scrollend", settle);
+  };
 
   const followDrill =
     (drillId: DrillId): Attachment<HTMLElement> =>
@@ -39,16 +69,12 @@
 </script>
 
 <section id="practice" class="grid scroll-mt-36 gap-12">
-  <div class="grid max-w-2xl gap-3">
-    <h2 class={sectionHeading}>{t("How each drill works")}</h2>
-    <p class={bodyText}>
-      {t(
-        "Keep your head still unless a drill says otherwise. These modes are about eye movement, attention, and focus, not neck movement."
-      )}
-    </p>
-  </div>
+  <h2 class={sectionHeading}>{t("How each drill works")}</h2>
 
-  <div class="grid gap-16 lg:grid-cols-2 lg:gap-20">
+  <div
+    class="grid gap-16 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] lg:gap-x-20"
+    {@attach followScroll}
+  >
     <div class="max-lg:hidden">
       <div class="sticky top-36 grid gap-3">
         <div
@@ -60,6 +86,7 @@
                 "stage-layer absolute top-2 left-2 h-[calc(100%-1rem)] w-[calc(100%-1rem)] rounded-3xl",
                 guide.drillId === activeDrill ? "is-active" : "is-idle",
               ]}
+              backdrop="fovea"
               drillId={guide.drillId}
             />
           {/each}
@@ -96,19 +123,21 @@
           ]}
           {@attach followDrill(guide.drillId)}
         >
-          <DrillPreview
-            class="ring-border aspect-4/3 w-full rounded-3xl ring-1 lg:hidden"
-            drillId={guide.drillId}
-          />
           <div class="grid gap-3">
             <span
-              class="text-muted-foreground text-sm font-medium tabular-nums"
+              class="text-muted-foreground flex items-center gap-2.5 text-sm font-medium tabular-nums"
             >
+              <span
+                class="bg-card grid size-9 place-items-center rounded-xl lg:hidden"
+                aria-hidden="true"
+              >
+                <DrillIcon class="size-4.5" drillId={guide.drillId} />
+              </span>
               {String(index + 1).padStart(2, "0")} / {String(
                 drillGuides.length
               ).padStart(2, "0")}
             </span>
-            <h3 class="text-xl font-semibold">{t(guide.title)}</h3>
+            <h3 class="text-lg font-semibold">{t(guide.title)}</h3>
             <p class={bodyText}>{t(guide.summary)}</p>
           </div>
           <StepList steps={guide.steps} />
@@ -118,7 +147,7 @@
           </p>
           <a
             class={[
-              buttonClass("primary", "lg"),
+              buttonClass("accent", "lg"),
               "group/cta justify-self-start",
             ]}
             href={mainRouteForDrill(guide.drillId)?.path}

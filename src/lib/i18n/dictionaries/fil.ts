@@ -55,8 +55,6 @@ export const fil = {
   Cancel: "Kanselahin",
   "Change speed and target size first. They usually have the biggest effect on difficulty and control.":
     "Unahin ang bilis at laki ng target. Karaniwan, sila ang may pinakamalaking epekto sa hirap at control.",
-  "Change your saved FoveaFlow settings.":
-    "Baguhin ang naka-save mong FoveaFlow settings.",
   "Changes to these terms": "Mga pagbabago sa mga tuntuning ito",
   "Checked against the public browser interface on":
     "Sinuri ang pampublikong interface sa browser noong",
@@ -64,6 +62,8 @@ export const fil = {
   "Choose Reaction Jumps when you want discrete target changes rather than continuous motion.":
     "Piliin ang Mabilis na lipat-tingin kung gusto mo ng hiwa-hiwalay na paglipat ng target sa halip na tuloy-tuloy na galaw.",
   "Choose a drill": "Pumili ng ehersisyo",
+  "Choose a drill for visual tracking, quick refocus, or peripheral awareness, then make it your own.":
+    "Pumili ng ehersisyo para sa pagsunod sa target, mabilis na paglipat ng tingin, o pagtanaw sa gilid, at iangkop ito sa iyo.",
   "Choose a path and adjust supported direction and motion behaviors.":
     "Pumili ng landas at i-adjust ang suportadong direksiyon at galaw.",
   "Choose by the controls you need":
@@ -168,8 +168,6 @@ export const fil = {
   "FPS warmup": "FPS warm-up",
   Feature: "Tampok",
   "Feature comparison": "Paghahambing ng features",
-  "Features may change. This comparison does not cover unreleased apps.":
-    "Maaaring magbago ang mga tampok. Hindi kasama rito ang mga app na hindi pa nailalabas.",
   "Figure Eight Smooth Pursuit Drill":
     "Ehersisyong Hugis-otso para sa Tuluy-tuloy na pagsunod",
   "Figure Eight adds a crossover point, which means the target passes through the center and changes direction more often than a simple loop.":
@@ -193,8 +191,6 @@ export const fil = {
     "Hindi nagse-set ang FoveaFlow ng advertising cookies. Maaaring mag-set ang Cloudflare ng security cookies kung kailangan para mapanatiling available at ligtas ang site.",
   "FoveaFlow eye trainer animation for visual tracking practice":
     "Animation ng FoveaFlow para sa pagsasanay sa pagsubaybay ng tingin",
-  "FoveaFlow eye trainer animation for visual tracking practice. Use Pause motion to stop target movement before changing controls.":
-    "Animation ng FoveaFlow para sa pagsasanay sa pagsubaybay ng tingin. Gamitin ang Pause motion para ihinto ang galaw ng target bago baguhin ang controls.",
   "FoveaFlow eye trainer app": "FoveaFlow pampagsanay ng mata app",
   "FoveaFlow is a free browser tool for visual tracking practice. It shows moving targets, reaction jumps, Lilac Chaser fixation practice, and distractor tracking patterns on a screen.":
     "Ang FoveaFlow ay libreng browser tool para magsanay ng pagsubaybay ng tingin. Nagpapakita ito ng gumagalaw na target, mabilis na lipat-tingin, fixation practice sa Tagahabol ng lila, at mga pattern na may distractors sa screen.",
@@ -299,8 +295,6 @@ export const fil = {
     "Panatilihing hindi gumagalaw ang ulo at umupo nang komportable. Kung madalas mawala sa tingin ang target, bagalan o lakihan ito. Dagdagan lang ang hirap kapag komportable mo na itong nasusundan.",
   "Keep your head still and start with your eyes on the ball.":
     "Panatilihing hindi gumagalaw ang ulo at magsimula na nakatingin sa bola.",
-  "Keep your head still unless a drill says otherwise. These modes are about eye movement, attention, and focus, not neck movement.":
-    "Panatilihing hindi gumagalaw ang ulo maliban kung iba ang tagubilin. Para sa galaw ng mata, atensiyon, at pagtutok ang mga ehersisyong ito, hindi para sa paggalaw ng leeg.",
   Language: "Wika",
   "Legal pages": "Mga legal page",
   "Let the disappearing gap move around the fixed circle. With steady focus, the colored balls may fade and the missing spot can look like a moving green afterimage.":
@@ -341,7 +335,6 @@ export const fil = {
   "More control, when you want it": "Mas maraming kontrol kapag kailangan mo",
   "More guides": "Iba pang gabay",
   Motion: "Galaw",
-  "Motion and target": "Galaw at target",
   "Motion feel": "Pakiramdam ng galaw",
   "Motion path": "Ruta ng galaw",
   "Motion paths": "Mga landas ng galaw",
@@ -416,7 +409,6 @@ export const fil = {
     "I-save ang gusto mong mga setting sa device para mabalikan sa susunod.",
   Scale: "Sukat",
   Semibold: "Medyo makapal",
-  "Settings save automatically.": "Awtomatikong nase-save ang mga setting.",
   "Settings saved in your browser": "Settings na naka-save sa browser mo",
   "Sharpen focus between code, logs, dashboards, terminals, tickets, and multi-monitor work.":
     "Patatagin ang focus sa pagitan ng code, logs, dashboards, terminals, tickets, at multi-monitor work.",
@@ -457,8 +449,6 @@ export const fil = {
   "Speed and size": "Bilis at laki",
   "Speed and size sliders.": "Mga slider para sa bilis at laki.",
   "Speed wave": "Alon ng bilis",
-  "Speed, size, shape, color, opacity, and trail change the feel of the moving drills. Lilac Chaser has its own ball color and scale controls.":
-    "Binabago ng bilis, laki, hugis, kulay, opacity, at trail ang pakiramdam ng mga ehersisyong may galaw. May sariling control ang Tagahabol ng lila para sa kulay at sukat ng bola.",
   "Speed, size, shape, color, opacity, trails, and mode-specific motion settings.":
     "Bilis, laki, hugis, kulay, opacity, bakas ng galaw, at mga setting na angkop sa bawat mode.",
   "Speed, target size, and path matter most because they change difficulty quickly.":
@@ -471,13 +461,11 @@ export const fil = {
   "Stair steps": "Hagdan",
   "Start a visual warmup in either browser tool. FoveaFlow gives you separate tracking, refocus, distraction, and fixation drills, with detailed controls available right now in the browser.":
     "Puwedeng mag-visual warmup sa alinman sa dalawang browser tool. May magkakahiwalay na ehersisyo sa FoveaFlow para sa pagsunod, lipat-tingin, distraksiyon, at pagtutok, kasama ang mga detalyadong kontrol na magagamit na ngayon.",
-  "Start slow. Adjust as you go.":
-    "Magsimula nang mabagal. Mag-adjust habang nagsasanay.",
   "Start the warmup": "Simulan ang warm-up",
   "Start with a comfortable speed and a medium target size, then raise difficulty only when you can stay on the target cleanly.":
     "Magsimula sa kumportableng bilis at katamtamang laki ng target. Dagdagan lang ang hirap kapag kaya mo nang sundan ang target nang maayos.",
-  "Start with a predictable path for steady tracking. Try random movement or hard turns when you want to spend more time finding the target. Each link opens Smooth Pursuit with that path selected.":
-    "Magsimula sa landas na madaling hulaan para sa maayos na pagsunod. Subukan ang random na galaw o biglang liko para mas magsanay sa paghahanap ng target. Binubuksan ng bawat link ang Tuluy-tuloy na pagsunod gamit ang napiling landas.",
+  "Start with a predictable path for steady tracking. Try random movement or hard turns when you want to spend more time finding the target.":
+    "Magsimula sa landas na madaling hulaan para sa maayos na pagsunod. Subukan ang random na galaw o biglang liko para mas magsanay sa paghahanap ng target.",
   "Start with fewer distractors, a slower speed, and a larger main target.":
     "Magsimula sa mas kaunting distractors, mas mabagal na bilis, at mas malaking main target.",
   "Start with fewer distractors, then add more when you can keep the target cleanly.":
@@ -498,8 +486,8 @@ export const fil = {
   "The full tool runs in the browser.": "Tumatakbo sa browser ang buong tool.",
   "The goal is steady fixation and better awareness of change away from the center of your gaze.":
     "Ang layunin ay steady fixation at mas magandang pagpansin ng pagbabago sa labas ng gitna ng tingin mo.",
-  "The page you’re looking for does not exist. Open the trainer or use the guide to find your next drill.":
-    "Wala ang pahinang hinahanap mo. Buksan ang pagsasanay o gamitin ang gabay para pumili ng susunod na ehersisyo.",
+  "The page you’re looking for does not exist.":
+    "Wala ang pahinang hinahanap mo.",
   "The path shape changes how predictable the movement feels and how often the target changes direction.":
     "Binabago ng hugis ng ruta kung gaano ka-predictable ang galaw at kung gaano kadalas magpalit ng direksyon ang target.",
   "The patterns are simple screen paths and timing drills. They are not a clinical program, and results will vary from person to person.":
@@ -523,8 +511,8 @@ export const fil = {
   Theme: "Tema",
   "These drills give you a way to practice specific visual tasks. FoveaFlow does not measure your eye movements or prove that your aim, reaction time, or eyesight has improved.":
     "Paraan ang mga ehersisyong ito para magsanay sa partikular na biswal na gawain. Hindi sinusukat ng FoveaFlow ang galaw ng mata at hindi nito pinatutunayang gumanda ang iyong pagpuntirya, oras ng reaksiyon, o paningin.",
-  "These sources explain the eye movements and visual effects behind the drills. They do not establish that FoveaFlow improves eyesight or game performance.":
-    "Ipinapaliwanag ng mga sangguniang ito ang galaw ng mata at mga biswal na epekto sa mga ehersisyo. Hindi nila pinatutunayang nagpapalinaw ng paningin o nagpapahusay sa laro ang FoveaFlow.",
+  "These sources do not establish that FoveaFlow improves eyesight or game performance.":
+    "Hindi pinatutunayan ng mga sangguniang ito na nagpapalinaw ng paningin o nagpapahusay sa laro ang FoveaFlow.",
   "These terms may be updated when the app or site changes. The date at the top shows the latest version.":
     "Maaaring i-update ang mga tuntuning ito kapag nagbago ang app o site. Ipinapakita ng petsa sa itaas ang pinakabagong bersyon.",
   "This page compares the public browser tools checked on September 12, 2026. It does not treat announced Steam features as available browser features, or make claims about the finished desktop app.":
@@ -563,8 +551,6 @@ export const fil = {
   "Use forward motion direction": "Gamitin ang karaniwang direksyon ng galaw",
   "Use it alongside your usual in-game practice if you enjoy it. There is no validated FoveaFlow routine or guaranteed performance gain.":
     "Kung gusto mo ito, isabay sa karaniwan mong pagsasanay sa laro. Walang napatunayang FoveaFlow routine o garantisadong pagbuti ng performance.",
-  "Use it as a quick visual warmup or active screen break.":
-    "Gamitin ito bilang mabilis na visual warm-up o active screen break.",
   "Use it when you want steady moving-target practice without the extra clutter of other drills.":
     "Gamitin ito kung gusto mo ng steady na practice sa gumagalaw na target nang walang dagdag na clutter mula sa ibang mga ehersisyo.",
   "Use predictable paths for steady tracking. Use random paths or hard turns when you want more target-search work.":
@@ -735,8 +721,6 @@ export const fil = {
   "You do not need to create an account to use FoveaFlow. The app does not ask for your name, email address, payment details, or health records.":
     "Hindi mo kailangang gumawa ng account para gamitin ang FoveaFlow. Hindi hinihingi ng app ang pangalan, email address, payment details, o health records mo.",
   "Your choices": "Mga pinili mo",
-  "Your guide to FoveaFlow’s free online eye trainer. Choose a drill for visual tracking, quick refocus, or peripheral awareness, then make it your own.":
-    "Gabay mo sa libreng online na pagsasanay ng mata gamit ang FoveaFlow. Pumili ng ehersisyo para sa pagsunod sa target, mabilis na paglipat ng tingin, o pagtanaw sa gilid, at iangkop ito sa iyo.",
   "Your practice choices are not uploaded to a FoveaFlow account because there are no accounts.":
     "Hindi ina-upload ang practice choices mo sa FoveaFlow account dahil walang accounts.",
   Zigzag: "Zigzag",

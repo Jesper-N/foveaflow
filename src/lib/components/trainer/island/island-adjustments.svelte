@@ -20,12 +20,10 @@
     label={t("Size")}
     setting="baseRadiusPx"
     thumbLabel={t("Header target size")}
-    ticks={24}
   />
   <SettingSlider
     label={t("Speed")}
     setting="speed"
     thumbLabel={t("Header target speed")}
-    ticks={24}
   />
 {/if}

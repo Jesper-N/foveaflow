@@ -38,6 +38,8 @@
   --popover: #ffffff;
   --primary: #17181a;
   --primary-foreground: #ffffff;
+  --accent: #fdc700;
+  --accent-foreground: #17181a;
   --muted-foreground: #646568;
   --faint: #b5b5b6;
   --fill: rgb(23 24 26 / 0.06);
@@ -60,6 +62,8 @@
   --popover: #262626;
   --primary: #ffffff;
   --primary-foreground: #0a0a0a;
+  --accent: #f0b100;
+  --accent-foreground: #0a0a0a;
   --muted-foreground: #a1a1a1;
   --faint: #6b6b6b;
   --fill: rgb(255 255 255 / 0.06);
@@ -81,6 +85,8 @@
   --color-popover: var(--popover);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
   --color-muted-foreground: var(--muted-foreground);
   --color-faint: var(--faint);
   --color-fill: var(--fill);
@@ -125,8 +131,10 @@
   --text-2xl--letter-spacing: -0.02em;
   --text-3xl: 3.25rem;
   --text-3xl--line-height: 3.5rem;
-  --text-3xl--letter-spacing: -0.02em;
-  --text-4xl: initial;
+  --text-3xl--letter-spacing: -0.03em;
+  --text-4xl: 4.5rem;
+  --text-4xl--line-height: 4.5rem;
+  --text-4xl--letter-spacing: -0.035em;
   --text-5xl: initial;
   --text-6xl: initial;
   --text-7xl: initial;
@@ -275,8 +283,30 @@
     @apply outline-ring outline-2 outline-offset-2;
   }
 
+  * {
+    scrollbar-color: color-mix(in srgb, var(--foreground) 20%, transparent)
+      transparent;
+    scrollbar-width: thin;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border: 3px solid transparent;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--foreground) 20%, transparent)
+      padding-box;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
   ::selection {
-    @apply bg-ring/25;
+    @apply bg-accent/45;
   }
 }
 
@@ -335,6 +365,13 @@ html[data-i18n-pending="true"] body > * {
       [data-ending-style]
     ) {
     translate: 0 8px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &:is([data-starting-style], [data-ending-style]) {
+      scale: 1;
+      translate: 0;
+    }
   }
 
   &[data-modality="keyboard"]:not([data-presentation="sheet"]) {
@@ -429,4 +466,33 @@ html[data-i18n-pending="true"] body > * {
     #000 calc(100% - 1.5rem),
     transparent
   );
+}
+
+@utility fovea-grid {
+  --fovea-line: color-mix(in srgb, var(--grid) 60%, transparent);
+
+  background-color: var(--canvas);
+  background-image:
+    linear-gradient(var(--grid), var(--grid)),
+    linear-gradient(var(--grid), var(--grid)),
+    radial-gradient(
+      circle closest-side,
+      transparent calc(32% - 1px),
+      var(--grid) calc(32% - 1px) 32%,
+      transparent 32% calc(62% - 1px),
+      var(--grid) calc(62% - 1px) 62%,
+      transparent 62% calc(92% - 1px),
+      var(--grid) calc(92% - 1px) 92%,
+      transparent 92%
+    ),
+    linear-gradient(to right, var(--fovea-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--fovea-line) 1px, transparent 1px);
+  background-position: center, center, center, center, center;
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat;
+  background-size:
+    0.75rem 1px,
+    1px 0.75rem,
+    100% 100%,
+    2rem 2rem,
+    2rem 2rem;
 }

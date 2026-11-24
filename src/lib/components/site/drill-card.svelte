@@ -10,7 +10,7 @@
     drillId: DrillId;
     href: string;
     title: string;
-    summary: string;
+    summary?: string;
   }
 
   let { drillId, href, title, summary }: Props = $props();
@@ -31,6 +31,7 @@
 >
   <DrillPreview
     class="aspect-4/3 w-full rounded-3xl"
+    backdrop="fovea"
     {drillId}
     playing={exploring}
   />
@@ -42,7 +43,9 @@
         <DrillIcon class="text-muted-foreground size-4.5 shrink-0" {drillId} />
         {title}
       </span>
-      <span class="text-muted-foreground text-sm text-pretty">{summary}</span>
+      {#if summary}
+        <span class="text-muted-foreground text-sm text-pretty">{summary}</span>
+      {/if}
     </span>
     <span
       class="bg-popover text-foreground shadow-thumb ease-spring grid size-9 shrink-0 place-items-center rounded-full transition-[opacity,scale] duration-260 pointer-fine:scale-86 pointer-fine:opacity-0 pointer-fine:group-hover/tile:scale-100 pointer-fine:group-hover/tile:opacity-100 pointer-fine:group-focus-visible/tile:scale-100 pointer-fine:group-focus-visible/tile:opacity-100"

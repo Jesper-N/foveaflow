@@ -50,8 +50,6 @@ export const en = {
   Cancel: "Cancel",
   "Change speed and target size first. They usually have the biggest effect on difficulty and control.":
     "Change speed and target size first. They usually have the biggest effect on difficulty and control.",
-  "Change your saved FoveaFlow settings.":
-    "Change your saved FoveaFlow settings.",
   "Changes to these terms": "Changes to these terms",
   "Checked against the public browser interface on":
     "Checked against the public browser interface on",
@@ -59,6 +57,8 @@ export const en = {
   "Choose Reaction Jumps when you want discrete target changes rather than continuous motion.":
     "Choose Reaction Jumps when you want discrete target changes rather than continuous motion.",
   "Choose a drill": "Choose a drill",
+  "Choose a drill for visual tracking, quick refocus, or peripheral awareness, then make it your own.":
+    "Choose a drill for visual tracking, quick refocus, or peripheral awareness, then make it your own.",
   "Choose a path and adjust supported direction and motion behaviors.":
     "Choose a path and adjust supported direction and motion behaviors.",
   "Choose by the controls you need": "Choose by the controls you need",
@@ -153,8 +153,6 @@ export const en = {
   "FPS warmup": "FPS warmup",
   Feature: "Feature",
   "Feature comparison": "Feature comparison",
-  "Features may change. This comparison does not cover unreleased apps.":
-    "Features may change. This comparison does not cover unreleased apps.",
   "Figure Eight Smooth Pursuit Drill": "Figure Eight Smooth Pursuit Drill",
   "Figure Eight adds a crossover point, which means the target passes through the center and changes direction more often than a simple loop.":
     "Figure Eight adds a crossover point, which means the target passes through the center and changes direction more often than a simple loop.",
@@ -177,8 +175,6 @@ export const en = {
     "FoveaFlow does not set advertising cookies. Cloudflare may set security cookies when it needs them to keep the site available and safe.",
   "FoveaFlow eye trainer animation for visual tracking practice":
     "FoveaFlow eye trainer animation for visual tracking practice",
-  "FoveaFlow eye trainer animation for visual tracking practice. Use Pause motion to stop target movement before changing controls.":
-    "FoveaFlow eye trainer animation for visual tracking practice. Use Pause motion to stop target movement before changing controls.",
   "FoveaFlow eye trainer app": "FoveaFlow eye trainer app",
   "FoveaFlow is a free browser tool for visual tracking practice. It shows moving targets, reaction jumps, Lilac Chaser fixation practice, and distractor tracking patterns on a screen.":
     "FoveaFlow is a free browser tool for visual tracking practice. It shows moving targets, reaction jumps, Lilac Chaser fixation practice, and distractor tracking patterns on a screen.",
@@ -280,8 +276,6 @@ export const en = {
     "Keep your head still and sit comfortably. If you keep losing the target, lower the speed or make it larger. Add difficulty once you can follow it comfortably.",
   "Keep your head still and start with your eyes on the ball.":
     "Keep your head still and start with your eyes on the ball.",
-  "Keep your head still unless a drill says otherwise. These modes are about eye movement, attention, and focus, not neck movement.":
-    "Keep your head still unless a drill says otherwise. These modes are about eye movement, attention, and focus, not neck movement.",
   Language: "Language",
   "Legal pages": "Legal pages",
   "Let the disappearing gap move around the fixed circle. With steady focus, the colored balls may fade and the missing spot can look like a moving green afterimage.":
@@ -321,7 +315,6 @@ export const en = {
   "More control, when you want it": "More control, when you want it",
   "More guides": "More guides",
   Motion: "Motion",
-  "Motion and target": "Motion and target",
   "Motion feel": "Motion feel",
   "Motion path": "Motion path",
   "Motion paths": "Motion paths",
@@ -395,7 +388,6 @@ export const en = {
     "Save your preferred settings locally and return to the same setup next time.",
   Scale: "Scale",
   Semibold: "Semibold",
-  "Settings save automatically.": "Settings save automatically.",
   "Settings saved in your browser": "Settings saved in your browser",
   "Sharpen focus between code, logs, dashboards, terminals, tickets, and multi-monitor work.":
     "Sharpen focus between code, logs, dashboards, terminals, tickets, and multi-monitor work.",
@@ -434,8 +426,6 @@ export const en = {
   "Speed and size": "Speed and size",
   "Speed and size sliders.": "Speed and size sliders.",
   "Speed wave": "Speed wave",
-  "Speed, size, shape, color, opacity, and trail change the feel of the moving drills. Lilac Chaser has its own ball color and scale controls.":
-    "Speed, size, shape, color, opacity, and trail change the feel of the moving drills. Lilac Chaser has its own ball color and scale controls.",
   "Speed, size, shape, color, opacity, trails, and mode-specific motion settings.":
     "Speed, size, shape, color, opacity, trails, and mode-specific motion settings.",
   "Speed, target size, and path matter most because they change difficulty quickly.":
@@ -447,12 +437,11 @@ export const en = {
   "Stair steps": "Stair steps",
   "Start a visual warmup in either browser tool. FoveaFlow gives you separate tracking, refocus, distraction, and fixation drills, with detailed controls available right now in the browser.":
     "Start a visual warmup in either browser tool. FoveaFlow gives you separate tracking, refocus, distraction, and fixation drills, with detailed controls available right now in the browser.",
-  "Start slow. Adjust as you go.": "Start slow. Adjust as you go.",
   "Start the warmup": "Start the warmup",
   "Start with a comfortable speed and a medium target size, then raise difficulty only when you can stay on the target cleanly.":
     "Start with a comfortable speed and a medium target size, then raise difficulty only when you can stay on the target cleanly.",
-  "Start with a predictable path for steady tracking. Try random movement or hard turns when you want to spend more time finding the target. Each link opens Smooth Pursuit with that path selected.":
-    "Start with a predictable path for steady tracking. Try random movement or hard turns when you want to spend more time finding the target. Each link opens Smooth Pursuit with that path selected.",
+  "Start with a predictable path for steady tracking. Try random movement or hard turns when you want to spend more time finding the target.":
+    "Start with a predictable path for steady tracking. Try random movement or hard turns when you want to spend more time finding the target.",
   "Start with fewer distractors, a slower speed, and a larger main target.":
     "Start with fewer distractors, a slower speed, and a larger main target.",
   "Start with fewer distractors, then add more when you can keep the target cleanly.":
@@ -473,8 +462,8 @@ export const en = {
   "The full tool runs in the browser.": "The full tool runs in the browser.",
   "The goal is steady fixation and better awareness of change away from the center of your gaze.":
     "The goal is steady fixation and better awareness of change away from the center of your gaze.",
-  "The page you’re looking for does not exist. Open the trainer or use the guide to find your next drill.":
-    "The page you’re looking for does not exist. Open the trainer or use the guide to find your next drill.",
+  "The page you’re looking for does not exist.":
+    "The page you’re looking for does not exist.",
   "The path shape changes how predictable the movement feels and how often the target changes direction.":
     "The path shape changes how predictable the movement feels and how often the target changes direction.",
   "The patterns are simple screen paths and timing drills. They are not a clinical program, and results will vary from person to person.":
@@ -498,8 +487,8 @@ export const en = {
   Theme: "Theme",
   "These drills give you a way to practice specific visual tasks. FoveaFlow does not measure your eye movements or prove that your aim, reaction time, or eyesight has improved.":
     "These drills give you a way to practice specific visual tasks. FoveaFlow does not measure your eye movements or prove that your aim, reaction time, or eyesight has improved.",
-  "These sources explain the eye movements and visual effects behind the drills. They do not establish that FoveaFlow improves eyesight or game performance.":
-    "These sources explain the eye movements and visual effects behind the drills. They do not establish that FoveaFlow improves eyesight or game performance.",
+  "These sources do not establish that FoveaFlow improves eyesight or game performance.":
+    "These sources do not establish that FoveaFlow improves eyesight or game performance.",
   "These terms may be updated when the app or site changes. The date at the top shows the latest version.":
     "These terms may be updated when the app or site changes. The date at the top shows the latest version.",
   "This page compares the public browser tools checked on September 12, 2026. It does not treat announced Steam features as available browser features, or make claims about the finished desktop app.":
@@ -538,8 +527,6 @@ export const en = {
   "Use forward motion direction": "Use forward motion direction",
   "Use it alongside your usual in-game practice if you enjoy it. There is no validated FoveaFlow routine or guaranteed performance gain.":
     "Use it alongside your usual in-game practice if you enjoy it. There is no validated FoveaFlow routine or guaranteed performance gain.",
-  "Use it as a quick visual warmup or active screen break.":
-    "Use it as a quick visual warmup or active screen break.",
   "Use it when you want steady moving-target practice without the extra clutter of other drills.":
     "Use it when you want steady moving-target practice without the extra clutter of other drills.",
   "Use predictable paths for steady tracking. Use random paths or hard turns when you want more target-search work.":
@@ -705,8 +692,6 @@ export const en = {
   "You do not need to create an account to use FoveaFlow. The app does not ask for your name, email address, payment details, or health records.":
     "You do not need to create an account to use FoveaFlow. The app does not ask for your name, email address, payment details, or health records.",
   "Your choices": "Your choices",
-  "Your guide to FoveaFlow’s free online eye trainer. Choose a drill for visual tracking, quick refocus, or peripheral awareness, then make it your own.":
-    "Your guide to FoveaFlow’s free online eye trainer. Choose a drill for visual tracking, quick refocus, or peripheral awareness, then make it your own.",
   "Your practice choices are not uploaded to a FoveaFlow account because there are no accounts.":
     "Your practice choices are not uploaded to a FoveaFlow account because there are no accounts.",
   Zigzag: "Zigzag",

@@ -24,13 +24,10 @@
         {t("This path ends here")}
       </h1>
       <p class="text-muted-foreground text-base text-pretty">
-        {t(
-          "The page you’re looking for does not exist. Open the trainer or use the guide to find your next drill."
-        )}
+        {t("The page you’re looking for does not exist.")}
       </p>
       <div class="flex flex-wrap justify-center gap-2 pt-2">
-        <a class={buttonClass("primary", "lg")} href="/"
-          >{t("Open FoveaFlow")}</a
+        <a class={buttonClass("accent", "lg")} href="/">{t("Open FoveaFlow")}</a
         >
         <a class={buttonClass("secondary", "lg")} href="/guide/"
           >{t("Read the guide")}</a

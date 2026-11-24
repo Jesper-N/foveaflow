@@ -11,11 +11,14 @@ import type { RangedSetting, TrainerSettings } from "./settings";
 
 // Saved settings name the drill `presetId`, from before drills were called
 // drills. Only this file knows that name.
-const SETTINGS_KEY = "foveaflow.settings.v3";
+const SETTINGS_KEY = "foveaflow.settings.v4";
+const PREVIOUS_SETTINGS_KEY = "foveaflow.settings.v3";
 const LEGACY_SETTINGS_KEY = "foveaflow.settings.v2";
 
 /** Version 2 stored the default target color instead of following the theme. */
 const LEGACY_DEFAULT_BALL_COLOR = "#76d900";
+
+const LEGACY_DEFAULT_LETTER_COLOR = "#000000";
 const SAVE_DELAY_MS = 250;
 
 const multiplierSchema = z.number().check(z.minimum(0), z.maximum(4));
@@ -96,7 +99,7 @@ const storedSettingsSchema = z.partial(
     baseRadiusPx: z.number(),
     distractorBrightness: z.number(),
     distractorCount: z.number(),
-    letterColor: z.string(),
+    letterColor: z.nullable(z.string()),
     letterEnabled: z.boolean(),
     letterScale: z.number(),
     letterWeight: z.number(),
@@ -151,9 +154,7 @@ const fromStored = (stored: StoredSettings): TrainerSettings => {
     ),
     distractorCount: ranged("distractorCount", stored.distractorCount),
     drillId: drill.id,
-    letterColor: isHexColor(stored.letterColor)
-      ? stored.letterColor
-      : defaults.letterColor,
+    letterColor: isHexColor(stored.letterColor) ? stored.letterColor : null,
     letterEnabled: stored.letterEnabled === true,
     letterScale: ranged("letterScale", stored.letterScale),
     letterWeight:
@@ -194,17 +195,26 @@ export const loadSettings = (): TrainerSettings | null => {
       return fromStored(storedSettingsSchema.parse(JSON.parse(value)));
     }
 
+    const previousValue =
+      globalThis.localStorage?.getItem(PREVIOUS_SETTINGS_KEY) ?? "";
+
     const legacyValue =
       globalThis.localStorage?.getItem(LEGACY_SETTINGS_KEY) ?? "";
 
-    if (legacyValue === "") {
+    const olderValue = previousValue === "" ? legacyValue : previousValue;
+
+    if (olderValue === "") {
       return null;
     }
 
-    const stored = storedSettingsSchema.parse(JSON.parse(legacyValue));
+    const stored = storedSettingsSchema.parse(JSON.parse(olderValue));
 
     if (stored.ballColor?.toLowerCase() === LEGACY_DEFAULT_BALL_COLOR) {
       stored.ballColor = null;
+    }
+
+    if (stored.letterColor?.toLowerCase() === LEGACY_DEFAULT_LETTER_COLOR) {
+      stored.letterColor = null;
     }
 
     return fromStored(stored);
@@ -219,6 +229,7 @@ const saveSettings = ({ drillId, ...settings }: TrainerSettings) => {
       SETTINGS_KEY,
       JSON.stringify({ ...settings, presetId: drillId })
     );
+    globalThis.localStorage?.removeItem(PREVIOUS_SETTINGS_KEY);
     globalThis.localStorage?.removeItem(LEGACY_SETTINGS_KEY);
   } catch {
     // Browser privacy settings can block storage.

@@ -6,7 +6,7 @@ export const siteMetadata = {
     "FoveaFlow is a free online eye trainer for visual tracking, quick refocus, distractor tracking, and peripheral awareness. It is built for gamers, developers, sysadmins, support teams, and other people who spend long days on screens.",
   homepageLastModified: "2026-07-10",
   imageAlt:
-    "FoveaFlow eye trainer with a yellow tracking target and floating controls against an orange background",
+    "FoveaFlow eye trainer with a yellow tracking target on a light grid and its control island open",
   imagePath: "/metadata/og.jpg",
   licenseUrl: "https://github.com/Jesper-N/foveaflow/blob/main/LICENSE",
   name: "FoveaFlow",

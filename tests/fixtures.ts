@@ -58,7 +58,7 @@ const savedSettingsSchema = z.looseObject({
 
 export const readSettings = async (page: Page) => {
   const value = await page.evaluate(() =>
-    localStorage.getItem("foveaflow.settings.v3")
+    localStorage.getItem("foveaflow.settings.v4")
   );
 
   return value === null ? null : savedSettingsSchema.parse(JSON.parse(value));

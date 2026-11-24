@@ -8,7 +8,8 @@ import {
   loadSettings,
 } from "../../src/lib/trainer/settings/storage";
 
-const SETTINGS_KEY = "foveaflow.settings.v3";
+const SETTINGS_KEY = "foveaflow.settings.v4";
+const PREVIOUS_SETTINGS_KEY = "foveaflow.settings.v3";
 const LEGACY_SETTINGS_KEY = "foveaflow.settings.v2";
 
 const storage = new Map<string, string>();
@@ -117,7 +118,7 @@ test("invalid values fall back one by one", () => {
   ).toMatchObject({
     baseRadiusPx: 100,
     drillId: "pursuit",
-    letterColor: "#000000",
+    letterColor: null,
     letterWeight: 600,
     lilacChaserBallColor: "#ff00fe",
     patternId: "randomWalk",
@@ -163,4 +164,20 @@ test("a size pulse always runs at a steady speed", () => {
   );
 
   expect(settings?.speedProfile).toEqual({ kind: "constant" });
+});
+
+test("a version 3 save drops the old black letter default and moves to version 4", () => {
+  expect(
+    loadFrom(
+      PREVIOUS_SETTINGS_KEY,
+      JSON.stringify({ letterColor: "#000000", speed: 42 })
+    )
+  ).toMatchObject({ letterColor: null, speed: 42 });
+
+  const saver = new SettingsSaver();
+
+  saver.schedule(createDefaultSettings());
+  saver.flush();
+  expect(storage.has(PREVIOUS_SETTINGS_KEY)).toBe(false);
+  expect(storage.has(SETTINGS_KEY)).toBe(true);
 });

@@ -3,8 +3,8 @@ const HEX_COLOR_PATTERN = /^#(?<hex>[0-9a-f]{6})$/iu;
 /** Replacement for saturated red, the color most likely to trigger photosensitive reactions. */
 const SAFE_RED_REPLACEMENT = "#ffb020";
 
-/** Used when a color to darken cannot be parsed. */
-const FALLBACK_DARK_COLOR = "#4c8a00";
+/** Used when a color to fade cannot be parsed. */
+const FALLBACK_FADED_COLOR = "#8a8a8a";
 
 export const isHexColor = (value: string | null | undefined): value is string =>
   typeof value === "string" && HEX_COLOR_PATTERN.test(value);
@@ -35,16 +35,20 @@ export const safeStimulusColor = (hexColor: string) => {
   return isSaturatedRed ? SAFE_RED_REPLACEMENT : hexColor;
 };
 
-export const darkenHexColor = (hexColor: string, amount: number) => {
+export const fadeHexColor = (
+  hexColor: string,
+  towardColor: string,
+  amount: number
+) => {
   const color = parseHexColor(hexColor);
+  const toward = parseHexColor(towardColor);
 
-  if (!color) {
-    return FALLBACK_DARK_COLOR;
+  if (!color || !toward) {
+    return FALLBACK_FADED_COLOR;
   }
 
-  const red = toHexChannel(Math.round(color.red * amount));
-  const green = toHexChannel(Math.round(color.green * amount));
-  const blue = toHexChannel(Math.round(color.blue * amount));
+  const mix = (from: number, to: number) =>
+    toHexChannel(Math.round(to + (from - to) * amount));
 
-  return `#${red}${green}${blue}`;
+  return `#${mix(color.red, toward.red)}${mix(color.green, toward.green)}${mix(color.blue, toward.blue)}`;
 };

@@ -52,13 +52,14 @@ export const zhHK = {
   Cancel: "取消",
   "Change speed and target size first. They usually have the biggest effect on difficulty and control.":
     "先改速度和目標大小。它們通常最影響難度和控制感。",
-  "Change your saved FoveaFlow settings.": "更改已儲存的 FoveaFlow 設定。",
   "Changes to these terms": "條款變更",
   "Checked against the public browser interface on": "公開瀏覽器介面核對日期：",
   Children: "兒童",
   "Choose Reaction Jumps when you want discrete target changes rather than continuous motion.":
     "如果你想練習一個個分開的目標變化，而不是連續運動，可以選反應跳點。",
   "Choose a drill": "選擇練習",
+  "Choose a drill for visual tracking, quick refocus, or peripheral awareness, then make it your own.":
+    "選擇視覺追蹤、快速轉移視線或周邊視覺練習，再按需要調整。",
   "Choose a path and adjust supported direction and motion behaviors.":
     "選擇路徑，並調整該路徑支援的方向和運動方式。",
   "Choose by the controls you need": "按需要的控制項來選擇",
@@ -150,8 +151,6 @@ export const zhHK = {
   "FPS warmup": "FPS 熱身",
   Feature: "功能",
   "Feature comparison": "功能比較",
-  "Features may change. This comparison does not cover unreleased apps.":
-    "功能可能改變。本比較不包括尚未發佈的應用程式。",
   "Figure Eight Smooth Pursuit Drill": "8 字形平滑追蹤練習",
   "Figure Eight adds a crossover point, which means the target passes through the center and changes direction more often than a simple loop.":
     "8 字形加入交叉點，目標會穿過中心，比簡單循環更頻繁地改變方向。",
@@ -174,8 +173,6 @@ export const zhHK = {
     "FoveaFlow 不設定廣告 Cookie。Cloudflare 可能會在需要時設定安全 Cookie，以保持網站可用和安全。",
   "FoveaFlow eye trainer animation for visual tracking practice":
     "用於視覺追蹤練習的 FoveaFlow 眼部訓練動畫",
-  "FoveaFlow eye trainer animation for visual tracking practice. Use Pause motion to stop target movement before changing controls.":
-    "用於視覺追蹤練習的 FoveaFlow 眼部訓練動畫。更改控制項前，請使用暫停運動來停止目標移動。",
   "FoveaFlow eye trainer app": "FoveaFlow 眼部訓練應用程式",
   "FoveaFlow is a free browser tool for visual tracking practice. It shows moving targets, reaction jumps, Lilac Chaser fixation practice, and distractor tracking patterns on a screen.":
     "FoveaFlow 是一個免費的瀏覽器視覺追蹤練習工具。它會在屏幕上顯示移動目標、反應跳點、丁香追逐者注視練習和干擾物追蹤圖案。",
@@ -276,8 +273,6 @@ export const zhHK = {
     "保持頭部不動，坐姿舒適。如果經常跟丟目標，就降低速度或增大目標。能輕鬆跟上後，再增加難度。",
   "Keep your head still and start with your eyes on the ball.":
     "保持頭部不動，一開始就把視線放在球上。",
-  "Keep your head still unless a drill says otherwise. These modes are about eye movement, attention, and focus, not neck movement.":
-    "除非練習另有說明，請保持頭部不動。這些練習針對眼球運動、注意力和注視控制，不需要轉動頸部。",
   Language: "語言",
   "Legal pages": "法律頁面",
   "Let the disappearing gap move around the fixed circle. With steady focus, the colored balls may fade and the missing spot can look like a moving green afterimage.":
@@ -316,7 +311,6 @@ export const zhHK = {
   "More control, when you want it": "需要時，調得更細",
   "More guides": "更多指南",
   Motion: "運動",
-  "Motion and target": "運動和目標",
   "Motion feel": "運動手感",
   "Motion path": "運動路徑",
   "Motion paths": "運動路徑",
@@ -389,7 +383,6 @@ export const zhHK = {
     "將喜歡的設定儲存在本機，下次繼續使用。",
   Scale: "比例",
   Semibold: "半粗體",
-  "Settings save automatically.": "設定會自動儲存。",
   "Settings saved in your browser": "設定已儲存在瀏覽器中",
   "Sharpen focus between code, logs, dashboards, terminals, tickets, and multi-monitor work.":
     "在程式碼、日誌、儀表板、終端、ticket 和多顯示器工作之間，快速恢復專注。",
@@ -428,8 +421,6 @@ export const zhHK = {
   "Speed and size": "速度和大小",
   "Speed and size sliders.": "速度和大小滑桿。",
   "Speed wave": "速度波動",
-  "Speed, size, shape, color, opacity, and trail change the feel of the moving drills. Lilac Chaser has its own ball color and scale controls.":
-    "速度、大小、形狀、顏色、不透明度和拖尾會改變移動練習的手感。丁香追逐者有自己的球顏色和大小控制。",
   "Speed, size, shape, color, opacity, trails, and mode-specific motion settings.":
     "速度、大小、形狀、顏色、不透明度、拖尾，以及各模式專屬的運動設定。",
   "Speed, target size, and path matter most because they change difficulty quickly.":
@@ -441,12 +432,11 @@ export const zhHK = {
   "Stair steps": "階梯",
   "Start a visual warmup in either browser tool. FoveaFlow gives you separate tracking, refocus, distraction, and fixation drills, with detailed controls available right now in the browser.":
     "兩款工具都能在瀏覽器中進行視覺熱身。FoveaFlow 分別提供追蹤、視線轉移、干擾和注視練習，現有瀏覽器版即可使用詳細設定。",
-  "Start slow. Adjust as you go.": "從慢速開始，邊練邊調整。",
   "Start the warmup": "開始熱身",
   "Start with a comfortable speed and a medium target size, then raise difficulty only when you can stay on the target cleanly.":
     "從舒適的速度和中等目標大小開始。只有能穩定跟住目標後，再提高難度。",
-  "Start with a predictable path for steady tracking. Try random movement or hard turns when you want to spend more time finding the target. Each link opens Smooth Pursuit with that path selected.":
-    "先用可預測的路徑練習穩定追蹤。想增加尋找目標的練習，可以試試隨機運動或急轉彎。按下任一路徑即可開啟平滑追蹤，並自動選中該路徑。",
+  "Start with a predictable path for steady tracking. Try random movement or hard turns when you want to spend more time finding the target.":
+    "先用可預測的路徑練習穩定追蹤。想增加尋找目標的練習，可以試試隨機運動或急轉彎。",
   "Start with fewer distractors, a slower speed, and a larger main target.":
     "從更少干擾物、更慢速度和更大的主目標開始。",
   "Start with fewer distractors, then add more when you can keep the target cleanly.":
@@ -467,8 +457,7 @@ export const zhHK = {
   "The full tool runs in the browser.": "完整工具都在瀏覽器中運作。",
   "The goal is steady fixation and better awareness of change away from the center of your gaze.":
     "目標是穩定注視，並更好地察覺視線中心之外的變化。",
-  "The page you’re looking for does not exist. Open the trainer or use the guide to find your next drill.":
-    "你要找的頁面不存在。開啟訓練工具，或在指南中選擇下一項練習。",
+  "The page you’re looking for does not exist.": "你要找的頁面不存在。",
   "The path shape changes how predictable the movement feels and how often the target changes direction.":
     "路徑形狀會改變運動的可預測感，以及目標改變方向的頻率。",
   "The patterns are simple screen paths and timing drills. They are not a clinical program, and results will vary from person to person.":
@@ -492,8 +481,8 @@ export const zhHK = {
   Theme: "主題",
   "These drills give you a way to practice specific visual tasks. FoveaFlow does not measure your eye movements or prove that your aim, reaction time, or eyesight has improved.":
     "這些練習讓你練習特定的視覺任務。FoveaFlow 不測量眼球運動，也不能證明你的瞄準、反應時間或視力有所改善。",
-  "These sources explain the eye movements and visual effects behind the drills. They do not establish that FoveaFlow improves eyesight or game performance.":
-    "這些資料介紹練習涉及的眼球運動和視覺現象，但不能證明 FoveaFlow 能改善視力或遊戲表現。",
+  "These sources do not establish that FoveaFlow improves eyesight or game performance.":
+    "這些資料不能證明 FoveaFlow 能改善視力或遊戲表現。",
   "These terms may be updated when the app or site changes. The date at the top shows the latest version.":
     "應用程式或網站變更時，這些條款可能會更新。頂部日期顯示最新版本。",
   "This page compares the public browser tools checked on September 12, 2026. It does not treat announced Steam features as available browser features, or make claims about the finished desktop app.":
@@ -532,8 +521,6 @@ export const zhHK = {
   "Use forward motion direction": "使用正向運動方向",
   "Use it alongside your usual in-game practice if you enjoy it. There is no validated FoveaFlow routine or guaranteed performance gain.":
     "如果你喜歡，可以配合日常遊戲練習使用。目前沒有經過驗證的 FoveaFlow 訓練方案，也不保證提升表現。",
-  "Use it as a quick visual warmup or active screen break.":
-    "把它作為快速視覺熱身或主動屏幕休息。",
   "Use it when you want steady moving-target practice without the extra clutter of other drills.":
     "當你想做穩定移動目標練習，又不想加入其他練習的額外干擾時使用它。",
   "Use predictable paths for steady tracking. Use random paths or hard turns when you want more target-search work.":
@@ -674,8 +661,6 @@ export const zhHK = {
   "You do not need to create an account to use FoveaFlow. The app does not ask for your name, email address, payment details, or health records.":
     "使用 FoveaFlow 不需要建立帳戶。應用程式不會要求你的姓名、電郵地址、付款資料或健康記錄。",
   "Your choices": "你的選擇",
-  "Your guide to FoveaFlow’s free online eye trainer. Choose a drill for visual tracking, quick refocus, or peripheral awareness, then make it your own.":
-    "這份指南介紹 FoveaFlow 的免費網上眼部訓練工具。選擇視覺追蹤、快速轉移視線或周邊視覺練習，再按需要調整。",
   "Your practice choices are not uploaded to a FoveaFlow account because there are no accounts.":
     "你的練習選擇不會上傳到 FoveaFlow 帳戶，因為這裏沒有帳戶。",
   Zigzag: "鋸齒",

@@ -28,13 +28,13 @@
   <PageHero
     layout="split"
     lede={t(
-      "Your guide to FoveaFlow’s free online eye trainer. Choose a drill for visual tracking, quick refocus, or peripheral awareness, then make it your own."
+      "Choose a drill for visual tracking, quick refocus, or peripheral awareness, then make it your own."
     )}
     title={t("FoveaFlow Guide")}
   >
     {#snippet actions()}
       <a
-        class={[buttonClass("primary", "lg"), "group/cta"]}
+        class={[buttonClass("accent", "lg"), "group/cta"]}
         href="/smooth-pursuit/"
       >
         {t("Try Smooth Pursuit")}
@@ -54,7 +54,6 @@
             <DrillCard
               drillId={guide.drillId}
               href="#{guide.drillId}"
-              summary={t(guide.summary)}
               title={t(guide.title)}
             />
           </li>
@@ -63,11 +62,10 @@
     </nav>
   </PageHero>
   <SectionNav links={contents} />
-  <div class={[pageWidth, sectionGap, "pt-20"]}>
+  <div class={[pageWidth, sectionGap, "pt-12 lg:pt-16"]}>
     <GuideDrillSections />
     <GuideResourceSections />
     <PageCta
-      body={t("Start slow. Adjust as you go.")}
       href="/"
       label={t("Open FoveaFlow")}
       title={t("Ready to try a drill?")}

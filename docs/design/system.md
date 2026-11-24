@@ -8,7 +8,7 @@ Values come from measuring [bencho.dev](https://bencho.dev/) in both themes (see
 
 - **Fill tiers, not borders.** Surfaces separate by background shade. A hairline (`border`) is for dividers only: accordion rows, table rows, the guide footer.
 - **Pills and concentric corners.** Buttons, triggers, chips and tracks are full pills. Nested surfaces keep corners concentric: inner radius = outer radius − padding (28 → 8 → 20).
-- **The drill is the content.** On trainer pages the canvas fills the screen and the controls live in one island that stays out of the way: a small black notch at rest, hidden with the cursor while the target moves.
+- **The drill is the content.** On trainer pages the canvas fills the screen and the controls live in one island that stays out of the way: a small notch in the surface color at rest, hidden with the cursor while the target moves.
 - **Motion has a job or it doesn't ship.** Every animation below names its purpose. Nothing loops in the corner of your eye while you train, nothing animates on a keyboard shortcut, and everything respects reduced motion.
 
 ## Color
@@ -30,16 +30,17 @@ Semantic tokens follow shadcn naming. `fill*` and `border` are alpha overlays of
 | `fill-active` | ink 12% | white 12% | Setting icon tiles, switch track off |
 | `border` | ink 12% | white 12% | Table dividers, text-link underline |
 | `ring` | `#2231dd` | `#3aa9ff` | Focus outline, selection tint |
-| `target` | `#fdc700` | `#f0b100` | The drill target. Same values as `getCanvasTheme().targetColor` |
+| `accent` / `accent-foreground` | `#fdc700` / `#17181a` | `#f0b100` / `#0a0a0a` | The brand yellow. Marks the target and everything that starts or confirms a drill: the logo, start-drill buttons (hero, island play, “Try this drill”, closing call to action, 404), the chosen-row badge in menus, a switch that is on, the icon tile of the setting you are adjusting, article bullets and text selection |
+| `target` | `#fdc700` | `#f0b100` | The drill target, the accent. Same values as `getCanvasTheme().targetColor`; distractors fade it toward `canvas`; letters default to ink |
 | `grid` | `rgb(16 18 22 / .075)` | `rgb(255 255 255 / .045)` | Canvas grid lines. Same values as the canvas theme |
 | `thumb` | `#ffffff` | white 16% | Segmented and tab indicator |
 | `lilac-stage` | `#d8d8da` | `#d8d8da` | Lilac Chaser previews (the illusion needs its grey) |
 
 Contrast (WCAG): text on `background`/`popover` is 15:1 or more. `muted-foreground` is at least 4.5:1 on every surface it sits on, including `fill` nested inside `card` (light 4.54:1, dark 4.89:1). bencho's own 52% muted mix (`#868788`) is 3.6:1 on white, so it was darkened. `ring` is 5.9:1 or more.
 
-The island and the closing call to action are always dark: they carry the `dark` class, which switches every token inside them (the dark token set applies to `.dark`, not only to `html.dark`). Menus opened from the island are dark too.
+The closing call to action is always dark: it carries the `dark` class, which switches every token inside it (the dark token set applies to `.dark`, not only to `html.dark`). The island follows the theme like every other floating surface.
 
-The target stays the brand yellow from the logo rather than a bencho accent: it is the one color that must win on the canvas.
+Yellow is the only brand color and it always means the same thing: the target, or an action that starts or confirms a drill. Selection highlights (tabs, segmented controls, section nav, target forms) stay ink, and focus rings stay `ring` blue, so the accent never competes with navigation.
 
 ## Typography
 
@@ -87,7 +88,7 @@ Tailwind's 4 px scale. The values in use, so new work picks from these:
 
 ## Elevation
 
-Only floating surfaces get a shadow: `shadow-popover` (a 1 px 6% ring plus a soft 32 px drop). The island uses a `drop-shadow` filter so the shadow follows its morphing shape, plus a 0.5 px light edge so the black notch reads on a dark canvas. Segmented and tab thumbs and small raised chips get `shadow-thumb`. Nothing else casts a shadow. Backdrops dim the page to black 24% (48% dark); the controls panel dims less (8% / 32%) so the drill stays readable while you tune it.
+Only floating surfaces get a shadow: `shadow-popover` (a 1 px 6% ring plus a soft 32 px drop). The island uses a `drop-shadow` filter so the shadow follows its clipped shape: a 0.5 px ink edge and a 1 px drop at rest, the popover's soft drop when open. No light edges or glows. Segmented and tab thumbs and small raised chips get `shadow-thumb`. Nothing else casts a shadow. Backdrops dim the page to black 24% (48% dark); the controls panel dims less (8% / 32%) so the drill stays readable while you tune it.
 
 ## Sizes
 
@@ -96,7 +97,7 @@ Only floating surfaces get a shadow: `shadow-popover` (a 1 px 6% ring plus a sof
 | Small button | 28 | 28 (never the only way to an action) |
 | Button, select trigger, icon button | 36 | 44 |
 | Large button | 40 | 44 |
-| Play / pause (island) | 48 | 48 |
+| Play / pause (island) | 44 | 44 |
 | Segmented item | 32 in a 36 track | 40 |
 | Menu row | 40 | 48 |
 | Setting icon tile | 28 | 28 (the whole row is the target) |
@@ -110,13 +111,13 @@ Only floating surfaces get a shadow: `shadow-popover` (a 1 px 6% ring plus a sof
 
 Custom SVGs in `src/lib/components/icons/`:
 
-- `drill-icon` — one 24 px glyph per drill in Lucide's stroke (2, round caps and joins), with the target drawn as a filled `target`-yellow dot. Smooth Pursuit: a curve that lands on the target. Reaction Jumps: a dashed jump arc from a ring to the target. Multiple Distractions: the target among rings. Lilac Chaser: a ring of dots around a fixation cross, the moving gap in yellow.
+- `drill-icon` — one 24 px glyph per drill in Lucide's stroke (2, round caps and joins), with the target drawn as a filled `target` dot. Smooth Pursuit: a curve that lands on the target. Reaction Jumps: a dashed jump arc from a ring to the target. Multiple Distractions: the target among rings. Lilac Chaser: a ring of dots around a fixation cross, the moving gap filled.
 - `drill-preview` — a live miniature of each drill on the canvas grid, drawn from the real motion data:
-  - Smooth Pursuit runs the engine's Figure eight route with a fading trail.
+  - Smooth Pursuit runs a hand-drawn cubic figure eight (or the route's own path on a route page), with no trail.
   - Reaction Jumps pops between four spots with a landing ripple.
-  - Multiple Distractions moves the target along one route and six darker distractors along six others.
-  - Lilac Chaser blurs twelve dots on grey and hides one per 100 ms step, like the drill. It plays while visible, or only while its host is explored (`playing` prop). Reduced motion shows a still frame.
-- `pattern-glyph` — each motion path's real route in a 32 × 24 box, generated from the engine by `scripts/generate-pattern-glyphs.ts`. A unit test fails when the data is stale.
+  - Multiple Distractions moves the target along one route and six faded distractors along six others.
+  - Lilac Chaser shows twelve crisp dots on grey and hides one per 100 ms step, like the drill. It plays while visible, or only while its host is explored (`playing` prop). Reduced motion shows a still frame.
+- `pattern-glyph` — each motion path's real route in a 32 × 24 box, generated from the engine by `scripts/generate-pattern-glyphs.ts`; Random and Hard turns have no fixed route, so they use drawn icons (a wandering curve, a sharp zigzag). A unit test fails when the data is stale.
 - `target-form-glyph` — the six target forms as the canvas draws them.
 - `path-end-art` — the 404 scene: the target runs its route once and stops where the path breaks, beside a dashed ring where the next target should be.
 - `brand-mark` — the logo emblem.
@@ -148,10 +149,10 @@ The spring curves are generated from Apple's damping/response model, not eyeball
 | Press | Pressables dip to 0.96 in 100 ms (swatches 0.9, cards 0.98) | Instant proof the press landed, before any result |
 | Hover on ghost buttons and nav pills | A fill grows in from 0.86 (bencho's header buttons) | Says "this is pressable" without shouting; mouse only |
 | Hover on links with arrows | The arrow nudges toward where the link goes | Previews direction; no other motion |
-| Island opens (hover 80 ms, tap, or keyboard focus) | Width and height are two springs (`island-morph.ts`, after designbookmark's morph island): width is stiffer, so the notch spreads sideways first and then drops open; while height moves fast the width gives back a little, and the overshoot shows as a 2 % stretch. Controls fade in from a 6 px blur 70 ms later | The controls come out of the thing you touched, so you always know where they live. One body changing shape, not a box appearing |
-| Island closes (pointer away 320 ms, outside tap, Escape) | Panel fades out first; 80 ms later both springs run near-critical (0.92) so the notch tucks back with no squash | Leaving is quicker than arriving; the grace delay forgives a pointer that slips off |
-| Island content changes size (switching drills while open) | The same springs retarget to the new size | The island grows or shrinks around new content instead of jumping |
-| Island at rest | A blank black notch, no text, icon or motion | Nothing to read or watch while you track the target |
+| Island opens (hover 80 ms, tap, or keyboard focus) | The notch's `clip-path` opens to the full card on the drawer curve (480 ms); the controls fade in from a 4 px blur 90 ms later | One surface grows out of the notch you touched, smooth and fully interruptible (a CSS transition), no springs fighting layout |
+| Island closes (pointer away 320 ms, outside tap, Escape) | Controls fade out in 120 ms, then the clip tucks back into the notch (340 ms, 60 ms later) | Content never gets cut off by the shrinking shape |
+| Anything that changes size (island content, settings cards, select triggers) | `smooth-resize` measures the natural size and animates the old size to the new one on the drawer curve (360 ms) | Content never jumps; the container follows what's inside |
+| Island at rest | A blank notch in the surface color, no text, icon or motion | Nothing to read or watch while you track the target |
 | Island while training | Fades out over 700 ms with the cursor (mouse only), back in 160 ms on movement | The drill gets the whole screen; the way back is instant |
 | Slider wake | Drag fast and every tick the value sweeps past jumps up (to 2.3×, scaled by drag speed) and decays back, so the run tails off behind your hand; a slow drag or a click only fills; an arrow key leaves a small wake. Label, value and icon tile brighten while you adjust | bencho's wake slider: the speed of your hand becomes visible, so the control feels physical without moving when you don't |
 | Switch | Thumb springs across; it stretches while pressed | The iOS feel of something you're physically pushing |
@@ -160,7 +161,7 @@ The spring curves are generated from Apple's damping/response model, not eyeball
 | Menu highlight | One highlight shared by the whole list moves between rows with a stiff leading edge and a soft trailing edge whose length grows with the distance (420 ms for a neighbour, up to 790 ms across the list); it snaps on the first row and when you use the keyboard | designbookmark's spring dropdown: your pointer drags a single object through the list |
 | Select menu, color popover | Unfolds out of the trigger's corner: from 0.86 × 0.72 and 10 px up on `ease-spring-pop`, opacity in 160 ms; rows deal in 35 ms apart (first six only). Out in 120–160 ms with no bounce. Opened from the keyboard it only fades | bencho's picker: the list comes from the thing you pressed and is handed to you row by row; the overshoot is the character. Keyboard use gets no delay |
 | Tooltip (single) | After 420 ms it scales in from its trigger (160 ms); a neighbour's tooltip (`data-instant`) appears with no animation | Teaches shortcuts without delaying repeat use |
-| Island title and byline | A newly picked drill or path rolls in from 10 px below while the old one leaves upward (260 / 160 ms) | designbookmark's spring dropdown: confirms the choice landed where you'll look for it |
+| Select value | A newly picked value rolls in from 10 px below while the old one leaves upward (260 / 160 ms), and the trigger eases to the new width | Confirms the choice landed where you'll look for it |
 | Tooltip group (island rows, site header) | One tooltip per toolbar, after designbookmark's morph tooltip: the first hover waits 420 ms and pops it in from below the trigger; moving to a neighbour makes it travel, leading edge stiff and trailing edge soft, while the old label slides out the way it came and the new one slides in from the far side. Rendered in the top layer, below the island | Reads as one tooltip following your pointer along the toolbar instead of several flashing on and off |
 | Accordion | Height and fade in 260 ms, plus turns into × | State change you can follow |
 | Drill tile | Its preview plays and the open button scales in while hovered or focused | You explore a drill before you open it; still otherwise, so a page of tiles stays calm |
@@ -178,7 +179,7 @@ The spring curves are generated from Apple's damping/response model, not eyeball
 | 404 | The target runs its route once and stops at the break | Tells the "path ends here" story; plays once |
 | Hero | Text rises once on load | First impression only |
 
-Measured with frame sampling (Chromium, 1280 × 800, `requestAnimationFrame` per frame): island open 290 ms to full size, 760 ms to rest; island close 870 ms including the 320 ms grace and 80 ms content exit; island content fade 530 ms; menu unfold 550 ms; menu rows dealt by 440 ms; menu highlight 560 ms; tooltip first show 420 ms delay then 510 ms; tooltip travel 860 ms; tabs 600 ms; segmented 530 ms; target form highlight 600 ms; section nav pill 830 ms; switch 360 ms; color popover 560 ms; Controls drawer 320 ms; reset dialog 300 ms; guide dialog 330 ms; guide stage crossfade 370 ms; accordion 340 ms; showcase crossfade 480 ms; drill tile button 330 ms; guide card marks 360 ms; routine dim 350 ms; press 170 ms; hero 610 ms; 404 runner 2.7 s once. With reduced motion every transform, clip and position change lands in one frame and only opacity fades.
+Measured with frame sampling (Chromium, 1280 × 800, `requestAnimationFrame` per frame): island open 610 ms; island close 770 ms including the 320 ms grace and 60 ms content exit; settings card resize 380 ms; select trigger width 390 ms; island content fade 530 ms; menu unfold 550 ms; menu rows dealt by 440 ms; menu highlight 560 ms; tooltip first show 420 ms delay then 510 ms; tooltip travel 860 ms; tabs 600 ms; segmented 530 ms; target form highlight 600 ms; section nav pill 830 ms; switch 360 ms; color popover 560 ms; Controls drawer 320 ms; reset dialog 300 ms; guide dialog 330 ms; guide stage crossfade 370 ms; accordion 340 ms; showcase crossfade 480 ms; drill tile button 330 ms; guide card marks 360 ms; routine dim 350 ms; press 170 ms; hero 610 ms; 404 runner 2.7 s once. With reduced motion every transform, clip and position change lands in one frame and only opacity fades.
 
 Never: animation on keyboard shortcuts beyond the state change itself, staggers longer than six rows, looping motion in the trainer chrome, `transition: all`.
 
@@ -226,8 +227,8 @@ Every surface names the reference it was measured against and what was taken fro
 
 | Surface | Reference | Taken from it |
 | --- | --- | --- |
-| Island at rest | designbookmark morph island, bencho dynamic island | 120 × 36 notch (bencho 150 × 36, designbookmark 126 × 36), black, no content at rest |
-| Island open | designbookmark morph island, bencho dynamic island (music activity) | Width spring stiffness 380 / damping 24, height 300 / 22, shrink stiffness 390, volume give `−v / 7000` capped at 5 %; corner `min(h / 2, 28)`; content crossfade through 6 px blur; now-playing layout: 48 px art, 16 px title, 14 px byline, round play |
+| Island at rest | designbookmark morph island, bencho dynamic island | 120 × 36 notch (bencho 150 × 36, designbookmark 126 × 36) in the popover surface, no content at rest |
+| Island open | designbookmark morph island, bencho dynamic island | Content crossfades through a small blur while the shape grows; the shape is one clip on the drawer curve. Contents use the same pill selects, sliders and icon buttons as the rest of the app |
 | Menus | bencho picker, designbookmark spring dropdown | Card radius 20, padding 8, rows 40 (picker 48 with avatars) at radius 14, 18 px filled check badge radius 6; unfold from 0.86 × 0.72 and −10 px on stiffness 500 / damping 18; rows dealt 35 ms apart (picker 40 ms); one shared highlight with stiff lead edge (620 / 46) and soft trail (190 / 19) |
 | Sliders | bencho wake slider | Thumbless 3 px bars on a 7 px pitch, 32 % ink for empty bars, energy per bar from drag speed `1 − e^(−v / 900)`, decay `e^(−6.5 dt)`, keyboard wake 0.3 |
 | Switch | bencho liquid toggle | Off: slab track with a grey thumb; on: ink track with slab thumb; track carries the state; colour eases, thumb springs and stretches while held |
@@ -250,10 +251,10 @@ Every surface names the reference it was measured against and what was taken fro
 ### Trainer (`/` and every drill route)
 
 - Full-screen `canvas` stage with the drill.
-- **The island**, top center, always dark:
-  - At rest: a 120 × 36 px black notch (136 × 44 on touch).
-  - Open, up to 432 px wide, laid out like a now-playing card: a still thumbnail of the drill, the drill (M) as the title and the path (P) as the byline (both plain-text selects), reverse, and a 48 px white play/pause (Space). Below: Size and Speed side by side (or Lilac's Ball color and Scale). Footer behind a hairline: brand, Language, Guide (G), Controls (S).
-  - On phones it opens full width with the same layout.
+- **The island**, top center, in the popover surface like every other floating panel:
+  - At rest: a 120 × 36 px notch (136 × 44 on touch).
+  - Open, up to 480 px wide: the drill (M) and path (P) as pill selects, reverse, and a 44 px play/pause (Space); below, Size and Speed (or Lilac's Ball color and Scale) in a `fill` card; then Language on the left and Guide (G) and Controls (S) on the right.
+  - On phones it opens full width; the two selects stack beside the play button.
 - **Controls** (S): right-side panel 416 px wide, inset 8 px, with tabs Drill / Targets / General. Each tab is grouped settings rows in `fill` cards, iOS-style: a 28 px icon tile, the label, the control on the right (sliders run under the label, aligned with it), hairlines between rows, small section titles above a card. Targets opens with the live target preview. Footer: "Settings save automatically." and Done. On touch screens it is an 85 dvh bottom sheet.
 - **Guide** (G): 704 px dialog (sheet on touch). On top, a 256 px stage band (208 on phones) with the drill's live preview and its name pill; on `/` the stage crossfades to whichever drill in the list you point at or focus. The text scrolls underneath with soft fades at both edges. Right: title, lede, steps, what it trains, quick answers, overview. Footer: updated date, Source, Privacy, Terms, and the primary Read full guide.
 - **Reset**: an alert dialog over the controls.

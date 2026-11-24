@@ -5,7 +5,7 @@
 </script>
 
 <svg
-  class={["canvas-grid text-foreground", className]}
+  class={["fovea-grid text-foreground", className]}
   aria-hidden="true"
   fill="none"
   viewBox="0 0 160 100"

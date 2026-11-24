@@ -13,7 +13,6 @@
     label: string;
     icon?: LucideIcon;
     thumbLabel?: string;
-    ticks?: number;
     class?: ClassValue;
   }
 
@@ -22,7 +21,6 @@
     label,
     icon,
     thumbLabel = label,
-    ticks,
     class: className,
   }: Props = $props();
 
@@ -42,6 +40,5 @@
   }}
   step={range.step}
   {thumbLabel}
-  {ticks}
   value={trainer.settings[setting]}
 />

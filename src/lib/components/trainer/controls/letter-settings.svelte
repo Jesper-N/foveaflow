@@ -29,7 +29,7 @@
     label={t("Letter color")}
     onValueChange={trainer.setLetterColor}
     presets={letterColorPresets}
-    value={trainer.settings.letterColor}
+    value={trainer.letterColor}
   />
   <Select
     groups={letterWeightGroups()}

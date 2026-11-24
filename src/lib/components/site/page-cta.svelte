@@ -6,7 +6,7 @@
 
   interface Props {
     title: string;
-    body: string;
+    body?: string;
     href: string;
     label: string;
   }
@@ -18,13 +18,15 @@
   class="dark text-foreground ring-border in-[html.dark]:bg-card grid items-center gap-2 overflow-hidden rounded-4xl bg-black p-2 ring-1 md:grid-cols-[minmax(0,1fr)_minmax(0,26rem)]"
 >
   <div class="grid justify-items-start gap-4 p-6 sm:p-10">
-    <h2 class="text-2xl font-semibold text-balance sm:text-3xl">{title}</h2>
-    <p
-      class="text-muted-foreground text-base sm:text-lg sm:leading-7 sm:tracking-normal"
-    >
-      {body}
-    </p>
-    <a class={[buttonClass("primary", "lg"), "group/cta mt-3"]} {href}>
+    <h2 class="text-xl font-semibold text-balance sm:text-2xl">{title}</h2>
+    {#if body}
+      <p
+        class="text-muted-foreground text-base sm:text-lg sm:leading-7 sm:tracking-normal"
+      >
+        {body}
+      </p>
+    {/if}
+    <a class={[buttonClass("accent", "lg"), "group/cta mt-3"]} {href}>
       {label}
       <ArrowRightIcon
         class="ease-spring transition-transform duration-260 group-hover/cta:translate-x-0.5 rtl:-scale-x-100"
@@ -32,5 +34,9 @@
       />
     </a>
   </div>
-  <DrillPreview class="aspect-4/3 w-full rounded-3xl" drillId="pursuit" />
+  <DrillPreview
+    class="aspect-4/3 w-full rounded-3xl"
+    backdrop="fovea"
+    drillId="pursuit"
+  />
 </section>

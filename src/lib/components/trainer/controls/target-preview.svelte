@@ -21,7 +21,7 @@
   };
 
   const letter: Attachment<HTMLElement> = (node) => {
-    node.style.color = trainer.settings.letterColor;
+    node.style.color = trainer.letterColor;
     node.style.fontWeight = String(trainer.settings.letterWeight);
     node.style.fontSize = `${Math.round(trainer.settings.letterScale * 84)}px`;
   };

@@ -52,8 +52,6 @@ export const ptBR = {
   Cancel: "Cancelar",
   "Change speed and target size first. They usually have the biggest effect on difficulty and control.":
     "Mude primeiro a velocidade e o tamanho do alvo. Normalmente são os ajustes que mais afetam a dificuldade e o controle.",
-  "Change your saved FoveaFlow settings.":
-    "Altere suas configurações salvas do FoveaFlow.",
   "Changes to these terms": "Alterações nestes termos",
   "Checked against the public browser interface on":
     "Interface pública conferida em",
@@ -61,6 +59,8 @@ export const ptBR = {
   "Choose Reaction Jumps when you want discrete target changes rather than continuous motion.":
     "Escolha Saltos de reação quando quiser mudanças pontuais de alvo em vez de movimento contínuo.",
   "Choose a drill": "Escolha um exercício",
+  "Choose a drill for visual tracking, quick refocus, or peripheral awareness, then make it your own.":
+    "Escolha um exercício de rastreamento, mudança rápida do olhar ou visão periférica e ajuste como preferir.",
   "Choose a path and adjust supported direction and motion behaviors.":
     "Escolha uma trajetória e ajuste a direção e os comportamentos de movimento compatíveis.",
   "Choose by the controls you need": "Escolha pelos controles de que precisa",
@@ -160,8 +160,6 @@ export const ptBR = {
   "FPS warmup": "Aquecimento FPS",
   Feature: "Recurso",
   "Feature comparison": "Comparação de recursos",
-  "Features may change. This comparison does not cover unreleased apps.":
-    "Os recursos podem mudar. Esta comparação não inclui aplicativos ainda não lançados.",
   "Figure Eight Smooth Pursuit Drill":
     "Exercício de Rastreamento suave em oito",
   "Figure Eight adds a crossover point, which means the target passes through the center and changes direction more often than a simple loop.":
@@ -185,8 +183,6 @@ export const ptBR = {
     "O FoveaFlow não define cookies de publicidade. A Cloudflare pode definir cookies de segurança quando precisar deles para manter o site disponível e seguro.",
   "FoveaFlow eye trainer animation for visual tracking practice":
     "Animação do treinador visual FoveaFlow para prática de rastreamento visual",
-  "FoveaFlow eye trainer animation for visual tracking practice. Use Pause motion to stop target movement before changing controls.":
-    "Animação do treinador visual FoveaFlow para prática de rastreamento visual. Use Pausar movimento para parar o alvo antes de mudar controles.",
   "FoveaFlow eye trainer app": "App de treino visual FoveaFlow",
   "FoveaFlow is a free browser tool for visual tracking practice. It shows moving targets, reaction jumps, Lilac Chaser fixation practice, and distractor tracking patterns on a screen.":
     "O FoveaFlow é uma ferramenta gratuita no navegador para prática de rastreamento visual. Ele mostra alvos em movimento, saltos de reação, prática de fixação Perseguidor lilás e padrões de rastreamento com distrações na tela.",
@@ -290,8 +286,6 @@ export const ptBR = {
     "Mantenha a cabeça parada e sente-se confortavelmente. Se perder o alvo com frequência, reduza a velocidade ou aumente o tamanho. Suba a dificuldade quando conseguir acompanhá-lo com conforto.",
   "Keep your head still and start with your eyes on the ball.":
     "Mantenha a cabeça parada e comece olhando para a bola.",
-  "Keep your head still unless a drill says otherwise. These modes are about eye movement, attention, and focus, not neck movement.":
-    "Mantenha a cabeça parada, salvo orientação diferente no exercício. Estes modos trabalham movimentos oculares, atenção e fixação do olhar, não movimentos do pescoço.",
   Language: "Idioma",
   "Legal pages": "Páginas legais",
   "Let the disappearing gap move around the fixed circle. With steady focus, the colored balls may fade and the missing spot can look like a moving green afterimage.":
@@ -332,7 +326,6 @@ export const ptBR = {
   "More control, when you want it": "Mais controle quando você precisar",
   "More guides": "Mais guias",
   Motion: "Movimento",
-  "Motion and target": "Movimento e alvo",
   "Motion feel": "Sensação do movimento",
   "Motion path": "Trajeto do movimento",
   "Motion paths": "Trajetórias",
@@ -406,8 +399,6 @@ export const ptBR = {
     "Salve suas preferências no dispositivo e retome a mesma configuração na próxima sessão.",
   Scale: "Escala",
   Semibold: "Seminegrito",
-  "Settings save automatically.":
-    "As configurações são salvas automaticamente.",
   "Settings saved in your browser": "Configurações salvas no navegador",
   "Sharpen focus between code, logs, dashboards, terminals, tickets, and multi-monitor work.":
     "Ajuste o foco entre código, logs, dashboards, terminais, tickets e trabalho com vários monitores.",
@@ -446,8 +437,6 @@ export const ptBR = {
   "Speed and size": "Velocidade e tamanho",
   "Speed and size sliders.": "Controles deslizantes de velocidade e tamanho.",
   "Speed wave": "Onda de velocidade",
-  "Speed, size, shape, color, opacity, and trail change the feel of the moving drills. Lilac Chaser has its own ball color and scale controls.":
-    "Velocidade, tamanho, forma, cor, opacidade e rastro mudam a sensação dos exercícios em movimento. O Perseguidor lilás tem seus próprios controles de cor e escala das bolas.",
   "Speed, size, shape, color, opacity, trails, and mode-specific motion settings.":
     "Velocidade, tamanho, forma, cor, opacidade, rastros e configurações de movimento de cada modo.",
   "Speed, target size, and path matter most because they change difficulty quickly.":
@@ -460,12 +449,11 @@ export const ptBR = {
   "Stair steps": "Degraus",
   "Start a visual warmup in either browser tool. FoveaFlow gives you separate tracking, refocus, distraction, and fixation drills, with detailed controls available right now in the browser.":
     "As duas ferramentas permitem um aquecimento visual no navegador. O FoveaFlow oferece exercícios separados de rastreamento, mudança do olhar, distração e fixação, com controles detalhados já disponíveis.",
-  "Start slow. Adjust as you go.": "Comece devagar. Ajuste durante a prática.",
   "Start the warmup": "Iniciar o aquecimento",
   "Start with a comfortable speed and a medium target size, then raise difficulty only when you can stay on the target cleanly.":
     "Comece com uma velocidade confortável e um alvo médio. Aumente a dificuldade quando conseguir acompanhá-lo sem perdê-lo.",
-  "Start with a predictable path for steady tracking. Try random movement or hard turns when you want to spend more time finding the target. Each link opens Smooth Pursuit with that path selected.":
-    "Comece com uma trajetória previsível para manter o rastreamento estável. Experimente movimentos aleatórios ou viradas bruscas para praticar mais a busca pelo alvo. Cada link abre Rastreamento suave com a trajetória escolhida.",
+  "Start with a predictable path for steady tracking. Try random movement or hard turns when you want to spend more time finding the target.":
+    "Comece com uma trajetória previsível para manter o rastreamento estável. Experimente movimentos aleatórios ou viradas bruscas para praticar mais a busca pelo alvo.",
   "Start with fewer distractors, a slower speed, and a larger main target.":
     "Comece com menos distrações, velocidade mais baixa e um alvo principal maior.",
   "Start with fewer distractors, then add more when you can keep the target cleanly.":
@@ -487,8 +475,8 @@ export const ptBR = {
     "A ferramenta completa funciona no navegador.",
   "The goal is steady fixation and better awareness of change away from the center of your gaze.":
     "O objetivo é fixação estável e melhor percepção de mudanças longe do centro do olhar.",
-  "The page you’re looking for does not exist. Open the trainer or use the guide to find your next drill.":
-    "A página que você procura não existe. Abra o treinador ou consulte o guia para escolher seu próximo exercício.",
+  "The page you’re looking for does not exist.":
+    "A página que você procura não existe.",
   "The path shape changes how predictable the movement feels and how often the target changes direction.":
     "A forma do trajeto muda o quanto o movimento parece previsível e a frequência com que o alvo muda de direção.",
   "The patterns are simple screen paths and timing drills. They are not a clinical program, and results will vary from person to person.":
@@ -512,8 +500,8 @@ export const ptBR = {
   Theme: "Tema",
   "These drills give you a way to practice specific visual tasks. FoveaFlow does not measure your eye movements or prove that your aim, reaction time, or eyesight has improved.":
     "Estes exercícios permitem praticar tarefas visuais específicas. O FoveaFlow não mede seus movimentos oculares nem comprova melhora na mira, no tempo de reação ou na visão.",
-  "These sources explain the eye movements and visual effects behind the drills. They do not establish that FoveaFlow improves eyesight or game performance.":
-    "Estas fontes explicam os movimentos oculares e os efeitos visuais dos exercícios. Elas não demonstram que o FoveaFlow melhora a visão ou o desempenho nos jogos.",
+  "These sources do not establish that FoveaFlow improves eyesight or game performance.":
+    "Essas fontes não demonstram que o FoveaFlow melhora a visão ou o desempenho nos jogos.",
   "These terms may be updated when the app or site changes. The date at the top shows the latest version.":
     "Estes termos podem ser atualizados quando o app ou o site mudar. A data no topo mostra a versão mais recente.",
   "This page compares the public browser tools checked on September 12, 2026. It does not treat announced Steam features as available browser features, or make claims about the finished desktop app.":
@@ -552,8 +540,6 @@ export const ptBR = {
   "Use forward motion direction": "Usar direção de movimento para frente",
   "Use it alongside your usual in-game practice if you enjoy it. There is no validated FoveaFlow routine or guaranteed performance gain.":
     "Se gostar, use junto com sua prática habitual no jogo. Não existe uma rotina validada do FoveaFlow nem garantia de ganho de desempenho.",
-  "Use it as a quick visual warmup or active screen break.":
-    "Use como aquecimento visual rápido ou pausa ativa da tela.",
   "Use it when you want steady moving-target practice without the extra clutter of other drills.":
     "Use quando quiser prática estável com alvo em movimento, sem a poluição extra de outros exercícios.",
   "Use predictable paths for steady tracking. Use random paths or hard turns when you want more target-search work.":
@@ -725,8 +711,6 @@ export const ptBR = {
   "You do not need to create an account to use FoveaFlow. The app does not ask for your name, email address, payment details, or health records.":
     "Você não precisa criar conta para usar o FoveaFlow. O app não pede seu nome, e-mail, dados de pagamento nem registros de saúde.",
   "Your choices": "Suas escolhas",
-  "Your guide to FoveaFlow’s free online eye trainer. Choose a drill for visual tracking, quick refocus, or peripheral awareness, then make it your own.":
-    "Seu guia do treinador visual gratuito FoveaFlow. Escolha um exercício de rastreamento, mudança rápida do olhar ou visão periférica e ajuste como preferir.",
   "Your practice choices are not uploaded to a FoveaFlow account because there are no accounts.":
     "Suas escolhas de prática não são enviadas para uma conta FoveaFlow porque não existem contas.",
   Zigzag: "Zigue-zague",

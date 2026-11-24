@@ -31,7 +31,7 @@
 <header
   class={[
     pageWidth,
-    "grid gap-14 pt-14 pb-20 sm:pt-24 sm:pb-28",
+    "grid gap-14 pt-14 pb-10 sm:pt-24 sm:pb-14",
     split &&
       "lg:grid-cols-[minmax(0,1fr)_minmax(0,40rem)] lg:items-center lg:gap-16 lg:pt-16",
   ]}
@@ -80,7 +80,14 @@
         </ol>
       </nav>
     {/if}
-    <h1 class="text-2xl font-semibold text-balance sm:text-3xl">{title}</h1>
+    <h1
+      class={[
+        "text-2xl font-semibold text-balance sm:text-3xl",
+        split && "xl:text-4xl",
+      ]}
+    >
+      {title}
+    </h1>
     <p
       class="text-muted-foreground max-w-2xl text-base text-pretty sm:text-lg sm:leading-7 sm:tracking-normal"
     >

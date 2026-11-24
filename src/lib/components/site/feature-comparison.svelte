@@ -118,9 +118,7 @@
     class="text-muted-foreground mx-auto max-w-2xl text-center text-sm text-pretty"
   >
     {t("Checked against the public browser interface on")}
-    <time datetime={checkedOn}>{formatDate(checkedOn)}</time>. {t(
-      "Features may change. This comparison does not cover unreleased apps."
-    )}
+    <time datetime={checkedOn}>{formatDate(checkedOn)}</time>.
     <a
       class={[textLink, "inline-flex items-center gap-0.5"]}
       href={comparison.source.href}
