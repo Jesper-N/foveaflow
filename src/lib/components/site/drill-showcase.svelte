@@ -3,7 +3,6 @@
   import { mainRouteForDrill } from "$lib/content/drill-routes";
   import { t } from "$lib/i18n/translate";
   import type { DrillId } from "$lib/trainer/settings/drills";
-  import { ArrowRightIcon } from "@lucide/svelte";
   import type { Attachment } from "svelte/attachments";
   import { on } from "svelte/events";
 
@@ -69,7 +68,7 @@
 </script>
 
 <section id="practice" class="short:scroll-mt-16 grid scroll-mt-36 gap-12">
-  <h2 class={sectionHeading}>{t("How each drill works")}</h2>
+  <h2 class={sectionHeading}>{t("How to practice")}</h2>
 
   <div
     class="grid gap-16 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] lg:gap-x-20"
@@ -113,50 +112,29 @@
     </div>
 
     <div class="grid gap-20 lg:gap-0">
-      {#each drillGuides as guide, index (guide.drillId)}
+      {#each drillGuides as guide (guide.drillId)}
         <article
           id={guide.drillId}
           class={[
-            "short:scroll-mt-16 grid scroll-mt-36 content-center gap-6 transition-opacity duration-500 ease-out lg:min-h-[70vh] lg:py-12",
+            "short:scroll-mt-16 grid scroll-mt-36 content-start gap-6 transition-opacity duration-500 ease-out lg:min-h-[70vh] lg:pb-12",
             guide.drillId !== activeDrill &&
               "lg:opacity-40 lg:focus-within:opacity-100 lg:hover:opacity-100",
           ]}
           {@attach followDrill(guide.drillId)}
         >
           <div class="grid gap-3">
-            <span
-              class="text-muted-foreground flex items-center gap-2.5 text-sm font-medium tabular-nums"
-            >
-              <span
-                class="bg-card grid size-9 place-items-center rounded-xl lg:hidden"
-                aria-hidden="true"
-              >
-                <DrillIcon class="size-4.5" drillId={guide.drillId} />
-              </span>
-              {String(index + 1).padStart(2, "0")} / {String(
-                drillGuides.length
-              ).padStart(2, "0")}
-            </span>
             <h3 class="text-lg font-semibold">{t(guide.title)}</h3>
             <p class={bodyText}>{t(guide.summary)}</p>
           </div>
           <StepList steps={guide.steps} />
           <p class="bg-fill text-md rounded-2xl p-4 text-pretty">
-            <span class="font-medium">{t("What it trains:")}</span>
-            <span class="text-muted-foreground">{t(guide.benefits)}</span>
+            {t(guide.benefits)}
           </p>
           <a
-            class={[
-              buttonClass("primary", "lg"),
-              "group/cta justify-self-start",
-            ]}
+            class={[buttonClass("primary", "lg"), "justify-self-start"]}
             href={mainRouteForDrill(guide.drillId)?.path}
           >
             {t("Try this drill")}
-            <ArrowRightIcon
-              class="ease-spring transition-transform duration-260 group-hover/cta:translate-x-0.5 rtl:-scale-x-100"
-              aria-hidden="true"
-            />
           </a>
         </article>
       {/each}

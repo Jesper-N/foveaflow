@@ -12,11 +12,8 @@ export const es419 = {
   "A 7-minute FPS eye warmup": "Calentamiento visual de 7 minutos para FPS",
   "A Change Routine control cycles the exercise.":
     "El control Change Routine permite pasar al siguiente ejercicio.",
-  "A few deliberate minutes before you play. FoveaFlow gives you four free browser drills for moving-target tracking, quick refocus, and attention when the screen gets busy.":
-    "Unos minutos de práctica atenta antes de jugar. FoveaFlow te da cuatro ejercicios gratuitos en el navegador para seguir objetivos móviles, cambiar la mirada con rapidez y mantener la atención en escenas cargadas.",
   "A separate mode with target count, distractor count, and brightness controls.":
     "Un modo separado con controles de cantidad de objetivos, cantidad de distractores y brillo.",
-  "A short break from the usual screen": "Una pausa en tu rutina de pantalla",
   "A warmup you can adjust": "Un calentamiento que puedes ajustar",
   "About FoveaFlow": "Acerca de FoveaFlow",
   "Acceptable use": "Uso aceptable",
@@ -38,7 +35,7 @@ export const es419 = {
   "Both are free eye trainers you can open in a browser. Choose FoveaFlow when you want to fine-tune the session: how the target moves and what it looks like.":
     "Ambos son entrenadores visuales gratuitos que puedes abrir en el navegador. Elige FoveaFlow para ajustar cómo se mueve el objetivo y cómo se ve.",
   Bounce: "Rebote",
-  "Bounce Smooth Pursuit Drill": "Ejercicio de Seguimiento suave con rebote",
+  "Bounce Smooth Pursuit drill": "Ejercicio de Seguimiento suave con rebote",
   "Bounce adds repeated reversals at the edges. It is useful when you want more direction changes and less continuous flow than Circle or Wave.":
     "Rebote agrega inversiones repetidas en los bordes. Sirve cuando quieres más cambios de dirección y menos flujo continuo que en Círculo u Onda.",
   Breadcrumb: "Ruta de navegación",
@@ -60,15 +57,15 @@ export const es419 = {
   "Choose Reaction Jumps when you want discrete target changes rather than continuous motion.":
     "Elige Saltos de reacción cuando quieras cambios puntuales de objetivo en lugar de movimiento continuo.",
   "Choose a drill": "Elige un ejercicio",
-  "Choose a drill for visual tracking, quick refocus, or peripheral awareness, then make it your own.":
-    "Elige un ejercicio de seguimiento, cambio rápido de mirada o visión periférica, y ajústalo a tus necesidades.",
+  "Choose a drill for visual tracking, quick refocus, or peripheral awareness, then change its settings.":
+    "Elige un ejercicio de seguimiento, cambio rápido de mirada o visión periférica, y luego cambia sus ajustes.",
   "Choose a path and adjust supported direction and motion behaviors.":
     "Elige una trayectoria y ajusta la dirección y los movimientos compatibles.",
   "Choose by the controls you need": "Elige según los controles que necesitas",
   "Choose shape, color, opacity, trails, and letter overlays.":
     "Elige forma, color, opacidad, estelas y letras superpuestas.",
   Circle: "Círculo",
-  "Circle Smooth Pursuit Drill": "Ejercicio de Seguimiento suave en círculo",
+  "Circle Smooth Pursuit drill": "Ejercicio de Seguimiento suave en círculo",
   "Circle is the easiest repeating Smooth Pursuit pattern and the best starting point for most users. The loop is predictable, which makes it useful for warmups and speed changes.":
     "Círculo es el patrón repetido más fácil de Seguimiento suave y el mejor punto de partida para la mayoría. El bucle es predecible, por eso sirve para calentamientos y cambios de velocidad.",
   Close: "Cerrar",
@@ -80,7 +77,7 @@ export const es419 = {
     "Documentación de Cloudflare sobre recopilación de datos",
   "Cloudflare hosting and analytics": "Alojamiento y analíticas de Cloudflare",
   Clover: "Trébol",
-  "Clover Smooth Pursuit Drill": "Ejercicio de Seguimiento suave en trébol",
+  "Clover Smooth Pursuit drill": "Ejercicio de Seguimiento suave en trébol",
   "Clover creates repeated looping lobes for continuous motion with more shape variation than Circle.":
     "Trébol crea lóbulos repetidos en bucle para movimiento continuo, con más variación de forma que Círculo.",
   "Compare FoveaFlow and BlinkCamp’s free browser eye trainers. See the differences in target appearance, motion paths, and distraction controls.":
@@ -91,10 +88,10 @@ export const es419 = {
   Contact: "Contacto",
   Controls: "Controles",
   Cookies: "Cookies",
-  "Corner Tour Smooth Pursuit Drill":
+  "Corner Tour Smooth Pursuit drill":
     "Ejercicio de Seguimiento suave por las esquinas",
-  "Corner Tour gives each corner of the display a deliberate role, making the route spacious and structured.":
-    "Recorrido por las esquinas le da un papel claro a cada esquina de la pantalla, lo que hace que la ruta sea amplia y estructurada.",
+  "Corner Tour moves the target from corner to corner of the display.":
+    "Recorrido por las esquinas mueve el objetivo de esquina a esquina de la pantalla.",
   "Corner tour": "Recorrido por las esquinas",
   Cross: "Cruz",
   Cyan: "Cian",
@@ -104,35 +101,34 @@ export const es419 = {
   "Data is used to run the site, keep it secure, understand whether pages load correctly, and see which public pages people use. FoveaFlow does not sell visitor data.":
     "Los datos se usan para operar el sitio, mantenerlo seguro, entender si las páginas cargan bien y ver qué páginas públicas usa la gente. FoveaFlow no vende datos de visitantes.",
   "Data we do not collect": "Datos que no recopilamos",
-  Defaults: "Valores predeterminados",
   "Desktop app": "Aplicación de escritorio",
   Diagonal: "Diagonal",
-  "Diagonal Smooth Pursuit Drill": "Ejercicio de Seguimiento suave diagonal",
+  "Diagonal Smooth Pursuit drill": "Ejercicio de Seguimiento suave diagonal",
   "Diagonal uses longer corner-to-corner motion, so it emphasizes broader screen coverage and clean tracking over distance.":
     "Diagonal recorre una distancia larga de esquina a esquina. Permite practicar el seguimiento estable en una zona más amplia de la pantalla.",
   Diamond: "Diamante",
-  "Diamond Loop Smooth Pursuit Drill":
+  "Diamond Loop Smooth Pursuit drill":
     "Ejercicio de Seguimiento suave en bucle de diamante",
   "Diamond Loop combines a simple repeating route with clear corner transitions and sharper shifts than Circle.":
     "Bucle de diamante combina una ruta simple y repetida con transiciones claras en las esquinas y cambios más marcados que Círculo.",
   "Diamond loop": "Bucle de diamante",
   Direction: "Dirección",
   Distractions: "Distracciones",
-  "Distractor Tracking Eye Training":
-    "Entrenamiento visual de seguimiento con distractores",
   "Distractor color": "Color del distractor",
   "Distractor color brightness": "Brillo del color del distractor",
+  "Distractor tracking eye training":
+    "Entrenamiento visual de seguimiento con distractores",
   Distractors: "Distractores",
   "Do not attack, overload, scrape aggressively, or try to gain unauthorized access to the site or its infrastructure.":
     "No ataques, sobrecargues, hagas scraping agresivo ni intentes acceder sin autorización al sitio o a su infraestructura.",
   "Do not follow the balls with your eyes.": "No sigas las bolas con los ojos.",
   Done: "Listo",
-  "Down-left Sweep Smooth Pursuit Drill":
+  "Down-left Sweep Smooth Pursuit drill":
     "Ejercicio de Seguimiento suave con barrido hacia abajo a la izquierda",
   "Down-left Sweep moves from the top-right corner toward the bottom-left corner on a simple diagonal line.":
     "Barrido hacia abajo a la izquierda se mueve desde la esquina superior derecha hacia la esquina inferior izquierda en una línea diagonal simple.",
   "Down-left sweep": "Barrido hacia abajo a la izquierda",
-  "Down-right Sweep Smooth Pursuit Drill":
+  "Down-right Sweep Smooth Pursuit drill":
     "Ejercicio de Seguimiento suave con barrido hacia abajo a la derecha",
   "Down-right Sweep moves from the top-left corner toward the bottom-right corner on a simple diagonal line.":
     "Barrido hacia abajo a la derecha se mueve desde la esquina superior izquierda hacia la esquina inferior derecha en una línea diagonal simple.",
@@ -140,13 +136,13 @@ export const es419 = {
   Drill: "Ejercicio",
   "Drill selection": "Selección de ejercicios",
   Drills: "Ejercicios",
-  "Edge Loop Smooth Pursuit Drill":
+  "Edge Loop Smooth Pursuit drill":
     "Ejercicio de Seguimiento suave en bucle por el borde",
-  "Edge Loop pushes the target around the perimeter, making the drill more spacious and edge-focused than center-heavy loops.":
-    "Bucle por el borde lleva el objetivo por el perímetro, haciendo que el ejercicio sea más amplio y más enfocado en los bordes que los bucles centrados en el medio.",
+  "Edge Loop moves the target around the edges of the display.":
+    "Bucle por el borde lleva el objetivo por los bordes de la pantalla.",
   "Edge loop": "Bucle por el borde",
   Ellipse: "Elipse",
-  "Ellipse Smooth Pursuit Drill": "Ejercicio de Seguimiento suave en elipse",
+  "Ellipse Smooth Pursuit drill": "Ejercicio de Seguimiento suave en elipse",
   "Ellipse keeps the calm rhythm of Circle but changes the width and height of the motion. It is a good bridge pattern when you want a familiar loop with more range.":
     "Elipse mantiene el ritmo tranquilo de Círculo, pero cambia el ancho y la altura del movimiento. Es un buen patrón de transición cuando quieres un bucle familiar con más alcance.",
   "Explore the drills": "Explorar los ejercicios",
@@ -161,7 +157,7 @@ export const es419 = {
   "FPS warmup": "Calentamiento FPS",
   Feature: "Función",
   "Feature comparison": "Comparación de funciones",
-  "Figure Eight Smooth Pursuit Drill": "Ejercicio de Seguimiento suave en ocho",
+  "Figure Eight Smooth Pursuit drill": "Ejercicio de Seguimiento suave en ocho",
   "Figure Eight adds a crossover point, which means the target passes through the center and changes direction more often than a simple loop.":
     "Ocho agrega un punto de cruce, así que el objetivo pasa por el centro y cambia de dirección más seguido que en un bucle simple.",
   "Figure eight": "Ocho",
@@ -176,7 +172,6 @@ export const es419 = {
   Forward: "Adelante",
   "Four ways to practice": "Cuatro formas de practicar",
   FoveaFlow: "FoveaFlow",
-  "FoveaFlow Guide": "Guía de FoveaFlow",
   "FoveaFlow can be used without sending personal details. It is not built to collect personal information from children.":
     "FoveaFlow se puede usar sin enviar datos personales. No está hecho para recopilar información personal de niños.",
   "FoveaFlow does not set advertising cookies. Cloudflare may set security cookies when it needs them to keep the site available and safe.":
@@ -184,6 +179,9 @@ export const es419 = {
   "FoveaFlow eye trainer animation for visual tracking practice":
     "Animación del entrenador visual FoveaFlow para práctica de seguimiento visual",
   "FoveaFlow eye trainer app": "App de entrenamiento visual FoveaFlow",
+  "FoveaFlow gives you four free browser drills for moving-target tracking, quick refocus, and attention when the screen gets busy.":
+    "FoveaFlow te da cuatro ejercicios gratuitos en el navegador para seguir objetivos móviles, cambiar la mirada con rapidez y mantener la atención en escenas cargadas.",
+  "FoveaFlow guide": "Guía de FoveaFlow",
   "FoveaFlow is a free browser tool for visual tracking practice. It shows moving targets, reaction jumps, Lilac Chaser fixation practice, and distractor tracking patterns on a screen.":
     "FoveaFlow es una herramienta gratuita en el navegador para practicar seguimiento visual. Muestra objetivos en movimiento, saltos de reacción, práctica de fijación Perseguidor lila y patrones de seguimiento con distractores en pantalla.",
   "FoveaFlow is a free browser tool. Use it safely, stop if it feels bad, and do not treat it as medical care.":
@@ -203,6 +201,8 @@ export const es419 = {
   "FoveaFlow lets you tune the drill to what you want to practice. Use a predictable path for steady tracking, jumps for quick refocus, or dimmer moving targets for distraction practice.":
     "FoveaFlow te permite adaptar el ejercicio a lo que quieres practicar. Usa una trayectoria predecible para un seguimiento estable, saltos para cambiar la mirada con rapidez u objetivos móviles más oscuros para practicar con distracciones.",
   "FoveaFlow on GitHub": "FoveaFlow en GitHub",
+  "FoveaFlow runs in the browser you already have open, with no account and nothing to install. You decide how long a session lasts.":
+    "FoveaFlow funciona en el navegador que ya tienes abierto, sin cuenta y sin instalar nada. Tú decides cuánto dura cada sesión.",
   "FoveaFlow stores settings locally in your browser so the app can remember them on the current device. That can include the selected language, mode, motion pattern, speed, target size, color, opacity, trail setting, and theme.":
     "FoveaFlow guarda la configuración localmente en tu navegador para que la app la recuerde en el dispositivo actual. Puede incluir idioma y modo seleccionados, patrón de movimiento, velocidad, tamaño del objetivo, color, opacidad, rastro y tema.",
   "FoveaFlow stores your language preference in local browser storage and in a same-site preference cookie so the correct language can be selected before the app starts. The cookie can last up to 400 days, uses SameSite=Lax, and is marked Secure on HTTPS.":
@@ -226,7 +226,7 @@ export const es419 = {
     "Dales a tus ojos una breve pausa activa después de leer, asistir a reuniones o trabajar con muchas pestañas abiertas.",
   Gold: "Dorado",
   Guide: "Guía",
-  "Hard Turns Smooth Pursuit Drill":
+  "Hard Turns Smooth Pursuit drill":
     "Ejercicio de Seguimiento suave con giros bruscos",
   "Hard Turns is one of the most demanding Smooth Pursuit patterns because the target changes direction abruptly.":
     "Giros bruscos es uno de los patrones más exigentes de Seguimiento suave porque el objetivo cambia de dirección de forma abrupta.",
@@ -239,22 +239,21 @@ export const es419 = {
     "Mantén el foco estable en el centro y nota los cambios alrededor.",
   "Hold the right target even when the screen gets busy.":
     "Mantén el objetivo correcto incluso cuando la pantalla se llene.",
-  "Horizontal Sweep Smooth Pursuit Drill":
+  "Horizontal Sweep Smooth Pursuit drill":
     "Ejercicio de Seguimiento suave con barrido horizontal",
   "Horizontal Sweep keeps the motion simple and broad for left-right tracking across a larger visual range.":
     "Barrido horizontal mantiene el movimiento simple y amplio para seguimiento de izquierda a derecha en un rango visual mayor.",
   "Horizontal sweep": "Barrido horizontal",
   Hourglass: "Reloj de arena",
-  "Hourglass Smooth Pursuit Drill":
+  "Hourglass Smooth Pursuit drill":
     "Ejercicio de Seguimiento suave en reloj de arena",
-  "Hourglass narrows through the middle and opens back out, creating repeated crossing behavior with a constrained shape.":
-    "Reloj de arena se estrecha por el centro y vuelve a abrirse, creando cruces repetidos dentro de una forma limitada.",
+  "Hourglass narrows through the middle and opens back out.":
+    "Reloj de arena se estrecha por el centro y vuelve a abrirse.",
   "How FoveaFlow handles locally stored browser settings, Cloudflare hosting, and basic analytics.":
     "Cómo maneja FoveaFlow los ajustes locales del navegador, el alojamiento en Cloudflare y las estadísticas básicas.",
   "How data is used": "Cómo se usan los datos",
   "How do I make it easier?": "¿Cómo lo hago más fácil?",
   "How do I make this pattern easier?": "¿Cómo hago más fácil este patrón?",
-  "How each drill works": "Cómo funciona cada ejercicio",
   "How should beginners start?": "¿Cómo deberían empezar los principiantes?",
   "How to practice": "Cómo practicar",
   "IT professionals": "Profesionales de TI",
@@ -264,8 +263,8 @@ export const es419 = {
     "Si los síntomas continúan después de detenerte, consulta a un profesional calificado.",
   "If you have a vision condition, recent eye injury, surgery, neurological symptoms, or any concern about using moving visual targets, ask a qualified professional before using the app.":
     "Si tienes una condición visual, lesión ocular reciente, cirugía, síntomas neurológicos o cualquier inquietud sobre usar objetivos visuales en movimiento, consulta a un profesional calificado antes de usar la app.",
-  "If you prefer a small set of visible controls and simply want to cycle through routines, BlinkCamp is a straightforward option. It is also open source.":
-    "Si prefieres pocos controles visibles y solo quieres alternar entre rutinas, BlinkCamp es una opción sencilla. Además, es de código abierto.",
+  "If you prefer a small set of visible controls and want to cycle through routines, BlinkCamp is a straightforward option. It is also open source.":
+    "Si prefieres pocos controles visibles y quieres alternar entre rutinas, BlinkCamp es una opción sencilla. Además, es de código abierto.",
   "It is the task of following the correct target while similar moving objects compete for your attention.":
     "Es la tarea de seguir el objetivo correcto mientras objetos parecidos en movimiento compiten por tu atención.",
   "Keep your head still and let your eyes do the work.":
@@ -285,9 +284,9 @@ export const es419 = {
   "Letter weight": "Grosor de la letra",
   Light: "Claro",
   "Lilac Chaser": "Perseguidor lila",
-  "Lilac Chaser Fixation and Peripheral Awareness":
-    "Fijación y percepción periférica con Perseguidor lila",
   "Lilac Chaser ball color": "Color de las bolas de Perseguidor lila",
+  "Lilac Chaser fixation and peripheral awareness":
+    "Fijación y percepción periférica con Perseguidor lila",
   "Lilac Chaser scale": "Escala de Perseguidor lila",
   "Lilac Chaser trains fixation, peripheral awareness, visual attention, and noticing change away from the point you are looking at. For gaming, it can be a short warmup for catching movement near the edge of your vision without constantly shifting your gaze.":
     "El Perseguidor lila entrena fijación, percepción periférica, atención visual y detección de cambios lejos del punto que estás mirando. Para juegos, puede ser un calentamiento corto para captar movimiento cerca del borde de tu visión sin cambiar la mirada todo el tiempo.",
@@ -295,7 +294,7 @@ export const es419 = {
     "Perseguidor lila: fija la mirada en el centro y percibe los cambios alrededor.",
   "Lilac chaser illusion": "Ilusión Perseguidor lila",
   Lissajous: "Lissajous",
-  "Lissajous Smooth Pursuit Drill":
+  "Lissajous Smooth Pursuit drill":
     "Ejercicio de Seguimiento suave en Lissajous",
   "Lissajous is one of the more complex flowing patterns because the target moves through a looping path that changes its relationship to the center over time.":
     "Lissajous es uno de los patrones fluidos más complejos porque el objetivo se mueve por un recorrido en bucle que cambia su relación con el centro con el tiempo.",
@@ -332,14 +331,14 @@ export const es419 = {
     "Software de práctica, no atención médica. Detente si sientes fatiga visual, mareo, dolor de cabeza, náusea o cualquier otra molestia.",
   Predictable: "Predecible",
   Privacy: "Privacidad",
-  "Privacy Policy": "Política de privacidad",
+  "Privacy policy": "Política de privacidad",
   "Quick answers": "Respuestas rápidas",
   Random: "Aleatorio",
-  "Random Smooth Pursuit Drill": "Ejercicio de Seguimiento suave aleatorio",
-  "Random removes the comfort of a repeating loop. Because the target changes direction and position less predictably, the drill adds more target-search work than a simple circle or ellipse.":
-    "Aleatorio quita la comodidad de un bucle repetido. Como el objetivo cambia de dirección y posición de forma menos predecible, el ejercicio exige más búsqueda del objetivo que un círculo o una elipse simple.",
+  "Random Smooth Pursuit drill": "Ejercicio de Seguimiento suave aleatorio",
+  "Random has no repeating loop. Because the target changes direction and position less predictably, the drill adds more target-search work than a simple circle or ellipse.":
+    "Aleatorio no tiene un bucle repetido. Como el objetivo cambia de dirección y posición de forma menos predecible, el ejercicio exige más búsqueda del objetivo que un círculo o una elipse simple.",
   "Reaction Jumps": "Saltos de reacción",
-  "Reaction Jumps Eye Training": "Entrenamiento visual de Saltos de reacción",
+  "Reaction Jumps eye training": "Entrenamiento visual de Saltos de reacción",
   "Reaction Jumps trains quick target acquisition, saccadic eye movement, peripheral detection, and fast refocusing. It is useful when you want to react to a new visual target without moving your head first.":
     "Saltos de reacción entrena adquisición rápida de objetivo, movimiento ocular sacádico, detección periférica y reenfoque rápido. Sirve cuando quieres reaccionar a un nuevo objetivo visual sin mover primero la cabeza.",
   "Reaction Jumps: find the target after it moves to a new position.":
@@ -350,7 +349,6 @@ export const es419 = {
   Red: "Rojo",
   References: "Referencias",
   Regular: "Regular",
-  "Research and background reading": "Investigación y lectura de apoyo",
   "Reset to defaults": "Restablecer valores predeterminados",
   "Reset to defaults?": "¿Restablecer valores predeterminados?",
   "Restore the selected drill to its default behavior, visuals, and saved local settings.":
@@ -369,8 +367,6 @@ export const es419 = {
     "Afina el foco entre código, logs, dashboards, terminales, tickets y trabajo con varios monitores.",
   "Sharpen selective focus by tracking the brightest target through moving distractions.":
     "Entrena el foco selectivo siguiendo el objetivo más brillante entre distracciones en movimiento.",
-  "Sharpen your visual warmup before FPS games with tracking, refocus, peripheral awareness, and character movement reading drills.":
-    "Mejora tu calentamiento visual antes de juegos FPS con ejercicios de seguimiento, reenfoque, percepción periférica y lectura de movimiento de personajes.",
   "Short bursts": "Ráfagas cortas",
   "Show target letters": "Mostrar letras en el objetivo",
   "Show trail": "Mostrar rastro",
@@ -378,7 +374,7 @@ export const es419 = {
   "Size pulse": "Pulso de tamaño",
   "Skip to content": "Ir al contenido",
   "Smooth Pursuit": "Seguimiento suave",
-  "Smooth Pursuit Eye Training": "Entrenamiento visual de Seguimiento suave",
+  "Smooth Pursuit eye training": "Entrenamiento visual de Seguimiento suave",
   "Smooth Pursuit helps train steady tracking, moving-target focus, and controlled eye movement across more of your usable range.":
     "Seguimiento suave ayuda a entrenar seguimiento estable, foco en objetivos en movimiento y movimiento ocular controlado en una mayor parte de tu rango útil.",
   "Smooth Pursuit, Reaction Jumps, Multiple Distractions, and Lilac Chaser.":
@@ -397,16 +393,16 @@ export const es419 = {
   "Speed wave": "Onda de velocidad",
   "Speed, size, shape, color, opacity, trails, and mode-specific motion settings.":
     "Velocidad, tamaño, forma, color, opacidad, estelas y ajustes de movimiento de cada modo.",
-  "Speed, target size, and path matter most because they change difficulty quickly.":
-    "Velocidad, tamaño del objetivo y recorrido son lo más importante porque cambian la dificultad rápido.",
+  "Speed, target size, and path change difficulty the most.":
+    "Velocidad, tamaño del objetivo y recorrido son lo que más cambia la dificultad.",
   Square: "Cuadrado",
-  "Stair Steps Smooth Pursuit Drill":
+  "Stair Steps Smooth Pursuit drill":
     "Ejercicio de Seguimiento suave en escalones",
   "Stair Steps creates a mechanical route with discrete directional segments that stays easier to predict than Random or Hard Turns.":
     "El patrón Escalones sigue segmentos con cambios de dirección definidos. Es más fácil de predecir que Aleatorio o Giros bruscos.",
   "Stair steps": "Escalones",
-  "Start a visual warmup in either browser tool. FoveaFlow gives you separate tracking, refocus, distraction, and fixation drills, with detailed controls available right now in the browser.":
-    "Puedes hacer un calentamiento visual con cualquiera de las dos herramientas web. FoveaFlow ofrece ejercicios separados de seguimiento, cambio de mirada, distracción y fijación, con controles detallados disponibles desde ahora.",
+  "Start a visual warmup in either browser tool. FoveaFlow gives you separate tracking, refocus, distraction, and fixation drills with detailed controls.":
+    "Puedes hacer un calentamiento visual con cualquiera de las dos herramientas web. FoveaFlow ofrece ejercicios separados de seguimiento, cambio de mirada, distracción y fijación, con controles detallados.",
   "Start the warmup": "Iniciar el calentamiento",
   "Start with a predictable path for steady tracking. Try random movement or hard turns when you want to spend more time finding the target.":
     "Empieza con una trayectoria predecible para seguir el objetivo con estabilidad. Prueba movimientos aleatorios o giros bruscos para practicar más la búsqueda del objetivo.",
@@ -423,7 +419,7 @@ export const es419 = {
   "Target size": "Tamaño del objetivo",
   Targets: "Objetivos",
   Terms: "Términos",
-  "Terms of Use": "Términos de uso",
+  "Terms of use": "Términos de uso",
   "Text size": "Tamaño del texto",
   "The floating controls tuck away while you practice. Your settings stay in your browser, so you can return to your preferred setup without an account.":
     "Los controles flotantes se ocultan mientras practicas. Los ajustes se quedan en tu navegador para que retomes tu configuración sin una cuenta.",
@@ -456,8 +452,6 @@ export const es419 = {
     "Estas fuentes no demuestran que FoveaFlow mejore la vista ni el rendimiento en los juegos.",
   "These terms may be updated when the app or site changes. The date at the top shows the latest version.":
     "Estos términos pueden actualizarse cuando cambie la app o el sitio. La fecha de arriba muestra la versión más reciente.",
-  "This page compares the public browser tools checked on September 12, 2026.":
-    "Esta página compara las herramientas públicas para navegador revisadas el 12 de septiembre de 2026.",
   "This path ends here": "Este camino termina aquí",
   "Those settings stay in your browser unless your browser syncs, backs up, or exports its site data. You can remove them by clearing site data for foveaflow.com.":
     "Esa configuración queda en tu navegador, a menos que el navegador sincronice, respalde o exporte sus datos de sitio. Puedes eliminarla borrando los datos del sitio foveaflow.com.",
@@ -495,10 +489,10 @@ export const es419 = {
     "Usa velocidades más lentas para un reenfoque limpio. Sube la velocidad cuando quieras un ejercicio de reacción más intenso.",
   "Use the app in a safe place where you can stop easily. Do not use it while driving, walking around, operating equipment, or doing anything that needs your full attention.":
     "Usa la app en un lugar seguro donde puedas detenerte fácilmente. No la uses mientras manejas, caminas, operas equipo o haces algo que requiere toda tu atención.",
-  "Vertical Sweep Smooth Pursuit Drill":
+  "Vertical Sweep Smooth Pursuit drill":
     "Ejercicio de Seguimiento suave con barrido vertical",
-  "Vertical Sweep mirrors the simplicity of Horizontal Sweep but changes the direction of travel for straightforward up-down tracking.":
-    "Barrido vertical conserva la simplicidad de Barrido horizontal, pero cambia la dirección del desplazamiento para un seguimiento directo de arriba abajo.",
+  "Vertical Sweep is the up-down version of Horizontal Sweep.":
+    "Barrido vertical es la versión de arriba abajo de Barrido horizontal.",
   "Vertical sweep": "Barrido vertical",
   "Visit BlinkCamp": "Visitar BlinkCamp",
   "Visit EyeTrainer.gg": "Visitar EyeTrainer.gg",
@@ -506,25 +500,27 @@ export const es419 = {
     "Guía visual de los movimientos oculares de seguimiento suave",
   "Visual learning in multiple-object tracking":
     "Aprendizaje visual en el seguimiento de múltiples objetos",
+  "Warm up before FPS games with tracking, refocus, and peripheral awareness drills.":
+    "Calienta antes de juegos FPS con ejercicios de seguimiento, reenfoque y percepción periférica.",
   Wave: "Onda",
-  "Wave Smooth Pursuit Drill": "Ejercicio de Seguimiento suave en onda",
+  "Wave Smooth Pursuit drill": "Ejercicio de Seguimiento suave en onda",
   "Wave introduces a repeating up-and-down rhythm on top of horizontal movement. It stays readable and smooth without the abrupt feel of hard corners.":
     "Onda agrega un ritmo repetido de subida y bajada sobre el movimiento horizontal. Sigue siendo clara y suave, sin la sensación abrupta de esquinas duras.",
   Weight: "Grosor",
   "What is available today": "Lo que está disponible hoy",
   "What is distractor tracking?": "¿Qué es el seguimiento con distractores?",
-  "What it trains:": "Qué entrena:",
   "What the app is": "Qué es la app",
   "What this warmup can and cannot tell you":
     "Lo que este calentamiento puede indicar y sus límites",
   "When BlinkCamp may be enough": "Cuándo puede bastar BlinkCamp",
-  "When it jumps, find the new location and actually focus on it before the next jump.":
+  "When it jumps, find the new location and focus on it before the next jump.":
     "Después de cada salto, encuentra el objetivo y fija la mirada antes de que vuelva a moverse.",
   "When should I choose this over Smooth Pursuit?":
     "¿Cuándo debería elegir esto en lugar de Seguimiento suave?",
   "When should I use Smooth Pursuit?":
     "¿Cuándo debería usar Seguimiento suave?",
   "Which settings matter most?": "¿Qué ajustes importan más?",
+  "Who FoveaFlow is for": "Para quién es FoveaFlow",
   "You can change the target’s appearance, adjust motion behavior, and keep your preferred settings on this device. Each main drill and Smooth Pursuit path also has a direct link.":
     "Puedes cambiar la apariencia del objetivo, ajustar sus movimientos y guardar tus preferencias en este dispositivo. Cada ejercicio principal y trayectoria de Seguimiento suave tiene un enlace directo.",
   "You can clear saved FoveaFlow settings from your browser's site data controls. You can also use browser or extension settings to block optional analytics scripts.":
@@ -535,7 +531,7 @@ export const es419 = {
     "No necesitas crear una cuenta para usar FoveaFlow. La app no pide tu nombre, correo electrónico, datos de pago ni registros de salud.",
   "Your choices": "Tus elecciones",
   Zigzag: "Zigzag",
-  "Zigzag Smooth Pursuit Drill": "Ejercicio de Seguimiento suave en zigzag",
+  "Zigzag Smooth Pursuit drill": "Ejercicio de Seguimiento suave en zigzag",
   "Zigzag adds frequent directional switching, so it feels more aggressive than Wave or Diagonal.":
     "Zigzag agrega cambios frecuentes de dirección, así que se siente más agresivo que Onda o Diagonal.",
   forward: "adelante",

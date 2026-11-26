@@ -29,7 +29,7 @@ export const drillGuides = [
     drillId: "reactionTime",
     steps: [
       "Keep your head still and start with your eyes on the ball.",
-      "When it jumps, find the new location and actually focus on it before the next jump.",
+      "When it jumps, find the new location and focus on it before the next jump.",
       "Use slower speeds for clean refocusing. Raise the speed when you want a sharper reaction drill.",
     ],
     summary:

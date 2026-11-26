@@ -5,7 +5,6 @@
   import { t } from "$lib/i18n/translate";
   import { getDrill } from "$lib/trainer/settings/drills";
   import type { DrillId } from "$lib/trainer/settings/drills";
-  import { ArrowUpRightIcon } from "@lucide/svelte";
   import { DialogDescription, DialogTitle } from "@ui-sdk/svelte/dialog";
 
   import DrillIcon from "../../icons/drill-icon.svelte";
@@ -67,7 +66,7 @@
           <li>
             <a
               class={[
-                "group/row hover:bg-fill flex items-center gap-3.5 rounded-2xl p-2",
+                "hover:bg-fill flex items-center gap-3.5 rounded-2xl p-2",
                 shown === guide.drillId && "bg-fill",
                 pressable,
               ]}
@@ -75,26 +74,13 @@
               onfocus={() => (shown = guide.drillId)}
               onpointerenter={() => (shown = guide.drillId)}
             >
-              <span
-                class={[
-                  "grid size-11 shrink-0 place-items-center rounded-xl transition-[background-color,box-shadow] duration-160 ease-out",
-                  shown === guide.drillId
-                    ? "bg-popover shadow-thumb"
-                    : "bg-fill",
-                ]}
-              >
-                <DrillIcon class="size-5" drillId={guide.drillId} />
-              </span>
+              <DrillIcon class="size-5 shrink-0" drillId={guide.drillId} />
               <span class="grid min-w-0 flex-1 gap-0.5">
                 <span class="text-md font-medium">{t(guide.title)}</span>
                 <span class="text-muted-foreground text-sm text-pretty">
                   {t(guide.summary)}
                 </span>
               </span>
-              <ArrowUpRightIcon
-                class="text-muted-foreground ease-spring group-hover/row:text-foreground size-4 shrink-0 transition-[translate,color] duration-260 group-hover/row:translate-x-0.5 group-hover/row:-translate-y-0.5 rtl:-scale-x-100"
-                aria-hidden="true"
-              />
             </a>
           </li>
         {/each}

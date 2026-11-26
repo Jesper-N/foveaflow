@@ -1,7 +1,6 @@
 <script lang="ts">
   import { patternGlyphs } from "$lib/trainer/glyphs/pattern-glyphs";
   import type { PursuitPatternId } from "$lib/trainer/settings/patterns";
-  import { ArrowUpRightIcon } from "@lucide/svelte";
   import type { Attachment } from "svelte/attachments";
 
   import { pressable } from "../ui/styles";
@@ -62,15 +61,7 @@
       />
     </svg>
   </span>
-  <span
-    class="flex items-center justify-between gap-2 px-2 text-sm font-medium"
-  >
-    <span class="truncate">{label}</span>
-    <ArrowUpRightIcon
-      class="text-muted-foreground ease-spring group-hover/path:text-foreground size-3.5 shrink-0 transition-[translate,color] duration-260 group-hover/path:translate-x-0.5 group-hover/path:-translate-y-0.5 rtl:-scale-x-100"
-      aria-hidden="true"
-    />
-  </span>
+  <span class="truncate px-2 text-sm font-medium">{label}</span>
 </a>
 
 <style>

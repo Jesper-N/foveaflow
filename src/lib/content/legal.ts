@@ -124,7 +124,7 @@ export const legalPages = {
     ],
     summary:
       "FoveaFlow is built to work without an account. The app keeps your settings in your browser and uses Cloudflare to serve the site.",
-    title: "Privacy Policy",
+    title: "Privacy policy",
   },
   terms: {
     ...legalPageLinks.terms,
@@ -210,6 +210,6 @@ export const legalPages = {
     ],
     summary:
       "FoveaFlow is a free browser tool. Use it safely, stop if it feels bad, and do not treat it as medical care.",
-    title: "Terms of Use",
+    title: "Terms of use",
   },
 } as const satisfies Record<keyof typeof legalPageLinks, LegalPage>;

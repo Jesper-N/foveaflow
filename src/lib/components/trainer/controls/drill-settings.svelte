@@ -1,18 +1,9 @@
 <script lang="ts">
   import { t } from "$lib/i18n/translate";
   import { isPursuitPattern } from "$lib/trainer/settings/patterns";
-  import {
-    ArrowLeftRightIcon,
-    AudioWaveformIcon,
-    CrosshairIcon,
-    GaugeIcon,
-    RouteIcon,
-    SplineIcon,
-  } from "@lucide/svelte";
 
   import DrillIcon from "../../icons/drill-icon.svelte";
   import PatternGlyph from "../../icons/pattern-glyph.svelte";
-  import RowLabel from "../../ui/row-label.svelte";
   import Segmented from "../../ui/segmented.svelte";
   import Select from "../../ui/select.svelte";
   import Switch from "../../ui/switch.svelte";
@@ -32,7 +23,6 @@
   <Select
     groups={drillGroups()}
     label={t("Drill")}
-    labelIcon={CrosshairIcon}
     onValueChange={trainer.selectDrill}
     value={trainer.settings.drillId}
   >
@@ -44,7 +34,6 @@
     <Select
       groups={patternGroups()}
       label={t("Motion path")}
-      labelIcon={RouteIcon}
       onValueChange={trainer.selectPattern}
       value={trainer.settings.patternId}
     >
@@ -62,15 +51,14 @@
     <Select
       groups={behaviorGroups()}
       label={t("Motion feel")}
-      labelIcon={AudioWaveformIcon}
       onValueChange={trainer.selectBehavior}
       value={trainer.behavior}
     />
-    <SettingSlider icon={GaugeIcon} label={t("Speed")} setting="speed" />
+    <SettingSlider label={t("Speed")} setting="speed" />
     {#if trainer.canReverse}
       <div class="flex items-center justify-between gap-3" data-setting-row>
-        <span class="text-md min-w-0 font-medium" aria-hidden="true">
-          <RowLabel icon={ArrowLeftRightIcon} label={t("Direction")} />
+        <span class="text-md min-w-0 truncate font-medium" aria-hidden="true">
+          {t("Direction")}
         </span>
         <Segmented
           label={t("Direction")}
@@ -83,7 +71,6 @@
         />
       </div>
       <Switch
-        icon={SplineIcon}
         label={t("Show trail")}
         bind:checked={trainer.settings.showTrail}
       />

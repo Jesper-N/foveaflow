@@ -5,7 +5,6 @@
     createDefaultSettings,
     settingRanges,
   } from "$lib/trainer/settings/settings";
-  import { GaugeIcon, ScalingIcon } from "@lucide/svelte";
   import type { Attachment } from "svelte/attachments";
 
   import { formatSetting } from "../trainer/controls/format-setting";
@@ -83,7 +82,6 @@
     <div class="grid gap-2">
       <Slider
         format={(value) => formatSetting("speed", value)}
-        icon={GaugeIcon}
         label={t("Speed")}
         max={settingRanges.speed.max}
         min={settingRanges.speed.min}
@@ -93,7 +91,6 @@
       />
       <Slider
         format={(value) => formatSetting("baseRadiusPx", value)}
-        icon={ScalingIcon}
         label={t("Size")}
         max={settingRanges.baseRadiusPx.max}
         min={settingRanges.baseRadiusPx.min}

@@ -1,7 +1,6 @@
 <script lang="ts">
   import { cue, cueChoice, isPersonChange } from "$lib/sound/sound.svelte";
   import { CheckIcon, ChevronDownIcon } from "@lucide/svelte";
-  import type { LucideIcon } from "@lucide/svelte";
   import {
     Select,
     SelectContent,
@@ -19,14 +18,12 @@
   import { fly } from "svelte/transition";
 
   import { followIndicator } from "./follow-indicator";
-  import RowLabel from "./row-label.svelte";
   import type { SelectGroup, SelectOption } from "./select-types";
   import { smoothResize } from "./smooth-resize";
   import { listGroupLabel, listItem, popupSurface, pressable } from "./styles";
 
   interface Props {
     label: string;
-    labelIcon?: LucideIcon;
     hideLabel?: boolean;
     compact?: boolean;
     appearance?: "field" | "ghost";
@@ -45,7 +42,6 @@
 
   let {
     label,
-    labelIcon,
     hideLabel = false,
     compact = false,
     appearance = "field",
@@ -150,9 +146,9 @@
     data-setting-row={hideLabel ? undefined : ""}
   >
     <SelectLabel
-      class={[hideLabel ? "sr-only" : "text-md min-w-0 font-medium"]}
+      class={[hideLabel ? "sr-only" : "text-md min-w-0 truncate font-medium"]}
     >
-      <RowLabel icon={labelIcon} {label} />
+      {label}
     </SelectLabel>
     <SelectTrigger
       class={[

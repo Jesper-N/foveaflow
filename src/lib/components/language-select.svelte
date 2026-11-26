@@ -33,7 +33,6 @@
   {groups}
   hideLabel={compact}
   label={t("Language")}
-  labelIcon={compact ? undefined : LanguagesIcon}
   onValueChange={(value) => {
     if (isAppLocale(value)) {
       languageState.set(value);

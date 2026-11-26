@@ -98,7 +98,7 @@ export const articles = [
     ],
     slug: "fps-eye-training",
     summary:
-      "A few deliberate minutes before you play. FoveaFlow gives you four free browser drills for moving-target tracking, quick refocus, and attention when the screen gets busy.",
+      "FoveaFlow gives you four free browser drills for moving-target tracking, quick refocus, and attention when the screen gets busy.",
     title: "FPS Eye Training Warmup: Tracking & Refocus | FoveaFlow",
   },
   {
@@ -175,7 +175,7 @@ export const articles = [
       },
       {
         body: [
-          "If you prefer a small set of visible controls and simply want to cycle through routines, BlinkCamp is a straightforward option. It is also open source.",
+          "If you prefer a small set of visible controls and want to cycle through routines, BlinkCamp is a straightforward option. It is also open source.",
           "FoveaFlow is the better fit if you want more say over the target and motion.",
         ],
         heading: "When BlinkCamp may be enough",
@@ -245,7 +245,6 @@ export const articles = [
       {
         body: [
           "EyeTrainer.gg offers browser patterns and promotes a forthcoming Steam app. Its announcement mentions new features and an Exercise Creator.",
-          "This page compares the public browser tools checked on September 12, 2026.",
         ],
         heading: "What is available today",
       },
@@ -258,7 +257,7 @@ export const articles = [
     ],
     slug: "eyetrainer-gg-alternative",
     summary:
-      "Start a visual warmup in either browser tool. FoveaFlow gives you separate tracking, refocus, distraction, and fixation drills, with detailed controls available right now in the browser.",
+      "Start a visual warmup in either browser tool. FoveaFlow gives you separate tracking, refocus, distraction, and fixation drills with detailed controls.",
     title: "FoveaFlow vs EyeTrainer.gg: Browser Eye Training Compared",
   },
 ] as const satisfies readonly Article[];

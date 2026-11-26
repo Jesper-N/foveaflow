@@ -3,7 +3,6 @@
   import { drillGuides } from "$lib/content/drill-guides";
   import { mainRouteForDrill } from "$lib/content/drill-routes";
   import { formatDate, t } from "$lib/i18n/translate";
-  import { ArrowRightIcon } from "@lucide/svelte";
 
   import { buttonClass } from "../ui/button-variants";
   import DrillCard from "./drill-card.svelte";
@@ -38,15 +37,8 @@
     title={t(page.heading)}
   >
     {#snippet actions()}
-      <a
-        class={[buttonClass("primary", "lg"), "group/cta"]}
-        href={page.primaryCta.href}
-      >
+      <a class={buttonClass("primary", "lg")} href={page.primaryCta.href}>
         {t(page.primaryCta.label)}
-        <ArrowRightIcon
-          class="ease-spring transition-transform duration-260 group-hover/cta:translate-x-0.5 rtl:-scale-x-100"
-          aria-hidden="true"
-        />
       </a>
       {#if page.secondaryCta}
         <a class={buttonClass("secondary", "lg")} href={page.secondaryCta.href}>

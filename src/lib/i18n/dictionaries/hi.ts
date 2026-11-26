@@ -12,11 +12,8 @@ export const hi = {
   "A 7-minute FPS eye warmup": "FPS के लिए 7 मिनट का नेत्र-वार्मअप",
   "A Change Routine control cycles the exercise.":
     "Change Routine नियंत्रण से अगला अभ्यास चुना जाता है।",
-  "A few deliberate minutes before you play. FoveaFlow gives you four free browser drills for moving-target tracking, quick refocus, and attention when the screen gets busy.":
-    "खेलने से पहले कुछ मिनट ध्यान से अभ्यास करें। FoveaFlow में चार मुफ़्त ब्राउज़र अभ्यास हैं: चलते लक्ष्य पर नज़र रखना, तेज़ी से नज़र बदलना और व्यस्त स्क्रीन पर ध्यान बनाए रखना।",
   "A separate mode with target count, distractor count, and brightness controls.":
     "अलग मोड, जिसमें लक्ष्यों की संख्या, व्यवधानों की संख्या और चमक बदल सकते हैं।",
-  "A short break from the usual screen": "रोज़ के स्क्रीन काम से छोटा-सा विराम",
   "A warmup you can adjust": "अपनी ज़रूरत के अनुसार वार्मअप",
   "About FoveaFlow": "FoveaFlow के बारे में",
   "Acceptable use": "स्वीकार्य उपयोग",
@@ -37,7 +34,7 @@ export const hi = {
   "Both are free eye trainers you can open in a browser. Choose FoveaFlow when you want to fine-tune the session: how the target moves and what it looks like.":
     "दोनों मुफ़्त नेत्र-अभ्यास हैं जो ब्राउज़र में खुलते हैं। लक्ष्य की गति और दिखावट बारीकी से बदलनी हो तो FoveaFlow चुनें।",
   Bounce: "बाउंस",
-  "Bounce Smooth Pursuit Drill": "बाउंस स्मूद ट्रैकिंग अभ्यास",
+  "Bounce Smooth Pursuit drill": "बाउंस स्मूद ट्रैकिंग अभ्यास",
   "Bounce adds repeated reversals at the edges. It is useful when you want more direction changes and less continuous flow than Circle or Wave.":
     "बाउंस किनारों पर बार-बार दिशा बदलता है. सर्कल या वेव से ज्यादा दिशा बदलाव और कम लगातार बहाव चाहिए तो यह काम आता है.",
   Breadcrumb: "ब्रेडक्रम्ब",
@@ -59,15 +56,15 @@ export const hi = {
   "Choose Reaction Jumps when you want discrete target changes rather than continuous motion.":
     "लगातार गति के बजाय अलग-अलग लक्ष्य बदलाव चाहिए तो तेज़ फोकस शिफ्ट चुनें.",
   "Choose a drill": "अभ्यास चुनें",
-  "Choose a drill for visual tracking, quick refocus, or peripheral awareness, then make it your own.":
-    "चलती वस्तु पर नज़र रखने, तेज़ी से नज़र बदलने या परिधीय दृष्टि का अभ्यास चुनें और उसे अपनी ज़रूरत के अनुसार ढालें।",
+  "Choose a drill for visual tracking, quick refocus, or peripheral awareness, then change its settings.":
+    "चलती वस्तु पर नज़र रखने, तेज़ी से नज़र बदलने या परिधीय दृष्टि का अभ्यास चुनें, फिर उसकी सेटिंग बदलें।",
   "Choose a path and adjust supported direction and motion behaviors.":
     "रास्ता चुनें और उसमें समर्थित दिशा तथा गति के व्यवहार को बदलें।",
   "Choose by the controls you need": "ज़रूरी नियंत्रणों के अनुसार चुनें",
   "Choose shape, color, opacity, trails, and letter overlays.":
     "आकृति, रंग, अपारदर्शिता, गति का निशान और ऊपर दिखने वाले अक्षर चुनें।",
   Circle: "सर्कल",
-  "Circle Smooth Pursuit Drill": "सर्कल स्मूद ट्रैकिंग अभ्यास",
+  "Circle Smooth Pursuit drill": "सर्कल स्मूद ट्रैकिंग अभ्यास",
   "Circle is the easiest repeating Smooth Pursuit pattern and the best starting point for most users. The loop is predictable, which makes it useful for warmups and speed changes.":
     "सर्कल सबसे आसान दोहराया जाने वाला स्मूद ट्रैकिंग पैटर्न है और ज्यादातर लोगों के लिए अच्छी शुरुआत है. लूप का अंदाजा पहले से लग जाता है, इसलिए यह वॉर्मअप और गति बदलने के लिए अच्छा है.",
   Close: "बंद करें",
@@ -78,7 +75,7 @@ export const hi = {
   "Cloudflare data collection docs": "Cloudflare डेटा संग्रह दस्तावेज",
   "Cloudflare hosting and analytics": "Cloudflare होस्टिंग और एनालिटिक्स",
   Clover: "क्लोवर",
-  "Clover Smooth Pursuit Drill": "क्लोवर स्मूद ट्रैकिंग अभ्यास",
+  "Clover Smooth Pursuit drill": "क्लोवर स्मूद ट्रैकिंग अभ्यास",
   "Clover creates repeated looping lobes for continuous motion with more shape variation than Circle.":
     "क्लोवर लगातार गति के लिए दोहराए जाने वाले लूप बनाता है. इसमें सर्कल से ज्यादा आकार बदलाव होता है.",
   "Compare FoveaFlow and BlinkCamp’s free browser eye trainers. See the differences in target appearance, motion paths, and distraction controls.":
@@ -89,9 +86,9 @@ export const hi = {
   Contact: "संपर्क",
   Controls: "कंट्रोल",
   Cookies: "कुकी",
-  "Corner Tour Smooth Pursuit Drill": "कॉर्नर टूर स्मूद ट्रैकिंग अभ्यास",
-  "Corner Tour gives each corner of the display a deliberate role, making the route spacious and structured.":
-    "कॉर्नर टूर स्क्रीन के हर कोने को साफ भूमिका देता है. रास्ता खुला और व्यवस्थित लगता है.",
+  "Corner Tour Smooth Pursuit drill": "कॉर्नर टूर स्मूद ट्रैकिंग अभ्यास",
+  "Corner Tour moves the target from corner to corner of the display.":
+    "कॉर्नर टूर लक्ष्य को स्क्रीन के एक कोने से दूसरे कोने तक ले जाता है.",
   "Corner tour": "कॉर्नर टूर",
   Cross: "क्रॉस",
   Cyan: "सियान",
@@ -101,44 +98,43 @@ export const hi = {
   "Data is used to run the site, keep it secure, understand whether pages load correctly, and see which public pages people use. FoveaFlow does not sell visitor data.":
     "डेटा साइट चलाने, उसे सुरक्षित रखने, पेज सही लोड हो रहे हैं या नहीं समझने और लोग कौन से सार्वजनिक पेज इस्तेमाल करते हैं यह देखने के लिए इस्तेमाल होता है. FoveaFlow विजिटर डेटा नहीं बेचता.",
   "Data we do not collect": "जो डेटा हम इकट्ठा नहीं करते",
-  Defaults: "डिफॉल्ट",
   "Desktop app": "डेस्कटॉप ऐप",
   Diagonal: "तिरछा",
-  "Diagonal Smooth Pursuit Drill": "तिरछा स्मूद ट्रैकिंग अभ्यास",
+  "Diagonal Smooth Pursuit drill": "तिरछा स्मूद ट्रैकिंग अभ्यास",
   "Diagonal uses longer corner-to-corner motion, so it emphasizes broader screen coverage and clean tracking over distance.":
     "तिरछा लंबे कोने से कोने तक चलने वाला रास्ता इस्तेमाल करता है. इससे ज्यादा स्क्रीन कवरेज और दूरी पर साफ ट्रैकिंग पर ध्यान जाता है.",
   Diamond: "डायमंड",
-  "Diamond Loop Smooth Pursuit Drill": "डायमंड लूप स्मूद ट्रैकिंग अभ्यास",
+  "Diamond Loop Smooth Pursuit drill": "डायमंड लूप स्मूद ट्रैकिंग अभ्यास",
   "Diamond Loop combines a simple repeating route with clear corner transitions and sharper shifts than Circle.":
     "डायमंड लूप सरल दोहराए जाने वाले रास्ते को साफ कोना बदलावों से जोड़ता है. इसमें सर्कल से तेज बदलाव होते हैं.",
   "Diamond loop": "डायमंड लूप",
   Direction: "दिशा",
   Distractions: "ध्यान भटकाने वाले लक्ष्य",
-  "Distractor Tracking Eye Training": "विचलन ट्रैकिंग आंख अभ्यास",
   "Distractor color": "विचलन का रंग",
   "Distractor color brightness": "विचलन रंग की चमक",
+  "Distractor tracking eye training": "विचलन ट्रैकिंग आंख अभ्यास",
   Distractors: "विचलन",
   "Do not attack, overload, scrape aggressively, or try to gain unauthorized access to the site or its infrastructure.":
     "साइट या उसके इंफ्रास्ट्रक्चर पर हमला, ओवरलोड, तेज स्क्रैपिंग या बिना अनुमति एक्सेस की कोशिश न करें.",
   "Do not follow the balls with your eyes.": "गेंदों को आंखों से फॉलो न करें.",
   Done: "हो गया",
-  "Down-left Sweep Smooth Pursuit Drill": "नीचे-बाएं स्वीप स्मूद ट्रैकिंग अभ्यास",
+  "Down-left Sweep Smooth Pursuit drill": "नीचे-बाएं स्वीप स्मूद ट्रैकिंग अभ्यास",
   "Down-left Sweep moves from the top-right corner toward the bottom-left corner on a simple diagonal line.":
     "नीचे-बाएं स्वीप सरल तिरछी रेखा पर ऊपर-दाएं कोने से नीचे-बाएं कोने की ओर चलता है.",
   "Down-left sweep": "नीचे-बाएं स्वीप",
-  "Down-right Sweep Smooth Pursuit Drill": "नीचे-दाएं स्वीप स्मूद ट्रैकिंग अभ्यास",
+  "Down-right Sweep Smooth Pursuit drill": "नीचे-दाएं स्वीप स्मूद ट्रैकिंग अभ्यास",
   "Down-right Sweep moves from the top-left corner toward the bottom-right corner on a simple diagonal line.":
     "नीचे-दाएं स्वीप सरल तिरछी रेखा पर ऊपर-बाएं कोने से नीचे-दाएं कोने की ओर चलता है.",
   "Down-right sweep": "नीचे-दाएं स्वीप",
   Drill: "अभ्यास",
   "Drill selection": "अभ्यास का चुनाव",
   Drills: "अभ्यास",
-  "Edge Loop Smooth Pursuit Drill": "किनारा लूप स्मूद ट्रैकिंग अभ्यास",
-  "Edge Loop pushes the target around the perimeter, making the drill more spacious and edge-focused than center-heavy loops.":
-    "किनारा लूप लक्ष्य को किनारों के आसपास चलाता है. यह केंद्र वाले लूप से ज्यादा खुला और किनारा केंद्रित लगता है.",
+  "Edge Loop Smooth Pursuit drill": "किनारा लूप स्मूद ट्रैकिंग अभ्यास",
+  "Edge Loop moves the target around the edges of the display.":
+    "किनारा लूप लक्ष्य को स्क्रीन के किनारों के आसपास चलाता है.",
   "Edge loop": "किनारा लूप",
   Ellipse: "दीर्घवृत्त",
-  "Ellipse Smooth Pursuit Drill": "दीर्घवृत्त स्मूद ट्रैकिंग अभ्यास",
+  "Ellipse Smooth Pursuit drill": "दीर्घवृत्त स्मूद ट्रैकिंग अभ्यास",
   "Ellipse keeps the calm rhythm of Circle but changes the width and height of the motion. It is a good bridge pattern when you want a familiar loop with more range.":
     "दीर्घवृत्त में सर्कल जैसी शांत लय रहती है, लेकिन गति की चौड़ाई और ऊंचाई बदलती है. जाना-पहचाना लूप और ज्यादा दायरा चाहिए तो यह अच्छा बीच का पैटर्न है.",
   "Explore the drills": "अभ्यास देखें",
@@ -152,7 +148,7 @@ export const hi = {
   "FPS warmup": "FPS वॉर्मअप",
   Feature: "सुविधा",
   "Feature comparison": "फीचर तुलना",
-  "Figure Eight Smooth Pursuit Drill": "फिगर आठ स्मूद ट्रैकिंग अभ्यास",
+  "Figure Eight Smooth Pursuit drill": "फिगर आठ स्मूद ट्रैकिंग अभ्यास",
   "Figure Eight adds a crossover point, which means the target passes through the center and changes direction more often than a simple loop.":
     "फिगर आठ में एक क्रॉसओवर बिंदु होता है. लक्ष्य बीच से गुजरता है और सरल लूप से ज्यादा बार दिशा बदलता है.",
   "Figure eight": "फिगर आठ",
@@ -167,7 +163,6 @@ export const hi = {
   Forward: "आगे",
   "Four ways to practice": "अभ्यास के चार तरीके",
   FoveaFlow: "FoveaFlow",
-  "FoveaFlow Guide": "FoveaFlow गाइड",
   "FoveaFlow can be used without sending personal details. It is not built to collect personal information from children.":
     "FoveaFlow निजी जानकारी भेजे बिना इस्तेमाल किया जा सकता है. यह बच्चों की निजी जानकारी इकट्ठा करने के लिए नहीं बना है.",
   "FoveaFlow does not set advertising cookies. Cloudflare may set security cookies when it needs them to keep the site available and safe.":
@@ -175,6 +170,9 @@ export const hi = {
   "FoveaFlow eye trainer animation for visual tracking practice":
     "विजुअल ट्रैकिंग अभ्यास के लिए FoveaFlow आई ट्रेनर एनिमेशन",
   "FoveaFlow eye trainer app": "FoveaFlow आई ट्रेनर ऐप",
+  "FoveaFlow gives you four free browser drills for moving-target tracking, quick refocus, and attention when the screen gets busy.":
+    "FoveaFlow में चार मुफ़्त ब्राउज़र अभ्यास हैं: चलते लक्ष्य पर नज़र रखना, तेज़ी से नज़र बदलना और व्यस्त स्क्रीन पर ध्यान बनाए रखना।",
+  "FoveaFlow guide": "FoveaFlow गाइड",
   "FoveaFlow is a free browser tool for visual tracking practice. It shows moving targets, reaction jumps, Lilac Chaser fixation practice, and distractor tracking patterns on a screen.":
     "FoveaFlow विजुअल ट्रैकिंग अभ्यास के लिए मुफ्त ब्राउजर टूल है. यह स्क्रीन पर चलते लक्ष्य, तेज़ फोकस शिफ्ट, लाइलैक चेज़र नजर टिकाने का अभ्यास और विचलन ट्रैकिंग पैटर्न दिखाता है.",
   "FoveaFlow is a free browser tool. Use it safely, stop if it feels bad, and do not treat it as medical care.":
@@ -194,6 +192,8 @@ export const hi = {
   "FoveaFlow lets you tune the drill to what you want to practice. Use a predictable path for steady tracking, jumps for quick refocus, or dimmer moving targets for distraction practice.":
     "FoveaFlow में अपनी ज़रूरत के अनुसार अभ्यास बदलें। स्थिर ट्रैकिंग के लिए अनुमान लगाने योग्य रास्ता, तेज़ नज़र बदलने के लिए छलाँगें या व्यवधान वाले अभ्यास के लिए मंद चलते लक्ष्य चुनें।",
   "FoveaFlow on GitHub": "GitHub पर FoveaFlow",
+  "FoveaFlow runs in the browser you already have open, with no account and nothing to install. You decide how long a session lasts.":
+    "FoveaFlow उसी ब्राउज़र में चलता है जो आपने पहले से खोला है, बिना खाते और बिना कुछ इंस्टॉल किए. हर सेशन कितना लंबा हो, यह आप तय करते हैं.",
   "FoveaFlow stores settings locally in your browser so the app can remember them on the current device. That can include the selected language, mode, motion pattern, speed, target size, color, opacity, trail setting, and theme.":
     "FoveaFlow सेटिंग आपके ब्राउजर में स्थानीय रूप से रखता है ताकि ऐप उन्हें इसी डिवाइस पर याद रख सके. इनमें चुनी हुई भाषा, मोड, गति पैटर्न, गति, लक्ष्य आकार, रंग, अपारदर्शिता, ट्रेल सेटिंग और थीम शामिल हो सकते हैं.",
   "FoveaFlow stores your language preference in local browser storage and in a same-site preference cookie so the correct language can be selected before the app starts. The cookie can last up to 400 days, uses SameSite=Lax, and is marked Secure on HTTPS.":
@@ -217,7 +217,7 @@ export const hi = {
     "रीडिंग, मीटिंग या बहुत सारे टैब के बाद थकी आंखों को छोटा सक्रिय ब्रेक दें.",
   Gold: "सुनहरा",
   Guide: "गाइड",
-  "Hard Turns Smooth Pursuit Drill": "हार्ड टर्न्स स्मूद ट्रैकिंग अभ्यास",
+  "Hard Turns Smooth Pursuit drill": "हार्ड टर्न्स स्मूद ट्रैकिंग अभ्यास",
   "Hard Turns is one of the most demanding Smooth Pursuit patterns because the target changes direction abruptly.":
     "हार्ड टर्न्स सबसे कठिन स्मूद ट्रैकिंग पैटर्न में से है, क्योंकि लक्ष्य अचानक दिशा बदलता है.",
   "Hard turns": "हार्ड टर्न्स",
@@ -229,20 +229,19 @@ export const hi = {
     "बीच में नजर टिकाए रखें और आसपास बदलाव देखें.",
   "Hold the right target even when the screen gets busy.":
     "स्क्रीन व्यस्त लगे तब भी सही लक्ष्य पर टिके रहें.",
-  "Horizontal Sweep Smooth Pursuit Drill": "क्षैतिज स्वीप स्मूद ट्रैकिंग अभ्यास",
+  "Horizontal Sweep Smooth Pursuit drill": "क्षैतिज स्वीप स्मूद ट्रैकिंग अभ्यास",
   "Horizontal Sweep keeps the motion simple and broad for left-right tracking across a larger visual range.":
     "क्षैतिज स्वीप गति को सरल और चौड़ा रखता है, ताकि बड़े दृश्य दायरे में बाएं-दाएं ट्रैकिंग हो सके.",
   "Horizontal sweep": "क्षैतिज स्वीप",
   Hourglass: "आवरग्लास",
-  "Hourglass Smooth Pursuit Drill": "आवरग्लास स्मूद ट्रैकिंग अभ्यास",
-  "Hourglass narrows through the middle and opens back out, creating repeated crossing behavior with a constrained shape.":
-    "आवरग्लास बीच में संकरा होता है और फिर खुलता है. इससे सीमित आकार में बार-बार क्रॉसिंग बनती है.",
+  "Hourglass Smooth Pursuit drill": "आवरग्लास स्मूद ट्रैकिंग अभ्यास",
+  "Hourglass narrows through the middle and opens back out.":
+    "आवरग्लास बीच में संकरा होता है और फिर खुलता है.",
   "How FoveaFlow handles locally stored browser settings, Cloudflare hosting, and basic analytics.":
     "FoveaFlow ब्राउज़र में सहेजी गई सेटिंग, Cloudflare होस्टिंग और बुनियादी आँकड़ों को कैसे संभालता है।",
   "How data is used": "डेटा कैसे इस्तेमाल होता है",
   "How do I make it easier?": "इसे आसान कैसे करूं?",
   "How do I make this pattern easier?": "इस पैटर्न को आसान कैसे करूं?",
-  "How each drill works": "हर अभ्यास कैसे काम करता है",
   "How should beginners start?": "शुरुआती लोग कैसे शुरू करें?",
   "How to practice": "अभ्यास कैसे करें",
   "IT professionals": "IT पेशेवर",
@@ -252,8 +251,8 @@ export const hi = {
     "रुकने के बाद भी लक्षण बने रहें, तो योग्य पेशेवर से सलाह लें.",
   "If you have a vision condition, recent eye injury, surgery, neurological symptoms, or any concern about using moving visual targets, ask a qualified professional before using the app.":
     "अगर आंखों की समस्या, हाल की आंख चोट, सर्जरी, न्यूरोलॉजिकल लक्षण या चलते विजुअल लक्ष्य इस्तेमाल करने को लेकर कोई चिंता है, तो ऐप इस्तेमाल करने से पहले योग्य पेशेवर से पूछें.",
-  "If you prefer a small set of visible controls and simply want to cycle through routines, BlinkCamp is a straightforward option. It is also open source.":
-    "अगर आपको कम नियंत्रण चाहिए और सिर्फ़ अभ्यास बदलते जाना है, तो BlinkCamp एक सरल विकल्प है। इसका सोर्स कोड भी खुला है।",
+  "If you prefer a small set of visible controls and want to cycle through routines, BlinkCamp is a straightforward option. It is also open source.":
+    "अगर आपको कम नियंत्रण चाहिए और अभ्यास बदलते जाना है, तो BlinkCamp एक सरल विकल्प है। इसका सोर्स कोड भी खुला है।",
   "It is the task of following the correct target while similar moving objects compete for your attention.":
     "इसमें मिलती-जुलती चलती वस्तुओं के बीच सही लक्ष्य को फॉलो करना होता है.",
   "Keep your head still and let your eyes do the work.":
@@ -273,9 +272,9 @@ export const hi = {
   "Letter weight": "अक्षर की मोटाई",
   Light: "हल्का",
   "Lilac Chaser": "लाइलैक चेज़र",
-  "Lilac Chaser Fixation and Peripheral Awareness":
-    "लाइलैक चेज़र नजर टिकाना और किनारी जागरूकता",
   "Lilac Chaser ball color": "लाइलैक चेज़र गेंद का रंग",
+  "Lilac Chaser fixation and peripheral awareness":
+    "लाइलैक चेज़र नजर टिकाना और किनारी जागरूकता",
   "Lilac Chaser scale": "लाइलैक चेज़र स्केल",
   "Lilac Chaser trains fixation, peripheral awareness, visual attention, and noticing change away from the point you are looking at. For gaming, it can be a short warmup for catching movement near the edge of your vision without constantly shifting your gaze.":
     "लाइलैक चेज़र नजर टिकाना, किनारी जागरूकता, विजुअल ध्यान और जिस बिंदु को आप देख रहे हैं उससे दूर बदलाव पहचानना सिखाता है. गेमिंग में यह नजर बार-बार हटाए बिना किनारों के पास हरकत पकड़ने का छोटा वॉर्मअप हो सकता है.",
@@ -283,7 +282,7 @@ export const hi = {
     "लाइलैक चेज़र: केंद्र पर नज़र टिकाकर आसपास के बदलाव पर ध्यान दें।",
   "Lilac chaser illusion": "लाइलैक चेज़र भ्रम",
   Lissajous: "लिसाजू",
-  "Lissajous Smooth Pursuit Drill": "लिसाजू स्मूद ट्रैकिंग अभ्यास",
+  "Lissajous Smooth Pursuit drill": "लिसाजू स्मूद ट्रैकिंग अभ्यास",
   "Lissajous is one of the more complex flowing patterns because the target moves through a looping path that changes its relationship to the center over time.":
     "लिसाजू ज्यादा जटिल बहते पैटर्न में से एक है. लक्ष्य ऐसे लूप वाले रास्ते से चलता है जिसका केंद्र से रिश्ता समय के साथ बदलता है.",
   "Look only at the black cross in the middle.": "सिर्फ बीच के काले क्रॉस को देखें.",
@@ -318,14 +317,14 @@ export const hi = {
     "यह अभ्यास सॉफ्टवेयर है, चिकित्सा देखभाल नहीं. आंखों में तनाव, चक्कर, सिरदर्द, मितली या कोई असुविधा हो तो रुकें.",
   Predictable: "पूर्वानुमेय",
   Privacy: "गोपनीयता",
-  "Privacy Policy": "गोपनीयता नीति",
+  "Privacy policy": "गोपनीयता नीति",
   "Quick answers": "जल्दी जवाब",
   Random: "रैंडम",
-  "Random Smooth Pursuit Drill": "रैंडम स्मूद ट्रैकिंग अभ्यास",
-  "Random removes the comfort of a repeating loop. Because the target changes direction and position less predictably, the drill adds more target-search work than a simple circle or ellipse.":
-    "रैंडम दोहराए जाने वाले लूप की आसानी हटाता है. लक्ष्य की दिशा और जगह का अंदाजा कम लगता है, इसलिए यह सरल सर्कल या दीर्घवृत्त से ज्यादा लक्ष्य खोजने का काम जोड़ता है.",
+  "Random Smooth Pursuit drill": "रैंडम स्मूद ट्रैकिंग अभ्यास",
+  "Random has no repeating loop. Because the target changes direction and position less predictably, the drill adds more target-search work than a simple circle or ellipse.":
+    "रैंडम में दोहराया जाने वाला लूप नहीं है. लक्ष्य की दिशा और जगह का अंदाजा कम लगता है, इसलिए यह सरल सर्कल या दीर्घवृत्त से ज्यादा लक्ष्य खोजने का काम जोड़ता है.",
   "Reaction Jumps": "तेज़ फोकस शिफ्ट",
-  "Reaction Jumps Eye Training": "तेज़ फोकस शिफ्ट आंख अभ्यास",
+  "Reaction Jumps eye training": "तेज़ फोकस शिफ्ट आंख अभ्यास",
   "Reaction Jumps trains quick target acquisition, saccadic eye movement, peripheral detection, and fast refocusing. It is useful when you want to react to a new visual target without moving your head first.":
     "तेज़ फोकस शिफ्ट जल्दी लक्ष्य पकड़ना, सैकैडिक आंख गति, किनारे पर पहचान और तेज दोबारा फोकस का अभ्यास कराता है. सिर पहले हिलाए बिना नए विजुअल लक्ष्य पर प्रतिक्रिया देनी हो तो यह उपयोगी है.",
   "Reaction Jumps: find the target after it moves to a new position.":
@@ -336,7 +335,6 @@ export const hi = {
   Red: "लाल",
   References: "संदर्भ",
   Regular: "सामान्य",
-  "Research and background reading": "रिसर्च और पृष्ठभूमि पढ़ाई",
   "Reset to defaults": "डिफॉल्ट पर रीसेट करें",
   "Reset to defaults?": "डिफॉल्ट पर रीसेट करें?",
   "Restore the selected drill to its default behavior, visuals, and saved local settings.":
@@ -355,8 +353,6 @@ export const hi = {
     "कोड, लॉग, डैशबोर्ड, टर्मिनल, टिकट और मल्टी-मॉनिटर काम के बीच फोकस तेज करें.",
   "Sharpen selective focus by tracking the brightest target through moving distractions.":
     "चलते विचलनों के बीच सबसे चमकीले लक्ष्य को ट्रैक करके चयनात्मक फोकस तेज करें.",
-  "Sharpen your visual warmup before FPS games with tracking, refocus, peripheral awareness, and character movement reading drills.":
-    "FPS गेम से पहले ट्रैकिंग, दोबारा फोकस, किनारी जागरूकता और कैरेक्टर मूवमेंट पढ़ने वाले अभ्यासों से अपना विजुअल वॉर्मअप तेज करें.",
   "Short bursts": "छोटे बर्स्ट",
   "Show target letters": "लक्ष्य अक्षर दिखाएं",
   "Show trail": "ट्रेल दिखाएं",
@@ -364,7 +360,7 @@ export const hi = {
   "Size pulse": "आकार पल्स",
   "Skip to content": "मुख्य सामग्री पर जाएँ",
   "Smooth Pursuit": "स्मूद ट्रैकिंग",
-  "Smooth Pursuit Eye Training": "स्मूद ट्रैकिंग आंख अभ्यास",
+  "Smooth Pursuit eye training": "स्मूद ट्रैकिंग आंख अभ्यास",
   "Smooth Pursuit helps train steady tracking, moving-target focus, and controlled eye movement across more of your usable range.":
     "स्मूद ट्रैकिंग स्थिर ट्रैकिंग, चलते लक्ष्य पर फोकस और आपके उपयोगी दायरे में नियंत्रित आंख गति का अभ्यास कराता है.",
   "Smooth Pursuit, Reaction Jumps, Multiple Distractions, and Lilac Chaser.":
@@ -383,15 +379,15 @@ export const hi = {
   "Speed wave": "स्पीड वेव",
   "Speed, size, shape, color, opacity, trails, and mode-specific motion settings.":
     "गति, आकार, आकृति, रंग, अपारदर्शिता, गति के निशान और हर मोड की खास गति सेटिंग।",
-  "Speed, target size, and path matter most because they change difficulty quickly.":
-    "गति, लक्ष्य आकार और रास्ता सबसे अहम हैं, क्योंकि वे कठिनाई जल्दी बदलते हैं.",
+  "Speed, target size, and path change difficulty the most.":
+    "गति, लक्ष्य आकार और रास्ता कठिनाई को सबसे ज़्यादा बदलते हैं.",
   Square: "वर्ग",
-  "Stair Steps Smooth Pursuit Drill": "सीढ़ी स्टेप्स स्मूद ट्रैकिंग अभ्यास",
+  "Stair Steps Smooth Pursuit drill": "सीढ़ी स्टेप्स स्मूद ट्रैकिंग अभ्यास",
   "Stair Steps creates a mechanical route with discrete directional segments that stays easier to predict than Random or Hard Turns.":
     "सीढ़ी स्टेप्स अलग-अलग दिशा खंडों वाला यांत्रिक रास्ता बनाता है. इसका अंदाजा रैंडम या हार्ड टर्न्स से आसान है.",
   "Stair steps": "सीढ़ी स्टेप्स",
-  "Start a visual warmup in either browser tool. FoveaFlow gives you separate tracking, refocus, distraction, and fixation drills, with detailed controls available right now in the browser.":
-    "दोनों ब्राउज़र साधनों में विज़ुअल वार्मअप कर सकते हैं। FoveaFlow में ट्रैकिंग, नज़र बदलने, व्यवधान और नज़र टिकाने के अलग अभ्यास हैं। इनके विस्तृत नियंत्रण अभी ब्राउज़र में उपलब्ध हैं।",
+  "Start a visual warmup in either browser tool. FoveaFlow gives you separate tracking, refocus, distraction, and fixation drills with detailed controls.":
+    "दोनों ब्राउज़र साधनों में विज़ुअल वार्मअप कर सकते हैं। FoveaFlow में ट्रैकिंग, नज़र बदलने, व्यवधान और नज़र टिकाने के अलग अभ्यास हैं, जिनके विस्तृत नियंत्रण हैं।",
   "Start the warmup": "वॉर्मअप शुरू करें",
   "Start with a predictable path for steady tracking. Try random movement or hard turns when you want to spend more time finding the target.":
     "स्थिर ट्रैकिंग के लिए पहले अनुमान लगाने योग्य रास्ता चुनें। लक्ष्य ढूँढने का अधिक अभ्यास चाहिए तो रैंडम गति या तीखे मोड़ आज़माएँ।",
@@ -408,7 +404,7 @@ export const hi = {
   "Target size": "लक्ष्य आकार",
   Targets: "लक्ष्य",
   Terms: "शर्तें",
-  "Terms of Use": "उपयोग की शर्तें",
+  "Terms of use": "उपयोग की शर्तें",
   "Text size": "टेक्स्ट आकार",
   "The floating controls tuck away while you practice. Your settings stay in your browser, so you can return to your preferred setup without an account.":
     "अभ्यास करते समय तैरते नियंत्रण सिमट जाते हैं। सेटिंग ब्राउज़र में रहती हैं, इसलिए बिना अकाउंट के अपनी पसंद के सेटअप पर लौट सकते हैं।",
@@ -440,8 +436,6 @@ export const hi = {
     "ये स्रोत साबित नहीं करते कि FoveaFlow से नज़र या गेम का प्रदर्शन बेहतर होता है।",
   "These terms may be updated when the app or site changes. The date at the top shows the latest version.":
     "ऐप या साइट बदलने पर ये शर्तें अपडेट हो सकती हैं. ऊपर दी गई तारीख नया संस्करण दिखाती है.",
-  "This page compares the public browser tools checked on September 12, 2026.":
-    "इस पेज पर 12 सितंबर 2026 को जाँचे गए सार्वजनिक ब्राउज़र साधनों की तुलना है।",
   "This path ends here": "यह रास्ता यहीं खत्म होता है",
   "Those settings stay in your browser unless your browser syncs, backs up, or exports its site data. You can remove them by clearing site data for foveaflow.com.":
     "ये सेटिंग आपके ब्राउजर में रहती हैं, जब तक आपका ब्राउजर साइट डेटा सिंक, बैकअप या एक्सपोर्ट न करे. foveaflow.com का साइट डेटा साफ करके आप इन्हें हटा सकते हैं.",
@@ -479,9 +473,9 @@ export const hi = {
     "साफ दोबारा फोकस के लिए धीमी गति इस्तेमाल करें. तेज प्रतिक्रिया अभ्यास चाहिए तो गति बढ़ाएं.",
   "Use the app in a safe place where you can stop easily. Do not use it while driving, walking around, operating equipment, or doing anything that needs your full attention.":
     "ऐप ऐसी सुरक्षित जगह इस्तेमाल करें जहां आप आसानी से रुक सकें. ड्राइविंग, चलते समय, उपकरण चलाते समय या ऐसा काम करते समय इस्तेमाल न करें जिसमें पूरा ध्यान चाहिए.",
-  "Vertical Sweep Smooth Pursuit Drill": "ऊर्ध्व स्वीप स्मूद ट्रैकिंग अभ्यास",
-  "Vertical Sweep mirrors the simplicity of Horizontal Sweep but changes the direction of travel for straightforward up-down tracking.":
-    "ऊर्ध्व स्वीप, क्षैतिज स्वीप की सरलता जैसा है, लेकिन सीधे ऊपर-नीचे ट्रैकिंग के लिए चलने की दिशा बदलता है.",
+  "Vertical Sweep Smooth Pursuit drill": "ऊर्ध्व स्वीप स्मूद ट्रैकिंग अभ्यास",
+  "Vertical Sweep is the up-down version of Horizontal Sweep.":
+    "ऊर्ध्व स्वीप, क्षैतिज स्वीप का ऊपर-नीचे वाला रूप है.",
   "Vertical sweep": "ऊर्ध्व स्वीप",
   "Visit BlinkCamp": "BlinkCamp पर जाएं",
   "Visit EyeTrainer.gg": "EyeTrainer.gg पर जाएं",
@@ -489,24 +483,26 @@ export const hi = {
     "स्मूद ट्रैकिंग आंख गतियों का विजुअल मार्गदर्शन",
   "Visual learning in multiple-object tracking":
     "कई वस्तुओं की ट्रैकिंग में विजुअल सीखना",
+  "Warm up before FPS games with tracking, refocus, and peripheral awareness drills.":
+    "FPS गेम से पहले ट्रैकिंग, दोबारा फोकस और किनारी जागरूकता वाले अभ्यासों से वॉर्मअप करें.",
   Wave: "वेव",
-  "Wave Smooth Pursuit Drill": "वेव स्मूद ट्रैकिंग अभ्यास",
+  "Wave Smooth Pursuit drill": "वेव स्मूद ट्रैकिंग अभ्यास",
   "Wave introduces a repeating up-and-down rhythm on top of horizontal movement. It stays readable and smooth without the abrupt feel of hard corners.":
     "वेव क्षैतिज गति के साथ दोहराई जाने वाली ऊपर-नीचे लय जोड़ता है. यह हार्ड कोनों जैसी अचानक अनुभूति के बिना साफ और सहज रहता है.",
   Weight: "मोटाई",
   "What is available today": "आज क्या उपलब्ध है",
   "What is distractor tracking?": "विचलन ट्रैकिंग क्या है?",
-  "What it trains:": "यह क्या अभ्यास कराता है:",
   "What the app is": "ऐप क्या है",
   "What this warmup can and cannot tell you":
     "इस वार्मअप से क्या पता चल सकता है और क्या नहीं",
   "When BlinkCamp may be enough": "BlinkCamp कब पर्याप्त हो सकता है",
-  "When it jumps, find the new location and actually focus on it before the next jump.":
-    "जब यह जंप करे, तो अगली जंप से पहले नई जगह खोजें और सच में उस पर फोकस करें.",
+  "When it jumps, find the new location and focus on it before the next jump.":
+    "जब यह जंप करे, तो अगली जंप से पहले नई जगह खोजें और उस पर फोकस करें.",
   "When should I choose this over Smooth Pursuit?":
     "स्मूद ट्रैकिंग के बजाय इसे कब चुनना चाहिए?",
   "When should I use Smooth Pursuit?": "स्मूद ट्रैकिंग कब इस्तेमाल करना चाहिए?",
   "Which settings matter most?": "कौन सी सेटिंग सबसे अहम हैं?",
+  "Who FoveaFlow is for": "FoveaFlow किसके लिए है",
   "You can change the target’s appearance, adjust motion behavior, and keep your preferred settings on this device. Each main drill and Smooth Pursuit path also has a direct link.":
     "लक्ष्य की दिखावट और गति बदलें तथा पसंदीदा सेटिंग इस डिवाइस पर रखें। हर मुख्य अभ्यास और स्मूद ट्रैकिंग के हर रास्ते का सीधा लिंक भी है।",
   "You can clear saved FoveaFlow settings from your browser's site data controls. You can also use browser or extension settings to block optional analytics scripts.":
@@ -517,7 +513,7 @@ export const hi = {
     "FoveaFlow इस्तेमाल करने के लिए खाता बनाने की जरूरत नहीं. ऐप आपका नाम, ईमेल पता, भुगतान जानकारी या स्वास्थ्य रिकॉर्ड नहीं मांगता.",
   "Your choices": "आपकी पसंद",
   Zigzag: "जिगजैग",
-  "Zigzag Smooth Pursuit Drill": "जिगजैग स्मूद ट्रैकिंग अभ्यास",
+  "Zigzag Smooth Pursuit drill": "जिगजैग स्मूद ट्रैकिंग अभ्यास",
   "Zigzag adds frequent directional switching, so it feels more aggressive than Wave or Diagonal.":
     "जिगजैग में दिशा बार-बार बदलती है, इसलिए यह वेव या तिरछा से ज्यादा आक्रामक लगता है.",
   forward: "आगे",

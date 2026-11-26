@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { ArrowRightIcon } from "@lucide/svelte";
-
   import DrillPreview from "../icons/drill-preview.svelte";
   import { buttonClass } from "../ui/button-variants";
 
@@ -26,13 +24,7 @@
         {body}
       </p>
     {/if}
-    <a class={[buttonClass("primary", "lg"), "group/cta mt-3"]} {href}>
-      {label}
-      <ArrowRightIcon
-        class="ease-spring transition-transform duration-260 group-hover/cta:translate-x-0.5 rtl:-scale-x-100"
-        aria-hidden="true"
-      />
-    </a>
+    <a class={[buttonClass("primary", "lg"), "mt-3"]} {href}>{label}</a>
   </div>
   <DrillPreview
     class="aspect-4/3 w-full rounded-3xl"

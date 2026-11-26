@@ -20,7 +20,7 @@ export const dialogSurface =
   "m-0 flex flex-col overflow-hidden border-0 bg-popover p-0 text-foreground shadow-popover";
 
 export const settingsGroup =
-  "grid rounded-2xl bg-fill ps-3 pe-4 *:data-setting-row:relative *:data-setting-row:py-3 *:data-setting-row:not-first:before:absolute *:data-setting-row:not-first:before:inset-s-10 *:data-setting-row:not-first:before:-inset-e-4 *:data-setting-row:not-first:before:top-0 *:data-setting-row:not-first:before:h-px *:data-setting-row:not-first:before:bg-border";
+  "grid rounded-2xl bg-fill px-4 *:data-setting-row:relative *:data-setting-row:py-3 *:data-setting-row:not-first:before:absolute *:data-setting-row:not-first:before:inset-s-0 *:data-setting-row:not-first:before:-inset-e-4 *:data-setting-row:not-first:before:top-0 *:data-setting-row:not-first:before:h-px *:data-setting-row:not-first:before:bg-border";
 
 export const segmentTrack =
   "relative grid auto-cols-fr grid-flow-col rounded-full bg-fill p-0.5";

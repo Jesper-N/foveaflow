@@ -2,14 +2,7 @@
   import LanguageSelect from "$lib/components/language-select.svelte";
   import { t } from "$lib/i18n/translate";
   import { cue, sound } from "$lib/sound/sound.svelte";
-  import {
-    MonitorIcon,
-    MoonIcon,
-    RotateCcwIcon,
-    SunIcon,
-    SunMoonIcon,
-    Volume2Icon,
-  } from "@lucide/svelte";
+  import { MonitorIcon, MoonIcon, SunIcon } from "@lucide/svelte";
   import {
     AlertDialog,
     AlertDialogBackdrop,
@@ -23,7 +16,6 @@
 
   import { selectTheme, themeOptions } from "../../theme-options";
   import { buttonClass } from "../../ui/button-variants";
-  import RowLabel from "../../ui/row-label.svelte";
   import Segmented from "../../ui/segmented.svelte";
   import { backdrop, dialogSurface } from "../../ui/styles";
   import Switch from "../../ui/switch.svelte";
@@ -49,11 +41,10 @@
 <SettingsSection id="trainer-general-settings">
   <LanguageSelect />
   <div class="grid gap-3" data-setting-row>
-    <span class="text-md font-medium" aria-hidden="true">
-      <RowLabel icon={SunMoonIcon} label={t("Theme")} />
+    <span class="text-md truncate font-medium" aria-hidden="true">
+      {t("Theme")}
     </span>
     <Segmented
-      class="ms-10"
       label={t("Theme")}
       onValueChange={selectTheme}
       options={themeChoices}
@@ -71,17 +62,13 @@
     </Segmented>
   </div>
   <Switch
-    icon={Volume2Icon}
     label={t("Sound")}
     bind:checked={() => sound.enabled, sound.setEnabled}
   />
 </SettingsSection>
 
 <SettingsSection id="trainer-defaults">
-  <div class="flex items-center justify-between gap-3" data-setting-row>
-    <span class="text-md min-w-0 font-medium">
-      <RowLabel icon={RotateCcwIcon} label={t("Defaults")} />
-    </span>
+  <div class="flex" data-setting-row>
     <AlertDialog
       onOpenChange={(open, details) => {
         if (open) {

@@ -35,10 +35,6 @@ export const followIndicator =
       }
 
       const start = axis === "x" ? target.offsetLeft : target.offsetTop;
-      const size = axis === "x" ? target.offsetWidth : target.offsetHeight;
-
-      const span =
-        axis === "x" ? container.clientWidth : container.clientHeight;
 
       if (previous === null) {
         marker.dataset["snap"] = "";
@@ -54,10 +50,15 @@ export const followIndicator =
         axis,
         start >= (previous ?? start)
       );
-      marker.style.setProperty(axis === "x" ? "left" : "top", `${start}px`);
+      marker.style.setProperty("left", `${target.offsetLeft}px`);
       marker.style.setProperty(
-        axis === "x" ? "right" : "bottom",
-        `${span - start - size}px`
+        "right",
+        `${container.clientWidth - target.offsetLeft - target.offsetWidth}px`
+      );
+      marker.style.setProperty("top", `${target.offsetTop}px`);
+      marker.style.setProperty(
+        "bottom",
+        `${container.clientHeight - target.offsetTop - target.offsetHeight}px`
       );
       marker.style.setProperty("opacity", "1");
       previous = start;

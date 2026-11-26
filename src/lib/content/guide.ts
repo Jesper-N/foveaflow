@@ -14,7 +14,7 @@ export const guideMetadata = {
 /** Who the app is for, shown in the guide and in structured data. */
 export const audiences = [
   {
-    body: "Sharpen your visual warmup before FPS games with tracking, refocus, peripheral awareness, and character movement reading drills.",
+    body: "Warm up before FPS games with tracking, refocus, and peripheral awareness drills.",
     title: "Gamers",
   },
   {

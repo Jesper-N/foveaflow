@@ -1,6 +1,5 @@
 <script lang="ts">
   import type { DrillId } from "$lib/trainer/settings/drills";
-  import { ArrowUpRightIcon } from "@lucide/svelte";
 
   import DrillIcon from "../icons/drill-icon.svelte";
   import DrillPreview from "../icons/drill-preview.svelte";
@@ -20,7 +19,7 @@
 
 <a
   class={[
-    "group/tile bg-card grid content-start rounded-4xl p-2 motion-safe:active:scale-98",
+    "bg-card grid content-start rounded-4xl p-2 motion-safe:active:scale-98",
     pressable,
   ]}
   {href}
@@ -35,23 +34,13 @@
     {drillId}
     playing={exploring}
   />
-  <span class="flex items-start gap-3 p-3 pt-4">
-    <span class="grid min-w-0 flex-1 gap-1">
-      <span
-        class="flex items-center gap-2 text-base font-medium tracking-tight"
-      >
-        <DrillIcon class="text-muted-foreground size-4.5 shrink-0" {drillId} />
-        {title}
-      </span>
-      {#if summary}
-        <span class="text-muted-foreground text-sm text-pretty">{summary}</span>
-      {/if}
+  <span class="grid gap-1 p-3 pt-4">
+    <span class="flex items-center gap-2 text-base font-medium tracking-tight">
+      <DrillIcon class="text-muted-foreground size-4.5 shrink-0" {drillId} />
+      {title}
     </span>
-    <span
-      class="bg-fill-hover text-foreground ease-spring grid size-9 shrink-0 place-items-center rounded-full transition-[opacity,scale] duration-260 pointer-fine:scale-86 pointer-fine:opacity-0 pointer-fine:group-hover/tile:scale-100 pointer-fine:group-hover/tile:opacity-100 pointer-fine:group-focus-visible/tile:scale-100 pointer-fine:group-focus-visible/tile:opacity-100"
-      aria-hidden="true"
-    >
-      <ArrowUpRightIcon class="size-4 rtl:-scale-x-100" />
-    </span>
+    {#if summary}
+      <span class="text-muted-foreground text-sm text-pretty">{summary}</span>
+    {/if}
   </span>
 </a>

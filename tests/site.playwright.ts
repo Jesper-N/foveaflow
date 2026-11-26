@@ -123,7 +123,7 @@ test("a language chosen in the menu is kept after a reload", async ({
   page,
 }) => {
   await openPage(page, "/guide/");
-  await expect(page.locator("h1")).toHaveText("FoveaFlow Guide");
+  await expect(page.locator("h1")).toHaveText("FoveaFlow guide");
   await languageSelect(page).click();
   await page.getByRole("option", { name: "Deutsch (German)" }).click();
   await expect(page.locator("h1")).toHaveText("FoveaFlow-Guide");

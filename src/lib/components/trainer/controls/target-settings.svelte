@@ -2,22 +2,12 @@
   import { t } from "$lib/i18n/translate";
   import { cueChoice, isPersonChange } from "$lib/sound/sound.svelte";
   import { targetForms } from "$lib/trainer/settings/options";
-  import {
-    BlendIcon,
-    CircleDashedIcon,
-    PaletteIcon,
-    ScalingIcon,
-    SunDimIcon,
-    TargetIcon,
-    TriangleIcon,
-  } from "@lucide/svelte";
   import { Field, FieldLabel } from "@ui-sdk/svelte/field";
   import { Radio, RadioGroup } from "@ui-sdk/svelte/radio";
 
   import TargetFormGlyph from "../../icons/target-form-glyph.svelte";
   import ColorField from "../../ui/color-field.svelte";
   import { followIndicator } from "../../ui/follow-indicator";
-  import RowLabel from "../../ui/row-label.svelte";
   import { pressable } from "../../ui/styles";
   import { ballColorPresets } from "../select-options";
   import { getTrainer } from "../trainer-context";
@@ -41,9 +31,8 @@
 
 {#if trainer.isLilacChaser}
   <SettingsSection id="trainer-lilac-settings">
-    <LilacColorSwatches icon />
+    <LilacColorSwatches />
     <SettingSlider
-      icon={ScalingIcon}
       label={t("Scale")}
       setting="lilacChaserScale"
       thumbLabel={t("Lilac Chaser scale")}
@@ -53,18 +42,17 @@
   <TargetPreview />
   <SettingsSection id="trainer-target-settings">
     <ColorField
-      icon={PaletteIcon}
       label={t("Ball color")}
       onValueChange={trainer.setBallColor}
       presets={ballColorPresets}
       value={trainer.targetColor}
     />
     <Field class="grid gap-3" data-setting-row>
-      <FieldLabel class="text-md font-medium">
-        <RowLabel icon={TriangleIcon} label={t("Target form")} />
+      <FieldLabel class="text-md truncate font-medium">
+        {t("Target form")}
       </FieldLabel>
       <RadioGroup
-        class="relative grid grid-cols-6 gap-1"
+        class="relative grid grid-cols-3 gap-1 sm:grid-cols-6"
         {@attach followChecked}
         onValueChange={(value, details) => {
           if (typeof value === "string") {
@@ -81,7 +69,7 @@
         value={trainer.settings.targetForm}
       >
         <span
-          class="bg-primary stretch-indicator pointer-events-none absolute inset-y-0 rounded-xl opacity-0"
+          class="bg-primary stretch-indicator pointer-events-none absolute rounded-xl opacity-0"
           aria-hidden="true"
           data-indicator
         ></span>
@@ -103,13 +91,11 @@
       </RadioGroup>
     </Field>
     <SettingSlider
-      icon={ScalingIcon}
       label={t("Size")}
       setting="baseRadiusPx"
       thumbLabel={t("Target size")}
     />
     <SettingSlider
-      icon={BlendIcon}
       label={t("Opacity")}
       setting="targetOpacity"
       thumbLabel={t("Target opacity")}
@@ -122,18 +108,9 @@
 
 {#if trainer.isDistractions}
   <SettingsSection id="trainer-distraction-settings" title={t("Distractions")}>
+    <SettingSlider label={t("Targets")} setting="targetCount" />
+    <SettingSlider label={t("Distractors")} setting="distractorCount" />
     <SettingSlider
-      icon={TargetIcon}
-      label={t("Targets")}
-      setting="targetCount"
-    />
-    <SettingSlider
-      icon={CircleDashedIcon}
-      label={t("Distractors")}
-      setting="distractorCount"
-    />
-    <SettingSlider
-      icon={SunDimIcon}
       label={t("Distractor color")}
       setting="distractorBrightness"
       thumbLabel={t("Distractor color brightness")}

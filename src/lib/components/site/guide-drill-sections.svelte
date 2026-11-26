@@ -49,7 +49,13 @@
   </nav>
 </section>
 
-<PageSection id="audiences" heading={t("A short break from the usual screen")}>
+<PageSection
+  id="audiences"
+  heading={t("Who FoveaFlow is for")}
+  intro={t(
+    "FoveaFlow runs in the browser you already have open, with no account and nothing to install. You decide how long a session lasts."
+  )}
+>
   <ul class="divide-border border-border grid divide-y border-y">
     {#each audiences as audience (audience.title)}
       <li class="grid gap-1.5 py-5">

@@ -42,12 +42,11 @@ const smoothPursuitCopy = {
       question: "When should I use Smooth Pursuit?",
     },
     {
-      answer:
-        "Speed, target size, and path matter most because they change difficulty quickly.",
+      answer: "Speed, target size, and path change difficulty the most.",
       question: "Which settings matter most?",
     },
   ],
-  heading: "Smooth Pursuit Eye Training",
+  heading: "Smooth Pursuit eye training",
   hero: "Follow one moving target and train steady visual tracking.",
 } satisfies DrillPageCopy;
 
@@ -64,7 +63,7 @@ const reactionJumpsCopy = {
       question: "How do I make it easier?",
     },
   ],
-  heading: "Reaction Jumps Eye Training",
+  heading: "Reaction Jumps eye training",
   hero: "Snap to the next target and train fast refocus.",
 } satisfies DrillPageCopy;
 
@@ -81,13 +80,13 @@ const multipleDistractionsCopy = {
       question: "How should beginners start?",
     },
   ],
-  heading: "Distractor Tracking Eye Training",
+  heading: "Distractor tracking eye training",
   hero: "Hold the right target even when the screen gets busy.",
 } satisfies DrillPageCopy;
 
 const lilacChaserCopy = {
   faq: [],
-  heading: "Lilac Chaser Fixation and Peripheral Awareness",
+  heading: "Lilac Chaser fixation and peripheral awareness",
   hero: "Hold steady at the center and notice change around it.",
 } satisfies DrillPageCopy;
 
@@ -99,7 +98,7 @@ const patternSummaries = {
   clover:
     "Clover creates repeated looping lobes for continuous motion with more shape variation than Circle.",
   cornerTour:
-    "Corner Tour gives each corner of the display a deliberate role, making the route spacious and structured.",
+    "Corner Tour moves the target from corner to corner of the display.",
   diagonal:
     "Diagonal uses longer corner-to-corner motion, so it emphasizes broader screen coverage and clean tracking over distance.",
   diamondLoop:
@@ -116,18 +115,15 @@ const patternSummaries = {
     "Figure Eight adds a crossover point, which means the target passes through the center and changes direction more often than a simple loop.",
   horizontalSweep:
     "Horizontal Sweep keeps the motion simple and broad for left-right tracking across a larger visual range.",
-  hourglass:
-    "Hourglass narrows through the middle and opens back out, creating repeated crossing behavior with a constrained shape.",
+  hourglass: "Hourglass narrows through the middle and opens back out.",
   lissajous:
     "Lissajous is one of the more complex flowing patterns because the target moves through a looping path that changes its relationship to the center over time.",
-  perimeterLoop:
-    "Edge Loop pushes the target around the perimeter, making the drill more spacious and edge-focused than center-heavy loops.",
+  perimeterLoop: "Edge Loop moves the target around the edges of the display.",
   randomWalk:
-    "Random removes the comfort of a repeating loop. Because the target changes direction and position less predictably, the drill adds more target-search work than a simple circle or ellipse.",
+    "Random has no repeating loop. Because the target changes direction and position less predictably, the drill adds more target-search work than a simple circle or ellipse.",
   stairStep:
     "Stair Steps creates a mechanical route with discrete directional segments that stays easier to predict than Random or Hard Turns.",
-  verticalSweep:
-    "Vertical Sweep mirrors the simplicity of Horizontal Sweep but changes the direction of travel for straightforward up-down tracking.",
+  verticalSweep: "Vertical Sweep is the up-down version of Horizontal Sweep.",
   wave: "Wave introduces a repeating up-and-down rhythm on top of horizontal movement. It stays readable and smooth without the abrupt feel of hard corners.",
   zigZag:
     "Zigzag adds frequent directional switching, so it feels more aggressive than Wave or Diagonal.",
@@ -165,7 +161,7 @@ const patternCopy = (label: string, patternId: PursuitPatternId) =>
         question: "How do I make this pattern easier?",
       },
     ],
-    heading: `${toTitleCase(label)} Smooth Pursuit Drill`,
+    heading: `${toTitleCase(label)} Smooth Pursuit drill`,
     hero: patternSummaries[patternId],
   }) satisfies DrillPageCopy;
 
@@ -175,7 +171,7 @@ export const patternDrillRoutes = pursuitPatterns.map(
     copy: patternCopy(name, id),
     description: `Practice the ${name} smooth pursuit pattern online. Adjust speed, target size, color, and trail for short visual tracking sessions.`,
     drillId: "pursuit",
-    heading: `${toTitleCase(name)} Smooth Pursuit Eye Training`,
+    heading: `${toTitleCase(name)} Smooth Pursuit eye training`,
     indexable: false,
     label: name,
     lastModified: LAST_MODIFIED,
@@ -192,7 +188,7 @@ export const drillRoutes: readonly DrillRoute[] = [
     description:
       "Free online eye trainer for smooth pursuit, visual tracking, and steady moving-target practice. Browser-based with no account or install.",
     drillId: "pursuit",
-    heading: "Smooth Pursuit Eye Training",
+    heading: "Smooth Pursuit eye training",
     indexable: true,
     label: "Smooth Pursuit",
     lastModified: LAST_MODIFIED,
@@ -207,7 +203,7 @@ export const drillRoutes: readonly DrillRoute[] = [
     description:
       "Free online eye trainer for quick refocus, target acquisition, and fast visual reaction practice. Browser-based with no account or install.",
     drillId: "reactionTime",
-    heading: "Reaction Jumps Eye Training",
+    heading: "Reaction Jumps eye training",
     indexable: true,
     label: "Reaction Jumps",
     lastModified: LAST_MODIFIED,
@@ -220,7 +216,7 @@ export const drillRoutes: readonly DrillRoute[] = [
     description:
       "Free online eye trainer for selective attention, distractor tracking, and focus under visual clutter. Browser-based with no account or install.",
     drillId: "mot",
-    heading: "Distractor Tracking Eye Training",
+    heading: "Distractor tracking eye training",
     indexable: true,
     label: "Multiple Distractions",
     lastModified: LAST_MODIFIED,
@@ -233,7 +229,7 @@ export const drillRoutes: readonly DrillRoute[] = [
     description:
       "Free online eye trainer for steady fixation, peripheral awareness, and noticing change outside center focus. Browser-based with no account or install.",
     drillId: "lilacChaser",
-    heading: "Lilac Chaser Fixation and Peripheral Awareness",
+    heading: "Lilac Chaser fixation and peripheral awareness",
     indexable: true,
     label: "Lilac Chaser",
     lastModified: LAST_MODIFIED,

@@ -12,11 +12,8 @@ export const zhCN = {
   "A 7-minute FPS eye warmup": "7 分钟 FPS 视觉热身",
   "A Change Routine control cycles the exercise.":
     "通过 Change Routine（切换练习）按钮依次更换练习。",
-  "A few deliberate minutes before you play. FoveaFlow gives you four free browser drills for moving-target tracking, quick refocus, and attention when the screen gets busy.":
-    "游戏前花几分钟专心练习。FoveaFlow 提供四项免费的浏览器练习，用于追踪移动目标、快速转移视线，以及在繁杂画面中保持注意力。",
   "A separate mode with target count, distractor count, and brightness controls.":
     "独立模式，可调整目标数量、干扰物数量和亮度。",
-  "A short break from the usual screen": "暂时换换屏幕上的内容",
   "A warmup you can adjust": "可以自行调整的热身",
   "About FoveaFlow": "关于 FoveaFlow",
   "Acceptable use": "可接受的使用方式",
@@ -37,7 +34,7 @@ export const zhCN = {
   "Both are free eye trainers you can open in a browser. Choose FoveaFlow when you want to fine-tune the session: how the target moves and what it looks like.":
     "两者都是打开浏览器即可使用的免费眼部训练工具。若想细调目标如何移动以及外观如何，可以选择 FoveaFlow。",
   Bounce: "弹跳",
-  "Bounce Smooth Pursuit Drill": "弹跳平滑追踪练习",
+  "Bounce Smooth Pursuit drill": "弹跳平滑追踪练习",
   "Bounce adds repeated reversals at the edges. It is useful when you want more direction changes and less continuous flow than Circle or Wave.":
     "弹跳路径会在边缘反复折返。想要更多方向变化，又不想像圆形或波浪那样连续流动时，它很合适。",
   Breadcrumb: "面包屑导航",
@@ -58,15 +55,15 @@ export const zhCN = {
   "Choose Reaction Jumps when you want discrete target changes rather than continuous motion.":
     "如果你想练习一个个分开的目标变化，而不是连续运动，可以选反应跳点。",
   "Choose a drill": "选择练习",
-  "Choose a drill for visual tracking, quick refocus, or peripheral awareness, then make it your own.":
-    "选择视觉追踪、快速转移视线或周边视觉练习，再按需要调整。",
+  "Choose a drill for visual tracking, quick refocus, or peripheral awareness, then change its settings.":
+    "选择视觉追踪、快速转移视线或周边视觉练习，再调整它的设置。",
   "Choose a path and adjust supported direction and motion behaviors.":
     "选择路径，并调整该路径支持的方向和运动方式。",
   "Choose by the controls you need": "按需要的控件来选择",
   "Choose shape, color, opacity, trails, and letter overlays.":
     "选择形状、颜色、不透明度、拖尾和字母叠加。",
   Circle: "圆形",
-  "Circle Smooth Pursuit Drill": "圆形平滑追踪练习",
+  "Circle Smooth Pursuit drill": "圆形平滑追踪练习",
   "Circle is the easiest repeating Smooth Pursuit pattern and the best starting point for most users. The loop is predictable, which makes it useful for warmups and speed changes.":
     "圆形是最简单的重复平滑追踪图案，也是多数用户最好的起点。循环路径可预测，适合热身和调速度。",
   Close: "关闭",
@@ -77,7 +74,7 @@ export const zhCN = {
   "Cloudflare data collection docs": "Cloudflare 数据收集文档",
   "Cloudflare hosting and analytics": "Cloudflare 托管和分析",
   Clover: "三叶形",
-  "Clover Smooth Pursuit Drill": "三叶形平滑追踪练习",
+  "Clover Smooth Pursuit drill": "三叶形平滑追踪练习",
   "Clover creates repeated looping lobes for continuous motion with more shape variation than Circle.":
     "三叶形会形成反复的叶瓣式循环，保持连续运动，同时比圆形有更多形状变化。",
   "Compare FoveaFlow and BlinkCamp’s free browser eye trainers. See the differences in target appearance, motion paths, and distraction controls.":
@@ -88,9 +85,9 @@ export const zhCN = {
   Contact: "联系",
   Controls: "控制项",
   Cookies: "Cookie",
-  "Corner Tour Smooth Pursuit Drill": "四角巡游平滑追踪练习",
-  "Corner Tour gives each corner of the display a deliberate role, making the route spacious and structured.":
-    "四角巡游会让屏幕每个角都有明确作用，路径更开阔，也更有结构。",
+  "Corner Tour Smooth Pursuit drill": "四角巡游平滑追踪练习",
+  "Corner Tour moves the target from corner to corner of the display.":
+    "四角巡游让目标在屏幕各个角之间移动。",
   "Corner tour": "四角巡游",
   Cross: "十字",
   Cyan: "青色",
@@ -100,44 +97,43 @@ export const zhCN = {
   "Data is used to run the site, keep it secure, understand whether pages load correctly, and see which public pages people use. FoveaFlow does not sell visitor data.":
     "数据用于运行网站、保持安全、了解页面是否正常加载，以及查看用户使用了哪些公开页面。FoveaFlow 不出售访客数据。",
   "Data we do not collect": "我们不收集的数据",
-  Defaults: "默认值",
   "Desktop app": "桌面应用",
   Diagonal: "对角线",
-  "Diagonal Smooth Pursuit Drill": "对角线平滑追踪练习",
+  "Diagonal Smooth Pursuit drill": "对角线平滑追踪练习",
   "Diagonal uses longer corner-to-corner motion, so it emphasizes broader screen coverage and clean tracking over distance.":
     "对角线路径使用更长的角到角移动，更强调大范围屏幕覆盖和跨距离稳定追踪。",
   Diamond: "菱形",
-  "Diamond Loop Smooth Pursuit Drill": "菱形循环平滑追踪练习",
+  "Diamond Loop Smooth Pursuit drill": "菱形循环平滑追踪练习",
   "Diamond Loop combines a simple repeating route with clear corner transitions and sharper shifts than Circle.":
     "菱形循环把简单重复路线、清晰的转角过渡和比圆形更明显的转向结合在一起。",
   "Diamond loop": "菱形循环",
   Direction: "方向",
   Distractions: "干扰目标",
-  "Distractor Tracking Eye Training": "干扰物追踪眼部训练",
   "Distractor color": "干扰物颜色",
   "Distractor color brightness": "干扰物颜色亮度",
+  "Distractor tracking eye training": "干扰物追踪眼部训练",
   Distractors: "干扰物",
   "Do not attack, overload, scrape aggressively, or try to gain unauthorized access to the site or its infrastructure.":
     "不要攻击、过载、激进抓取，或尝试未授权访问本站及其基础设施。",
   "Do not follow the balls with your eyes.": "不要用眼睛跟着球移动。",
   Done: "完成",
-  "Down-left Sweep Smooth Pursuit Drill": "左下扫动平滑追踪练习",
+  "Down-left Sweep Smooth Pursuit drill": "左下扫动平滑追踪练习",
   "Down-left Sweep moves from the top-right corner toward the bottom-left corner on a simple diagonal line.":
     "左下扫动沿简单对角线，从右上角移动到左下角。",
   "Down-left sweep": "左下扫动",
-  "Down-right Sweep Smooth Pursuit Drill": "右下扫动平滑追踪练习",
+  "Down-right Sweep Smooth Pursuit drill": "右下扫动平滑追踪练习",
   "Down-right Sweep moves from the top-left corner toward the bottom-right corner on a simple diagonal line.":
     "右下扫动沿简单对角线，从左上角移动到右下角。",
   "Down-right sweep": "右下扫动",
   Drill: "练习",
   "Drill selection": "练习选择",
   Drills: "练习",
-  "Edge Loop Smooth Pursuit Drill": "边缘循环平滑追踪练习",
-  "Edge Loop pushes the target around the perimeter, making the drill more spacious and edge-focused than center-heavy loops.":
-    "边缘循环会让目标沿屏幕外围移动，比偏向中心的循环更开阔，也更强调边缘区域。",
+  "Edge Loop Smooth Pursuit drill": "边缘循环平滑追踪练习",
+  "Edge Loop moves the target around the edges of the display.":
+    "边缘循环让目标沿屏幕边缘移动。",
   "Edge loop": "边缘循环",
   Ellipse: "椭圆",
-  "Ellipse Smooth Pursuit Drill": "椭圆平滑追踪练习",
+  "Ellipse Smooth Pursuit drill": "椭圆平滑追踪练习",
   "Ellipse keeps the calm rhythm of Circle but changes the width and height of the motion. It is a good bridge pattern when you want a familiar loop with more range.":
     "椭圆保留圆形的平稳节奏，但改变运动的宽度和高度。想要熟悉的循环又想扩大范围时，它是很好的过渡图案。",
   "Explore the drills": "浏览练习",
@@ -151,7 +147,7 @@ export const zhCN = {
   "FPS warmup": "FPS 热身",
   Feature: "功能",
   "Feature comparison": "功能比较",
-  "Figure Eight Smooth Pursuit Drill": "8 字形平滑追踪练习",
+  "Figure Eight Smooth Pursuit drill": "8 字形平滑追踪练习",
   "Figure Eight adds a crossover point, which means the target passes through the center and changes direction more often than a simple loop.":
     "8 字形加入交叉点，目标会穿过中心，比简单循环更频繁地改变方向。",
   "Figure eight": "8 字形",
@@ -166,7 +162,6 @@ export const zhCN = {
   Forward: "正向",
   "Four ways to practice": "四种练习方式",
   FoveaFlow: "FoveaFlow",
-  "FoveaFlow Guide": "FoveaFlow 指南",
   "FoveaFlow can be used without sending personal details. It is not built to collect personal information from children.":
     "使用 FoveaFlow 不需要发送个人信息。它并不是为了收集儿童个人信息而设计的。",
   "FoveaFlow does not set advertising cookies. Cloudflare may set security cookies when it needs them to keep the site available and safe.":
@@ -174,6 +169,9 @@ export const zhCN = {
   "FoveaFlow eye trainer animation for visual tracking practice":
     "用于视觉追踪练习的 FoveaFlow 眼部训练动画",
   "FoveaFlow eye trainer app": "FoveaFlow 眼部训练应用",
+  "FoveaFlow gives you four free browser drills for moving-target tracking, quick refocus, and attention when the screen gets busy.":
+    "FoveaFlow 提供四项免费的浏览器练习，用于追踪移动目标、快速转移视线，以及在繁杂画面中保持注意力。",
+  "FoveaFlow guide": "FoveaFlow 指南",
   "FoveaFlow is a free browser tool for visual tracking practice. It shows moving targets, reaction jumps, Lilac Chaser fixation practice, and distractor tracking patterns on a screen.":
     "FoveaFlow 是一个免费的浏览器视觉追踪练习工具。它会在屏幕上显示移动目标、反应跳点、丁香追逐者注视练习和干扰物追踪图案。",
   "FoveaFlow is a free browser tool. Use it safely, stop if it feels bad, and do not treat it as medical care.":
@@ -193,6 +191,8 @@ export const zhCN = {
   "FoveaFlow lets you tune the drill to what you want to practice. Use a predictable path for steady tracking, jumps for quick refocus, or dimmer moving targets for distraction practice.":
     "FoveaFlow 可以按练习目的调整。用可预测路径练习稳定追踪，用跳点练习快速转移视线，或加入较暗的移动目标练习抵抗干扰。",
   "FoveaFlow on GitHub": "GitHub 上的 FoveaFlow",
+  "FoveaFlow runs in the browser you already have open, with no account and nothing to install. You decide how long a session lasts.":
+    "FoveaFlow 直接在你已经打开的浏览器里运行，不需要账户，也不用安装。每次训练多久由你决定。",
   "FoveaFlow stores settings locally in your browser so the app can remember them on the current device. That can include the selected language, mode, motion pattern, speed, target size, color, opacity, trail setting, and theme.":
     "FoveaFlow 会把设置本地保存在你的浏览器中，这样应用能在当前设备上记住它们。设置可能包括所选语言、模式、运动图案、速度、目标大小、颜色、不透明度、拖尾设置和主题。",
   "FoveaFlow stores your language preference in local browser storage and in a same-site preference cookie so the correct language can be selected before the app starts. The cookie can last up to 400 days, uses SameSite=Lax, and is marked Secure on HTTPS.":
@@ -216,7 +216,7 @@ export const zhCN = {
     "阅读、开会或打开太多标签页后，让疲劳的眼睛做一次短暂的主动休息。",
   Gold: "金色",
   Guide: "指南",
-  "Hard Turns Smooth Pursuit Drill": "急转弯平滑追踪练习",
+  "Hard Turns Smooth Pursuit drill": "急转弯平滑追踪练习",
   "Hard Turns is one of the most demanding Smooth Pursuit patterns because the target changes direction abruptly.":
     "急转弯是难度较高的平滑追踪图案之一，因为目标会突然改变方向。",
   "Hard turns": "急转弯",
@@ -228,20 +228,19 @@ export const zhCN = {
     "稳定盯住中心，留意周围变化。",
   "Hold the right target even when the screen gets busy.":
     "即使屏幕变得复杂，也要盯住正确目标。",
-  "Horizontal Sweep Smooth Pursuit Drill": "水平扫动平滑追踪练习",
+  "Horizontal Sweep Smooth Pursuit drill": "水平扫动平滑追踪练习",
   "Horizontal Sweep keeps the motion simple and broad for left-right tracking across a larger visual range.":
     "水平扫动让运动保持简单且范围较大，适合在更宽视觉范围内做左右追踪。",
   "Horizontal sweep": "水平扫动",
   Hourglass: "沙漏",
-  "Hourglass Smooth Pursuit Drill": "沙漏平滑追踪练习",
-  "Hourglass narrows through the middle and opens back out, creating repeated crossing behavior with a constrained shape.":
-    "沙漏路径在中间收窄，再向外打开，在受限形状中形成反复交叉。",
+  "Hourglass Smooth Pursuit drill": "沙漏平滑追踪练习",
+  "Hourglass narrows through the middle and opens back out.":
+    "沙漏路径在中间收窄，再向外打开。",
   "How FoveaFlow handles locally stored browser settings, Cloudflare hosting, and basic analytics.":
     "了解 FoveaFlow 如何处理浏览器本地设置、Cloudflare 托管和基础统计。",
   "How data is used": "数据如何使用",
   "How do I make it easier?": "怎样降低难度？",
   "How do I make this pattern easier?": "怎样让这个图案更简单？",
-  "How each drill works": "各项练习怎么做",
   "How should beginners start?": "初学者应该怎么开始？",
   "How to practice": "练习方法",
   "IT professionals": "IT 专业人士",
@@ -251,8 +250,8 @@ export const zhCN = {
     "如果停止后症状仍然持续，请咨询合格专业人士。",
   "If you have a vision condition, recent eye injury, surgery, neurological symptoms, or any concern about using moving visual targets, ask a qualified professional before using the app.":
     "如果你有视力问题、近期眼部受伤、手术、神经系统症状，或对使用移动视觉目标有任何顾虑，请先咨询合格专业人士再使用本应用。",
-  "If you prefer a small set of visible controls and simply want to cycle through routines, BlinkCamp is a straightforward option. It is also open source.":
-    "如果你喜欢少量清晰可见的控件，只想依次切换练习，BlinkCamp 是一个简单直接的选择，而且是开源的。",
+  "If you prefer a small set of visible controls and want to cycle through routines, BlinkCamp is a straightforward option. It is also open source.":
+    "如果你喜欢少量清晰可见的控件，想依次切换练习，BlinkCamp 是一个简单直接的选择，而且是开源的。",
   "It is the task of following the correct target while similar moving objects compete for your attention.":
     "它的任务是在类似移动物体争夺注意力时，继续跟随正确目标。",
   "Keep your head still and let your eyes do the work.":
@@ -272,9 +271,9 @@ export const zhCN = {
   "Letter weight": "字母粗细",
   Light: "浅色",
   "Lilac Chaser": "丁香追逐者",
-  "Lilac Chaser Fixation and Peripheral Awareness":
-    "丁香追逐者注视和周边视觉感知",
   "Lilac Chaser ball color": "丁香追逐者球颜色",
+  "Lilac Chaser fixation and peripheral awareness":
+    "丁香追逐者注视和周边视觉感知",
   "Lilac Chaser scale": "丁香追逐者大小",
   "Lilac Chaser trains fixation, peripheral awareness, visual attention, and noticing change away from the point you are looking at. For gaming, it can be a short warmup for catching movement near the edge of your vision without constantly shifting your gaze.":
     "丁香追逐者训练注视、周边视觉感知、视觉注意，以及察觉视线落点外的变化。用于游戏时，它可以作为短暂热身，帮你在不频繁转移视线的情况下捕捉视野边缘的移动。",
@@ -282,7 +281,7 @@ export const zhCN = {
     "丁香追逐者：注视中心，同时留意周围的变化。",
   "Lilac chaser illusion": "丁香追逐者错觉",
   Lissajous: "李萨如",
-  "Lissajous Smooth Pursuit Drill": "李萨如平滑追踪练习",
+  "Lissajous Smooth Pursuit drill": "李萨如平滑追踪练习",
   "Lissajous is one of the more complex flowing patterns because the target moves through a looping path that changes its relationship to the center over time.":
     "李萨如是较复杂的流动图案之一，因为目标沿循环路径移动，并且与中心的关系会随时间变化。",
   "Look only at the black cross in the middle.": "只看中间的黑色十字。",
@@ -317,14 +316,14 @@ export const zhCN = {
     "这是练习软件，不是医疗护理。如果你感到眼疲劳、头晕、头痛、恶心或任何其他不适，请停止。",
   Predictable: "可预测",
   Privacy: "隐私",
-  "Privacy Policy": "隐私政策",
+  "Privacy policy": "隐私政策",
   "Quick answers": "快速回答",
   Random: "随机",
-  "Random Smooth Pursuit Drill": "随机平滑追踪练习",
-  "Random removes the comfort of a repeating loop. Because the target changes direction and position less predictably, the drill adds more target-search work than a simple circle or ellipse.":
-    "随机路径没有重复循环带来的舒适感。目标的方向和位置更难预测，因此比简单圆形或椭圆增加了更多目标搜索负荷。",
+  "Random Smooth Pursuit drill": "随机平滑追踪练习",
+  "Random has no repeating loop. Because the target changes direction and position less predictably, the drill adds more target-search work than a simple circle or ellipse.":
+    "随机路径没有重复循环。目标的方向和位置更难预测，因此比简单圆形或椭圆增加了更多目标搜索负荷。",
   "Reaction Jumps": "反应跳点",
-  "Reaction Jumps Eye Training": "反应跳点眼部训练",
+  "Reaction Jumps eye training": "反应跳点眼部训练",
   "Reaction Jumps trains quick target acquisition, saccadic eye movement, peripheral detection, and fast refocusing. It is useful when you want to react to a new visual target without moving your head first.":
     "反应跳点训练快速目标捕捉、扫视眼动、周边检测和快速转移视线。当你想在不先转头的情况下对新视觉目标作出反应时，它很有用。",
   "Reaction Jumps: find the target after it moves to a new position.":
@@ -335,7 +334,6 @@ export const zhCN = {
   Red: "红色",
   References: "参考资料",
   Regular: "常规",
-  "Research and background reading": "研究和背景阅读",
   "Reset to defaults": "重置为默认值",
   "Reset to defaults?": "重置为默认值？",
   "Restore the selected drill to its default behavior, visuals, and saved local settings.":
@@ -353,8 +351,6 @@ export const zhCN = {
     "在代码、日志、仪表盘、终端、工单和多显示器工作之间，快速恢复专注。",
   "Sharpen selective focus by tracking the brightest target through moving distractions.":
     "在移动干扰中追踪最亮目标，练习选择性专注。",
-  "Sharpen your visual warmup before FPS games with tracking, refocus, peripheral awareness, and character movement reading drills.":
-    "在 FPS 游戏前，通过追踪、转移视线、周边视觉感知和角色移动判断练习来热身视觉状态。",
   "Short bursts": "短时爆发",
   "Show target letters": "显示目标字母",
   "Show trail": "显示拖尾",
@@ -362,7 +358,7 @@ export const zhCN = {
   "Size pulse": "大小脉冲",
   "Skip to content": "跳转到正文",
   "Smooth Pursuit": "平滑追踪",
-  "Smooth Pursuit Eye Training": "平滑追踪眼部训练",
+  "Smooth Pursuit eye training": "平滑追踪眼部训练",
   "Smooth Pursuit helps train steady tracking, moving-target focus, and controlled eye movement across more of your usable range.":
     "平滑追踪帮助训练稳定追踪、移动目标专注，以及在更大可用范围内控制眼动。",
   "Smooth Pursuit, Reaction Jumps, Multiple Distractions, and Lilac Chaser.":
@@ -381,15 +377,15 @@ export const zhCN = {
   "Speed wave": "速度波动",
   "Speed, size, shape, color, opacity, trails, and mode-specific motion settings.":
     "速度、大小、形状、颜色、不透明度、拖尾，以及各模式专属的运动设置。",
-  "Speed, target size, and path matter most because they change difficulty quickly.":
-    "速度、目标大小和路径最重要，因为它们会迅速改变难度。",
+  "Speed, target size, and path change difficulty the most.":
+    "速度、目标大小和路径对难度的影响最大。",
   Square: "方形",
-  "Stair Steps Smooth Pursuit Drill": "阶梯平滑追踪练习",
+  "Stair Steps Smooth Pursuit drill": "阶梯平滑追踪练习",
   "Stair Steps creates a mechanical route with discrete directional segments that stays easier to predict than Random or Hard Turns.":
     "阶梯路径会形成机械感路线，由分段方向组成，比随机或急转弯更容易预测。",
   "Stair steps": "阶梯",
-  "Start a visual warmup in either browser tool. FoveaFlow gives you separate tracking, refocus, distraction, and fixation drills, with detailed controls available right now in the browser.":
-    "两款工具都能在浏览器中进行视觉热身。FoveaFlow 分别提供追踪、视线转移、干扰和注视练习，现有浏览器版即可使用详细设置。",
+  "Start a visual warmup in either browser tool. FoveaFlow gives you separate tracking, refocus, distraction, and fixation drills with detailed controls.":
+    "两款工具都能在浏览器中进行视觉热身。FoveaFlow 分别提供追踪、视线转移、干扰和注视练习，并带有详细设置。",
   "Start the warmup": "开始热身",
   "Start with a predictable path for steady tracking. Try random movement or hard turns when you want to spend more time finding the target.":
     "先用可预测的路径练习稳定追踪。想增加寻找目标的练习，可以试试随机运动或急转弯。",
@@ -406,7 +402,7 @@ export const zhCN = {
   "Target size": "目标大小",
   Targets: "目标",
   Terms: "条款",
-  "Terms of Use": "使用条款",
+  "Terms of use": "使用条款",
   "Text size": "文字大小",
   "The floating controls tuck away while you practice. Your settings stay in your browser, so you can return to your preferred setup without an account.":
     "练习时，悬浮控件会收起。设置保存在浏览器中，下次无需账号就能继续使用熟悉的配置。",
@@ -437,8 +433,6 @@ export const zhCN = {
     "这些资料不能证明 FoveaFlow 能改善视力或游戏表现。",
   "These terms may be updated when the app or site changes. The date at the top shows the latest version.":
     "应用或网站变更时，这些条款可能会更新。顶部日期显示最新版本。",
-  "This page compares the public browser tools checked on September 12, 2026.":
-    "本页对比的是 2026 年 9 月 12 日核查的公开浏览器工具。",
   "This path ends here": "这条路径到此为止",
   "Those settings stay in your browser unless your browser syncs, backs up, or exports its site data. You can remove them by clearing site data for foveaflow.com.":
     "这些设置会留在你的浏览器中，除非浏览器同步、备份或导出站点数据。你可以通过清除 foveaflow.com 的站点数据来移除它们。",
@@ -476,32 +470,34 @@ export const zhCN = {
     "先用较慢的速度练习准确地转移视线，再提高速度，增加反应练习的难度。",
   "Use the app in a safe place where you can stop easily. Do not use it while driving, walking around, operating equipment, or doing anything that needs your full attention.":
     "请在安全、方便随时停止的地方使用本应用。不要在开车、走路、操作设备，或进行任何需要全部注意力的事情时使用。",
-  "Vertical Sweep Smooth Pursuit Drill": "垂直扫动平滑追踪练习",
-  "Vertical Sweep mirrors the simplicity of Horizontal Sweep but changes the direction of travel for straightforward up-down tracking.":
-    "垂直扫动保留了水平扫动的简单性，只是把移动方向改为上下，适合直接的上下追踪。",
+  "Vertical Sweep Smooth Pursuit drill": "垂直扫动平滑追踪练习",
+  "Vertical Sweep is the up-down version of Horizontal Sweep.":
+    "垂直扫动是水平扫动的上下版本。",
   "Vertical sweep": "垂直扫动",
   "Visit BlinkCamp": "访问 BlinkCamp",
   "Visit EyeTrainer.gg": "访问 EyeTrainer.gg",
   "Visual guidance of smooth pursuit eye movements": "平滑追踪眼动的视觉引导",
   "Visual learning in multiple-object tracking": "多目标追踪中的视觉学习",
+  "Warm up before FPS games with tracking, refocus, and peripheral awareness drills.":
+    "在 FPS 游戏前，通过追踪、转移视线和周边视觉感知练习来热身。",
   Wave: "波浪",
-  "Wave Smooth Pursuit Drill": "波浪平滑追踪练习",
+  "Wave Smooth Pursuit drill": "波浪平滑追踪练习",
   "Wave introduces a repeating up-and-down rhythm on top of horizontal movement. It stays readable and smooth without the abrupt feel of hard corners.":
     "波浪在水平移动上加入重复的上下节奏。它保持清晰和平滑，不会像硬转角那样突兀。",
   Weight: "粗细",
   "What is available today": "目前可用的功能",
   "What is distractor tracking?": "什么是干扰物追踪？",
-  "What it trains:": "训练内容：",
   "What the app is": "应用是什么",
   "What this warmup can and cannot tell you":
     "这套热身能说明什么，不能说明什么",
   "When BlinkCamp may be enough": "什么时候 BlinkCamp 就够用了",
-  "When it jumps, find the new location and actually focus on it before the next jump.":
+  "When it jumps, find the new location and focus on it before the next jump.":
     "目标跳到新位置后，找到它，并在下一次跳动前稳定注视。",
   "When should I choose this over Smooth Pursuit?":
     "什么时候该选它而不是平滑追踪？",
   "When should I use Smooth Pursuit?": "什么时候该用平滑追踪？",
   "Which settings matter most?": "哪些设置最重要？",
+  "Who FoveaFlow is for": "FoveaFlow 适合谁",
   "You can change the target’s appearance, adjust motion behavior, and keep your preferred settings on this device. Each main drill and Smooth Pursuit path also has a direct link.":
     "你可以修改目标外观、调整运动方式，并将喜欢的设置保存在这台设备上。每个主要练习和平滑追踪路径也都有直接链接。",
   "You can clear saved FoveaFlow settings from your browser's site data controls. You can also use browser or extension settings to block optional analytics scripts.":
@@ -512,7 +508,7 @@ export const zhCN = {
     "使用 FoveaFlow 不需要创建账户。应用不会要求你的姓名、邮箱地址、付款信息或健康记录。",
   "Your choices": "你的选择",
   Zigzag: "锯齿",
-  "Zigzag Smooth Pursuit Drill": "锯齿平滑追踪练习",
+  "Zigzag Smooth Pursuit drill": "锯齿平滑追踪练习",
   "Zigzag adds frequent directional switching, so it feels more aggressive than Wave or Diagonal.":
     "锯齿路径加入频繁方向切换，因此感觉比波浪或对角线更强烈。",
   forward: "正向",

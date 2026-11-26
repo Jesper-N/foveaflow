@@ -1,7 +1,6 @@
 <script lang="ts">
   import { t } from "$lib/i18n/translate";
   import { cue } from "$lib/sound/sound.svelte";
-  import type { LucideIcon } from "@lucide/svelte";
   import {
     ColorPicker,
     ColorPickerArea,
@@ -20,19 +19,17 @@
     PopoverTrigger,
   } from "@ui-sdk/svelte/popover";
 
-  import RowLabel from "./row-label.svelte";
   import { popupSurface, pressable } from "./styles";
   import SwatchDot from "./swatch-dot.svelte";
 
   interface Props {
     label: string;
-    icon?: LucideIcon;
     value: string;
     presets: readonly string[];
     onValueChange: (color: string) => void;
   }
 
-  let { label, icon, value, presets, onValueChange }: Props = $props();
+  let { label, value, presets, onValueChange }: Props = $props();
 
   const triggerId = $props.id();
 
@@ -53,8 +50,11 @@
   bind:value={() => value, onValueChange}
 >
   <div class="flex min-h-9 items-center justify-between gap-3">
-    <Label class="text-md min-w-0 cursor-pointer font-medium" for={triggerId}>
-      <RowLabel {icon} {label} />
+    <Label
+      class="text-md min-w-0 cursor-pointer truncate font-medium"
+      for={triggerId}
+    >
+      {label}
     </Label>
     <Popover
       onOpenChange={(open) => {

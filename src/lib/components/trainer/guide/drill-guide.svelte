@@ -67,8 +67,7 @@
       </h3>
       <StepList steps={drillGuide.steps} />
       <p class="bg-fill text-md mt-2 rounded-2xl p-4 text-pretty">
-        <span class="font-medium">{t("What it trains:")}</span>
-        <span class="text-muted-foreground">{t(drillGuide.benefits)}</span>
+        {t(drillGuide.benefits)}
       </p>
     </section>
 

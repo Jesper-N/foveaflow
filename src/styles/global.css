@@ -415,12 +415,16 @@ html[data-i18n-pending="true"] body > * {
   transition:
     left 330ms var(--ease-edge-lead),
     right 330ms var(--ease-edge-lead),
+    top 330ms var(--ease-edge-lead),
+    bottom 330ms var(--ease-edge-lead),
     opacity 160ms var(--ease-out);
 
   [data-direction="right"] & {
     transition:
       right 330ms var(--ease-edge-lead),
       left var(--trail, 790ms) var(--ease-edge-trail),
+      top 330ms var(--ease-edge-lead),
+      bottom 330ms var(--ease-edge-lead),
       opacity 160ms var(--ease-out);
   }
 
@@ -428,6 +432,8 @@ html[data-i18n-pending="true"] body > * {
     transition:
       left 330ms var(--ease-edge-lead),
       right var(--trail, 790ms) var(--ease-edge-trail),
+      top 330ms var(--ease-edge-lead),
+      bottom 330ms var(--ease-edge-lead),
       opacity 160ms var(--ease-out);
   }
 

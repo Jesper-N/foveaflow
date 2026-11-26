@@ -27,7 +27,7 @@ Semantic tokens follow shadcn naming. `fill*` and `border` are alpha overlays of
 | `faint` | `#b5b5b6` | `#6b6b6b` | Decorative strokes and empty slider ticks, never text |
 | `fill` | ink 6% | white 6% | Secondary buttons, chips, tracks, rows, settings groups |
 | `fill-hover` | ink 10% | white 10% | Hover of anything on `fill` |
-| `fill-active` | ink 12% | white 12% | Setting icon tiles, switch track off |
+| `fill-active` | ink 12% | white 12% | Sheet handle, inactive showcase dots |
 | `border` | ink 12% | white 12% | Table dividers, text-link underline |
 | `ring` | ink 50% | white 55% | Focus outline. Neutral like the rest of the theme; at least 3:1 against every surface |
 | `target` | `#17181a` | `#ffffff` | The drill target: the theme ink. Same values as `getCanvasTheme().targetColor`; distractors fade it toward `canvas`; letters default to `canvas` |
@@ -100,7 +100,6 @@ Only floating surfaces get a shadow: `shadow-popover` (a 1 px 6% ring plus a sof
 | Play / pause (island) | 44 | 44 |
 | Segmented item | 32 in a 36 track | 40 |
 | Menu row | 40 | 48 |
-| Setting icon tile | 28 | 28 (the whole row is the target) |
 | Slider hit area | 40 | 44 |
 | Island notch | 32 × 176 | 36 × 184 |
 | Color swatch | 32 | 44 |
@@ -146,7 +145,7 @@ The spring curves are generated from Apple's damping/response model, not eyeball
 | --- | --- | --- |
 | Press | Pressables dip to 0.96 in 100 ms (swatches 0.9, cards 0.98) | Instant proof the press landed, before any result |
 | Hover on ghost buttons and nav pills | A fill grows in from 0.86 (bencho's header buttons) | Says "this is pressable" without shouting; mouse only |
-| Hover on links with arrows | The arrow nudges toward where the link goes | Previews direction; no other motion |
+| Hover on reference links | The ↗ nudges up and out | Says the link leaves the site; no other motion |
 | Island opens (hover 30 ms, tap, or keyboard focus) | The notch's width and height grow on a soft spring (380 / 420 ms, first frame at about 30 ms, full size by about 200 ms); the controls fade in 60 ms later | Responsive like a hardware notch: it reacts the moment you reach it |
 | Island closes (pointer away 220 ms, outside tap, Escape) | Controls fade out in 90 ms, then the notch shrinks back (220 ms, 40 ms later) | The content leaves first, so the shape closes around an empty panel |
 | Anything that changes size (island content, settings cards, select triggers) | `smooth-resize` measures the natural size and animates the old size to the new one on the drawer curve (360 ms) | The container follows what's inside, at the same pace everywhere |
@@ -154,18 +153,18 @@ The spring curves are generated from Apple's damping/response model, not eyeball
 | Island reverse button | When a path supports reversing, its slot opens on `ease-drawer` (300 ms) so the play button glides up; the button fades and scales in (200 ms). Leaving such a path runs it backwards | The controls around a new button make room for it in one motion |
 | Island at rest | A blank MacBook-style notch in the surface color: flat against the top edge, rounded bottom corners, concave fillets into the edge. No text, icon or motion | Nothing to read or watch while you track the target |
 | Island while training | Fades out over 700 ms with the cursor (mouse only), back in 160 ms on movement | The drill gets the whole screen; the way back is instant |
-| Slider wake | Drag fast and every tick the value sweeps past jumps up (to 2.3×, scaled by drag speed) and decays back, so the run tails off behind your hand; a slow drag or a click only fills; an arrow key leaves a small wake. Label, value and icon tile brighten while you adjust | bencho's wake slider: the speed of your hand becomes visible, so the control feels physical without moving when you don't |
+| Slider wake | Drag fast and every tick the value sweeps past jumps up (to 2.3×, scaled by drag speed) and decays back, so the run tails off behind your hand; a slow drag or a click only fills; an arrow key leaves a small wake. The value (and the label, in the island) brightens while you adjust | bencho's wake slider: the speed of your hand becomes visible, so the control feels physical without moving when you don't |
 | Switch | Thumb springs across; it stretches while pressed | The iOS feel of something you're physically pushing |
 | In-page jump (section nav, hero links) | The page scrolls smoothly to the section (`scroll-behavior: smooth`, browser timing, about 1.1 s for a long jump); the section pill moves straight to the chip you pressed and stays there until the scroll ends. Reduced motion jumps instantly | You see where you are going, and the pill marks the destination from the first frame |
 | Segmented control, tabs, section nav | The highlight's two edges ride two springs: the edge facing the new option is stiff, the trailing edge soft, so it stretches across and lands with a small squash. Direction is written to the track before ui-sdk measures, so the right edge always leads | designbookmark's plan switch: reads as one object travelling, not a box swapped |
-| Target form tiles | One black highlight travels to the chosen form with the two-edge springs; the glyph's colour follows 100 ms later | bencho's aspect picker: the choice moves rather than blinking |
+| Target form tiles | One black highlight travels to the chosen form with the two-edge springs (six in a row, three per row on phones, where it also eases between rows); the glyph's colour follows 100 ms later | bencho's aspect picker: the choice moves rather than blinking |
 | Menu highlight | One highlight shared by the whole list moves between rows with a stiff leading edge and a soft trailing edge whose length grows with the distance (420 ms for a neighbour, up to 790 ms across the list); it snaps on the first row and when you use the keyboard | designbookmark's spring dropdown: your pointer drags a single object through the list |
 | Select menu, color popover | Unfolds out of the trigger's corner: from 0.96 × 0.9 and 6 px up on `ease-out` (220 ms, no overshoot), opacity in 140 ms; rows deal in 35 ms apart (first six only). Out in 120–140 ms. Opened from the keyboard it only fades | bencho's picker: the list comes from the thing you pressed and is handed to you row by row, settling without a bounce. Keyboard use gets no delay |
 | Tooltip (single) | After 420 ms it scales in from its trigger (160 ms); a neighbour's tooltip (`data-instant`) appears with no animation | Teaches shortcuts without delaying repeat use |
 | Select value | A newly picked value rolls in from 10 px below while the old one leaves upward (260 / 160 ms), and the trigger eases to the new width | Confirms the choice landed where you'll look for it |
 | Tooltip group (island rows, site header) | One tooltip per toolbar, after designbookmark's morph tooltip: the first hover waits 420 ms and pops it in from below the trigger; moving to a neighbour makes it travel, leading edge stiff and trailing edge soft, while the old label slides out the way it came and the new one slides in from the far side. Rendered in the top layer, below the island | Reads as one tooltip following your pointer along the toolbar instead of several flashing on and off |
 | Accordion | Height and fade in 260 ms, plus turns into × | State change you can follow |
-| Drill tile | Its preview plays and the open button scales in while hovered or focused | You explore a drill before you open it; still otherwise, so a page of tiles stays calm |
+| Drill tile | Its preview plays while hovered or focused | You explore a drill before you open it; still otherwise, so a page of tiles stays calm |
 | Guide drill list | Hovering or focusing a drill crossfades the stage to its preview and plays it | Maps each name to its motion |
 | Controls playground (guide) | Real Speed and Size sliders drive a target on a figure eight | Explains the two settings that matter most by letting you feel them |
 | Drill showcase | The sticky stage crossfades (blur 8 px, 0.96) to the drill you're reading; the other write-ups dim to 40 % until hovered or focused | One focal motion that follows the reading, and the page tells you which text belongs to it |
@@ -181,7 +180,7 @@ The spring curves are generated from Apple's damping/response model, not eyeball
 | Hero | Text rises once on load | First impression only |
 | Page to page | Native cross-document view transition: the old page fades and lifts 8 px (140 ms), the new one fades up from 12 px after 60 ms (320 ms), both on `ease-out`, over the page background. The site header has its own `view-transition-name`, so it holds still while the content changes | Links feel like moving within one place instead of a reload; no script, and Firefox simply navigates |
 
-Measured with frame sampling (Chromium, 1280 × 800, `requestAnimationFrame` per frame): island open 390 ms (full size by about 200 ms); island close 500 ms including the 220 ms grace; settings card resize 380 ms; select trigger width 390 ms; island content fade 530 ms; menu unfold 250 ms (no overshoot); menu rows dealt by 440 ms; menu highlight 560 ms; tooltip first show 420 ms delay then a 200 ms scale-in; tooltip travel 860 ms; tabs 600 ms; segmented 530 ms; target form highlight 600 ms; section nav pill 830 ms; switch 360 ms; color popover 250 ms (same unfold); Controls drawer 320 ms; reset dialog 300 ms; guide dialog 330 ms; guide stage crossfade 370 ms; accordion 340 ms; showcase crossfade 480 ms; drill tile button 330 ms; guide card marks 360 ms; routine dim 350 ms; press 170 ms; hero 610 ms; 404 runner 2.7 s once. With reduced motion every transform, clip and position change lands in one frame and only opacity fades.
+Measured with frame sampling (Chromium, 1280 × 800, `requestAnimationFrame` per frame): island open 390 ms (full size by about 200 ms); island close 500 ms including the 220 ms grace; settings card resize 380 ms; select trigger width 390 ms; island content fade 530 ms; menu unfold 250 ms (no overshoot); menu rows dealt by 440 ms; menu highlight 560 ms; tooltip first show 420 ms delay then a 200 ms scale-in; tooltip travel 860 ms; tabs 600 ms; segmented 530 ms; target form highlight 600 ms; section nav pill 830 ms; switch 360 ms; color popover 250 ms (same unfold); Controls drawer 320 ms; reset dialog 300 ms; guide dialog 330 ms; guide stage crossfade 370 ms; accordion 340 ms; showcase crossfade 480 ms; guide card marks 360 ms; routine dim 350 ms; press 170 ms; hero 610 ms; 404 runner 2.7 s once. With reduced motion every transform, clip and position change lands in one frame and only opacity fades.
 
 Never: animation on keyboard shortcuts beyond the state change itself, staggers longer than six rows, looping motion in the trainer chrome, `transition: all`.
 
@@ -222,11 +221,10 @@ Never: a cue per animation frame or per drill event, hover sounds, a cue for pag
 | `button-variants.ts` | — | `buttonClass(variant, size)` for links that look like buttons and for ui-sdk parts that render buttons |
 | `button.svelte` | ui-sdk Button | Actions. `primary`, `secondary`, `ghost`; sizes `sm`, `md`, `lg`, `icon` |
 | `icon-button.svelte` | Button + Tooltip | Icon-only actions, named by a tooltip that shows the shortcut. `grouped` hands the tooltip to the surrounding `tooltip-group` |
-| `follow-indicator.ts` | — | Attachment for one shared highlight that travels to the active item (`[data-indicator]` child, `axis` x or y); used by menus and target forms |
+| `follow-indicator.ts` | — | Attachment for one shared highlight that covers the active item (`[data-indicator]` child; `axis` x or y picks the edges that stretch); used by menus and target forms |
 | `tooltip-group.svelte` | Popover API | Wraps a toolbar; every descendant with `data-tip` (and optional `data-tip-key`) shares one travelling tooltip. Triggers carry `aria-label` and `aria-keyshortcuts`, so the tooltip itself is `aria-hidden`. Not ui-sdk's shared tooltip: that one places itself by its left edge only, so the two-edge stretch can't ride on it, and it labels every trigger with the current payload |
-| `select.svelte` | ui-sdk Select | Every choice from a list. Groups, leading icon, an 18 px filled check badge on the chosen row, 40 px rows (48 on touch). `appearance`: `field` (filled pill), `ghost` (header and island icon triggers), `text` (the island's title and byline). `labelIcon` adds a row icon tile. Sheet on touch; `compact` stays a popover and hides the chevron on phones |
-| `slider.svelte` | ui-sdk Field + Slider | Every number: thumbless 3 × 16 px tick bars with bencho's speed wake, the formatted value; optional `icon` tile. The visible label is a `FieldLabel`, so pressing it focuses the slider; `thumbLabel` gives the thumb a longer name where the short label is ambiguous. Label and tile light up from the slider's own `data-dragging` and keyboard focus |
-| `row-label.svelte` | — | A setting's label with its optional 28 px icon tile (inverts while the setting is being adjusted) |
+| `select.svelte` | ui-sdk Select | Every choice from a list. Groups, leading icon, an 18 px filled check badge on the chosen row, 40 px rows (48 on touch). `appearance`: `field` (filled pill), `ghost` (header and island icon triggers), `text` (the island's title and byline). Sheet on touch; `compact` stays a popover and hides the chevron on phones |
+| `slider.svelte` | ui-sdk Field + Slider | Every number: thumbless 3 × 16 px tick bars with bencho's speed wake, the formatted value. The visible label is a `FieldLabel`, so pressing it focuses the slider; `thumbLabel` gives the thumb a longer name where the short label is ambiguous. The value lights up from the slider's own `data-dragging` and keyboard focus, and so does the label with `mutedLabel` (the island) |
 | `color-field.svelte` | ui-sdk Color Picker + Popover + Label | Colors: swatch + hex trigger named by its visible `Label`; popover with saturation area, hue slider, presets and a hex field |
 | `switch.svelte` | ui-sdk Switch | On/off settings as a whole-row label. 48 × 28, after bencho's toggle: off is a slab track with a grey thumb, on inverts to an ink track with a slab thumb, so the track carries the state; the thumb stretches while pressed |
 | `segmented.svelte` | ui-sdk Segmented Control | Two or three visible choices (direction, theme) |
@@ -266,7 +264,7 @@ Every surface names the reference it was measured against and what was taken fro
 | Segmented controls, tabs | designbookmark plan switch | Two-edge highlight: leading edge 620 / 46 (330 ms), trailing edge 190 / 19 (790 ms); direction written before layout is read |
 | Tooltips | designbookmark morph tooltip; Emil Kowalski's tooltip timing | One tooltip per toolbar; first show after 420 ms with scale from 0.72; travels with lead/trail edges; old label slides out 14 px the way it came, new one in from the far side; leave grace 140 ms |
 | Color picker | bencho picker (card), ui-sdk Color Picker | Popover radius 20 and unfold motion from the picker; 20 px thumbs with a 2 px white ring; 8 presets in one row; hex field 36 px |
-| Controls panel | bencho action node (icon tiles), iOS settings | 28 px icon tiles at radius 8, grouped rows with hairlines inset past the tile, section titles outside the card; drawer ease `0.32 0.72 0 1` |
+| Controls panel | iOS settings | Grouped rows with hairlines between them, section titles outside the card; drawer ease `0.32 0.72 0 1` |
 | Reset dialog | bencho card surfaces | Radius 28, 24 px padding, two equal 40 px actions; scale 0.96 + fade in 220 ms |
 | Home guide dialog | bencho wall cards, Apple sheets | Stage crossfades to the pointed drill; name pill on `popover/90`; full-width action on phones |
 | Drill guide dialog | bencho wall cards | Live preview stage with name pill; steps, callout, accordion; 928 px wide |
@@ -286,7 +284,7 @@ Every surface names the reference it was measured against and what was taken fro
   - At rest: a 176 × 32 px notch (184 × 36 on touch). It opens for 3 s on load first.
   - Open, up to 576 px wide: drill tabs (icons, the chosen drill also shows its name) with Language, Guide (G) and Controls (S) on the top row; below, a still preview of the drill, then the path select (P) for Smooth Pursuit or the drill's one-line summary, Size and Speed (or Lilac's Ball color and Scale), and a 48 px play/pause (Space) with reverse under it.
   - On phones it opens full width; drill tabs show icons only and the preview is hidden.
-- **Controls** (S): right-side panel 416 px wide, inset 8 px, with tabs Targets / Drill / General, opening on Targets. Each tab is grouped settings rows in `fill` cards, iOS-style: a 28 px icon tile, the label, the control on the right (sliders run under the label, aligned with it), hairlines between rows, small section titles above a card. Targets opens with the live target preview. Footer: Done. On touch screens it is an 85 dvh bottom sheet.
+- **Controls** (S): right-side panel 416 px wide, inset 8 px, with tabs Targets / Drill / General, opening on Targets. Each tab is grouped settings rows in `fill` cards, iOS-style: the label, the control on the right (sliders run under the label), hairlines between rows, small section titles above a card. Targets opens with the live target preview. Footer: Done. On touch screens it is an 85 dvh bottom sheet.
 - **Guide** (G): 704 px dialog (sheet on touch). On top, a 256 px stage band (208 on phones) with the drill's live preview and its name pill; on `/` the stage crossfades to whichever drill in the list you point at or focus. The text scrolls underneath with soft fades at both edges. Right: title, lede, steps, what it trains, quick answers, overview. Footer: updated date, Source, Privacy, Terms, and the primary Read full guide.
 - **Reset**: an alert dialog over the controls.
 
@@ -297,11 +295,11 @@ Every surface names the reference it was measured against and what was taken fro
 - Hero, centered: breadcrumb chips, title (36 → 52), lede (16 → 20), actions, updated date. Below it, full width: the drill wall (four tiles, 1 → 2 → 4 columns) or the comparison table.
 - Section nav: a sticky chip bar under the header ("On this page") with a sliding pill for the current section; between sections and after a jump it keeps the last section you passed. Above the first section the first chip is active, and the pill fades in where it lands.
 - Sections 96–128 px apart, in an editorial split from `lg`: heading and intro sticky on the left (352 px), content on the right.
-- Guide extras: the drill showcase (sticky live stage beside the four drill write-ups), the motion path gallery (one grid of 20 route tiles, 2 → 4 → 5 columns, the two unpredictable paths first with a badge), audience cards with icons, the controls playground, article cards, FAQ accordion, reference list.
+- Guide extras: the drill showcase (sticky live stage beside the four drill write-ups, each starting level with the stage top), the motion path gallery (one grid of 20 route tiles, 2 → 4 → 5 columns, the two unpredictable paths first with a badge), the audience list, the controls playground, article cards, FAQ accordion, reference list.
 - Closing call to action: a dark band with the title, line, button and a live pursuit preview.
 - Comparison table: FoveaFlow's column is raised on `popover`, the competitor's stays muted. Below `md` it becomes one card per feature with the FoveaFlow answer raised above the competitor's.
 - Footer: a `card` with brand and the free-use line, a Drills column (icon + name) and a FoveaFlow column (Guide, Privacy, Terms).
-- References list: numbered rows with each source's domain under the title.
+- References list: one row per source with its domain under the title.
 - More guides: three cards with a visual header: the warmup shows its routine as a strip of drill icons sized by minutes, comparisons show both app marks stacked (they part on hover).
 - Article routines (FPS warmup): the hero is the routine itself, a timeline bar split by minutes. Each segment is a link to its drill showing the drill's preview and a localized duration (`Intl` minutes, no dictionary strings); the hovered or focused segment plays and the others dim. On phones it is a slim icon bar. Articles without a routine keep the drill wall; comparisons lead with the table.
 - Scroll areas (Controls panel, guide dialogs, section nav) fade content out at their edges (`scroll-fade-y`, `scroll-fade-x`) instead of cutting it. The Controls panel and guide text hide the scrollbar (`scrollbar-none`) and rely on that fade, so content keeps its full width at any length.

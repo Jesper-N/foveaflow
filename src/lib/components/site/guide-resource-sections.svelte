@@ -51,7 +51,7 @@
         href={article.path}
       >
         <span
-          class="canvas-grid relative grid aspect-2/1 place-items-center overflow-hidden rounded-2xl"
+          class="canvas-grid grid aspect-2/1 place-items-center overflow-hidden rounded-2xl"
           aria-hidden="true"
         >
           {#if article.comparison}
@@ -77,16 +77,8 @@
               {/each}
             </span>
           {/if}
-          <span
-            class="bg-popover shadow-thumb ease-spring absolute inset-e-2 top-2 grid size-8 place-items-center rounded-full transition-[translate] duration-260 group-hover/article:translate-x-0.5 group-hover/article:-translate-y-0.5"
-          >
-            <ArrowUpRightIcon class="size-3.5 rtl:-scale-x-100" />
-          </span>
         </span>
         <span class="grid gap-2 px-3">
-          <span class="text-muted-foreground text-xs font-medium">
-            {t(article.kicker)}
-          </span>
           <h3 class={subHeading}>{t(article.heading)}</h3>
           <span class="text-muted-foreground line-clamp-3 text-sm text-pretty">
             {t(article.description)}
@@ -99,13 +91,13 @@
 
 <PageSection
   id="references"
-  heading={t("Research and background reading")}
+  heading={t("References")}
   intro={t(
     "These sources do not establish that FoveaFlow improves eyesight or game performance."
   )}
 >
-  <ol class="divide-border border-border grid divide-y border-y">
-    {#each referenceLinks as reference, index (reference.url)}
+  <ul class="divide-border border-border grid divide-y border-y">
+    {#each referenceLinks as reference (reference.url)}
       <li>
         <a
           class="group/ref text-md flex items-start gap-4 py-4 transition-colors duration-160 ease-out"
@@ -113,11 +105,6 @@
           rel="noopener noreferrer"
           target="_blank"
         >
-          <span
-            class="text-muted-foreground w-6 shrink-0 pt-px text-sm tabular-nums"
-          >
-            {String(index + 1).padStart(2, "0")}
-          </span>
           <span class="grid flex-1 gap-0.5">
             <span class="text-pretty">{t(reference.label)}</span>
             <span class="text-muted-foreground text-xs">
@@ -131,5 +118,5 @@
         </a>
       </li>
     {/each}
-  </ol>
+  </ul>
 </PageSection>

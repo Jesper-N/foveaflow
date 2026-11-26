@@ -12,17 +12,20 @@
   <LilacColorSwatches />
   <SettingSlider
     label={t("Scale")}
+    mutedLabel
     setting="lilacChaserScale"
     thumbLabel={t("Lilac Chaser scale")}
   />
 {:else}
   <SettingSlider
     label={t("Size")}
+    mutedLabel
     setting="baseRadiusPx"
     thumbLabel={t("Header target size")}
   />
   <SettingSlider
     label={t("Speed")}
+    mutedLabel
     setting="speed"
     thumbLabel={t("Header target speed")}
   />

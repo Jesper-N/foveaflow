@@ -1,6 +1,5 @@
 <script lang="ts">
   import { isPersonChange, sound } from "$lib/sound/sound.svelte";
-  import type { LucideIcon } from "@lucide/svelte";
   import { Field, FieldLabel } from "@ui-sdk/svelte/field";
   import {
     Slider,
@@ -12,11 +11,9 @@
   import type { Attachment } from "svelte/attachments";
   import type { ClassValue } from "svelte/elements";
 
-  import RowLabel from "./row-label.svelte";
-
   interface Props {
     label: string;
-    icon?: LucideIcon;
+    mutedLabel?: boolean;
     thumbLabel?: string;
     value: number;
     min: number;
@@ -29,7 +26,7 @@
 
   let {
     label,
-    icon,
+    mutedLabel = false,
     thumbLabel = label,
     value,
     min,
@@ -190,11 +187,11 @@
   >
     <FieldLabel
       class={[
-        "text-md min-w-0 cursor-pointer font-medium transition-colors duration-160 ease-out",
-        icon ? "text-foreground" : activeText,
+        "text-md min-w-0 cursor-pointer truncate font-medium transition-colors duration-160 ease-out",
+        mutedLabel ? activeText : "text-foreground",
       ]}
     >
-      <RowLabel {icon} {label} />
+      {label}
     </FieldLabel>
     <SliderValue
       class={[
@@ -203,10 +200,7 @@
       ]}
     />
     <SliderControl
-      class={[
-        "col-span-2 flex h-10 cursor-pointer touch-pan-y items-center pointer-coarse:h-11",
-        icon && "ms-10",
-      ]}
+      class="col-span-2 flex h-10 cursor-pointer touch-pan-y items-center pointer-coarse:h-11"
       onpointerdown={(event: PointerEvent) => {
         speed = 0;
         lastX = event.clientX;

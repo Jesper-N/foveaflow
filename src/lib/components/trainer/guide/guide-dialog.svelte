@@ -3,7 +3,7 @@
   import { siteMetadata } from "$lib/content/site";
   import { formatDate, t } from "$lib/i18n/translate";
   import { cue } from "$lib/sound/sound.svelte";
-  import { ArrowRightIcon, XIcon } from "@lucide/svelte";
+  import { XIcon } from "@lucide/svelte";
   import {
     Dialog,
     DialogBackdrop,
@@ -89,15 +89,11 @@
       <a
         class={[
           buttonClass("primary", "lg"),
-          "group/cta max-sm:order-first max-sm:w-full",
+          "max-sm:order-first max-sm:w-full",
         ]}
         href="/guide/"
       >
         {t("Read full guide")}
-        <ArrowRightIcon
-          class="ease-spring transition-transform duration-260 group-hover/cta:translate-x-0.5 rtl:-scale-x-100"
-          aria-hidden="true"
-        />
       </a>
     </footer>
   </DialogContent>
